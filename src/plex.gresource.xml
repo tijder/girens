@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/Plex">
-    <file>window.ui</file>
+    <file>main_window.ui</file>
+    <file>discover_view.ui</file>
+    <file>login_view.ui</file>
   </gresource>
 </gresources>

@@ -17,21 +17,31 @@
 
 from gi.repository import Gtk
 from .gi_composites import GtkTemplate
-from .login_view import LoginView
 
+@GtkTemplate(ui='/org/gnome/Plex/login_view.ui')
+class LoginView(Gtk.Box):
+    __gtype_name__ = 'login_view'
 
-@GtkTemplate(ui='/org/gnome/Plex/main_window.ui')
-class PlexWindow(Gtk.ApplicationWindow):
-    __gtype_name__ = 'PlexWindow'
-
-    _login_revealer = GtkTemplate.Child()
+    _username_entry = GtkTemplate.Child()
+    _password_entry = GtkTemplate.Child()
+    _login_button = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
-        self._login_view = LoginView()
-        self._login_revealer.add(self._login_view)
-        self._login_revealer.set_visible(True)
+        self._password_entry.connect("changed", self.__entry_changed)
+        self._username_entry.connect("changed", self.__entry_changed)
+        self._login_button.connect("clicked", self.__on_login_clicked)
 
-        
+
+
+    def __entry_changed(self, entry):
+        self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), None)
+        print(entry.get_text())
+
+    def __on_login_clicked(self, button):
+        self.__show_incorrect_login()
+
+    def __show_incorrect_login(self):
+        self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
