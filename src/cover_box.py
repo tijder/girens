@@ -25,6 +25,7 @@ class CoverBox(Gtk.Box):
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
     _progress_bar = GtkTemplate.Child()
+    _watched_image = GtkTemplate.Child()
 
     def __init__(self, item, **kwargs):
         super().__init__(**kwargs)
@@ -36,10 +37,13 @@ class CoverBox(Gtk.Box):
 
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
-            subtitle = item.title
+            subtitle = item.seasonEpisode + ' - ' + item.title
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)
+
+        if (not item.isWatched):
+            self._watched_image.set_visible(True)
 
         self._title_label.set_text(title)
         self._subtitle_label.set_text(subtitle)
