@@ -20,6 +20,8 @@ from .gi_composites import GtkTemplate
 from .login_view import LoginView
 from .plex import Plex
 
+import os
+
 
 @GtkTemplate(ui='/org/gnome/Plex/main_window.ui')
 class PlexWindow(Gtk.ApplicationWindow):
@@ -31,7 +33,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         super().__init__(**kwargs)
         self.init_template()
 
-        self._plex = Plex()
+        self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'])
 
         self._login_view = LoginView(self._plex)
         self._login_revealer.add(self._login_view)

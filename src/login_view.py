@@ -61,6 +61,7 @@ class LoginView(Gtk.Box):
             username = self._username_entry.get_text()
             password = self._password_entry.get_text()
             thread = threading.Thread(target=self._plex.login, args=(username, password))
+            #thread = threading.Thread(target=self._plex.login_token, args=(password,))
             thread.daemon = True
             thread.start()
 
