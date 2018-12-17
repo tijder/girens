@@ -7,6 +7,7 @@
     "finish-args": [
         "--share=network",
         "--share=ipc",
+        "--socket=pulseaudio",
         "--socket=x11",
         "--socket=wayland",
         "--filesystem=xdg-run/dconf",
@@ -33,6 +34,106 @@
         "*.a"
     ],
     "modules": [
+    {
+            "name" : "libmpv",
+            "cleanup" : [
+                "/include",
+                "/lib/pkgconfig"
+            ],
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "python3 waf configure --prefix=${FLATPAK_DEST} --enable-libmpv-shared --disable-cplayer --disable-oss-audio --disable-alsa --disable-manpage-build --disable-debug-build",
+                "python3 waf build",
+                "python3 waf install"
+            ],
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/mpv-player/mpv/archive/v0.29.1.tar.gz",
+                    "sha256" : "f9f9d461d1990f9728660b4ccb0e8cb5dce29ccaa6af567bec481b79291ca623"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://waf.io/waf-2.0.13",
+                    "sha256" : "d30805b36891ec65d5a3841ce4850262a5642d64dc4b5f2492b4539f95765970",
+                    "dest-filename" : "waf"
+                }
+            ],
+            "modules" : [
+                {
+                    "name" : "libass",
+                    "cleanup" : [
+                        "/include",
+                        "/lib/*.la",
+                        "/lib/pkgconfig"
+                    ],
+                    "config-opts" : [
+                        "--disable-static"
+                    ],
+                    "sources" : [
+                        {
+                            "type" : "archive",
+                            "url" : "https://github.com/libass/libass/releases/download/0.14.0/libass-0.14.0.tar.xz",
+                            "sha256" : "881f2382af48aead75b7a0e02e65d88c5ebd369fe46bc77d9270a94aa8fd38a2"
+                        }
+                    ],
+                    "modules" : [
+                        {
+                            "name" : "fribidi",
+                            "cleanup" : [
+                                "/bin",
+                                "/include",
+                                "/lib/pkgconfig",
+                                "/lib/*.la",
+                                "/share/man"
+                            ],
+                            "sources" : [
+                                {
+                                    "type" : "archive",
+                                    "url" : "https://github.com/fribidi/fribidi/releases/download/v1.0.5/fribidi-1.0.5.tar.bz2",
+                                    "sha256" : "6a64f2a687f5c4f203a46fa659f43dd43d1f8b845df8d723107e8a7e6158e4ce"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "ffmpeg",
+                    "cleanup" : [
+                        "/include",
+                        "/lib/pkgconfig",
+                        "/share/ffmpeg/examples"
+                    ],
+                    "config-opts" : [
+                        "--enable-shared",
+                        "--disable-static",
+                        "--enable-gnutls",
+                        "--disable-doc",
+                        "--disable-ffplay",
+                        "--enable-version3"
+                    ],
+                    "sources" : [
+                        {
+                            "type" : "git",
+                            "url" : "https://github.com/FFmpeg/FFmpeg.git"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name" : "python-mpv",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "pip3 install --prefix=/app ./"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://github.com/jaseg/python-mpv"
+                }
+            ]
+        },
     	{
             "name" : "PlexAPI",
             "buildsystem" : "simple",
