@@ -25,10 +25,9 @@ import threading
 class DiscoverView(Gtk.Box):
     __gtype_name__ = 'discover_view'
 
-    _label = GtkTemplate.Child()
-    _label2 = GtkTemplate.Child()
-
     _deck_shows_box = GtkTemplate.Child()
+    _movies_shows_box = GtkTemplate.Child()
+    _seasons_shows_box = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -39,19 +38,25 @@ class DiscoverView(Gtk.Box):
         self._plex.connect("shows-deck", self.__on_show_deck_update)
 
     def refresh(self):
-        self._label2.set_text(self._plex._account.username)
-
         thread = threading.Thread(target=self._plex.get_deck,)
         thread.daemon = True
         thread.start()
 
-    def __on_show_latest_update(self, plex, shows):
-        print(shows)
+        thread = threading.Thread(target=self._plex.get_latest,)
+        thread.daemon = True
+        thread.start()
 
-    def __on_show_deck_update(self, plex, shows):
-        GLib.idle_add(self.__add_to_hub, self._deck_shows_box, shows)
+    def __on_show_latest_update(self, plex, items):
+        for item in items:
+            if(item.TYPE == 'movie'):
+                GLib.idle_add(self.__add_to_hub, self._movies_shows_box, item)
+            elif(item.TYPE == 'episode' or item.TYPE == 'season'):
+                GLib.idle_add(self.__add_to_hub, self._seasons_shows_box, item)
 
-    def __add_to_hub(self, hub, shows):
-        for show in shows:
-            cover = CoverBox(self._plex, show)
-            hub.add(cover)
+    def __on_show_deck_update(self, plex, items):
+        for item in items:
+            GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
+
+    def __add_to_hub(self, hub, show):
+        cover = CoverBox(self._plex, show)
+        hub.add(cover)

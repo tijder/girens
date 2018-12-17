@@ -55,6 +55,9 @@ class CoverBox(Gtk.Box):
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)
+        elif (item.TYPE == 'season'):
+            title = item.parentTitle
+            subtitle = item.title
 
         if (not item.isWatched):
             self._watched_image.set_visible(True)
