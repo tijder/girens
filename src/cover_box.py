@@ -29,6 +29,7 @@ class CoverBox(Gtk.Box):
     _progress_bar = GtkTemplate.Child()
     _watched_image = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
+    _play_button = GtkTemplate.Child()
 
     def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
@@ -37,6 +38,7 @@ class CoverBox(Gtk.Box):
         self._item = item
         self._plex = plex
         self._plex.connect("download-cover", self.__on_cover_downloaded)
+        self._play_button.connect("clicked", self.__on_play_button_clicked)
 
         self._download_key = self._item.ratingKey
         self._download_thumb = self._item.thumb
@@ -70,3 +72,8 @@ class CoverBox(Gtk.Box):
 
     def __set_image(self, path):
         self._cover_image.set_from_file(path)
+
+    def __on_play_button_clicked(self, button):
+        thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
+        thread.daemon = True
+        thread.start()

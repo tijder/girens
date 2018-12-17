@@ -28,6 +28,7 @@ configure_file(
 plex_sources = [
   '__init__.py',
   'plex.py',
+  'player.py',
   'gi_composites.py',
   'main.py',
   'window.py',

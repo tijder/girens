@@ -2,8 +2,11 @@ import time
 import os.path
 import urllib
 
+from .player import Player
+
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
+from plexapi.playqueue import PlayQueue
 from gi.repository import GObject
 
 class Plex(GObject.Object):
@@ -73,6 +76,10 @@ class Plex(GObject.Object):
 
         path = self.download(url_image, 'thumb_' + str(key))
         self.emit('download-cover', key, path)
+
+    def play_item(self, item):
+        playqueue = PlayQueue.create(self._server, item)
+        Player(playqueue)
 
     def download(self, url_image, prefix):
         path_dir = self._data_dir + '/' + self._server.machineIdentifier
