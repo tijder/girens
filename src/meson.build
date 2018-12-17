@@ -31,7 +31,9 @@ plex_sources = [
   'gi_composites.py',
   'main.py',
   'window.py',
-  'login_view.py'
+  'login_view.py',
+  'discover_view.py',
+  'cover_box.py'
 ]
 
 install_data(plex_sources, install_dir: moduledir)

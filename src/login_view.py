@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, GObject
 from .gi_composites import GtkTemplate
 
 import threading
@@ -23,6 +23,10 @@ import threading
 @GtkTemplate(ui='/org/gnome/Plex/login_view.ui')
 class LoginView(Gtk.Box):
     __gtype_name__ = 'login_view'
+
+    __gsignals__ = {
+        'login-success': (GObject.SignalFlags.RUN_FIRST, None, (bool,))
+    }
 
     _loading = False
 
@@ -50,6 +54,7 @@ class LoginView(Gtk.Box):
     def __plex_login_status_process(self, success, message):
         if(success):
             self.__show_correct_login()
+            self.emit('login-success',True)
         else:
             self.__show_incorrect_login()
 
@@ -72,7 +77,6 @@ class LoginView(Gtk.Box):
             username = self._username_entry.get_text()
             password = self._password_entry.get_text()
             thread = threading.Thread(target=self._plex.login, args=(username, password))
-            #thread = threading.Thread(target=self._plex.login_token, args=(password,))
             thread.daemon = True
             thread.start()
 
