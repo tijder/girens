@@ -18,6 +18,8 @@
 from gi.repository import Gtk, GLib
 from .gi_composites import GtkTemplate
 
+import threading
+
 @GtkTemplate(ui='/org/gnome/Plex/cover_box.ui')
 class CoverBox(Gtk.Box):
     __gtype_name__ = 'cover_box'
@@ -26,10 +28,18 @@ class CoverBox(Gtk.Box):
     _subtitle_label = GtkTemplate.Child()
     _progress_bar = GtkTemplate.Child()
     _watched_image = GtkTemplate.Child()
+    _cover_image = GtkTemplate.Child()
 
-    def __init__(self, item, **kwargs):
+    def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
+
+        self._item = item
+        self._plex = plex
+        self._plex.connect("download-cover", self.__on_cover_downloaded)
+
+        self._download_key = self._item.ratingKey
+        self._download_thumb = self._item.thumb
 
         if (item.TYPE == 'movie' or item.TYPE == 'episode' and item.viewOffset != 0):
             self._progress_bar.set_fraction(item.viewOffset / item.duration)
@@ -38,6 +48,8 @@ class CoverBox(Gtk.Box):
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
             subtitle = item.seasonEpisode + ' - ' + item.title
+            self._download_key = self._item.grandparentRatingKey
+            self._download_thumb = self._item.grandparentThumb
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)
@@ -47,3 +59,14 @@ class CoverBox(Gtk.Box):
 
         self._title_label.set_text(title)
         self._subtitle_label.set_text(subtitle)
+
+        thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
+        thread.daemon = True
+        thread.start()
+
+    def __on_cover_downloaded(self, plex, rating_key, path):
+        if(self._download_key == rating_key):
+            GLib.idle_add(self.__set_image, path)
+
+    def __set_image(self, path):
+        self._cover_image.set_from_file(path)

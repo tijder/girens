@@ -53,5 +53,5 @@ class DiscoverView(Gtk.Box):
 
     def __add_to_hub(self, hub, shows):
         for show in shows:
-            cover = CoverBox(show)
+            cover = CoverBox(self._plex, show)
             hub.add(cover)

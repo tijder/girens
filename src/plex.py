@@ -1,5 +1,6 @@
 import time
 import os.path
+import urllib
 
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
@@ -9,7 +10,8 @@ class Plex(GObject.Object):
     __gsignals__ = {
         'login-status': (GObject.SignalFlags.RUN_FIRST, None, (bool,str)),
         'shows-latest': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
-        'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,))
+        'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'download-cover': (GObject.SignalFlags.RUN_FIRST, None, (int,str))
     }
 
     _token = None
@@ -65,6 +67,24 @@ class Plex(GObject.Object):
 
         deck = self._library.onDeck()
         self.emit('shows-deck',deck)
+
+    def download_cover(self, key, thumb):
+        url_image = self._server.transcodeImage(thumb, 300, 200)
+
+        path = self.download(url_image, 'thumb_' + str(key))
+        self.emit('download-cover', key, path)
+
+    def download(self, url_image, prefix):
+        path_dir = self._data_dir + '/' + self._server.machineIdentifier
+        path = path_dir + '/' + prefix
+
+        if not os.path.exists(path_dir):
+            os.makedirs(path_dir)
+        if not os.path.exists(path):
+            urllib.request.urlretrieve(url_image, path)
+            return path
+        else:
+            return path
 
     def __connect_to_server(self):
         if (self._server_url is not None):
