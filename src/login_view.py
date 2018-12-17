@@ -41,6 +41,9 @@ class LoginView(Gtk.Box):
         self._username_entry.connect("changed", self.__entry_changed)
         self._login_button.connect("clicked", self.__on_login_clicked)
 
+        if (self._plex.has_token()):
+            self.__login_with_token()
+
     def __plex_login_status(self, plex, success, message):
         GLib.idle_add(self.__plex_login_status_process, success, message)
 
@@ -52,6 +55,14 @@ class LoginView(Gtk.Box):
 
     def __entry_changed(self, entry):
         self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), None)
+
+    def __login_with_token(self):
+        self._loading = True
+        self.__show_loading()
+
+        thread = threading.Thread(target=self._plex.login_token, args=(self._plex._token,))
+        thread.daemon = True
+        thread.start()
 
     def __on_login_clicked(self, button):
         if (self._loading == False):

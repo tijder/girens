@@ -13,9 +13,13 @@ class Plex(GObject.Object):
         super().__init__(**kwargs)
         self._config_dir = config_dir
         self._data_dir = data_dir
+        self._token = None
         if(os.path.isfile(self._config_dir + '/config')):
            with open(self._config_dir + '/config', 'r') as file:
-               print(file.readlines()[0])
+               self._token = file.readlines()[0]
+
+    def has_token(self):
+        return self._token is not None
 
     def login_token(self, token):
         try:
