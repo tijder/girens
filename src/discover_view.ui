@@ -60,7 +60,7 @@
         <property name="margin_left">10</property>
         <property name="margin_top">20</property>
         <property name="margin_bottom">5</property>
-        <property name="label" translatable="yes">recently added TV</property>
+        <property name="label" translatable="yes">Recently added TV</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
@@ -106,7 +106,7 @@
         <property name="margin_left">10</property>
         <property name="margin_top">20</property>
         <property name="margin_bottom">5</property>
-        <property name="label" translatable="yes">recently added Movies</property>
+        <property name="label" translatable="yes">Recently added Movies</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
