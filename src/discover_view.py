@@ -38,6 +38,15 @@ class DiscoverView(Gtk.Box):
         self._plex.connect("shows-deck", self.__on_show_deck_update)
 
     def refresh(self):
+        for item in self._deck_shows_box.get_children():
+            self._deck_shows_box.remove(item)
+
+        for item in self._movies_shows_box.get_children():
+            self._movies_shows_box.remove(item)
+
+        for item in self._seasons_shows_box.get_children():
+            self._seasons_shows_box.remove(item)
+
         thread = threading.Thread(target=self._plex.get_deck,)
         thread.daemon = True
         thread.start()

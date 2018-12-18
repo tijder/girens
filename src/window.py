@@ -36,12 +36,15 @@ class PlexWindow(Gtk.ApplicationWindow):
     _discover_revealer = GtkTemplate.Child()
 
     _home_button = GtkTemplate.Child()
+    _refresh_button = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'])
+
+        self._refresh_button.connect("clicked", self.__on_refresh_clicked)
 
         self._login_view = LoginView(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
@@ -72,5 +75,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._discover_view.refresh()
         self.__show_view('discover')
 
+    def __on_refresh_clicked(self, button):
+        if(self._active_view == 'discover'):
+            self._discover_view.refresh()
 
         
