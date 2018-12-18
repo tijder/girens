@@ -87,7 +87,10 @@ class CoverBox(Gtk.Box):
         self._cover_image.set_from_file(path)
 
     def __on_go_to_show_clicked(self, button):
-        self.emit('view-show-wanted', self._item.grandparentRatingKey)
+        if self._item.TYPE == 'episode':
+            self.emit('view-show-wanted', self._item.grandparentRatingKey)
+        elif self._item.TYPE == 'season':
+            self.emit('view-show-wanted', self._item.parentRatingKey)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
