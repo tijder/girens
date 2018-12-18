@@ -4,7 +4,7 @@
   <requires lib="gtk+" version="3.20"/>
   <template class="PlexWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
-    <property name="default_width">400</property>
+    <property name="default_width">440</property>
     <property name="default_height">800</property>
     <property name="icon_name">applications-multimedia</property>
     <child type="titlebar">
