@@ -4,6 +4,7 @@
     <file>main_window.ui</file>
     <file>discover_view.ui</file>
     <file>login_view.ui</file>
+    <file>show_view.ui</file>
     <file>cover_box.ui</file>
   </gresource>
 </gresources>

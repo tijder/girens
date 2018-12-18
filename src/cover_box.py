@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, GObject
 from .gi_composites import GtkTemplate
 
 import threading
@@ -24,6 +24,10 @@ import threading
 class CoverBox(Gtk.Box):
     __gtype_name__ = 'cover_box'
 
+    __gsignals__ = {
+        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+    }
+
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
     _progress_bar = GtkTemplate.Child()
@@ -31,7 +35,9 @@ class CoverBox(Gtk.Box):
     _cover_image = GtkTemplate.Child()
     _play_button = GtkTemplate.Child()
 
-    def __init__(self, plex, item, **kwargs):
+    _show_view_button = GtkTemplate.Child()
+
+    def __init__(self, plex, item, grand_parent_thumb=False, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
@@ -40,8 +46,7 @@ class CoverBox(Gtk.Box):
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
 
-        self._download_key = self._item.ratingKey
-        self._download_thumb = self._item.thumb
+        self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
 
         if (item.TYPE == 'movie' or item.TYPE == 'episode' and item.viewOffset != 0):
             self._progress_bar.set_fraction(item.viewOffset / item.duration)
@@ -50,8 +55,6 @@ class CoverBox(Gtk.Box):
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
             subtitle = item.seasonEpisode + ' - ' + item.title
-            self._download_key = self._item.grandparentRatingKey
-            self._download_thumb = self._item.grandparentThumb
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)
@@ -65,6 +68,13 @@ class CoverBox(Gtk.Box):
         self._title_label.set_text(title)
         self._subtitle_label.set_text(subtitle)
 
+        if (not grand_parent_thumb):
+            self._download_key = self._item.ratingKey
+            self._download_thumb = self._item.thumb
+        else:
+            self._download_key = self._item.grandparentRatingKey
+            self._download_thumb = self._item.grandparentThumb
+
         thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
         thread.daemon = True
         thread.start()
@@ -75,6 +85,9 @@ class CoverBox(Gtk.Box):
 
     def __set_image(self, path):
         self._cover_image.set_from_file(path)
+
+    def __on_go_to_show_clicked(self, button):
+        self.emit('view-show-wanted', self._item.grandparentRatingKey)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))

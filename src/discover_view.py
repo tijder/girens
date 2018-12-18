@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, GObject
 from .gi_composites import GtkTemplate
 from .cover_box import CoverBox
 
@@ -24,6 +24,10 @@ import threading
 @GtkTemplate(ui='/org/gnome/Plex/discover_view.ui')
 class DiscoverView(Gtk.Box):
     __gtype_name__ = 'discover_view'
+
+    __gsignals__ = {
+        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+    }
 
     _deck_shows_box = GtkTemplate.Child()
     _movies_shows_box = GtkTemplate.Child()
@@ -66,6 +70,13 @@ class DiscoverView(Gtk.Box):
         for item in items:
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
-    def __add_to_hub(self, hub, show):
-        cover = CoverBox(self._plex, show)
+    def __add_to_hub(self, hub, item):
+        grand_parent_thumb = False
+        if (item.TYPE == 'episode'):
+            grand_parent_thumb = True
+        cover = CoverBox(self._plex, item, grand_parent_thumb=grand_parent_thumb)
+        cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
         hub.add(cover)
+
+    def __on_go_to_show_clicked(self, cover, key):
+        self.emit('view-show-wanted', key)

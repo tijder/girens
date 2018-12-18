@@ -41,6 +41,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
                 <property name="selection_mode">none</property>
               </object>
             </child>
@@ -88,6 +89,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
                 <property name="selection_mode">none</property>
               </object>
             </child>
@@ -135,6 +137,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
                 <property name="selection_mode">none</property>
               </object>
             </child>

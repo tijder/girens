@@ -15,7 +15,8 @@ class Plex(GObject.Object):
         'shows-latest': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'download-cover': (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
-        'stopped-playing': (GObject.SignalFlags.RUN_FIRST, None, ())
+        'stopped-playing': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object))
     }
 
     _token = None
@@ -71,6 +72,11 @@ class Plex(GObject.Object):
 
         deck = self._library.onDeck()
         self.emit('shows-deck',deck)
+
+    def get_show(self, key):
+        show = self._server.fetchItem(int(key))
+        episodes = show.episodes()
+        self.emit('shows-retrieved',show, episodes)
 
     def download_cover(self, key, thumb):
         url_image = self._server.transcodeImage(thumb, 300, 200)
