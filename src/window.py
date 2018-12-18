@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 from .gi_composites import GtkTemplate
 
 from .login_view import LoginView
@@ -43,6 +43,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.init_template()
 
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'])
+
+        self._plex.connect("stopped-playing", self.__on_plex_stopped_playing)
 
         self._refresh_button.connect("clicked", self.__on_refresh_clicked)
 
@@ -76,7 +78,12 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__show_view('discover')
 
     def __on_refresh_clicked(self, button):
+        self.__refresh_data()
+
+    def __on_plex_stopped_playing(self, plex):
+        GLib.idle_add(self.__refresh_data)
+
+    def __refresh_data(self):
         if(self._active_view == 'discover'):
             self._discover_view.refresh()
-
         

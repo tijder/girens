@@ -10,17 +10,13 @@ from gi.repository import Gtk, GdkPixbuf
 # locale.setlocale(locale.LC_NUMERIC, 'C')
 # player = mpv.MPV()
 
-class PlayerThread(threading.Thread):
+class PlayerThread:
     def __init__(self, playqueue):
-        threading.Thread.__init__(self)
         self.player = None
         self.progresUpdate = None
         self.progresNow = None
         self.item = None
         self.playqueue = playqueue
-
-    def run(self):
-        self.play()
 
     def createPlayer(self):
         import locale
@@ -78,6 +74,6 @@ class PlayerThread(threading.Thread):
 class Player():
     def __init__(self, playqueue):
         player = PlayerThread(playqueue)
-        player.start()
+        player.play()
 
 
