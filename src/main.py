@@ -19,8 +19,9 @@ import sys
 import gi
 
 gi.require_version('Gtk', '3.0')
+gi.require_version('Handy', '0.0')
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GObject, Handy
 
 from .window import PlexWindow
 
@@ -31,6 +32,7 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
+        GObject.type_register(Handy.Leaflet)
         win = self.props.active_window
         if not win:
             win = PlexWindow(application=self)

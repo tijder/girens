@@ -2,165 +2,273 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <requires lib="libhandy" version="0.0"/>
   <template class="PlexWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="default_width">440</property>
     <property name="default_height">800</property>
     <property name="icon_name">applications-multimedia</property>
     <child type="titlebar">
-      <object class="GtkHeaderBar">
+      <object class="HdyTitleBar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="show_close_button">True</property>
         <child>
-          <object class="GtkActionBar">
+          <object class="HdyLeaflet" id="header">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="mode_transition_type">slide</property>
+            <property name="child_transition_type">slide</property>
             <child>
-              <object class="GtkButton" id="_home_button">
+              <object class="GtkHeaderBar" id="sidebar_header">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can_focus">False</property>
+                <property name="title">Plex</property>
+              </object>
+              <packing>
+                <property name="name">sidebar</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="separator_header">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <style>
+                  <class name="sidebar"/>
+                </style>
+              </object>
+              <packing>
+                <property name="name">separator</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHeaderBar" id="content_header">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="show_close_button">True</property>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkRevealer">
+                    <property name="reveal-child" bind-source="header" bind-property="folded" bind-flags="sync-create"/>
+                    <property name="transition-duration" bind-source="header" bind-property="mode-transition-duration" bind-flags="bidirectional|sync-create"/>
+                    <property name="transition-type">crossfade</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="stock">gtk-home</property>
+                    <child>
+                      <object class="GtkButton" id="_back_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">go-previous-symbolic</property>
+                            <property name="icon_size">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="position">0</property>
+                <property name="name">content</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkButton" id="_refresh_button">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="stock">gtk-refresh</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-        </child>
-        <child type="title">
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Plex</property>
-            <property name="ellipsize">end</property>
           </object>
         </child>
       </object>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="HdyLeaflet">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
+        <property name="mode_transition_duration">0</property>
+        <property name="child_transition_duration">0</property>
+        <property name="visible-child-name" bind-source="header" bind-property="visible-child-name" bind-flags="bidirectional|sync-create"/>
         <child>
-          <object class="GtkSearchBar">
+          <object class="GtkBox" id="sidebar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkSearchEntry">
+              <object class="GtkButton" id="_refresh_button">
+                <property name="label" translatable="yes">Refresh</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="primary_icon_name">edit-find-symbolic</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="primary_icon_sensitive">False</property>
+                <property name="receives_default">True</property>
               </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="_home_button">
+                <property name="label" translatable="yes">Home</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">button</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="name">sidebar</property>
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkSeparator" id="separator">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">in</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="name">separator</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="content">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkViewport">
+              <object class="GtkSearchBar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkSearchEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="primary_icon_name">edit-find-symbolic</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">False</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkViewport">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkRevealer" id="_login_revealer">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="transition_type">none</property>
-                        <property name="reveal_child">True</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkRevealer" id="_login_revealer">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="transition_type">none</property>
+                            <property name="reveal_child">True</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRevealer" id="_discover_revealer">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="transition_type">none</property>
+                            <property name="reveal_child">True</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRevealer" id="_show_revealer">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="transition_type">none</property>
+                            <property name="reveal_child">True</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkRevealer" id="_discover_revealer">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="transition_type">none</property>
-                        <property name="reveal_child">True</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkRevealer" id="_show_revealer">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="transition_type">none</property>
-                        <property name="reveal_child">True</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="name">content</property>
           </packing>
         </child>
       </object>
     </child>
   </template>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="sidebar_header"/>
+      <widget name="sidebar"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="separator_header"/>
+      <widget name="separator"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="content_header"/>
+      <widget name="content"/>
+    </widgets>
+  </object>
 </interface>
