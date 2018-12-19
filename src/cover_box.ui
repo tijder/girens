@@ -47,13 +47,12 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">center</property>
-        <property name="valign">center</property>
         <child>
           <object class="GtkImage" id="_cover_image">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">center</property>
-            <property name="valign">center</property>
+            <property name="valign">end</property>
             <property name="stock">gtk-missing-image</property>
           </object>
           <packing>
