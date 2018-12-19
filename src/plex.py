@@ -18,6 +18,8 @@ class Plex(GObject.Object):
         'stopped-playing': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
     }
 
     _token = None
@@ -78,6 +80,19 @@ class Plex(GObject.Object):
         show = self._server.fetchItem(int(key))
         episodes = show.episodes()
         self.emit('shows-retrieved',show, episodes)
+
+    def get_servers(self):
+        servers = []
+        for resource in self._account.resources():
+            if (resource.provides == 'server'):
+                servers.append(resource)
+        self.emit('servers-retrieved', servers)
+
+    def get_sections(self):
+        if (self._server is None):
+            self.__connect_to_server()
+        sections = self._library.sections()
+        self.emit('sections-retrieved', sections)
 
     def download_cover(self, key, thumb):
         url_image = self._server.transcodeImage(thumb, 300, 200)

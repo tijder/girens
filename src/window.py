@@ -18,6 +18,7 @@
 from gi.repository import Gtk, GLib
 from .gi_composites import GtkTemplate
 
+from .sidebar_box import SidebarBox
 from .login_view import LoginView
 from .discover_view import DiscoverView
 from .show_view import ShowView
@@ -38,10 +39,9 @@ class PlexWindow(Gtk.ApplicationWindow):
     _show_revealer = GtkTemplate.Child()
 
     header = GtkTemplate.Child()
+    sidebar = GtkTemplate.Child()
 
     _back_button = GtkTemplate.Child()
-    _home_button = GtkTemplate.Child()
-    _refresh_button = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -51,9 +51,13 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._plex.connect("stopped-playing", self.__on_plex_stopped_playing)
 
-        self._refresh_button.connect("clicked", self.__on_refresh_clicked)
-        self._home_button.connect("clicked", self.__on_home_clicked)
+        #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
+
+        self._sidebar_box = SidebarBox(self._plex)
+        self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
+        self.sidebar.add(self._sidebar_box)
+        print(self.sidebar)
 
         self._login_view = LoginView(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
@@ -73,8 +77,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._discover_revealer.set_visible(False)
         self._show_revealer.set_visible(False)
 
-        self._home_button.set_visible(False)
-
         if view_name == 'login':
             self._login_revealer.set_visible(True)
         elif view_name == 'discover':
@@ -82,19 +84,17 @@ class PlexWindow(Gtk.ApplicationWindow):
         elif view_name == 'show':
             self._show_revealer.set_visible(True)
 
-        if(view_name == 'discover' or view_name == 'show'):
-            self._home_button.set_visible(True)
-
         self._active_view = view_name
 
     def __on_login_success(self, view, status):
         self._discover_view.refresh()
+        self._sidebar_box.refresh()
         self.__show_view('discover')
 
     def __on_refresh_clicked(self, button):
         self.__refresh_data()
 
-    def __on_home_clicked(self, button):
+    def __on_home_clicked(self, view):
         self.header.set_visible_child_name("content");
         self._discover_view.refresh()
         self.__show_view('discover')
