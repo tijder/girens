@@ -10,10 +10,14 @@
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_top">20</property>
+        <property name="margin_bottom">5</property>
         <child>
           <object class="GtkLabel" id="_title_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">start</property>
             <property name="label">label</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -28,6 +32,7 @@
           <object class="GtkLabel" id="_subtitle_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">start</property>
             <property name="label">label</property>
             <attributes>
               <attribute name="weight" value="semilight"/>

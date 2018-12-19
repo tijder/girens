@@ -40,6 +40,8 @@ class ShowView(Gtk.Box):
         self._plex.connect("shows-retrieved", self.__show_retrieved)
 
     def change_show(self, key):
+        self._title_label.set_text('')
+        self._subtitle_label.set_text('')
         for item in self._season_stack.get_children():
             self._season_stack.remove(item)
 
@@ -49,11 +51,6 @@ class ShowView(Gtk.Box):
 
     def __show_retrieved(self, plex, show, episodes):
         GLib.idle_add(self.__show_process, show, episodes)
-        #for item in items:
-        #    if(item.TYPE == 'movie'):
-        #        GLib.idle_add(self.__add_to_hub, self._movies_shows_box, item)
-        #    elif(item.TYPE == 'episode' or item.TYPE == 'season'):
-        #        GLib.idle_add(self.__add_to_hub, self._seasons_shows_box, item)
 
     def __show_process(self, show, episodes):
         self._title_label.set_text(show.title)
@@ -73,8 +70,6 @@ class ShowView(Gtk.Box):
                 self._season_stack.add_titled(flow, episode.parentIndex, episode.parentTitle)
                 flow.show()
             self.__add_to_hub(seasons[episode.parentIndex], episode)
-
-        #self.show()
 
     def __on_show_deck_update(self, plex, items):
         for item in items:
