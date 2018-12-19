@@ -6,6 +6,7 @@
     <file>discover_view.ui</file>
     <file>login_view.ui</file>
     <file>show_view.ui</file>
+    <file>section_view.ui</file>
     <file>cover_box.ui</file>
     <file>section_grid.ui</file>
   </gresource>

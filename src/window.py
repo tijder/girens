@@ -22,6 +22,7 @@ from .sidebar_box import SidebarBox
 from .login_view import LoginView
 from .discover_view import DiscoverView
 from .show_view import ShowView
+from .section_view import SectionView
 
 from .plex import Plex
 
@@ -37,6 +38,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _login_revealer = GtkTemplate.Child()
     _discover_revealer = GtkTemplate.Child()
     _show_revealer = GtkTemplate.Child()
+    _section_revealer = GtkTemplate.Child()
 
     header = GtkTemplate.Child()
     sidebar = GtkTemplate.Child()
@@ -55,6 +57,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._back_button.connect("clicked", self.__on_back_clicked)
 
         self._sidebar_box = SidebarBox(self._plex)
+        self._sidebar_box.connect("section-clicked", self.__on_section_clicked)
         self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
         self.sidebar.add(self._sidebar_box)
         print(self.sidebar)
@@ -62,6 +65,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._login_view = LoginView(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
         self._login_revealer.add(self._login_view)
+
+        self._section_view = SectionView(self._plex)
+        self._section_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        self._section_revealer.add(self._section_view)
 
         self._discover_view = DiscoverView(self._plex)
         self._discover_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
@@ -76,6 +83,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._login_revealer.set_visible(False)
         self._discover_revealer.set_visible(False)
         self._show_revealer.set_visible(False)
+        self._section_revealer.set_visible(False)
 
         if view_name == 'login':
             self._login_revealer.set_visible(True)
@@ -83,6 +91,8 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._discover_revealer.set_visible(True)
         elif view_name == 'show':
             self._show_revealer.set_visible(True)
+        elif view_name == 'section':
+            self._section_revealer.set_visible(True)
 
         self._active_view = view_name
 
@@ -98,6 +108,11 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.header.set_visible_child_name("content");
         self._discover_view.refresh()
         self.__show_view('discover')
+
+    def __on_section_clicked(self, view, section):
+        self.header.set_visible_child_name("content");
+        self._section_view.refresh(section)
+        self.__show_view('section')
 
     def __on_back_clicked(self, button):
         self.header.set_visible_child_name("sidebar");

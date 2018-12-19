@@ -20,6 +20,7 @@ class Plex(GObject.Object):
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
     }
 
     _token = None
@@ -93,6 +94,10 @@ class Plex(GObject.Object):
             self.__connect_to_server()
         sections = self._library.sections()
         self.emit('sections-retrieved', sections)
+
+    def get_section_items(self, section):
+        items = section.all()
+        self.emit('section-item-retrieved', items)
 
     def download_cover(self, key, thumb):
         url_image = self._server.transcodeImage(thumb, 300, 200)

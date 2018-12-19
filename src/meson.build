@@ -36,6 +36,7 @@ plex_sources = [
   'login_view.py',
   'discover_view.py',
   'show_view.py',
+  'section_view.py',
   'cover_box.py',
   'section_grid.py'
 ]

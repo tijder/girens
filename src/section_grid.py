@@ -24,7 +24,11 @@ import threading
 class SectionGrid(Gtk.Grid):
     __gtype_name__ = 'section_grid'
 
-    _title_label = GtkTemplate.Child()
+    __gsignals__ = {
+        'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
+    }
+
+    _title_button = GtkTemplate.Child()
 
     def __init__(self, data, **kwargs):
         super().__init__(**kwargs)
@@ -32,4 +36,9 @@ class SectionGrid(Gtk.Grid):
 
         self._data = data
 
-        self._title_label.set_label(data.title)
+        self._title_button.set_label(data.title)
+
+        self._title_button.connect("clicked", self.__on_section_clicked)
+
+    def __on_section_clicked(self, button):
+        self.emit('section-clicked', self._data)

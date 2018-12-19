@@ -86,6 +86,10 @@ class CoverBox(Gtk.Box):
             title = item.title
             subtitle = str(item.year)
             self._show_view_button.set_visible(False)
+        elif (item.TYPE == 'show'):
+            title = item.title
+            subtitle = str(item.year)
+            self._show_view_button.set_visible(True)
         elif (item.TYPE == 'season'):
             title = item.parentTitle
             subtitle = item.title
@@ -119,6 +123,8 @@ class CoverBox(Gtk.Box):
             self.emit('view-show-wanted', self._item.grandparentRatingKey)
         elif self._item.TYPE == 'season':
             self.emit('view-show-wanted', self._item.parentRatingKey)
+        elif self._item.TYPE == 'show':
+            self.emit('view-show-wanted', self._item.ratingKey)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))

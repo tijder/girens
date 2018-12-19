@@ -27,7 +27,8 @@ class SidebarBox(Gtk.Box):
     __gtype_name__ = 'sidebar_box'
 
     __gsignals__ = {
-        'home-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ())
+        'home-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
     _server_box = GtkTemplate.Child()
@@ -63,6 +64,7 @@ class SidebarBox(Gtk.Box):
         for section in sections:
             if(section.type == 'movie' or section.type == 'show'):
                 section_grid = SectionGrid(section)
+                section_grid.connect("section-clicked", self.__on_section_clicked)
                 self._section_list.add(section_grid)
         print(sections)
         self.show()
@@ -82,4 +84,7 @@ class SidebarBox(Gtk.Box):
 
     def __on_home_clicked(self, button):
         self.emit('home-button-clicked')
+        
+    def __on_section_clicked(self, button, section):
+        self.emit('section-clicked', section)
         
