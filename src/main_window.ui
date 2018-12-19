@@ -86,13 +86,21 @@
         <property name="child_transition_duration">0</property>
         <property name="visible-child-name" bind-source="header" bind-property="visible-child-name" bind-flags="bidirectional|sync-create"/>
         <child>
-          <object class="GtkBox" id="sidebar">
+          <object class="GtkScrolledWindow" id="sidebar">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <property name="hscrollbar_policy">never</property>
             <property name="width_request">200</property>
-            <child>
-              <placeholder/>
-            </child>
+              <child>
+                <object class="GtkViewport" id="_sidebar_viewport">
+                  <property name="visible">True</property>
+                  <property name="can_focus">False</property>
+                  <child>
+                    <placeholder/>
+                  </child>
+                </object>
+              </child>
           </object>
           <packing>
             <property name="name">sidebar</property>

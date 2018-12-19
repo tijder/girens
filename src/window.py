@@ -42,6 +42,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     header = GtkTemplate.Child()
     sidebar = GtkTemplate.Child()
+    _sidebar_viewport = GtkTemplate.Child()
 
     _back_button = GtkTemplate.Child()
 
@@ -59,8 +60,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box = SidebarBox(self._plex)
         self._sidebar_box.connect("section-clicked", self.__on_section_clicked)
         self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
-        self.sidebar.add(self._sidebar_box)
-        print(self.sidebar)
+        self._sidebar_viewport.add(self._sidebar_box)
 
         self._login_view = LoginView(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
