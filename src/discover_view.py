@@ -71,10 +71,7 @@ class DiscoverView(Gtk.Box):
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
     def __add_to_hub(self, hub, item):
-        grand_parent_thumb = False
-        if (item.TYPE == 'episode'):
-            grand_parent_thumb = True
-        cover = CoverBox(self._plex, item, grand_parent_thumb=grand_parent_thumb)
+        cover = CoverBox(self._plex, item)
         cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
         hub.add(cover)
 

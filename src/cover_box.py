@@ -40,12 +40,13 @@ class CoverBox(Gtk.Box):
     _mark_played_button = GtkTemplate.Child()
     _mark_unplayed_button = GtkTemplate.Child()
 
-    def __init__(self, plex, item, grand_parent_thumb=False, **kwargs):
+    def __init__(self, plex, item, show_view=False, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._item = item
         self._plex = plex
+        self._show_view = show_view
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex.connect("item-retrieved", self.__on_item_retrieved)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
@@ -56,7 +57,7 @@ class CoverBox(Gtk.Box):
 
         self.__set_item(self._item)
 
-        if (not grand_parent_thumb):
+        if (not item.TYPE == 'episode' or self._show_view):
             self._download_key = item.ratingKey
             self._download_thumb = item.thumb
         else:
@@ -77,7 +78,10 @@ class CoverBox(Gtk.Box):
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
             subtitle = item.seasonEpisode + ' - ' + item.title
-            self._show_view_button.set_visible(True)
+            if (self._show_view):
+                self._show_view_button.set_visible(False)
+            else:
+                self._show_view_button.set_visible(True)
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)

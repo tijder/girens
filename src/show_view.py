@@ -76,5 +76,5 @@ class ShowView(Gtk.Box):
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
     def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, item)
+        cover = CoverBox(self._plex, item, show_view=True)
         hub.add(cover)
