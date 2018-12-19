@@ -35,7 +35,10 @@ class CoverBox(Gtk.Box):
     _cover_image = GtkTemplate.Child()
     _play_button = GtkTemplate.Child()
 
+    _menu_button = GtkTemplate.Child()
     _show_view_button = GtkTemplate.Child()
+    _mark_played_button = GtkTemplate.Child()
+    _mark_unplayed_button = GtkTemplate.Child()
 
     def __init__(self, plex, item, grand_parent_thumb=False, **kwargs):
         super().__init__(**kwargs)
@@ -44,40 +47,61 @@ class CoverBox(Gtk.Box):
         self._item = item
         self._plex = plex
         self._plex.connect("download-cover", self.__on_cover_downloaded)
+        self._plex.connect("item-retrieved", self.__on_item_retrieved)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
 
         self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
+        self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
+        self._mark_unplayed_button.connect("clicked", self.__on_mark_unplayed_clicked)
 
-        if (item.TYPE == 'movie' or item.TYPE == 'episode' and item.viewOffset != 0):
-            self._progress_bar.set_fraction(item.viewOffset / item.duration)
-            self._progress_bar.set_visible(True)
-
-        if (item.TYPE == 'episode'):
-            title = item.grandparentTitle
-            subtitle = item.seasonEpisode + ' - ' + item.title
-        elif (item.TYPE == 'movie'):
-            title = item.title
-            subtitle = str(item.year)
-        elif (item.TYPE == 'season'):
-            title = item.parentTitle
-            subtitle = item.title
-
-        if (not item.isWatched):
-            self._watched_image.set_visible(True)
-
-        self._title_label.set_text(title)
-        self._subtitle_label.set_text(subtitle)
+        self.__set_item(self._item)
 
         if (not grand_parent_thumb):
-            self._download_key = self._item.ratingKey
-            self._download_thumb = self._item.thumb
+            self._download_key = item.ratingKey
+            self._download_thumb = item.thumb
         else:
-            self._download_key = self._item.grandparentRatingKey
-            self._download_thumb = self._item.grandparentThumb
+            self._download_key = item.grandparentRatingKey
+            self._download_thumb = item.grandparentThumb
 
         thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
         thread.daemon = True
         thread.start()
+
+    def __set_item(self, item):
+        if (item.TYPE == 'movie' or item.TYPE == 'episode' and item.viewOffset != 0):
+            self._progress_bar.set_fraction(item.viewOffset / item.duration)
+            self._progress_bar.set_visible(True)
+        else:
+            self._progress_bar.set_visible(False)
+
+        if (item.TYPE == 'episode'):
+            title = item.grandparentTitle
+            subtitle = item.seasonEpisode + ' - ' + item.title
+            self._show_view_button.set_visible(True)
+        elif (item.TYPE == 'movie'):
+            title = item.title
+            subtitle = str(item.year)
+            self._show_view_button.set_visible(False)
+        elif (item.TYPE == 'season'):
+            title = item.parentTitle
+            subtitle = item.title
+            self._show_view_button.set_visible(True)
+
+        if (not item.isWatched and (item.TYPE == 'episode' and item.viewOffset != 0)):
+            self._watched_image.set_visible(True)
+            self._mark_unplayed_button.set_visible(True)
+            self._mark_played_button.set_visible(True)
+        elif (not item.isWatched):
+            self._watched_image.set_visible(True)
+            self._mark_unplayed_button.set_visible(False)
+            self._mark_played_button.set_visible(True)
+        else:
+            self._watched_image.set_visible(False)
+            self._mark_played_button.set_visible(False)
+            self._mark_unplayed_button.set_visible(True)
+
+        self._title_label.set_text(title)
+        self._subtitle_label.set_text(subtitle)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
@@ -96,3 +120,21 @@ class CoverBox(Gtk.Box):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
         thread.daemon = True
         thread.start()
+
+    def __on_mark_played_clicked(self, button):
+        self._menu_button.set_active(False)
+        thread = threading.Thread(target=self._plex.mark_as_played, args=(self._item))
+        thread.daemon = True
+        thread.start()
+
+    def __on_mark_unplayed_clicked(self, button):
+        self._menu_button.set_active(False)
+        thread = threading.Thread(target=self._plex.mark_as_unplayed, args=(self._item))
+        thread.daemon = True
+        thread.start()
+
+    def __on_item_retrieved(self, plex, item):
+        if (self._item.ratingKey == item.ratingKey):
+            self._item = item
+            self.__set_item(self._item)
+            

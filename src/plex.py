@@ -16,7 +16,8 @@ class Plex(GObject.Object):
         'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'download-cover': (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
         'stopped-playing': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object))
+        'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
+        'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
     }
 
     _token = None
@@ -89,6 +90,16 @@ class Plex(GObject.Object):
         Player(playqueue)
         print('playing stopped')
         self.emit('stopped-playing')
+
+    def mark_as_played(self, item):
+        item.markWatched()
+        item.reload()
+        self.emit('item-retrieved', item)
+
+    def mark_as_unplayed(self, item):
+        item.markUnwatched()
+        item.reload()
+        self.emit('item-retrieved', item)
 
     def download(self, url_image, prefix):
         path_dir = self._data_dir + '/' + self._server.machineIdentifier
