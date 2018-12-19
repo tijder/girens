@@ -264,6 +264,21 @@
             ]
         },
         {
+            "name" : "libhandy",
+            "buildsystem" : "meson",
+            "builddir" : true,
+            "config-opts": [
+                "-Dglade_catalog=false"
+            ],
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "sha256" : "449c9b2354b843755fbd6729c32cad52c2fffe45986ad635bb84edf4c92f55ad",
+                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.6/libhandy-v0.0.6.tar.bz2"
+                }
+            ]
+        },
+        {
             "name": "plex",
             "buildsystem": "meson",
             "config-opts": [ "--libdir=lib" ],

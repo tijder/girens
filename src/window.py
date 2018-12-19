@@ -37,6 +37,9 @@ class PlexWindow(Gtk.ApplicationWindow):
     _discover_revealer = GtkTemplate.Child()
     _show_revealer = GtkTemplate.Child()
 
+    header = GtkTemplate.Child()
+
+    _back_button = GtkTemplate.Child()
     _home_button = GtkTemplate.Child()
     _refresh_button = GtkTemplate.Child()
 
@@ -50,6 +53,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._home_button.connect("clicked", self.__on_home_clicked)
+        self._back_button.connect("clicked", self.__on_back_clicked)
 
         self._login_view = LoginView(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
@@ -91,8 +95,12 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__refresh_data()
 
     def __on_home_clicked(self, button):
+        self.header.set_visible_child_name("content");
         self._discover_view.refresh()
         self.__show_view('discover')
+
+    def __on_back_clicked(self, button):
+        self.header.set_visible_child_name("sidebar");
 
     def __on_plex_stopped_playing(self, plex):
         GLib.idle_add(self.__refresh_data)
