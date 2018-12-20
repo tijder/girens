@@ -33,12 +33,15 @@ class SectionView(Gtk.Box):
     _title_label = GtkTemplate.Child()
     _section_flow = GtkTemplate.Child()
 
+    _show_more_button = GtkTemplate.Child()
+
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._plex = plex
         self._plex.connect("section-item-retrieved", self.__on_section_items_retrieved)
+        self._show_more_button.connect("clicked", self.__show_more_clicked)
 
 
     def refresh(self, section):
@@ -49,6 +52,8 @@ class SectionView(Gtk.Box):
         for item in self._section_flow.get_children():
             self._section_flow.remove(item)
 
+        self._show_more_button.set_visible(False)
+
         thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,))
         thread.daemon = True
         thread.start()
@@ -57,10 +62,25 @@ class SectionView(Gtk.Box):
         GLib.idle_add(self.__process_section_items, items)
 
     def __process_section_items(self, items):
-        for item in items:
-            cover = CoverBox(self._plex, item)
+        self._items = items
+        self.__show_more_items()
+
+    def __show_more_items(self):
+        count = 0
+        while count < 100 and len(self._items) != 0:
+            cover = CoverBox(self._plex, self._items[0])
             cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
             self._section_flow.add(cover)
+            self._items.remove(self._items[0])
+            count = count + 1
+
+        if (len(self._items) == 0):
+            self._show_more_button.set_visible(False)
+        else:
+            self._show_more_button.set_visible(True)
+
+    def __show_more_clicked(self, button):
+        self.__show_more_items()
 
     def __on_go_to_show_clicked(self, cover, key):
         self.emit('view-show-wanted', key)
