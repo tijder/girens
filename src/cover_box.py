@@ -94,8 +94,16 @@ class CoverBox(Gtk.Box):
             title = item.parentTitle
             subtitle = item.title
             self._show_view_button.set_visible(True)
+        elif (item.TYPE == 'album'):
+            title = item.parentTitle
+            subtitle = item.title
+            self._show_view_button.set_visible(False)
 
-        if (not item.isWatched and (item.TYPE == 'episode' and item.viewOffset != 0)):
+        if (item.TYPE == 'album'):
+            self._watched_image.set_visible(False)
+            self._mark_unplayed_button.set_visible(False)
+            self._mark_played_button.set_visible(False)
+        elif (not item.isWatched and (item.TYPE == 'episode' and item.viewOffset != 0)):
             self._watched_image.set_visible(True)
             self._mark_unplayed_button.set_visible(True)
             self._mark_played_button.set_visible(True)

@@ -32,6 +32,7 @@ class DiscoverView(Gtk.Box):
     _deck_shows_box = GtkTemplate.Child()
     _movies_shows_box = GtkTemplate.Child()
     _seasons_shows_box = GtkTemplate.Child()
+    _music_shows_box = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -51,6 +52,9 @@ class DiscoverView(Gtk.Box):
         for item in self._seasons_shows_box.get_children():
             self._seasons_shows_box.remove(item)
 
+        for item in self._music_shows_box.get_children():
+            self._music_shows_box.remove(item)
+
         thread = threading.Thread(target=self._plex.get_deck,)
         thread.daemon = True
         thread.start()
@@ -65,6 +69,8 @@ class DiscoverView(Gtk.Box):
                 GLib.idle_add(self.__add_to_hub, self._movies_shows_box, item)
             elif(item.TYPE == 'episode' or item.TYPE == 'season'):
                 GLib.idle_add(self.__add_to_hub, self._seasons_shows_box, item)
+            elif(item.TYPE == 'album'):
+                GLib.idle_add(self.__add_to_hub, self._music_shows_box, item)
 
     def __on_show_deck_update(self, plex, items):
         for item in items:
