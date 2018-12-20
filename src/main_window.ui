@@ -82,8 +82,10 @@
       <object class="HdyLeaflet">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="mode_transition_duration">0</property>
-        <property name="child_transition_duration">0</property>
+        <property name="child-transition-duration" bind-source="header" bind-property="child-transition-duration" bind-flags="bidirectional|sync-create"/>
+        <property name="child-transition-type" bind-source="header" bind-property="child-transition-type" bind-flags="bidirectional|sync-create"/>
+        <property name="mode-transition-duration" bind-source="header" bind-property="mode-transition-duration" bind-flags="bidirectional|sync-create"/>
+        <property name="mode-transition-type" bind-source="header" bind-property="mode-transition-type" bind-flags="bidirectional|sync-create"/>
         <property name="visible-child-name" bind-source="header" bind-property="visible-child-name" bind-flags="bidirectional|sync-create"/>
         <child>
           <object class="GtkScrolledWindow" id="sidebar">
@@ -260,5 +262,6 @@
     </widgets>
   </object>
 </interface>
+
 
 
