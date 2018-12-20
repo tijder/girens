@@ -23,6 +23,7 @@ from .login_view import LoginView
 from .discover_view import DiscoverView
 from .show_view import ShowView
 from .section_view import SectionView
+from .search_view import SearchView
 
 from .plex import Plex
 
@@ -39,12 +40,17 @@ class PlexWindow(Gtk.ApplicationWindow):
     _discover_revealer = GtkTemplate.Child()
     _show_revealer = GtkTemplate.Child()
     _section_revealer = GtkTemplate.Child()
+    _search_revealer = GtkTemplate.Child()
 
     header = GtkTemplate.Child()
     sidebar = GtkTemplate.Child()
     _sidebar_viewport = GtkTemplate.Child()
 
+    _search_bar = GtkTemplate.Child()
+    _search_entry = GtkTemplate.Child()
+
     _back_button = GtkTemplate.Child()
+    _search_toggle_button = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -56,6 +62,10 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
+
+        self._search_toggle_button.connect("toggled", self.__on_search_toggled)
+        self._search_entry.connect("search-changed", self.__on_search_changed)
+        self._search_entry.connect("stop-search", self.__stop_search)
 
         self._sidebar_box = SidebarBox(self._plex)
         self._sidebar_box.connect("section-clicked", self.__on_section_clicked)
@@ -69,6 +79,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._section_view = SectionView(self._plex)
         self._section_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
         self._section_revealer.add(self._section_view)
+
+        self._search_view = SearchView(self._plex)
+        self._search_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        self._search_revealer.add(self._search_view)
 
         self._discover_view = DiscoverView(self._plex)
         self._discover_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
@@ -84,6 +98,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._discover_revealer.set_visible(False)
         self._show_revealer.set_visible(False)
         self._section_revealer.set_visible(False)
+        self._search_revealer.set_visible(False)
 
         if view_name == 'login':
             self._login_revealer.set_visible(True)
@@ -93,6 +108,11 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._show_revealer.set_visible(True)
         elif view_name == 'section':
             self._section_revealer.set_visible(True)
+        elif view_name == 'search':
+            self._search_revealer.set_visible(True)
+
+        if (view_name != 'search'):
+            self._search_toggle_button.set_active(False)
 
         self._active_view = view_name
 
@@ -125,6 +145,17 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._discover_view.refresh()
         
     def __on_go_to_show_clicked(self, view, key):
-        print(key)
         self._ShowView.change_show(key)
         self.__show_view('show')
+
+    def __stop_search(self, search):
+        self._search_toggle_button.set_active(False)
+
+    def __on_search_toggled(self, toggle):
+        self._search_bar.set_search_mode(toggle.get_active())
+
+    def __on_search_changed(self, entry):
+        if (entry.get_text() != "" and len(entry.get_text()) >= 3):
+            self.header.set_visible_child_name("content");
+            self._search_view.refresh(entry.get_text())
+            self.__show_view('search')

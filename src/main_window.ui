@@ -46,17 +46,12 @@
                 <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="show_close_button">True</property>
-                <child>
-                  <object class="GtkRevealer">
-                    <property name="reveal-child" bind-source="header" bind-property="folded" bind-flags="sync-create"/>
-                    <property name="transition-duration" bind-source="header" bind-property="mode-transition-duration" bind-flags="bidirectional|sync-create"/>
-                    <property name="transition-type">crossfade</property>
-                    <property name="visible">True</property>
                     <child>
                       <object class="GtkButton" id="_back_button">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
+                        <property name="visible" bind-source="header" bind-property="folded" bind-flags="sync-create"/>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
@@ -65,6 +60,19 @@
                             <property name="icon_size">1</property>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                <child>
+                  <object class="GtkToggleButton" id="_search_toggle_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="always_show_image">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="stock">gtk-find</property>
                       </object>
                     </child>
                   </object>
@@ -124,11 +132,11 @@
             <property name="hexpand">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkSearchBar">
+              <object class="GtkSearchBar" id="_search_bar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkSearchEntry">
+                  <object class="GtkSearchEntry" id="_search_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="primary_icon_name">edit-find-symbolic</property>
@@ -207,6 +215,22 @@
                         </child>
                         <child>
                           <object class="GtkRevealer" id="_section_revealer">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="transition_type">none</property>
+                            <property name="reveal_child">True</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRevealer" id="_search_revealer">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="transition_type">none</property>

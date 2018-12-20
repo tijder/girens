@@ -21,6 +21,7 @@ class Plex(GObject.Object):
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'search-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (str,object)),
     }
 
     _token = None
@@ -99,11 +100,16 @@ class Plex(GObject.Object):
         items = section.all()
         self.emit('section-item-retrieved', items)
 
+    def search_library(self, search, libtype=None):
+        items = self._library.search(search, limit=10, libtype=libtype)
+        self.emit('search-item-retrieved', search, items)
+
+
     def download_cover(self, key, thumb):
         url_image = self._server.transcodeImage(thumb, 300, 200)
-
-        path = self.download(url_image, 'thumb_' + str(key))
-        self.emit('download-cover', key, path)
+        if (url_image is not None and url_image != ""):
+            path = self.download(url_image, 'thumb_' + str(key))
+            self.emit('download-cover', key, path)
 
     def play_item(self, item):
         playqueue = PlayQueue.create(self._server, item)
