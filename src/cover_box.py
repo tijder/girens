@@ -69,7 +69,7 @@ class CoverBox(Gtk.Box):
         thread.start()
 
     def __set_item(self, item):
-        if (item.TYPE == 'movie' or item.TYPE == 'episode' and item.viewOffset != 0):
+        if ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0):
             self._progress_bar.set_fraction(item.viewOffset / item.duration)
             self._progress_bar.set_visible(True)
         else:
