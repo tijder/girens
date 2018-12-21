@@ -107,7 +107,7 @@ class CoverBox(Gtk.Box):
             self._show_view_button.set_visible(False)
         elif (item.TYPE == 'artist'):
             title = item.title
-            subtitle = str(item.title)
+            subtitle = 'Views ' + str(item.viewCount)
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
 

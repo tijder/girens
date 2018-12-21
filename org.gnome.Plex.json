@@ -138,14 +138,12 @@
             "name" : "PlexAPI",
             "buildsystem" : "simple",
             "build-commands" : [
-                "ls",
-                "pip3 install --prefix=/app PlexAPI-3.1.0.tar.gz"
+                "pip3 install --prefix=/app ./"
             ],
             "sources" : [
                 {
-                    "type" : "file",
-                    "url" : "https://files.pythonhosted.org/packages/f5/41/134162e767252aa3b27be33263e57fc6fedf0c6516ad550a7b509b38e16e/PlexAPI-3.1.0.tar.gz",
-                    "sha256" : "4044876f354b6b93737f704e41910c5a5537e000ad9d4dc79b4ded7bc9e9ce4d"
+                    "type" : "git",
+                    "url" : "https://github.com/tijder/python-plexapi"
                 }
             ],
             "modules" : [

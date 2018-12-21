@@ -94,8 +94,8 @@ class Plex(GObject.Object):
         sections = self._library.sections()
         self.emit('sections-retrieved', sections)
 
-    def get_section_items(self, section):
-        items = section.all()
+    def get_section_items(self, section, sort=None):
+        items = section.all(sort=sort)
         self.emit('section-item-retrieved', items)
 
     def search_library(self, search, libtype=None):

@@ -34,6 +34,9 @@ class SectionView(Gtk.Box):
     _section_flow = GtkTemplate.Child()
 
     _show_more_button = GtkTemplate.Child()
+    _filter_box = GtkTemplate.Child()
+
+    _sort_active = None
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -42,10 +45,12 @@ class SectionView(Gtk.Box):
         self._plex = plex
         self._plex.connect("section-item-retrieved", self.__on_section_items_retrieved)
         self._show_more_button.connect("clicked", self.__show_more_clicked)
+        self._filter_box.connect("changed", self.__filter_changed)
 
 
-    def refresh(self, section):
+    def refresh(self, section, sort=None, sort_value=None):
         self._section = section
+        self._sort_active = sort
 
         self._title_label.set_label(self._section.title)
 
@@ -54,9 +59,33 @@ class SectionView(Gtk.Box):
 
         self._show_more_button.set_visible(False)
 
-        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,))
+
+        self._filter_box.clear()
+        self._sort_store = Gtk.ListStore(object, str)
+        for sort_avaible in self._section.ALLOWED_SORT:
+            self._sort_store.append([sort_avaible, str(sort_avaible)])
+
+        self._filter_box.set_model(self._sort_store)
+        self._filter_box.set_id_column(1)
+        renderer_text = Gtk.CellRendererText()
+        self._filter_box.pack_start(renderer_text, True)
+        self._filter_box.add_attribute(renderer_text, "text", 1)
+        self._filter_box.set_active_id(sort)
+
+        if (sort != None and sort_value != None):
+            sort = sort + ':' + sort_value
+
+        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':sort})
         thread.daemon = True
         thread.start()
+
+    def __filter_changed(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            sort_object, sort_string = model[tree_iter][:2]
+            if (self._sort_active != sort_string):
+                self.refresh(self._section, sort=sort_string, sort_value="desc")
 
     def __on_section_items_retrieved(self, plex, items):
         GLib.idle_add(self.__process_section_items, items)
