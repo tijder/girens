@@ -110,12 +110,12 @@ class CoverBox(Gtk.Box):
             self._show_view_button.set_visible(False)
         elif (item.TYPE == 'artist'):
             title = item.title
-            subtitle = 'Views ' + str(item.viewCount)
+            subtitle = None
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
         elif (item.TYPE == 'playlist'):
             title = item.title
-            subtitle = item.title
+            subtitle = None
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
 
@@ -138,8 +138,12 @@ class CoverBox(Gtk.Box):
 
         self._title_label.set_text(title)
         self._title_label.set_tooltip_text(title)
-        self._subtitle_label.set_text(subtitle)
-        self._subtitle_label.set_tooltip_text(subtitle)
+        if (subtitle != None):
+            self._subtitle_label.set_text(subtitle)
+            self._subtitle_label.set_tooltip_text(subtitle)
+            self._subtitle_label.set_visible(True)
+        else:
+            self._subtitle_label.set_visible(False)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
