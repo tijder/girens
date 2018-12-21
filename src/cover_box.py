@@ -105,8 +105,13 @@ class CoverBox(Gtk.Box):
             subtitle = item.title
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
+        elif (item.TYPE == 'artist'):
+            title = item.title
+            subtitle = str(item.title)
+            self._shuffle_button.set_visible(True)
+            self._show_view_button.set_visible(False)
 
-        if (item.TYPE == 'album'):
+        if (item.TYPE == 'album' or item.TYPE == 'artist'):
             self._watched_image.set_visible(False)
             self._mark_unplayed_button.set_visible(False)
             self._mark_played_button.set_visible(False)
