@@ -3,77 +3,94 @@ import mpv
 import threading
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf, GObject
 
 # import gi
 # gi.require_version('Gtk', '3.0')
 # locale.setlocale(locale.LC_NUMERIC, 'C')
 # player = mpv.MPV()
 
-class PlayerThread:
-    def __init__(self, playqueue):
-        self.player = None
-        self.progresUpdate = None
-        self.progresNow = None
-        self.item = None
-        self.playqueue = playqueue
+class Player(GObject.Object):
+    __gsignals__ = {
+        'media-paused': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
+        'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int)),
+        'media-time': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
+    }
 
-    def createPlayer(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self._player = None
+        self._progresUpdate = None
+        self._progresNow = None
+        self._item = None
+        self._stop_command = False
+
+    def __createPlayer(self):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
-        self.player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, vo='x11', title=self.item.title)
+        self._player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, vo='x11', title=self._item.title)
 
-        @self.player.property_observer('time-pos')
-        def time_observer(_name, value):
-            # Here, _value is either None if nothing is playing or a float containing
-            # fractional seconds since the beginning of the file.
-            # print('Now playing at {:.2f}s'.format(value))
-            # print(value)
-            if value is not None and abs(value - self.progresUpdate) > 5:
-                self.progresUpdate = value
-                self.item.updateTimeline(value * 1000, state='playing', duration=self.item.duration)
+        @self._player.property_observer('time-pos')
+        def __time_observer(_name, value):
+            self.emit('media-time', value * 1000)
+            if value is not None and abs(value - self._progresUpdate) > 5:
+                self._progresUpdate = value
+                self._item.updateTimeline(value * 1000, state='playing', duration=self._item.duration)
             pass
 
-        @self.player.property_observer('eof-reached')
-        def time_observer(_name, value):
-            print(_name, value)
+        @self._player.property_observer('pause')
+        def __on_pause(_name, value):
+            self.emit('media-paused', value)
+            if (value == True):
+                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration)
 
-        @self.player.on_key_press('STOP')
-        def my_close_binding():
-            print('Stop press')
-
-        @self.player.on_key_press('z')
-        def my_z_binding():
-            print('z')
-            # self.player.seek(10, reference="absolute-percent")
-            self.player.command('seek', 10, "absolute-percent")
-            print('y')
-
-    def stop(self):
-        print('stopped')
-        self.player.terminate()
-        self.item.updateTimeline(self.progresNow * 1000, state='stopped', duration=self.item.duration)
+    def __stop(self):
+        self._player.terminate()
+        self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+        self._item.updateTimeline(self._progresNow * 1000, state='stopped', duration=self._item.duration)
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
-        self.createPlayer()
+        self.__createPlayer()
+
+    def set_playqueue(self, playqueue):
+        self._playqueue = playqueue
+        self._offset = int(self._playqueue.playQueueSelectedItemOffset)
+
+    def start(self):
+        self._stop_command = False
+        self._item = self._playqueue.items[self._offset]
+        self.__createPlayer()
+        self._progresUpdate = 0
+        self._progresNow = 0
+
+        self._player.play(self._item.getStreamURL(offset=self._item.viewOffset / 1000))
+        self.emit('media-playing', True, self._item, self._playqueue, self._offset)
+        self._player.wait_for_playback()
+        self.__stop()
+
+        if (self._stop_command == False):
+            self.__next()
+
+    def prev(self):
+        self._player.terminate()
+        self._offset = self._offset - 1
+        self.start()
+
+    def next(self):
+        self._player.command('stop')
+
+    def __next(self):
+        if (self._offset + 1 < len(self._playqueue.items)):
+            self._offset = self._offset + 1
+            self.start()
+
+    def pause(self):
+        self._player.pause = True
 
     def play(self):
-        self.item = self.playqueue.items[int(self.playqueue.playQueueSelectedItemOffset)]
-        self.createPlayer()
-        self.progresUpdate = 0
-        self.progresNow = 0
-        print(self.item.viewOffset)
-        self.player.play(self.item.getStreamURL(offset=self.item.viewOffset / 1000))
-        # self.player.seek(self.item.viewOffset / 1000, reference="absolute")
-        # self.player.command('seek', 10, "absolute-percent")
-        self.player.wait_for_playback()
-        self.stop()
+        self._player.pause = False
 
-
-
-class Player():
-    def __init__(self, playqueue):
-        player = PlayerThread(playqueue)
-        player.play()
-
-
+    def stop(self):
+        self._stop_command = True
+        self._player.command('stop')

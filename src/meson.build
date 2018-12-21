@@ -33,6 +33,7 @@ plex_sources = [
   'main.py',
   'window.py',
   'sidebar_box.py',
+  'media_box.py',
   'login_view.py',
   'discover_view.py',
   'show_view.py',

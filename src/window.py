@@ -19,6 +19,7 @@ from gi.repository import Gtk, GLib
 from .gi_composites import GtkTemplate
 
 from .sidebar_box import SidebarBox
+from .media_box import MediaBox
 from .login_view import LoginView
 from .discover_view import DiscoverView
 from .show_view import ShowView
@@ -26,6 +27,7 @@ from .section_view import SectionView
 from .search_view import SearchView
 
 from .plex import Plex
+from .player import Player
 
 import os
 
@@ -35,6 +37,8 @@ class PlexWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'PlexWindow'
 
     _active_view = None
+
+    _content_box_wrapper = GtkTemplate.Child()
 
     _login_revealer = GtkTemplate.Child()
     _discover_revealer = GtkTemplate.Child()
@@ -56,12 +60,15 @@ class PlexWindow(Gtk.ApplicationWindow):
         super().__init__(**kwargs)
         self.init_template()
 
-        self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'])
-
-        self._plex.connect("stopped-playing", self.__on_plex_stopped_playing)
+        self._player = Player()
+        self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
 
         #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
+
+        self._media_box = MediaBox(self._plex, self._player)
+        self._content_box_wrapper.add(self._media_box)
+        self._media_box.set_visible(True)
 
         self._search_toggle_button.connect("toggled", self.__on_search_toggled)
         self._search_entry.connect("search-changed", self.__on_search_changed)
@@ -136,9 +143,6 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_back_clicked(self, button):
         self.header.set_visible_child_name("sidebar");
-
-    def __on_plex_stopped_playing(self, plex):
-        GLib.idle_add(self.__refresh_data)
 
     def __refresh_data(self):
         if(self._active_view == 'discover'):

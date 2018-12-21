@@ -2,8 +2,6 @@ import time
 import os.path
 import urllib
 
-from .player import Player
-
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from plexapi.playqueue import PlayQueue
@@ -15,7 +13,6 @@ class Plex(GObject.Object):
         'shows-latest': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'download-cover': (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
-        'stopped-playing': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
@@ -30,10 +27,11 @@ class Plex(GObject.Object):
     _account = None
     _library = None
 
-    def __init__(self, config_dir, data_dir, **kwargs):
+    def __init__(self, config_dir, data_dir, player, **kwargs):
         super().__init__(**kwargs)
         self._config_dir = config_dir
         self._data_dir = data_dir
+        self._player = player
         if(os.path.isfile(self._config_dir + '/config')):
            with open(self._config_dir + '/config', 'r') as file:
                lines = file.readlines()
@@ -113,9 +111,8 @@ class Plex(GObject.Object):
 
     def play_item(self, item):
         playqueue = PlayQueue.create(self._server, item)
-        Player(playqueue)
-        print('playing stopped')
-        self.emit('stopped-playing')
+        self._player.set_playqueue(playqueue)
+        self._player.start()
 
     def mark_as_played(self, item):
         item.markWatched()
