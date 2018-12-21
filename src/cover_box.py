@@ -137,7 +137,9 @@ class CoverBox(Gtk.Box):
             self._mark_unplayed_button.set_visible(True)
 
         self._title_label.set_text(title)
+        self._title_label.set_tooltip_text(title)
         self._subtitle_label.set_text(subtitle)
+        self._subtitle_label.set_tooltip_text(subtitle)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
