@@ -59,9 +59,12 @@ class CoverBox(Gtk.Box):
 
         self.__set_item(self._item)
 
-        if (not item.TYPE == 'episode' or self._show_view):
+        if (not item.TYPE == 'playlist' and (not item.TYPE == 'episode' or self._show_view)):
             self._download_key = item.ratingKey
             self._download_thumb = item.thumb
+        elif (item.type == 'playlist'):
+            self._download_key = item.ratingKey
+            self._download_thumb = item.composite
         else:
             self._download_key = item.grandparentRatingKey
             self._download_thumb = item.grandparentThumb
@@ -110,8 +113,13 @@ class CoverBox(Gtk.Box):
             subtitle = 'Views ' + str(item.viewCount)
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
+        elif (item.TYPE == 'playlist'):
+            title = item.title
+            subtitle = item.title
+            self._shuffle_button.set_visible(True)
+            self._show_view_button.set_visible(False)
 
-        if (item.TYPE == 'album' or item.TYPE == 'artist'):
+        if (item.TYPE == 'playlist' or item.TYPE == 'album' or item.TYPE == 'artist'):
             self._watched_image.set_visible(False)
             self._mark_unplayed_button.set_visible(False)
             self._mark_played_button.set_visible(False)

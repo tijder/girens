@@ -77,6 +77,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box = SidebarBox(self._plex)
         self._sidebar_box.connect("section-clicked", self.__on_section_clicked)
         self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
+        self._sidebar_box.connect("playlists-button-clicked", self.__on_playlists_clicked)
         self._sidebar_viewport.add(self._sidebar_box)
 
         self._login_view = LoginView(self._plex)
@@ -135,6 +136,11 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.header.set_visible_child_name("content");
         self._discover_view.refresh()
         self.__show_view('discover')
+
+    def __on_playlists_clicked(self, view):
+        self.header.set_visible_child_name("content");
+        self._section_view.show_playlists(self._plex._server.playlists())
+        self.__show_view('section')
 
     def __on_section_clicked(self, view, section):
         self.header.set_visible_child_name("content");

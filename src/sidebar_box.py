@@ -28,12 +28,14 @@ class SidebarBox(Gtk.Box):
 
     __gsignals__ = {
         'home-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'playlists-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
     _server_box = GtkTemplate.Child()
     _section_list = GtkTemplate.Child()
     _home_button = GtkTemplate.Child()
+    _playlists_button = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -44,6 +46,7 @@ class SidebarBox(Gtk.Box):
         self._plex.connect('servers-retrieved', self.__on_servers_retrieved)
         self._plex.connect('sections-retrieved', self.__on_sections_retrieved)
         self._home_button.connect("clicked", self.__on_home_clicked)
+        self._playlists_button.connect("clicked", self.__on_playlists_clicked)
 
     def refresh(self):
         thread = threading.Thread(target=self._plex.get_servers)
@@ -85,6 +88,9 @@ class SidebarBox(Gtk.Box):
     def __on_home_clicked(self, button):
         self.emit('home-button-clicked')
         
+    def __on_playlists_clicked(self, button):
+        self.emit('playlists-button-clicked')
+
     def __on_section_clicked(self, button, section):
         self.emit('section-clicked', section)
         

@@ -71,6 +71,7 @@ class SectionView(Gtk.Box):
         self._filter_box.pack_start(renderer_text, True)
         self._filter_box.add_attribute(renderer_text, "text", 1)
         self._filter_box.set_active_id(sort)
+        self._filter_box.set_visible(True)
 
         if (sort != None and sort_value != None):
             sort = sort + ':' + sort_value
@@ -78,6 +79,20 @@ class SectionView(Gtk.Box):
         thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':sort})
         thread.daemon = True
         thread.start()
+
+    def show_playlists(self, playlists):
+        self._section = playlists
+        self._sort_active = None
+
+        self._title_label.set_label("Playlists")
+
+        for item in self._section_flow.get_children():
+            self._section_flow.remove(item)
+
+        self._show_more_button.set_visible(False)
+        self._filter_box.set_visible(False)
+
+        self.__process_section_items(playlists)
 
     def __filter_changed(self, combo):
         tree_iter = combo.get_active_iter()
