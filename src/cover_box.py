@@ -34,6 +34,7 @@ class CoverBox(Gtk.Box):
     _watched_image = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
     _play_button = GtkTemplate.Child()
+    _shuffle_button = GtkTemplate.Child()
 
     _menu_button = GtkTemplate.Child()
     _show_view_button = GtkTemplate.Child()
@@ -50,6 +51,7 @@ class CoverBox(Gtk.Box):
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex.connect("item-retrieved", self.__on_item_retrieved)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
+        self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
 
         self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
         self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
@@ -78,6 +80,7 @@ class CoverBox(Gtk.Box):
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
             subtitle = item.seasonEpisode + ' - ' + item.title
+            self._shuffle_button.set_visible(False)
             if (self._show_view):
                 self._show_view_button.set_visible(False)
             else:
@@ -85,18 +88,22 @@ class CoverBox(Gtk.Box):
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)
+            self._shuffle_button.set_visible(False)
             self._show_view_button.set_visible(False)
         elif (item.TYPE == 'show'):
             title = item.title
             subtitle = str(item.year)
+            self._shuffle_button.set_visible(False)
             self._show_view_button.set_visible(True)
         elif (item.TYPE == 'season'):
             title = item.parentTitle
             subtitle = item.title
+            self._shuffle_button.set_visible(False)
             self._show_view_button.set_visible(True)
         elif (item.TYPE == 'album'):
             title = item.parentTitle
             subtitle = item.title
+            self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
 
         if (item.TYPE == 'album'):
@@ -136,6 +143,12 @@ class CoverBox(Gtk.Box):
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
+        thread.daemon = True
+        thread.start()
+
+    def __on_shuffle_button_clicked(self, button):
+        self._menu_button.set_active(False)
+        thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
         thread.daemon = True
         thread.start()
 

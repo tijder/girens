@@ -109,8 +109,8 @@ class Plex(GObject.Object):
             path = self.download(url_image, 'thumb_' + str(key))
             self.emit('download-cover', key, path)
 
-    def play_item(self, item):
-        playqueue = PlayQueue.create(self._server, item)
+    def play_item(self, item, shuffle=0):
+        playqueue = PlayQueue.create(self._server, item, shuffle=shuffle)
         self._player.set_playqueue(playqueue)
         self._player.start()
 
