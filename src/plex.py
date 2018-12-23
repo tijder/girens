@@ -7,6 +7,8 @@ from plexapi.server import PlexServer
 from plexapi.playqueue import PlayQueue
 from gi.repository import GObject
 
+import json
+
 class Plex(GObject.Object):
     __gsignals__ = {
         'login-status': (GObject.SignalFlags.RUN_FIRST, None, (bool,str)),
@@ -21,10 +23,11 @@ class Plex(GObject.Object):
         'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'search-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (str,object)),
         'connection-to-server': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'logout': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    _token = None
-    _server_url = None
+    _config = {}
+
     _server = None
     _account = None
     _library = None
@@ -37,17 +40,16 @@ class Plex(GObject.Object):
         if(os.path.isfile(self._config_dir + '/config')):
            with open(self._config_dir + '/config', 'r') as file:
                lines = file.readlines()
-               self._token = lines[0].split()[0]
-               if (len(lines) >= 2):
-                   self._server_url = lines[1].split()[0]
+               self._config = json.loads(lines[0])
 
     def has_token(self):
-        return self._token is not None
+        return 'token' in self._config
 
     def login_token(self, token):
         try:
             self._account = MyPlexAccount(token=token)
-            self.__save_login(self._account._token)
+            self._config['token'] = self._account._token
+            self.__save_config()
             self.emit('login-status',True,'')
         except:
             self.emit('login-status',False,'Login failed')
@@ -55,14 +57,26 @@ class Plex(GObject.Object):
     def login(self, username, password):
         try:
             self._account = MyPlexAccount(username, password)
-            self.__save_login(self._account._token)
+            self._config['token'] = self._account._token
+            self.__save_config()
             self.emit('login-status',True,'')
         except:
             self.emit('login-status',False,'Login failed')
 
-    def __save_login(self, token):
-        with open(self._config_dir + '/config', 'a') as file:
-                file.write(token)
+    def __save_config(self):
+        with open(self._config_dir + '/config', 'w') as file:
+            file.write(json.dumps(self._config))
+
+    def logout(self):
+        self._config = {}
+        self._server = None
+        self._account = None
+        self._library = None
+        self.__remove_login()
+        self.emit('logout')
+
+    def __remove_login(self):
+        os.remove(self._config_dir + '/config')
 
     def get_latest(self):
         if (self._server is None):
@@ -104,7 +118,6 @@ class Plex(GObject.Object):
         items = self._library.search(search, limit=10, libtype=libtype)
         self.emit('search-item-retrieved', search, items)
 
-
     def download_cover(self, key, thumb):
         url_image = self._server.transcodeImage(thumb, 300, 200)
         if (url_image is not None and url_image != ""):
@@ -144,9 +157,9 @@ class Plex(GObject.Object):
             return path
 
     def __connect_to_server(self):
-        if (self._server_url is not None):
+        if ('server_url' in self._config):
             try:
-                self._server = PlexServer(self._server_url, self._token)
+                self._server = PlexServer(self._config['server_url'], self._config['token'])
                 self._library = self._server.library
                 self.emit('connection-to-server')
             except:
@@ -157,6 +170,8 @@ class Plex(GObject.Object):
                     try:
                         self._server = resource.connect(ssl=self._account.secure)
                         self._library = self._server.library
+                        self._config['server_url'] = self._server._baseurl
+                        self.__save_config()
                         self.emit('connection-to-server')
                         break
                     except:

@@ -21,7 +21,7 @@ from .gi_composites import GtkTemplate
 import threading
 
 @GtkTemplate(ui='/org/gnome/Plex/login_view.ui')
-class LoginView(Gtk.Box):
+class LoginView(Gtk.Dialog):
     __gtype_name__ = 'login_view'
 
     __gsignals__ = {
@@ -55,6 +55,7 @@ class LoginView(Gtk.Box):
         if(success):
             self.__show_correct_login()
             self.emit('login-success',True)
+            self.destroy()
         else:
             self.__show_incorrect_login()
 
@@ -65,7 +66,7 @@ class LoginView(Gtk.Box):
         self._loading = True
         self.__show_loading()
 
-        thread = threading.Thread(target=self._plex.login_token, args=(self._plex._token,))
+        thread = threading.Thread(target=self._plex.login_token, args=(self._plex._config['token'],))
         thread.daemon = True
         thread.start()
 

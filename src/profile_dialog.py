@@ -42,6 +42,7 @@ class ProfileDialog(Gtk.Dialog):
         self._plex.connect("download-from-url", self.__on_downloaded)
 
         self._ok_button.connect("clicked", self.__on_ok_clicked)
+        self._logout_button.connect("clicked", self.__on_logout_clicked)
 
         self._username_value_label.set_text(self._plex._account.username)
         self._email_value_label.set_text(self._plex._account.email)
@@ -61,4 +62,8 @@ class ProfileDialog(Gtk.Dialog):
         self._avatar_image.set_from_pixbuf(pix)
 
     def __on_ok_clicked(self, button):
+        self.destroy()
+
+    def __on_logout_clicked(self, button):
+        self._plex.logout()
         self.destroy()

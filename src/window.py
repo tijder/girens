@@ -41,7 +41,6 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     _content_box_wrapper = GtkTemplate.Child()
 
-    _login_revealer = GtkTemplate.Child()
     _discover_revealer = GtkTemplate.Child()
     _show_revealer = GtkTemplate.Child()
     _section_revealer = GtkTemplate.Child()
@@ -67,6 +66,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("connection-to-server", self.__on_connection_to_server)
+        self._plex.connect("logout", self.__on_logout)
 
         #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
@@ -86,10 +86,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box.connect("playlists-button-clicked", self.__on_playlists_clicked)
         self._sidebar_viewport.add(self._sidebar_box)
 
-        self._login_view = LoginView(self._plex)
-        self._login_view.connect("login-success", self.__on_login_success)
-        self._login_revealer.add(self._login_view)
-
         self._section_view = SectionView(self._plex)
         self._section_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
         self._section_revealer.add(self._section_view)
@@ -105,18 +101,20 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._ShowView = ShowView(self._plex)
         self._show_revealer.add(self._ShowView)
 
-        self.__show_view('login')
+
+        self.connect("map", self.__test)
+
+
+    def __test(self, map):
+        self.__show_login_view()
 
     def __show_view(self, view_name):
-        self._login_revealer.set_visible(False)
         self._discover_revealer.set_visible(False)
         self._show_revealer.set_visible(False)
         self._section_revealer.set_visible(False)
         self._search_revealer.set_visible(False)
 
-        if view_name == 'login':
-            self._login_revealer.set_visible(True)
-        elif view_name == 'discover':
+        if view_name == 'discover':
             self._discover_revealer.set_visible(True)
         elif view_name == 'show':
             self._show_revealer.set_visible(True)
@@ -130,10 +128,19 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._active_view = view_name
 
+    def __show_login_view(self):
+        self._login_view = LoginView(self._plex)
+        self._login_view.connect("login-success", self.__on_login_success)
+        self._login_view.set_transient_for(self)
+        self._login_view.show()
+
     def __on_login_success(self, view, status):
         self._discover_view.refresh()
         self._sidebar_box.refresh()
         self.__show_view('discover')
+
+    def __on_logout(self, plex):
+        self.__show_login_view()
 
     def __on_connection_to_server(self, plex):
         thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
