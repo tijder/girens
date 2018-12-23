@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <!-- interface-css-provider-path plex.css -->
   <object class="GtkPopover" id="popover1">
     <property name="can_focus">False</property>
     <child>
@@ -71,6 +72,7 @@
     <child>
       <object class="GtkOverlay">
         <property name="visible">True</property>
+        <property name="app_paintable">True</property>
         <property name="can_focus">False</property>
         <property name="halign">center</property>
         <child>
@@ -78,9 +80,10 @@
             <property name="width_request">200</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">center</property>
-            <property name="valign">end</property>
             <property name="stock">gtk-missing-image</property>
+            <style>
+              <class name="cover_image"/>
+            </style>
           </object>
           <packing>
             <property name="index">-1</property>

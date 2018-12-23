@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GdkPixbuf
+from gi.repository import Gtk, Gdk, Gio, GLib, GdkPixbuf
 from .gi_composites import GtkTemplate
 
 from .sidebar_box import SidebarBox
@@ -62,6 +62,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         super().__init__(**kwargs)
         self.init_template()
 
+        self.__custom_css()
+
         self._player = Player()
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
@@ -100,7 +102,6 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._ShowView = ShowView(self._plex)
         self._show_revealer.add(self._ShowView)
-
 
         self.connect("map", self.__test)
 
@@ -200,3 +201,15 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._profile_dialog = ProfileDialog(self._plex)
         self._profile_dialog.set_transient_for(self)
         self._profile_dialog.show()
+
+    def __custom_css(self):
+        screen = Gdk.Screen.get_default()
+
+        css_provider = Gtk.CssProvider()
+        css_provider_resource = Gio.File.new_for_uri(
+            "resource:///org/gnome/Plex/plex.css")
+        css_provider.load_from_file(css_provider_resource)
+
+        context = Gtk.StyleContext()
+        context.add_provider_for_screen(
+            screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
