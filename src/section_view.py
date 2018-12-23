@@ -50,6 +50,13 @@ class SectionView(Gtk.Box):
 
     def refresh(self, section, sort=None, sort_value=None):
         self._section = section
+
+        if (sort == None):
+            sort_config = self._plex.get_section_filter(section)
+            if (sort_config != None):
+                sort = sort_config['sort']
+                sort_value = sort_config['sort_value']
+
         self._sort_active = sort
 
         self._title_label.set_label(self._section.title)
@@ -73,10 +80,7 @@ class SectionView(Gtk.Box):
         self._filter_box.set_active_id(sort)
         self._filter_box.set_visible(True)
 
-        if (sort != None and sort_value != None):
-            sort = sort + ':' + sort_value
-
-        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':sort})
+        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':sort, 'sort_value': sort_value})
         thread.daemon = True
         thread.start()
 

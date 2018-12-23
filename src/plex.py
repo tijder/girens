@@ -110,7 +110,21 @@ class Plex(GObject.Object):
         sections = self._library.sections()
         self.emit('sections-retrieved', sections)
 
-    def get_section_items(self, section, sort=None):
+    def get_section_filter(self, section):
+        if ('sections' in self._config and section.uuid in self._config['sections'] and 'sort' in self._config['sections'][section.uuid] ):
+            return self._config['sections'][section.uuid]
+        return None
+
+    def get_section_items(self, section, sort=None, sort_value=None):
+        if (sort != None):
+            if 'sections' not in self._config:
+                self._config['sections'] = {}
+            if section.uuid not in self._config['sections']:
+                self._config['sections'][section.uuid] = {}
+            self._config['sections'][section.uuid]['sort'] = sort
+            self._config['sections'][section.uuid]['sort_value'] = sort_value
+            self.__save_config()
+            sort = sort + ':' + sort_value
         items = section.all(sort=sort)
         self.emit('section-item-retrieved', items)
 
