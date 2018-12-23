@@ -153,8 +153,6 @@ class CoverBox(Gtk.Box):
         else:
             self._subtitle_label.set_visible(False)
 
-        self._cover_image.set_size_request(self._image_width, self._image_height)
-
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
             pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, self._image_width, self._image_height)
