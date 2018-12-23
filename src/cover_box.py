@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
 from .gi_composites import GtkTemplate
 
+import cairo
 import threading
 
 @GtkTemplate(ui='/org/gnome/Plex/cover_box.ui')
@@ -80,12 +81,16 @@ class CoverBox(Gtk.Box):
         else:
             self._progress_bar.set_visible(False)
 
+        self._image_height = 300
+        self._image_width = 200
+
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
             subtitle = item.seasonEpisode + ' - ' + item.title
             self._shuffle_button.set_visible(False)
             if (self._show_view):
                 self._show_view_button.set_visible(False)
+                self._image_height = 110
             else:
                 self._show_view_button.set_visible(True)
         elif (item.TYPE == 'movie'):
@@ -108,16 +113,19 @@ class CoverBox(Gtk.Box):
             subtitle = item.title
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
+            self._image_height = 200
         elif (item.TYPE == 'artist'):
             title = item.title
             subtitle = None
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
+            self._image_height = 200
         elif (item.TYPE == 'playlist'):
             title = item.title
             subtitle = None
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
+            self._image_height = 200
 
         if (item.TYPE == 'playlist' or item.TYPE == 'album' or item.TYPE == 'artist'):
             self._watched_image.set_visible(False)
@@ -147,10 +155,12 @@ class CoverBox(Gtk.Box):
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
-            GLib.idle_add(self.__set_image, path)
+            print(self._image_width)
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, self._image_width, self._image_height)
+            GLib.idle_add(self.__set_image, pix)
 
-    def __set_image(self, path):
-        self._cover_image.set_from_file(path)
+    def __set_image(self, pix):
+        self._cover_image.set_from_pixbuf(pix)
 
     def __on_go_to_show_clicked(self, button):
         if self._item.TYPE == 'episode':
