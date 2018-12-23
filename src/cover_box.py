@@ -131,8 +131,12 @@ class CoverBox(Gtk.Box):
             self._watched_image.set_visible(False)
             self._mark_unplayed_button.set_visible(False)
             self._mark_played_button.set_visible(False)
-        elif (not item.isWatched and (item.TYPE == 'episode' and item.viewOffset != 0)):
+        elif (not item.isWatched and ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0)):
             self._watched_image.set_visible(True)
+            self._mark_unplayed_button.set_visible(True)
+            self._mark_played_button.set_visible(True)
+        elif (item.isWatched and ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0)):
+            self._watched_image.set_visible(False)
             self._mark_unplayed_button.set_visible(True)
             self._mark_played_button.set_visible(True)
         elif (not item.isWatched):
