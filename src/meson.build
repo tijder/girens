@@ -31,6 +31,7 @@ plex_sources = [
   'player.py',
   'gi_composites.py',
   'main.py',
+  'profile_dialog.py',
   'window.py',
   'sidebar_box.py',
   'media_box.py',

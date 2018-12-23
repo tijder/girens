@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, GdkPixbuf
 from .gi_composites import GtkTemplate
 
 from .sidebar_box import SidebarBox
@@ -25,12 +25,13 @@ from .discover_view import DiscoverView
 from .show_view import ShowView
 from .section_view import SectionView
 from .search_view import SearchView
+from .profile_dialog import ProfileDialog
 
 from .plex import Plex
 from .player import Player
 
 import os
-
+import threading
 
 @GtkTemplate(ui='/org/gnome/Plex/main_window.ui')
 class PlexWindow(Gtk.ApplicationWindow):
@@ -53,6 +54,8 @@ class PlexWindow(Gtk.ApplicationWindow):
     _search_bar = GtkTemplate.Child()
     _search_entry = GtkTemplate.Child()
 
+    _avatar_image = GtkTemplate.Child()
+    _profile_button = GtkTemplate.Child()
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
 
@@ -62,9 +65,12 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._player = Player()
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
+        self._plex.connect("download-from-url", self.__on_downloaded)
+        self._plex.connect("connection-to-server", self.__on_connection_to_server)
 
         #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
+        self._profile_button.connect("clicked", self.__on_profile_clicked)
 
         self._media_box = MediaBox(self._plex, self._player)
         self._content_box_wrapper.add(self._media_box)
@@ -129,6 +135,19 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box.refresh()
         self.__show_view('discover')
 
+    def __on_connection_to_server(self, plex):
+        thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
+        thread.daemon = True
+        thread.start()
+
+    def __on_downloaded(self, plex, name_image, path):
+        if(self._plex._account.username == name_image):
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 25, 25)
+            GLib.idle_add(self.__set_image, pix)
+
+    def __set_image(self, pix):
+        self._avatar_image.set_from_pixbuf(pix)
+
     def __on_refresh_clicked(self, button):
         self.__refresh_data()
 
@@ -169,3 +188,8 @@ class PlexWindow(Gtk.ApplicationWindow):
             self.header.set_visible_child_name("content");
             self._search_view.refresh(entry.get_text())
             self.__show_view('search')
+
+    def __on_profile_clicked(self, button):
+        self._profile_dialog = ProfileDialog(self._plex)
+        self._profile_dialog.set_transient_for(self)
+        self._profile_dialog.show()

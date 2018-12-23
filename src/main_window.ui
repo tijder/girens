@@ -24,6 +24,22 @@
                 <property name="can_focus">False</property>
                 <property name="title">Plex</property>
                 <property name="show_close_button" bind-source="header" bind-property="folded" bind-flags="sync-create"/>
+                <child>
+                  <object class="GtkButton" id="_profile_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="always_show_image">True</property>
+                    <child>
+                      <object class="GtkImage" id="_avatar_image">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">preferences-desktop-personal</property>
+                        <property name="icon_size">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="name">sidebar</property>
@@ -295,6 +311,7 @@
     </widgets>
   </object>
 </interface>
+
 
 
 

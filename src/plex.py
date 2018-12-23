@@ -13,12 +13,14 @@ class Plex(GObject.Object):
         'shows-latest': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'download-cover': (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
+        'download-from-url': (GObject.SignalFlags.RUN_FIRST, None, (str,str)),
         'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'search-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (str,object)),
+        'connection-to-server': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     _token = None
@@ -106,8 +108,13 @@ class Plex(GObject.Object):
     def download_cover(self, key, thumb):
         url_image = self._server.transcodeImage(thumb, 300, 200)
         if (url_image is not None and url_image != ""):
-            path = self.download(url_image, 'thumb_' + str(key))
+            path = self.__download(url_image, 'thumb_' + str(key))
             self.emit('download-cover', key, path)
+
+    def download_from_url(self, name_image, url_image):
+        if (url_image is not None and url_image != ""):
+            path = self.__download(url_image, 'thumb_' + name_image)
+            self.emit('download-from-url', name_image, path)
 
     def play_item(self, item, shuffle=0):
         playqueue = PlayQueue.create(self._server, item, shuffle=shuffle)
@@ -124,7 +131,7 @@ class Plex(GObject.Object):
         item.reload()
         self.emit('item-retrieved', item)
 
-    def download(self, url_image, prefix):
+    def __download(self, url_image, prefix):
         path_dir = self._data_dir + '/' + self._server.machineIdentifier
         path = path_dir + '/' + prefix
 
@@ -141,17 +148,16 @@ class Plex(GObject.Object):
             try:
                 self._server = PlexServer(self._server_url, self._token)
                 self._library = self._server.library
+                self.emit('connection-to-server')
             except:
                 print('custom url connection failed')
         else:
             for resource in self._account.resources():
                 if (resource.provides == 'server'):
                     try:
-                        print(resource)
-                        print(self._account.secure)
-                        print(resource.connections)
                         self._server = resource.connect(ssl=self._account.secure)
                         self._library = self._server.library
+                        self.emit('connection-to-server')
                         break
                     except:
                         print('connection failed')

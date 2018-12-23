@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gnome/Plex">
     <file>main_window.ui</file>
+    <file>profile_dialog.ui</file>
     <file>sidebar_box.ui</file>
     <file>media_box.ui</file>
     <file>discover_view.ui</file>
