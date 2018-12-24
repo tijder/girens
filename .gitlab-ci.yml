@@ -2,23 +2,23 @@ stages:
   - flatpak
 
 variables:
-  BUNDLE: "org.gnome.Plex.flatpak"
+  BUNDLE: "org.gnome.Girens.flatpak"
 
 
 flatpak:
     image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:3.30
     stage: flatpak
     variables:
-        MANIFEST_PATH: "org.gnome.Plex.json"
+        MANIFEST_PATH: "org.gnome.Girens.json"
         RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
-        FLATPAK_MODULE: "plex"
+        FLATPAK_MODULE: "girens"
     script:
         - flatpak-builder --stop-at=${FLATPAK_MODULE} app ${MANIFEST_PATH}
         - flatpak build app meson --prefix=/app ${MESON_ARGS} _build
         - flatpak build app ninja -C _build install
         - flatpak-builder --finish-only --repo=repo app ${MANIFEST_PATH}
         - flatpak build-export repo app
-        - flatpak build-bundle repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} org.gnome.Plex
+        - flatpak build-bundle repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} org.gnome.Girens
     artifacts:
         paths:
             - ${BUNDLE}
