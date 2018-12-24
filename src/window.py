@@ -130,12 +130,14 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._active_view = view_name
 
     def __show_login_view(self):
+        self._content_box_wrapper.set_visible(False)
         self._login_view = LoginView(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
         self._login_view.set_transient_for(self)
         self._login_view.show()
 
     def __on_login_success(self, view, status):
+        self._content_box_wrapper.set_visible(True)
         self._discover_view.refresh()
         self._sidebar_box.refresh()
         self.__show_view('discover')
