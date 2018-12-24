@@ -1,6 +1,7 @@
 [Desktop Entry]
-Name=plex
+Name=Plex
 Exec=plex
+Icon=org.gnome.Plex
 Terminal=false
 Type=Application
 Categories=GTK;
