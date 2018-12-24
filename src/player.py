@@ -35,7 +35,10 @@ class Player(GObject.Object):
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
-            self.emit('media-time', value * 1000)
+            if value is not None:
+                self.emit('media-time', value * 1000)
+            else:
+                self.emit('media-time', 0)
             if value is not None and abs(value - self._progresUpdate) > 5:
                 self._progresUpdate = value
                 self._item.updateTimeline(value * 1000, state='playing', duration=self._item.duration)
