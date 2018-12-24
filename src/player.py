@@ -49,7 +49,6 @@ class Player(GObject.Object):
 
         @self._player.property_observer('eof-reached')
         def __on_eof(_name, value):
-            print(value)
             if (value == True):
                 self._eof = True
                 self._player.command('stop')
