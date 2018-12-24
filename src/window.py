@@ -103,10 +103,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._ShowView = ShowView(self._plex)
         self._show_revealer.add(self._ShowView)
 
-        self.connect("map", self.__test)
+        self.connect("map", self.__screen_mapped)
 
 
-    def __test(self, map):
+    def __screen_mapped(self, map):
         self.__show_login_view()
 
     def __show_view(self, view_name):
