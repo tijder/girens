@@ -25,6 +25,8 @@ class Player(GObject.Object):
         self._progresNow = None
         self._item = None
         self._stop_command = False
+        self._playing = False
+        self._play_wait = False
 
     def __createPlayer(self):
         import locale
@@ -65,24 +67,33 @@ class Player(GObject.Object):
         self._offset = int(self._playqueue.playQueueSelectedItemOffset)
 
     def start(self):
-        self._next = False
-        self._prev = False
-        self._eof = False
-        self._stop_command = False
-        self._item = self._playqueue.items[self._offset]
-        self.__createPlayer()
-        self._progresUpdate = 0
-        self._progresNow = 0
+        if (self._playing != False):
+            self._play_wait = True
+            self._player.command('stop')
+        else:
+            self._next = False
+            self._prev = False
+            self._eof = False
+            self._playing = True
+            self._stop_command = False
+            self._item = self._playqueue.items[self._offset]
+            self.__createPlayer()
+            self._progresUpdate = 0
+            self._progresNow = 0
 
-        self._player.play(self._item.getStreamURL(offset=self._item.viewOffset / 1000))
-        self.emit('media-playing', True, self._item, self._playqueue, self._offset)
-        self._player.wait_for_playback()
-        self.__stop()
+            self._player.play(self._item.getStreamURL(offset=self._item.viewOffset / 1000))
+            self.emit('media-playing', True, self._item, self._playqueue, self._offset)
+            self._player.wait_for_playback()
+            self.__stop()
+            self._playing = False
 
-        if (self._stop_command == False and self._eof == True or self._next == True):
-            self.__next()
-        elif (self._prev == True):
-            self.__prev()
+            if (self._play_wait == True):
+                self._play_wait = False
+                self.start()
+            elif (self._stop_command == False and self._eof == True or self._next == True):
+                self.__next()
+            elif (self._prev == True):
+                self.__prev()
 
     def prev(self):
         self._prev = True
