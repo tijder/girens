@@ -1,6 +1,6 @@
-data/org.gnome.Plex.desktop.in
-data/org.gnome.Plex.appdata.xml.in
-data/org.gnome.Plex.gschema.xml
+data/org.gnome.Girens.desktop.in
+data/org.gnome.Girens.appdata.xml.in
+data/org.gnome.Girens.gschema.xml
 src/window.ui
 src/main.py
 src/window.py

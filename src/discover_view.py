@@ -21,7 +21,7 @@ from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Plex/discover_view.ui')
+@GtkTemplate(ui='/org/gnome/Girens/discover_view.ui')
 class DiscoverView(Gtk.Box):
     __gtype_name__ = 'discover_view'
 

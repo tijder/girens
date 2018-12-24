@@ -20,7 +20,7 @@ from .gi_composites import GtkTemplate
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Plex/login_view.ui')
+@GtkTemplate(ui='/org/gnome/Girens/login_view.ui')
 class LoginView(Gtk.Dialog):
     __gtype_name__ = 'login_view'
 

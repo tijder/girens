@@ -1,1 +1,1 @@
-i18n.gettext('plex', preset: 'glib')
+i18n.gettext('girens', preset: 'glib')

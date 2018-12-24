@@ -1,6 +1,6 @@
 #!@PYTHON@
 
-# plex.in
+# girens.in
 #
 # Copyright 2018 Gerben Droogers
 #
@@ -28,14 +28,14 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-gettext.install('plex', localedir)
+gettext.install('girens', localedir)
 
 if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'plex.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'girens.gresource'))
     resource._register()
 
-    from plex import main
+    from girens import main
     sys.exit(main.main(VERSION))

@@ -1,9 +1,9 @@
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'plex')
+moduledir = join_paths(pkgdatadir, 'girens')
 gnome = import('gnome')
 
-gnome.compile_resources('plex',
-  'plex.gresource.xml',
+gnome.compile_resources('girens',
+  'girens.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
@@ -18,14 +18,14 @@ conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'plex.in',
-  output: 'plex',
+  input: 'girens.in',
+  output: 'girens',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir')
 )
 
-plex_sources = [
+girens_sources = [
   '__init__.py',
   'plex.py',
   'player.py',
@@ -44,4 +44,4 @@ plex_sources = [
   'section_grid.py'
 ]
 
-install_data(plex_sources, install_dir: moduledir)
+install_data(girens_sources, install_dir: moduledir)

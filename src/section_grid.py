@@ -20,7 +20,7 @@ from .gi_composites import GtkTemplate
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Plex/section_grid.ui')
+@GtkTemplate(ui='/org/gnome/Girens/section_grid.ui')
 class SectionGrid(Gtk.Grid):
     __gtype_name__ = 'section_grid'
 

@@ -22,7 +22,7 @@ from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Plex/show_view.ui')
+@GtkTemplate(ui='/org/gnome/Girens/show_view.ui')
 class ShowView(Gtk.Box):
     __gtype_name__ = 'show_view'
 
