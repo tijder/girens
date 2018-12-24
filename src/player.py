@@ -29,7 +29,7 @@ class Player(GObject.Object):
     def __createPlayer(self):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
-        self._player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, vo='x11', title=self._item.title)
+        self._player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, vo='x11', title=self._item.title, keep_open=True)
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
@@ -45,6 +45,13 @@ class Player(GObject.Object):
             if (value == True):
                 self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration)
 
+        @self._player.property_observer('eof-reached')
+        def __on_eof(_name, value):
+            print(value)
+            if (value == True):
+                self._eof = True
+                self._player.command('stop')
+
     def __stop(self):
         self._player.terminate()
         self.emit('media-playing', False, self._item, self._playqueue, self._offset)
@@ -58,6 +65,9 @@ class Player(GObject.Object):
         self._offset = int(self._playqueue.playQueueSelectedItemOffset)
 
     def start(self):
+        self._next = False
+        self._prev = False
+        self._eof = False
         self._stop_command = False
         self._item = self._playqueue.items[self._offset]
         self.__createPlayer()
@@ -69,20 +79,27 @@ class Player(GObject.Object):
         self._player.wait_for_playback()
         self.__stop()
 
-        if (self._stop_command == False):
+        if (self._stop_command == False and self._eof == True or self._next == True):
             self.__next()
+        elif (self._prev == True):
+            self.__prev()
 
     def prev(self):
-        self._player.terminate()
-        self._offset = self._offset - 1
-        self.start()
+        self._prev = True
+        self._player.command('stop')
 
     def next(self):
+        self._next = True
         self._player.command('stop')
 
     def __next(self):
         if (self._offset + 1 < len(self._playqueue.items)):
             self._offset = self._offset + 1
+            self.start()
+
+    def __prev(self):
+        if (self._offset - 1 >= 0):
+            self._offset = self._offset - 1
             self.start()
 
     def pause(self):
