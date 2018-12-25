@@ -73,7 +73,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._plex.connect("logout", self.__on_logout)
         self._plex.connect("loading", self.__on_plex_load)
 
-        #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
 
@@ -214,7 +213,6 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_plex_load(self, plex, load_text, status):
         if (status == True):
-            print(load_text)
             self._loading_view.set_text(load_text)
             self._loading_view.set_visible(True)
             self._content_leaflet.set_visible(False)
