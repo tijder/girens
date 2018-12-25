@@ -12,5 +12,7 @@
     Girens is a Plex media player client. You can watch and listen to your music with this GTK app.
   </p>
 	</description>
+  <launchable type="desktop-id">nl.g4d.Girens.desktop</launchable>
 </component>
+
 
