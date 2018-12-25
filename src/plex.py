@@ -175,8 +175,11 @@ class Plex(GObject.Object):
             except:
                 self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
                 print('custom url connection failed')
+
+        servers_found = False
         for resource in self._account.resources():
             if (resource.provides == 'server'):
+                servers_found = True
                 try:
                     self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
                     self._server = resource.connect(ssl=self._account.secure)
@@ -190,4 +193,5 @@ class Plex(GObject.Object):
                 except:
                     self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
                     print('connection failed')
-        self.emit('loading', 'No servers found for this server.', True)
+        if (servers_found == False):
+            self.emit('loading', 'No servers found for this server.', True)
