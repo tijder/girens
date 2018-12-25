@@ -1,6 +1,6 @@
-data/org.gnome.Girens.desktop.in
-data/org.gnome.Girens.appdata.xml.in
-data/org.gnome.Girens.gschema.xml
+data/nl.g4d.Girens.desktop.in
+data/nl.g4d.Girens.appdata.xml.in
+data/nl.g4d.Girens.gschema.xml
 src/window.ui
 src/main.py
 src/window.py

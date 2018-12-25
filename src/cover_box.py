@@ -21,7 +21,7 @@ from .gi_composites import GtkTemplate
 import cairo
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/cover_box.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/cover_box.ui')
 class CoverBox(Gtk.Box):
     __gtype_name__ = 'cover_box'
 

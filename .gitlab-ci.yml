@@ -2,14 +2,14 @@ stages:
   - flatpak
 
 variables:
-  BUNDLE: "org.gnome.Girens.flatpak"
+  BUNDLE: "nl.g4d.Girens.flatpak"
 
 
 flatpak:
     image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:3.30
     stage: flatpak
     variables:
-        MANIFEST_PATH: "org.gnome.Girens.json"
+        MANIFEST_PATH: "nl.g4d.Girens.json"
         RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "girens"
     script:
@@ -18,7 +18,7 @@ flatpak:
         - flatpak build app ninja -C _build install
         - flatpak-builder --finish-only --repo=repo app ${MANIFEST_PATH}
         - flatpak build-export repo app
-        - flatpak build-bundle repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} org.gnome.Girens
+        - flatpak build-bundle repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} nl.g4d.Girens
     artifacts:
         paths:
             - ${BUNDLE}

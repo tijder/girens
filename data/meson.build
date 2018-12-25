@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-  input: 'org.gnome.Girens.desktop.in',
-  output: 'org.gnome.Girens.desktop',
+  input: 'nl.g4d.Girens.desktop.in',
+  output: 'nl.g4d.Girens.desktop',
   type: 'desktop',
   po_dir: '../po',
   install: true,
@@ -15,8 +15,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-  input: 'org.gnome.Girens.appdata.xml.in',
-  output: 'org.gnome.Girens.appdata.xml',
+  input: 'nl.g4d.Girens.appdata.xml.in',
+  output: 'nl.g4d.Girens.appdata.xml',
   po_dir: '../po',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'appdata')
@@ -29,7 +29,7 @@ if appstream_util.found()
   )
 endif
 
-install_data('org.gnome.Girens.gschema.xml',
+install_data('nl.g4d.Girens.gschema.xml',
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
 

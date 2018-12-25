@@ -20,7 +20,7 @@ from .gi_composites import GtkTemplate
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/profile_dialog.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/profile_dialog.ui')
 class ProfileDialog(Gtk.Dialog):
     __gtype_name__ = 'profile_dialog'
 

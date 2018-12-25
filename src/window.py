@@ -33,7 +33,7 @@ from .player import Player
 import os
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/main_window.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/main_window.ui')
 class PlexWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'PlexWindow'
 
@@ -209,7 +209,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         css_provider = Gtk.CssProvider()
         css_provider_resource = Gio.File.new_for_uri(
-            "resource:///org/gnome/Girens/plex.css")
+            "resource:///nl/g4d/Girens/plex.css")
         css_provider.load_from_file(css_provider_resource)
 
         context = Gtk.StyleContext()

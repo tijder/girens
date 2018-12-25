@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-	<id>org.gnome.Girens.desktop</id>
+	<id>nl.g4d.Girens.desktop</id>
   <name>Girens for Plex</name>
   <developer_name>Gerben Droogers</developer_name>
   <summary>Girens is a Plex GTK client for playing movies, TV shows and music from your Plex library.</summary>

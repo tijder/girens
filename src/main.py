@@ -28,7 +28,7 @@ from .window import PlexWindow
 
 class Application(Gtk.Application):
     def __init__(self):
-        super().__init__(application_id='org.gnome.Girens',
+        super().__init__(application_id='nl.g4d.Girens',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):

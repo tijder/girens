@@ -22,7 +22,7 @@ from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/section_view.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/section_view.ui')
 class SectionView(Gtk.Box):
     __gtype_name__ = 'section_view'
 

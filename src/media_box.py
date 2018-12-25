@@ -21,7 +21,7 @@ from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/media_box.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/media_box.ui')
 class MediaBox(Gtk.Revealer):
     __gtype_name__ = 'media_box'
 

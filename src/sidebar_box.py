@@ -22,7 +22,7 @@ from .section_grid import SectionGrid
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/sidebar_box.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/sidebar_box.ui')
 class SidebarBox(Gtk.Box):
     __gtype_name__ = 'sidebar_box'
 

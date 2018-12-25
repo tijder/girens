@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Girens
 Exec=girens
-Icon=org.gnome.Girens
+Icon=nl.g4d.Girens
 Terminal=false
 Type=Application
 Categories=GTK;

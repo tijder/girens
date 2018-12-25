@@ -22,7 +22,7 @@ from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/org/gnome/Girens/search_view.ui')
+@GtkTemplate(ui='/nl/g4d/Girens/search_view.ui')
 class SearchView(Gtk.Box):
     __gtype_name__ = 'search_view'
 
