@@ -29,6 +29,7 @@ class LoginView(Gtk.Dialog):
     }
 
     _loading = False
+    _try_token = False
 
     _username_entry = GtkTemplate.Child()
     _password_entry = GtkTemplate.Child()
@@ -47,6 +48,8 @@ class LoginView(Gtk.Dialog):
 
         if (self._plex.has_token()):
             self.__login_with_token()
+        else:
+            self.show()
 
     def __plex_login_status(self, plex, success, message):
         GLib.idle_add(self.__plex_login_status_process, success, message)
@@ -57,12 +60,15 @@ class LoginView(Gtk.Dialog):
             self.emit('login-success',True)
             self.destroy()
         else:
+            if (self._try_token == True):
+                self.show()
             self.__show_incorrect_login()
 
     def __entry_changed(self, entry):
         self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), None)
 
     def __login_with_token(self):
+        self._try_token = True
         self._loading = True
         self.__show_loading()
 

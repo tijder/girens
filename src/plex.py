@@ -180,6 +180,7 @@ class Plex(GObject.Object):
                 self.emit('connection-to-server')
                 self.emit('loading', 'Success', False)
             except:
+                self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
                 print('custom url connection failed')
         else:
             for resource in self._account.resources():
