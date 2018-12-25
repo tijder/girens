@@ -194,4 +194,4 @@ class Plex(GObject.Object):
                     self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
                     print('connection failed')
         if (servers_found == False):
-            self.emit('loading', 'No servers found for this server.', True)
+            self.emit('loading', 'No servers found for this account.', True)
