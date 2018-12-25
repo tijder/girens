@@ -1,9 +1,10 @@
 [Desktop Entry]
 Name=Girens
+Comment=Play your Plex movies, tv Shows and music
 Exec=girens
 Icon=nl.g4d.Girens
 Terminal=false
 Type=Application
-Categories=GTK;
+Categories=GTK;AudioVideo;Audio;Video;Player;
 StartupNotify=true
 Keywords=girens;plex;media;player;
