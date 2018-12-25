@@ -79,7 +79,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._loading_view = LoadingView(self._plex)
         self._content_box_wrapper.add(self._loading_view)
-        self._loading_view.set_visible(True)
+        self._loading_view.set_visible(False)
         self._loading_view.set_vexpand(True)
 
         self._media_box = MediaBox(self._plex, self._player)

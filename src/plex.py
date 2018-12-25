@@ -174,9 +174,11 @@ class Plex(GObject.Object):
     def __connect_to_server(self):
         if ('server_url' in self._config and 'server_token' in self._config):
             try:
+                self.emit('loading', 'Connecting to ' + self._config['server_url'] + '.', True)
                 self._server = PlexServer(self._config['server_url'], self._config['server_token'])
                 self._library = self._server.library
                 self.emit('connection-to-server')
+                self.emit('loading', 'Success', False)
             except:
                 print('custom url connection failed')
         else:
