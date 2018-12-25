@@ -171,22 +171,23 @@ class Plex(GObject.Object):
                 self._library = self._server.library
                 self.emit('connection-to-server')
                 self.emit('loading', 'Success', False)
+                return None
             except:
                 self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
                 print('custom url connection failed')
-        else:
-            for resource in self._account.resources():
-                if (resource.provides == 'server'):
-                    try:
-                        self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
-                        self._server = resource.connect(ssl=self._account.secure)
-                        self._library = self._server.library
-                        self._config['server_url'] = self._server._baseurl
-                        self._config['server_token'] = self._server._token
-                        self.__save_config()
-                        self.emit('connection-to-server')
-                        self.emit('loading', 'Success', False)
-                        break
-                    except:
-                        self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
-                        print('connection failed')
+        for resource in self._account.resources():
+            if (resource.provides == 'server'):
+                try:
+                    self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
+                    self._server = resource.connect(ssl=self._account.secure)
+                    self._library = self._server.library
+                    self._config['server_url'] = self._server._baseurl
+                    self._config['server_token'] = self._server._token
+                    self.__save_config()
+                    self.emit('connection-to-server')
+                    self.emit('loading', 'Success', False)
+                    break
+                except:
+                    self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
+                    print('connection failed')
+        self.emit('loading', 'No servers found for this server.', True)
