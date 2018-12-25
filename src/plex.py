@@ -80,16 +80,10 @@ class Plex(GObject.Object):
         os.remove(self._config_dir + '/config')
 
     def get_latest(self):
-        if (self._server is None):
-            self.__connect_to_server()
-            
         latest = self._library.recentlyAdded()
         self.emit('shows-latest',latest)
 
     def get_deck(self):
-        if (self._server is None):
-            self.__connect_to_server()
-
         deck = self._library.onDeck()
         self.emit('shows-deck',deck)
 
@@ -106,8 +100,6 @@ class Plex(GObject.Object):
         self.emit('servers-retrieved', servers)
 
     def get_sections(self):
-        if (self._server is None):
-            self.__connect_to_server()
         sections = self._library.sections()
         self.emit('sections-retrieved', sections)
 
@@ -171,7 +163,7 @@ class Plex(GObject.Object):
         else:
             return path
 
-    def __connect_to_server(self):
+    def connect_to_server(self):
         if ('server_url' in self._config and 'server_token' in self._config):
             try:
                 self.emit('loading', 'Connecting to ' + self._config['server_url'] + '.', True)

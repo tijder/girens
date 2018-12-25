@@ -144,14 +144,15 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_login_success(self, view, status):
         self._content_box_wrapper.set_visible(True)
-        self._discover_view.refresh()
-        self._sidebar_box.refresh()
         self.__show_view('discover')
+        self._plex.connect_to_server()
 
     def __on_logout(self, plex):
         self.__show_login_view()
 
     def __on_connection_to_server(self, plex):
+        self._discover_view.refresh()
+        self._sidebar_box.refresh()
         thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
         thread.daemon = True
         thread.start()
