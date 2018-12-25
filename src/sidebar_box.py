@@ -53,6 +53,9 @@ class SidebarBox(Gtk.Box):
         thread.daemon = True
         thread.start()
 
+        for item in self._section_list.get_children():
+            self._section_list.remove(item)
+
         thread = threading.Thread(target=self._plex.get_sections)
         thread.daemon = True
         thread.start()
