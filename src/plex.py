@@ -171,9 +171,9 @@ class Plex(GObject.Object):
             return path
 
     def __connect_to_server(self):
-        if ('server_url' in self._config):
+        if ('server_url' in self._config and 'server_token' in self._config):
             try:
-                self._server = PlexServer(self._config['server_url'], self._config['token'])
+                self._server = PlexServer(self._config['server_url'], self._config['server_token'])
                 self._library = self._server.library
                 self.emit('connection-to-server')
             except:
@@ -185,6 +185,7 @@ class Plex(GObject.Object):
                         self._server = resource.connect(ssl=self._account.secure)
                         self._library = self._server.library
                         self._config['server_url'] = self._server._baseurl
+                        self._config['server_token'] = self._server._token
                         self.__save_config()
                         self.emit('connection-to-server')
                         break
