@@ -26,6 +26,7 @@ from .show_view import ShowView
 from .section_view import SectionView
 from .search_view import SearchView
 from .profile_dialog import ProfileDialog
+from .loading_view import LoadingView
 
 from .plex import Plex
 from .player import Player
@@ -40,6 +41,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _active_view = None
 
     _content_box_wrapper = GtkTemplate.Child()
+    _content_leaflet = GtkTemplate.Child()
 
     _discover_revealer = GtkTemplate.Child()
     _show_revealer = GtkTemplate.Child()
@@ -69,10 +71,16 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("connection-to-server", self.__on_connection_to_server)
         self._plex.connect("logout", self.__on_logout)
+        self._plex.connect("loading", self.__on_plex_load)
 
         #self._refresh_button.connect("clicked", self.__on_refresh_clicked)
         self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
+
+        self._loading_view = LoadingView(self._plex)
+        self._content_box_wrapper.add(self._loading_view)
+        self._loading_view.set_visible(True)
+        self._loading_view.set_vexpand(True)
 
         self._media_box = MediaBox(self._plex, self._player)
         self._content_box_wrapper.add(self._media_box)
@@ -203,6 +211,16 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._profile_dialog = ProfileDialog(self._plex)
         self._profile_dialog.set_transient_for(self)
         self._profile_dialog.show()
+
+    def __on_plex_load(self, plex, load_text, status):
+        if (status == True):
+            print(load_text)
+            self._loading_view.set_text(load_text)
+            self._loading_view.set_visible(True)
+            self._content_leaflet.set_visible(False)
+        else:
+            self._loading_view.set_visible(False)
+            self._content_leaflet.set_visible(True)
 
     def __custom_css(self):
         screen = Gdk.Screen.get_default()

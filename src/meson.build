@@ -41,7 +41,8 @@ girens_sources = [
   'section_view.py',
   'search_view.py',
   'cover_box.py',
-  'section_grid.py'
+  'section_grid.py',
+  'loading_view.py'
 ]
 
 install_data(girens_sources, install_dir: moduledir)

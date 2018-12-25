@@ -13,5 +13,6 @@
     <file>search_view.ui</file>
     <file>cover_box.ui</file>
     <file>section_grid.ui</file>
+    <file>loading_view.ui</file>
   </gresource>
 </gresources>
