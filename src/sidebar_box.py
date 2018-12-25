@@ -81,6 +81,7 @@ class SidebarBox(Gtk.Box):
         for server in servers:
             self._server_store.append([server, server.name])
 
+        self._server_box.clear()
         self._server_box.set_model(self._server_store)
         self._server_box.set_id_column(1)
         renderer_text = Gtk.CellRendererText()
