@@ -143,11 +143,14 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._login_view.set_transient_for(self)
 
     def __on_login_success(self, view, status):
-        self._content_box_wrapper.set_visible(True)
-        self.__show_view('discover')
-        thread = threading.Thread(target=self._plex.connect_to_server)
-        thread.daemon = True
-        thread.start()
+        if (status == True):
+            self._content_box_wrapper.set_visible(True)
+            self.__show_view('discover')
+            thread = threading.Thread(target=self._plex.connect_to_server)
+            thread.daemon = True
+            thread.start()
+        else:
+            self.destroy()
 
     def __on_logout(self, plex):
         self.__show_login_view()
