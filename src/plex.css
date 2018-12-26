@@ -1,3 +1,7 @@
 .cover_image {
   background-color: @theme_base_color;
 }
+
+.media_box {
+  background-color: @theme_base_color;
+}

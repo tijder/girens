@@ -34,8 +34,6 @@ class SidebarBox(Gtk.Box):
 
     _server_box = GtkTemplate.Child()
     _section_list = GtkTemplate.Child()
-    _home_button = GtkTemplate.Child()
-    _playlists_button = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -45,8 +43,8 @@ class SidebarBox(Gtk.Box):
 
         self._plex.connect('servers-retrieved', self.__on_servers_retrieved)
         self._plex.connect('sections-retrieved', self.__on_sections_retrieved)
-        self._home_button.connect("clicked", self.__on_home_clicked)
-        self._playlists_button.connect("clicked", self.__on_playlists_clicked)
+
+        self._section_list.connect("row-selected", self.__on_section_clicked)
 
     def refresh(self):
         thread = threading.Thread(target=self._plex.get_servers)
@@ -60,6 +58,9 @@ class SidebarBox(Gtk.Box):
         thread.daemon = True
         thread.start()
 
+    def unselect_all(self):
+        self._section_list.unselect_all()
+
     def __on_servers_retrieved(self, plex, servers):
         GLib.idle_add(self.__process_servers, servers)
 
@@ -67,12 +68,18 @@ class SidebarBox(Gtk.Box):
         GLib.idle_add(self.__process_section, sections)
 
     def __process_section(self, sections):
+        section_grid = SectionGrid()
+        section_grid.set_title('Home')
+        self._section_list.add(section_grid)
+        section_grid = SectionGrid()
+        section_grid.set_title('Playlists')
+        self._section_list.add(section_grid)
         for section in sections:
             if(section.type == 'movie' or section.type == 'show' or section.type == 'artist'):
-                section_grid = SectionGrid(section)
-                section_grid.connect("section-clicked", self.__on_section_clicked)
+                section_grid = SectionGrid()
+                section_grid.set_title(section.title)
+                section_grid.set_data(section)
                 self._section_list.add(section_grid)
-        print(sections)
         self.show()
 
     def __process_servers(self, servers):
@@ -89,12 +96,13 @@ class SidebarBox(Gtk.Box):
         self._server_box.add_attribute(renderer_text, "text", 1)
         self._server_box.set_active_id(server.name)
 
-    def __on_home_clicked(self, button):
-        self.emit('home-button-clicked')
-        
-    def __on_playlists_clicked(self, button):
-        self.emit('playlists-button-clicked')
-
-    def __on_section_clicked(self, button, section):
-        self.emit('section-clicked', section)
-        
+    def __on_section_clicked(self, listbox, listboxrow):
+        if(listboxrow != None):
+            child = listboxrow.get_child()
+            if (child.get_data() != None):
+                self.emit('section-clicked', listboxrow.get_child().get_data())
+            else:
+                if (child.get_title() == 'Home'):
+                    self.emit('home-button-clicked')
+                elif (child.get_title() == 'Playlists'):
+                    self.emit('playlists-button-clicked')

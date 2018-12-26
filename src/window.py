@@ -189,6 +189,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__show_view('section')
 
     def __on_back_clicked(self, button):
+        self._sidebar_box.unselect_all()
         self.header.set_visible_child_name("sidebar");
 
     def __refresh_data(self):

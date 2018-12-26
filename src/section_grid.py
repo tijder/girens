@@ -29,16 +29,22 @@ class SectionGrid(Gtk.Grid):
     }
 
     _title_button = GtkTemplate.Child()
+    _data = None
+    _title = None
 
-    def __init__(self, data, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
+    def set_data(self, data):
         self._data = data
 
-        self._title_button.set_label(data.title)
+    def get_data(self):
+        return self._data
 
-        self._title_button.connect("clicked", self.__on_section_clicked)
+    def set_title(self, title):
+        self._title = title
+        self._title_button.set_label(title)
 
-    def __on_section_clicked(self, button):
-        self.emit('section-clicked', self._data)
+    def get_title(self):
+        return self._title
