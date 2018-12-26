@@ -218,9 +218,13 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._loading_view.set_text(load_text)
             self._loading_view.set_visible(True)
             self._content_leaflet.set_visible(False)
+
+            self._search_toggle_button.set_sensitive(False)
         else:
             self._loading_view.set_visible(False)
             self._content_leaflet.set_visible(True)
+
+            self._search_toggle_button.set_sensitive(True)
 
     def __custom_css(self):
         screen = Gdk.Screen.get_default()
