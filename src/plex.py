@@ -178,8 +178,8 @@ class Plex(GObject.Object):
 
         servers_found = False
         for resource in self._account.resources():
-            if (resource.provides == 'server'):
-                servers_found = True
+            servers_found = True
+            if ('server' in resource.provides.split(',')):
                 try:
                     self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
                     self._server = resource.connect(ssl=self._account.secure)
