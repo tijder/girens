@@ -37,6 +37,7 @@ class SectionView(Gtk.Box):
     _filter_box = GtkTemplate.Child()
 
     _sort_active = None
+    _load_spinner = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -80,6 +81,8 @@ class SectionView(Gtk.Box):
         self._filter_box.set_active_id(sort)
         self._filter_box.set_visible(True)
 
+        self._load_spinner.set_visible(True)
+
         thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':sort, 'sort_value': sort_value})
         thread.daemon = True
         thread.start()
@@ -112,6 +115,7 @@ class SectionView(Gtk.Box):
     def __process_section_items(self, items):
         self._items = items
         self.__show_more_items()
+        self._load_spinner.set_visible(False)
 
     def __show_more_items(self):
         count = 0
