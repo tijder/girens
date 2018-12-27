@@ -45,6 +45,7 @@ class SectionView(Gtk.Box):
 
         self._plex = plex
         self._plex.connect("section-item-retrieved", self.__on_section_items_retrieved)
+        self._plex.connect("playlists-retrieved", self.__on_playlists_retrieved)
         self._show_more_button.connect("clicked", self.__show_more_clicked)
         self._filter_box.connect("changed", self.__filter_changed)
 
@@ -87,8 +88,7 @@ class SectionView(Gtk.Box):
         thread.daemon = True
         thread.start()
 
-    def show_playlists(self, playlists):
-        self._section = playlists
+    def show_playlists(self):
         self._sort_active = None
 
         self._title_label.set_label("Playlists")
@@ -99,7 +99,11 @@ class SectionView(Gtk.Box):
         self._show_more_button.set_visible(False)
         self._filter_box.set_visible(False)
 
-        self.__process_section_items(playlists)
+        self._load_spinner.set_visible(True)
+
+        thread = threading.Thread(target=self._plex.get_playlists)
+        thread.daemon = True
+        thread.start()
 
     def __filter_changed(self, combo):
         tree_iter = combo.get_active_iter()
@@ -108,6 +112,12 @@ class SectionView(Gtk.Box):
             sort_object, sort_string = model[tree_iter][:2]
             if (self._sort_active != sort_string):
                 self.refresh(self._section, sort=sort_string, sort_value="desc")
+
+    def __on_playlists_retrieved(self, plex, playlists):
+        GLib.idle_add(self.__process_playlists, playlists)
+
+    def __process_playlists(self, playlists):
+        self.__process_section_items(playlists)
 
     def __on_section_items_retrieved(self, plex, items):
         GLib.idle_add(self.__process_section_items, items)

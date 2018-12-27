@@ -20,6 +20,7 @@ class Plex(GObject.Object):
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'playlists-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'search-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (str,object)),
         'connection-to-server': (GObject.SignalFlags.RUN_FIRST, None, ()),
@@ -98,6 +99,10 @@ class Plex(GObject.Object):
             if (resource.provides == 'server'):
                 servers.append(resource)
         self.emit('servers-retrieved', servers)
+
+    def get_playlists(self):
+        playlists = self._server.playlists()
+        self.emit('playlists-retrieved', playlists)
 
     def get_sections(self):
         sections = self._library.sections()

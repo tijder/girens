@@ -180,7 +180,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_playlists_clicked(self, view):
         self.header.set_visible_child_name("content");
-        self._section_view.show_playlists(self._plex._server.playlists())
+        self._section_view.show_playlists()
         self.__show_view('section')
 
     def __on_section_clicked(self, view, section):
