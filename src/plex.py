@@ -141,10 +141,10 @@ class Plex(GObject.Object):
             path = self.__download(url_image, 'thumb_' + name_image)
             self.emit('download-from-url', name_image, path)
 
-    def play_item(self, item, shuffle=0):
+    def play_item(self, item, shuffle=0, from_beginning=False):
         playqueue = PlayQueue.create(self._server, item, shuffle=shuffle)
         self._player.set_playqueue(playqueue)
-        self._player.start()
+        self._player.start(from_beginning=from_beginning)
 
     def mark_as_played(self, item):
         item.markWatched()

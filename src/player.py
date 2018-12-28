@@ -68,7 +68,7 @@ class Player(GObject.Object):
         self._playqueue = playqueue
         self._offset = int(self._playqueue.playQueueSelectedItemOffset)
 
-    def start(self):
+    def start(self, from_beginning=False):
         if (self._playing != False):
             self._play_wait = True
             self._player.command('stop')
@@ -83,7 +83,12 @@ class Player(GObject.Object):
             self._progresUpdate = 0
             self._progresNow = 0
 
-            self._player.play(self._item.getStreamURL(offset=self._item.viewOffset / 1000))
+            if (from_beginning == False):
+                offset = self._item.viewOffset / 1000
+            else:
+                offset = 0
+
+            self._player.play(self._item.getStreamURL(offset=offset))
             self.emit('media-playing', True, self._item, self._playqueue, self._offset)
             self._player.wait_for_playback()
             self.__stop()

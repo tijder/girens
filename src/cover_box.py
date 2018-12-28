@@ -41,6 +41,7 @@ class CoverBox(Gtk.Box):
     _show_view_button = GtkTemplate.Child()
     _mark_played_button = GtkTemplate.Child()
     _mark_unplayed_button = GtkTemplate.Child()
+    _play_from_beginning_button = GtkTemplate.Child()
 
     def __init__(self, plex, item, show_view=False, **kwargs):
         super().__init__(**kwargs)
@@ -57,6 +58,7 @@ class CoverBox(Gtk.Box):
         self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
         self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
         self._mark_unplayed_button.connect("clicked", self.__on_mark_unplayed_clicked)
+        self._play_from_beginning_button.connect("clicked", self.__on_play_from_beginning_clicked)
 
         self.__set_item(self._item)
 
@@ -127,6 +129,7 @@ class CoverBox(Gtk.Box):
             self._show_view_button.set_visible(False)
             self._image_height = 200
 
+        self._play_from_beginning_button.set_visible(False)
         if (item.TYPE == 'playlist' or item.TYPE == 'album' or item.TYPE == 'artist'):
             self._watched_image.set_visible(False)
             self._mark_unplayed_button.set_visible(False)
@@ -135,10 +138,12 @@ class CoverBox(Gtk.Box):
             self._watched_image.set_visible(True)
             self._mark_unplayed_button.set_visible(True)
             self._mark_played_button.set_visible(True)
+            self._play_from_beginning_button.set_visible(True)
         elif (item.isWatched and ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0)):
             self._watched_image.set_visible(False)
             self._mark_unplayed_button.set_visible(True)
             self._mark_played_button.set_visible(True)
+            self._play_from_beginning_button.set_visible(True)
         elif (not item.isWatched):
             self._watched_image.set_visible(True)
             self._mark_unplayed_button.set_visible(False)
@@ -175,6 +180,12 @@ class CoverBox(Gtk.Box):
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
+        thread.daemon = True
+        thread.start()
+
+    def __on_play_from_beginning_clicked(self, button):
+        self._menu_button.set_active(False)
+        thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'from_beginning':True})
         thread.daemon = True
         thread.start()
 
