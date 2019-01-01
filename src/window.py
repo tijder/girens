@@ -27,6 +27,7 @@ from .section_view import SectionView
 from .search_view import SearchView
 from .profile_dialog import ProfileDialog
 from .loading_view import LoadingView
+from .download_menu import DownloadMenu
 
 from .plex import Plex
 from .player import Player
@@ -57,6 +58,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     _avatar_image = GtkTemplate.Child()
     _profile_button = GtkTemplate.Child()
+    _download_button = GtkTemplate.Child()
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
 
@@ -75,6 +77,11 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
+
+        self._download_menu = DownloadMenu(self._plex)
+        self._download_menu.connect("show-button", self.__on_show_download_button)
+        self._download_button.set_popover(self._download_menu)
+        self._download_button.set_visible(False)
 
         self._loading_view = LoadingView(self._plex)
         self._content_box_wrapper.add(self._loading_view)
@@ -229,6 +236,9 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._content_leaflet.set_visible(True)
 
             self._search_toggle_button.set_sensitive(True)
+
+    def __on_show_download_button(self, menu):
+        self._download_button.set_visible(True)
 
     def __custom_css(self):
         screen = Gdk.Screen.get_default()

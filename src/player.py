@@ -28,6 +28,9 @@ class Player(GObject.Object):
         self._playing = False
         self._play_wait = False
 
+    def set_plex(self, plex):
+        self._plex = plex
+
     def __createPlayer(self):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
@@ -88,7 +91,14 @@ class Player(GObject.Object):
             else:
                 offset = 0
 
-            self._player.play(self._item.getStreamURL(offset=offset))
+            source = self._plex.get_item_download_path(self._item)
+            if (source == None):
+                source = self._item.getStreamURL(offset=offset)
+                self._player.play(source)
+            else:
+                self._player.play(source)
+                self._player.wait_for_property('seekable')
+                self._player.seek(offset, reference='absolute', precision='exact')
             self.emit('media-playing', True, self._item, self._playqueue, self._offset)
             self._player.wait_for_playback()
             self.__stop()

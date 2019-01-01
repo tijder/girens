@@ -4,6 +4,7 @@ import urllib
 
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
+from plexapi import utils
 from plexapi.playqueue import PlayQueue
 from gi.repository import GObject
 
@@ -18,6 +19,7 @@ class Plex(GObject.Object):
         'download-from-url': (GObject.SignalFlags.RUN_FIRST, None, (str,str)),
         'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'item-downloading': (GObject.SignalFlags.RUN_FIRST, None, (object,bool)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'playlists-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
@@ -39,6 +41,7 @@ class Plex(GObject.Object):
         self._config_dir = config_dir
         self._data_dir = data_dir
         self._player = player
+        self._player.set_plex(self)
         if(os.path.isfile(self._config_dir + '/config')):
            with open(self._config_dir + '/config', 'r') as file:
                lines = file.readlines()
@@ -145,6 +148,34 @@ class Plex(GObject.Object):
         playqueue = PlayQueue.create(self._server, item, shuffle=shuffle)
         self._player.set_playqueue(playqueue)
         self._player.start(from_beginning=from_beginning)
+
+    def download_item(self, item):
+        path_dir = self._data_dir + '/' + self._server.machineIdentifier
+        filename = 'item_' + str(item.ratingKey)
+        filename_tmp = filename + '.tmp'
+        path = path_dir + '/' + filename
+        path_tmp = path_dir + '/' + filename_tmp
+
+        self.emit('item-downloading', item, True)
+
+        if not os.path.exists(path_dir):
+            os.makedirs(path_dir)
+        if not os.path.exists(path):
+            if os.path.exists(path_tmp):
+                os.remove(path_tmp)
+            locations = [i for i in item.iterParts() if i]
+            download_url = self._server.url('%s?download=1' % locations[0].key)
+            utils.download(download_url, self._server._token, filename=filename_tmp, savepath=path_dir, session=self._server._session)
+            os.rename(path_tmp, path)
+            self.emit('item-downloading', item, False)
+
+    def get_item_download_path(self, item):
+        path_dir = self._data_dir + '/' + self._server.machineIdentifier
+        filename = 'item_' + str(item.ratingKey)
+        path = path_dir + '/' + filename
+        if not os.path.exists(path):
+            return None
+        return path
 
     def mark_as_played(self, item):
         item.markWatched()

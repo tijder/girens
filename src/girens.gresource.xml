@@ -14,5 +14,7 @@
     <file>cover_box.ui</file>
     <file>section_grid.ui</file>
     <file>loading_view.ui</file>
+    <file>download_row.ui</file>
+    <file>download_menu.ui</file>
   </gresource>
 </gresources>

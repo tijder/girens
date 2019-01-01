@@ -42,6 +42,7 @@ class CoverBox(Gtk.Box):
     _mark_played_button = GtkTemplate.Child()
     _mark_unplayed_button = GtkTemplate.Child()
     _play_from_beginning_button = GtkTemplate.Child()
+    _download_button = GtkTemplate.Child()
 
     def __init__(self, plex, item, show_view=False, **kwargs):
         super().__init__(**kwargs)
@@ -52,6 +53,7 @@ class CoverBox(Gtk.Box):
         self._show_view = show_view
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex.connect("item-retrieved", self.__on_item_retrieved)
+        self._plex.connect("item-downloading", self.__on_item_downloading)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
 
@@ -59,6 +61,7 @@ class CoverBox(Gtk.Box):
         self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
         self._mark_unplayed_button.connect("clicked", self.__on_mark_unplayed_clicked)
         self._play_from_beginning_button.connect("clicked", self.__on_play_from_beginning_clicked)
+        self._download_button.connect("clicked", self.__on_download_button)
 
         self.__set_item(self._item)
 
@@ -153,6 +156,13 @@ class CoverBox(Gtk.Box):
             self._mark_played_button.set_visible(False)
             self._mark_unplayed_button.set_visible(True)
 
+        if (item.TYPE != 'movie' and item.TYPE != 'episode'):
+            self._download_button.set_visible(False)
+        elif (self._plex.get_item_download_path(self._item) != None):
+            self._download_button.set_visible(False)
+        else:
+            self._download_button.set_visible(True)
+
         self._title_label.set_text(title)
         self._title_label.set_tooltip_text(title)
         if (subtitle != None):
@@ -189,6 +199,12 @@ class CoverBox(Gtk.Box):
         thread.daemon = True
         thread.start()
 
+    def __on_download_button(self, button):
+        self._menu_button.set_active(False)
+        thread = threading.Thread(target=self._plex.download_item, args=(self._item,))
+        thread.daemon = True
+        thread.start()
+
     def __on_shuffle_button_clicked(self, button):
         self._menu_button.set_active(False)
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
@@ -212,3 +228,6 @@ class CoverBox(Gtk.Box):
             self._item = item
             self.__set_item(self._item)
             
+    def __on_item_downloading(self, plex, item, status):
+        if (self._item.ratingKey == item.ratingKey):
+            self._download_button.set_visible(False)
