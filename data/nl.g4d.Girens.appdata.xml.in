@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
+<!-- Copyright 2018 Gerben Droogers -->
+<component type="desktop-application">
 	<id>nl.g4d.Girens.desktop</id>
   <name>Girens for Plex</name>
   <developer_name>Gerben Droogers</developer_name>
@@ -13,6 +14,25 @@
   </p>
 	</description>
   <launchable type="desktop-id">nl.g4d.Girens.desktop</launchable>
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-chat">mild</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
+  </content_rating>
+  <screenshots>
+​    <screenshot type="default">
+​      <image>https://g4d.nl/girens/screenshot_deck_blurred.png</image>
+​    </screenshot>
+​    <screenshot>
+​      <image>https://g4d.nl/girens/screenshot_films_blurred.png</image>
+​    </screenshot>
+    <screenshot>
+​      <image>https://g4d.nl/girens/screenshot_tvshows_blurred.png</image>
+​    </screenshot>
+​  </screenshots>
+  <releases>
+    <release version="1.0.0" date="2019-01-01"/>
+  </releases>
 </component>
+
 
 
