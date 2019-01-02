@@ -40,16 +40,6 @@
                     </child>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkMenuButton" id="_download_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                </child>
               </object>
               <packing>
                 <property name="name">sidebar</property>
@@ -100,6 +90,41 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="stock">gtk-find</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">horizontal</property>
+                    <style>
+                      <class name="linked"/>
+                    </style>
+                    <child>
+                      <object class="GtkButton" id="_sync_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <child>
+                          <object class="GtkImage" id="_sync_image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">network-transmit</property>
+                            <property name="icon_size">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuButton" id="_download_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <child>
+                          <placeholder/>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -305,6 +330,7 @@
     </widgets>
   </object>
 </interface>
+
 
 
 

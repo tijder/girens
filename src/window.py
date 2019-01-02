@@ -27,6 +27,7 @@ from .section_view import SectionView
 from .search_view import SearchView
 from .profile_dialog import ProfileDialog
 from .loading_view import LoadingView
+from .sync_dialog import SyncDialog
 from .download_menu import DownloadMenu
 
 from .plex import Plex
@@ -58,6 +59,8 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     _avatar_image = GtkTemplate.Child()
     _profile_button = GtkTemplate.Child()
+    _sync_button = GtkTemplate.Child()
+    _sync_image = GtkTemplate.Child()
     _download_button = GtkTemplate.Child()
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
@@ -71,6 +74,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._player = Player()
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
+        self._plex.connect("sync-status", self.__on_sync)
         self._plex.connect("connection-to-server", self.__on_connection_to_server)
         self._plex.connect("logout", self.__on_logout)
         self._plex.connect("loading", self.__on_plex_load)
@@ -82,6 +86,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._download_menu.connect("show-button", self.__on_show_download_button)
         self._download_button.set_popover(self._download_menu)
         self._download_button.set_visible(False)
+
+        self._sync_button.connect("clicked", self.__on_sync_clicked)
 
         self._loading_view = LoadingView(self._plex)
         self._content_box_wrapper.add(self._loading_view)
@@ -173,6 +179,22 @@ class PlexWindow(Gtk.ApplicationWindow):
         if(self._plex._account.username == name_image):
             pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 25, 25)
             GLib.idle_add(self.__set_image, pix)
+
+    def __on_sync_clicked(self, button):
+        self._sync_dialog = SyncDialog(self._plex)
+        self._sync_dialog.set_transient_for(self)
+        self._sync_dialog.show()
+
+    def __on_sync(self, plex, status):
+        GLib.idle_add(self.__set_sync, status)
+
+    def __set_sync(self, status):
+        if (status == True):
+            self._sync_button.set_sensitive(False)
+            self._sync_image.set_from_icon_name('network-transmit-receive', 4)
+        else:
+            self._sync_button.set_sensitive(True)
+            self._sync_image.set_from_icon_name('network-transmit', 4)
 
     def __set_image(self, pix):
         self._avatar_image.set_from_pixbuf(pix)

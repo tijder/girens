@@ -20,6 +20,7 @@ class Plex(GObject.Object):
         'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'item-downloading': (GObject.SignalFlags.RUN_FIRST, None, (object,bool)),
+        'sync-status': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'playlists-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
@@ -28,6 +29,7 @@ class Plex(GObject.Object):
         'connection-to-server': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'logout': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'loading': (GObject.SignalFlags.RUN_FIRST, None, (str,bool)),
+        'sync-items': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
     }
 
     _config = {}
@@ -35,6 +37,7 @@ class Plex(GObject.Object):
     _server = None
     _account = None
     _library = None
+    _sync_busy = False
 
     def __init__(self, config_dir, data_dir, player, **kwargs):
         super().__init__(**kwargs)
@@ -149,7 +152,51 @@ class Plex(GObject.Object):
         self._player.set_playqueue(playqueue)
         self._player.start(from_beginning=from_beginning)
 
-    def download_item(self, item):
+    def get_sync_items(self):
+        if 'sync' in self._config:
+            self.emit('sync-items', self._config['sync'])
+
+    def remove_from_sync(self, item_key):
+        if str(item_key) in self._config['sync']:
+            del self._config['sync'][item_key]
+            self.__save_config()
+            self.get_sync_items()
+
+    def add_to_sync(self, item, converted=False):
+        if 'sync' not in self._config:
+            self._config['sync'] = {}
+        if str(item.ratingKey) not in self._config['sync']:
+            self._config['sync'][str(item.ratingKey)] = {}
+            self._config['sync'][str(item.ratingKey)]['rating_key'] = str(item.ratingKey)
+            self._config['sync'][str(item.ratingKey)]['converted'] = converted
+            self.__save_config()
+        self.sync()
+
+    def sync(self):
+        if (self._sync_busy == False):
+            self.emit('sync-status', True)
+            path_dir = self._data_dir + '/' + self._server.machineIdentifier
+            download_files = []
+            for file in os.listdir(path_dir):
+                if file.startswith("item_"):
+                    download_files.append(file)
+            self._sync_busy = True
+            if 'sync' in self._config:
+                sync = self._config['sync'].copy()
+                for item_keys in sync:
+                    item = self._server.fetchItem(int(item_keys))
+                    if(self.get_item_download_path(item) == None):
+                        self.__download_item(item, converted=sync[item_keys]['converted'])
+                    if ('item_' + str(item.ratingKey) in download_files):
+                        download_files.remove('item_' + str(item.ratingKey))
+            for file in download_files:
+                path_file = os.path.join(path_dir, file)
+                if os.path.exists(path_file):
+                    os.remove(path_file)
+            self.emit('sync-status', False)
+            self._sync_busy = False
+
+    def __download_item(self, item, converted=False):
         path_dir = self._data_dir + '/' + self._server.machineIdentifier
         filename = 'item_' + str(item.ratingKey)
         filename_tmp = filename + '.tmp'
@@ -164,7 +211,10 @@ class Plex(GObject.Object):
             if os.path.exists(path_tmp):
                 os.remove(path_tmp)
             locations = [i for i in item.iterParts() if i]
-            download_url = self._server.url('%s?download=1' % locations[0].key)
+            if (converted == False):
+                download_url = self._server.url('%s?download=1' % locations[0].key)
+            else:
+                download_url = item.getStreamURL()
             utils.download(download_url, self._server._token, filename=filename_tmp, savepath=path_dir, session=self._server._session)
             os.rename(path_tmp, path)
             self.emit('item-downloading', item, False)
@@ -185,6 +235,10 @@ class Plex(GObject.Object):
     def mark_as_unplayed(self, item):
         item.markUnwatched()
         item.reload()
+        self.emit('item-retrieved', item)
+
+    def retrieve_item(self, item_key):
+        item = self._server.fetchItem(int(item_key))
         self.emit('item-retrieved', item)
 
     def __download(self, url_image, prefix):

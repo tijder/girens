@@ -43,6 +43,8 @@ girens_sources = [
   'cover_box.py',
   'section_grid.py',
   'loading_view.py',
+  'sync_dialog.py',
+  'sync_item.py',
   'download_row.py',
   'download_menu.py'
 ]

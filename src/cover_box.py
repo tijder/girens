@@ -201,7 +201,7 @@ class CoverBox(Gtk.Box):
 
     def __on_download_button(self, button):
         self._menu_button.set_active(False)
-        thread = threading.Thread(target=self._plex.download_item, args=(self._item,))
+        thread = threading.Thread(target=self._plex.add_to_sync, args=(self._item,))
         thread.daemon = True
         thread.start()
 
