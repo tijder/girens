@@ -20,13 +20,16 @@
   </content_rating>
   <screenshots>
 ​    <screenshot type="default">
-​      <image>https://g4d.nl/girens/screenshot_deck_blurred.png</image>
+      <caption>The ondeck view</caption>
+​      <image type="source" width="1280" height="767">https://g4d.nl/girens/screenshot_deck_blurred.png</image>
 ​    </screenshot>
 ​    <screenshot>
-​      <image>https://g4d.nl/girens/screenshot_films_blurred.png</image>
+      <caption>The films view</caption>
+​      <image type="source" width="1280" height="767">https://g4d.nl/girens/screenshot_films_blurred.png</image>
 ​    </screenshot>
     <screenshot>
-​      <image>https://g4d.nl/girens/screenshot_tvshows_blurred.png</image>
+      <caption>The tvshows view</caption>
+​      <image type="source" width="1280" height="767">https://g4d.nl/girens/screenshot_tvshows_blurred.png</image>
 ​    </screenshot>
 ​  </screenshots>
   <releases>
