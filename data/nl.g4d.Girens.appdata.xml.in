@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018 Gerben Droogers -->
 <component type="desktop-application">
-	<id>nl.g4d.Girens.desktop</id>
+  <id>nl.g4d.Girens.desktop</id>
   <name>Girens for Plex</name>
   <developer_name>Gerben Droogers</developer_name>
   <summary>Girens is a Plex GTK client for playing movies, TV shows and music from your Plex library.</summary>
-  <url type="homepage">https://gitlab.gnome.org/tijder/girens</url>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-3.0-or-later</project_license>
-	<description>
-  <p>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <description>
+    <p>
     Girens is a Plex media player client. You can watch and listen to your music with this GTK app.
   </p>
-	</description>
+  </description>
   <launchable type="desktop-id">nl.g4d.Girens.desktop</launchable>
   <content_rating type="oars-1.1">
     <content_attribute id="social-chat">mild</content_attribute>
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <screenshots>
-​    <screenshot type="default">
+    <screenshot type="default">
       <caption>The ondeck view</caption>
-​      <image type="source" width="1280" height="767">https://g4d.nl/girens/screenshot_deck_blurred.png</image>
-​    </screenshot>
-​    <screenshot>
+      <image type="source" height="767" width="1280">https://g4d.nl/girens/screenshot_deck_blurred.png</image>
+    </screenshot>
+    <screenshot>
       <caption>The films view</caption>
-​      <image type="source" width="1280" height="767">https://g4d.nl/girens/screenshot_films_blurred.png</image>
-​    </screenshot>
+      <image type="source" height="767" width="1280">https://g4d.nl/girens/screenshot_films_blurred.png</image>
+    </screenshot>
     <screenshot>
       <caption>The tvshows view</caption>
-​      <image type="source" width="1280" height="767">https://g4d.nl/girens/screenshot_tvshows_blurred.png</image>
-​    </screenshot>
-​  </screenshots>
+      <image type="source" height="767" width="1280">https://g4d.nl/girens/screenshot_tvshows_blurred.png</image>
+    </screenshot>
+  </screenshots>
   <releases>
-    <release version="1.0.0" date="2019-01-02"/>
+    <release date="2019-01-02" version="1.0.0"/>
   </releases>
+  <url type="homepage">https://gitlab.gnome.org/tijder/girens</url>
+  <url type="bugtracker">https://gitlab.gnome.org/tijder/girens/issues</url>
+  <url type="donation">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RNKS46L5N7W56&amp;source=url</url>
+  <update_contact>girens_at_g4d.nl</update_contact>
 </component>
-
+  
