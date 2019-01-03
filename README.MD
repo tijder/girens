@@ -14,6 +14,10 @@ Setup [flatpak](https://www.flatpak.org/setup/) for your Linux distro. Download 
 flatpak install nl.g4d.girens.flatpak
 ```
 
+## How to build
+
+The easiest way to build this App from source is with [Gnome-builder](https://wiki.gnome.org/Apps/Builder). Install Gnome-builder on your machine. Clone thise git project to your machine. Open the git project in Gnome-builder and click run.
+
 ## Screenshot
 
 ![Screenshot of Girens with covers blurred](https://g4d.nl/girens/screenshot_films_blurred.png)
