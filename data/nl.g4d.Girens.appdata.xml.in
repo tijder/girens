@@ -32,6 +32,15 @@
   <releases>
     <release date="2019-01-02" version="1.0.1">
       <description>
+        <u>
+          <li>Buttons now with more constrast</li>
+          <li>Sync tv show with options like only unwatched</li>
+          <li>Sync and download dialog with thumbnails</li>
+        </u>
+      </description>
+    </release>
+    <release date="2019-01-02" version="1.0.1">
+      <description>
       Media controll buttons/images with more contrast.
       </description>
     </release>
@@ -42,6 +51,3 @@
   <url type="donation">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=RNKS46L5N7W56&amp;source=url</url>
   <update_contact>girens_at_g4d.nl</update_contact>
 </component>
-  
-
-
