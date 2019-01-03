@@ -32,11 +32,11 @@
   <releases>
     <release date="2019-01-02" version="1.0.1">
       <description>
-        <u>
+        <ul>
           <li>Buttons now with more constrast</li>
           <li>Sync tv show with options like only unwatched</li>
           <li>Sync and download dialog with thumbnails</li>
-        </u>
+        </ul>
       </description>
     </release>
     <release date="2019-01-02" version="1.0.1">
