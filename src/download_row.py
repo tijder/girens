@@ -28,6 +28,11 @@ class DownloadRow(Gtk.Box):
     _title_label = GtkTemplate.Child()
     _download_spinner = GtkTemplate.Child()
 
+    _cover_image = GtkTemplate.Child()
+
+    _download_key = None
+    _download_thumb = None
+
     def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -36,8 +41,28 @@ class DownloadRow(Gtk.Box):
         self._item = item
 
         self._plex.connect("item-downloading", self.__on_item_downloading)
+        self._plex.connect("download-cover", self.__on_cover_downloaded)
 
         self._title_label.set_text(self._item.title)
+
+        if (not item.TYPE == 'playlist'):
+            self._download_key = item.ratingKey
+            self._download_thumb = item.thumb
+        elif (item.type == 'playlist'):
+            self._download_key = item.ratingKey
+            self._download_thumb = item.composite
+
+        thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
+        thread.daemon = True
+        thread.start()
+
+    def __on_cover_downloaded(self, plex, rating_key, path):
+        if(self._download_key == rating_key):
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 100, 100)
+            GLib.idle_add(self.__set_image, pix)
+
+    def __set_image(self, pix):
+        self._cover_image.set_from_pixbuf(pix)
 
     def __on_item_downloading(self, plex, item, status):
         if (status == False and self._item.key == item.key):
