@@ -31,7 +31,7 @@
           <object class="GtkImage">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="stock">gtk-delete</property>
+            <property name="icon_name">edit-delete-symbolic</property>
           </object>
         </child>
       </object>

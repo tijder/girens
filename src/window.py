@@ -191,10 +191,10 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __set_sync(self, status):
         if (status == True):
             self._sync_button.set_sensitive(False)
-            self._sync_image.set_from_icon_name('network-transmit-receive', 4)
+            self._sync_image.set_from_icon_name('network-transmit-receive-symbolic', 4)
         else:
             self._sync_button.set_sensitive(True)
-            self._sync_image.set_from_icon_name('network-transmit', 4)
+            self._sync_image.set_from_icon_name('network-transmit-symbolic', 4)
 
     def __set_image(self, pix):
         self._avatar_image.set_from_pixbuf(pix)

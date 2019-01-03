@@ -89,7 +89,8 @@
                       <object class="GtkImage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="stock">gtk-find</property>
+                        <property name="icon_name">edit-find-symbolic</property>
+                        <property name="icon_size">1</property>
                       </object>
                     </child>
                   </object>
@@ -111,7 +112,7 @@
                           <object class="GtkImage" id="_sync_image">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="icon_name">network-transmit</property>
+                            <property name="icon_name">network-transmit-symbolic</property>
                             <property name="icon_size">1</property>
                           </object>
                         </child>
