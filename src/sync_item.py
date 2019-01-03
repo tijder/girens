@@ -28,6 +28,11 @@ class SyncItem(Gtk.Box):
     _remove_button = GtkTemplate.Child()
     _title_label = GtkTemplate.Child()
 
+    _cover_image = GtkTemplate.Child()
+
+    _download_key = None
+    _download_thumb = None
+
     def __init__(self, plex, item_dict, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -36,6 +41,7 @@ class SyncItem(Gtk.Box):
         self._item_dict = item_dict
 
         self._plex.connect('item-retrieved', self.__on_item_retrieved)
+        self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._remove_button.connect('clicked', self.__on_remove_clicked)
 
         thread = threading.Thread(target=self._plex.retrieve_item, args=(self._item_dict['rating_key'],))
@@ -49,6 +55,25 @@ class SyncItem(Gtk.Box):
                 self._title_label.set_text(item._prettyfilename())
             elif (item.TYPE == 'album' or item.TYPE == 'playlist' or item.TYPE == 'artist' or item.TYPE == 'show'):
                 self._title_label.set_text(item.title)
+
+            if (not item.TYPE == 'playlist'):
+                self._download_key = item.ratingKey
+                self._download_thumb = item.thumb
+            elif (item.type == 'playlist'):
+                self._download_key = item.ratingKey
+                self._download_thumb = item.composite
+
+            thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
+            thread.daemon = True
+            thread.start()
+
+    def __on_cover_downloaded(self, plex, rating_key, path):
+        if(self._download_key == rating_key):
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 100, 100)
+            GLib.idle_add(self.__set_image, pix)
+
+    def __set_image(self, pix):
+        self._cover_image.set_from_pixbuf(pix)
 
     def __on_remove_clicked(self, button):
         self._plex.remove_from_sync(self._item_dict['rating_key'])
