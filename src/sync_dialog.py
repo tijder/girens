@@ -21,6 +21,8 @@ from .sync_item import SyncItem
 
 import cairo
 import threading
+import sys
+import gc
 
 @GtkTemplate(ui='/nl/g4d/Girens/sync_dialog.ui')
 class SyncDialog(Gtk.Dialog):
@@ -29,6 +31,8 @@ class SyncDialog(Gtk.Dialog):
     _item_box = GtkTemplate.Child()
     _sync_button = GtkTemplate.Child()
     _ok_button = GtkTemplate.Child()
+
+    _items = []
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -44,11 +48,16 @@ class SyncDialog(Gtk.Dialog):
 
 
     def __on_sync_items_retrieved(self, plex, items):
+        for item in self._items:
+            item.destroy_safe()
+        self._items = []
+
         for item in self._item_box.get_children():
             self._item_box.remove(item)
 
         for item_keys in items:
             sync_item = SyncItem(self._plex, items[item_keys])
+            self._items.append(sync_item)
             self._item_box.add(sync_item)
 
     def __on_ok_clicked(self, button):

@@ -41,13 +41,18 @@ class SyncItem(Gtk.Box):
         self._plex = plex
         self._item_dict = item_dict
 
-        self._plex.connect('item-retrieved', self.__on_item_retrieved)
-        self._plex.connect("download-cover", self.__on_cover_downloaded)
+        self.id = self._plex.connect('item-retrieved', self.__on_item_retrieved)
+        self.id2 = self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._remove_button.connect('clicked', self.__on_remove_clicked)
 
         thread = threading.Thread(target=self._plex.retrieve_item, args=(self._item_dict['rating_key'],))
         thread.daemon = True
         thread.start()
+
+    def destroy_safe(self):
+        self._plex.handler_block(self.id)
+        self._plex.handler_block(self.id2)
+        self.destroy()
 
     def __on_item_retrieved(self, plex, item):
         if (int(item.ratingKey) == int(self._item_dict['rating_key'])):
