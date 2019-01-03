@@ -14,3 +14,6 @@ Setup [flatpak](https://www.flatpak.org/setup/) for your Linux distro. Download 
 flatpak install nl.g4d.girens.flatpak
 ```
 
+## Screenshot
+
+![Screenshot of Girens with covers blurred](https://g4d.nl/girens/screenshot_films_blurred.png)
