@@ -192,7 +192,7 @@
                   <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="stock">gtk-media-play</property>
+                    <property name="icon_name">media-playback-start-symbolic</property>
                   </object>
                 </child>
               </object>

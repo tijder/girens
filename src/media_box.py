@@ -93,9 +93,9 @@ class MediaBox(Gtk.Revealer):
 
     def __update_buttons(self):
         if (self._paused == True):
-            self._play_image.set_from_icon_name('media-playback-start', 4)
+            self._play_image.set_from_icon_name('media-playback-start-symbolic', 4)
         else:
-            self._play_image.set_from_icon_name('media-playback-pause', 4)
+            self._play_image.set_from_icon_name('media-playback-pause-symbolic', 4)
 
         if (self._item != None):
             self._prev_button.set_sensitive(self._offset - 1 >= 0)
