@@ -29,6 +29,7 @@ class SyncItem(Gtk.Box):
     _title_label = GtkTemplate.Child()
 
     _cover_image = GtkTemplate.Child()
+    _watched_image = GtkTemplate.Child()
 
     _download_key = None
     _download_thumb = None
@@ -62,6 +63,9 @@ class SyncItem(Gtk.Box):
             elif (item.type == 'playlist'):
                 self._download_key = item.ratingKey
                 self._download_thumb = item.composite
+
+            if ((item.TYPE == 'movie' or item.TYPE == 'episode') and not item.isWatched):
+                self._watched_image.set_visible(True)
 
             thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
             thread.daemon = True
