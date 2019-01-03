@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018 Gerben Droogers -->
 <component type="desktop-application">
-  <id>nl.g4d.Girens.desktop</id>
+  <id>nl.g4d.Girens</id>
   <name>Girens for Plex</name>
   <developer_name>Gerben Droogers</developer_name>
   <summary>Girens is a Plex GTK client for playing movies, TV shows and music from your Plex library.</summary>
@@ -32,6 +32,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-01-02" version="1.0.1">
+      <description>
+      Media controll buttons/images with more contrast.
+      </description>
+    </release>
     <release date="2019-01-02" version="1.0.0"/>
   </releases>
   <url type="homepage">https://gitlab.gnome.org/tijder/girens</url>
@@ -40,3 +45,4 @@
   <update_contact>girens_at_g4d.nl</update_contact>
 </component>
   
+
