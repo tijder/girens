@@ -171,6 +171,8 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_connection_to_server(self, plex):
         self._discover_view.refresh()
         self._sidebar_box.refresh()
+        self._sync_dialog = SyncDialog(self._plex)
+        self._sync_dialog.set_transient_for(self)
         thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
         thread.daemon = True
         thread.start()
@@ -181,8 +183,6 @@ class PlexWindow(Gtk.ApplicationWindow):
             GLib.idle_add(self.__set_image, pix)
 
     def __on_sync_clicked(self, button):
-        self._sync_dialog = SyncDialog(self._plex)
-        self._sync_dialog.set_transient_for(self)
         self._sync_dialog.show()
 
     def __on_sync(self, plex, status):

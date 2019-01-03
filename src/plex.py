@@ -173,6 +173,7 @@ class Plex(GObject.Object):
             if (max_items != None):
                 self._config['sync'][str(item.ratingKey)]['max_items'] = max_items
             self.__save_config()
+            self.get_sync_items()
         self.sync()
 
     def sync(self):

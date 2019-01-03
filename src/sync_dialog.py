@@ -52,10 +52,10 @@ class SyncDialog(Gtk.Dialog):
             self._item_box.add(sync_item)
 
     def __on_ok_clicked(self, button):
-        self.destroy()
+        self.hide()
 
     def __on_sync_clicked(self, button):
         thread = threading.Thread(target=self._plex.sync)
         thread.daemon = True
         thread.start()
-        self.destroy()
+        self.hide()
