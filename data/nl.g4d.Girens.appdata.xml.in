@@ -8,9 +8,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <description>
-    <p>
-    Girens is a Plex media player client. You can watch and listen to your music with this GTK app.
-  </p>
+    <p>Girens is a Plex media player client. You can watch and listen to your music, shows and movies with this GTK app.</p>
   </description>
   <launchable type="desktop-id">nl.g4d.Girens.desktop</launchable>
   <content_rating type="oars-1.1">
@@ -45,4 +43,5 @@
   <update_contact>girens_at_g4d.nl</update_contact>
 </component>
   
+
 
