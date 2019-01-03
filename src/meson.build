@@ -45,6 +45,7 @@ girens_sources = [
   'loading_view.py',
   'sync_dialog.py',
   'sync_item.py',
+  'sync_settings.py',
   'download_row.py',
   'download_menu.py'
 ]

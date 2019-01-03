@@ -162,13 +162,16 @@ class Plex(GObject.Object):
             self.__save_config()
             self.get_sync_items()
 
-    def add_to_sync(self, item, converted=False):
+    def add_to_sync(self, item, converted=False, max_items=None, only_unwatched=False):
         if 'sync' not in self._config:
             self._config['sync'] = {}
         if str(item.ratingKey) not in self._config['sync']:
             self._config['sync'][str(item.ratingKey)] = {}
             self._config['sync'][str(item.ratingKey)]['rating_key'] = str(item.ratingKey)
             self._config['sync'][str(item.ratingKey)]['converted'] = converted
+            self._config['sync'][str(item.ratingKey)]['only_unwatched'] = only_unwatched
+            if (max_items != None):
+                self._config['sync'][str(item.ratingKey)]['max_items'] = max_items
             self.__save_config()
         self.sync()
 
@@ -193,11 +196,26 @@ class Plex(GObject.Object):
                         download_items = item.tracks()
                     elif (item.TYPE == 'playlist'):
                         download_items = item.items()
+                    elif (item.TYPE == 'show'):
+                        download_items = item.episodes()
+                    count = 0
                     for download_item in download_items:
-                        if(self.get_item_download_path(download_item) == None):
-                            self.__download_item(download_item, converted=sync[item_keys]['converted'])
-                        if ('item_' + str(download_item.ratingKey) in download_files):
-                            download_files.remove('item_' + str(download_item.ratingKey))
+                        sync_bool = False
+                        if ('only_unwatched' not in sync[item_keys]):
+                            sync_bool = True
+                        elif (sync[item_keys]['only_unwatched'] == False):
+                            sync_bool = True
+                        elif (sync[item_keys]['only_unwatched'] == True and (download_item.TYPE == 'movie' or download_item.TYPE == 'episode') and not download_item.isWatched):
+                            sync_bool = True
+
+                        if (sync_bool == True):
+                            count = count + 1
+                            if ('max_items' in sync[item_keys] and count > int(sync[item_keys]['max_items'])):
+                                break
+                            if(self.get_item_download_path(download_item) == None):
+                                self.__download_item(download_item, converted=sync[item_keys]['converted'])
+                            if ('item_' + str(download_item.ratingKey) in download_files):
+                                download_files.remove('item_' + str(download_item.ratingKey))
             for file in download_files:
                 path_file = os.path.join(path_dir, file)
                 if os.path.exists(path_file):

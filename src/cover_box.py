@@ -18,6 +18,8 @@
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
 from .gi_composites import GtkTemplate
 
+from .sync_settings import SyncSettings
+
 import cairo
 import threading
 
@@ -156,7 +158,7 @@ class CoverBox(Gtk.Box):
             self._mark_played_button.set_visible(False)
             self._mark_unplayed_button.set_visible(True)
 
-        if (item.TYPE != 'movie' and item.TYPE != 'episode' and item.TYPE != 'album' and item.TYPE != 'playlist' and item.TYPE != 'artist'):
+        if (item.TYPE != 'movie' and item.TYPE != 'episode' and item.TYPE != 'album' and item.TYPE != 'playlist' and item.TYPE != 'artist' and item.TYPE != 'show'):
             self._download_button.set_visible(False)
         elif (self._plex.get_item_download_path(self._item) != None):
             self._download_button.set_visible(False)
@@ -201,9 +203,13 @@ class CoverBox(Gtk.Box):
 
     def __on_download_button(self, button):
         self._menu_button.set_active(False)
-        thread = threading.Thread(target=self._plex.add_to_sync, args=(self._item,))
-        thread.daemon = True
-        thread.start()
+        if (self._item.TYPE == 'show'):
+            self._sync_settings = SyncSettings(self._plex, self._item)
+            self._sync_settings.show()
+        else:
+            thread = threading.Thread(target=self._plex.add_to_sync, args=(self._item,))
+            thread.daemon = True
+            thread.start()
 
     def __on_shuffle_button_clicked(self, button):
         self._menu_button.set_active(False)

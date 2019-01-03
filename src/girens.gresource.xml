@@ -16,6 +16,7 @@
     <file>loading_view.ui</file>
     <file>sync_dialog.ui</file>
     <file>sync_item.ui</file>
+    <file>sync_settings.ui</file>
     <file>download_row.ui</file>
     <file>download_menu.ui</file>
   </gresource>

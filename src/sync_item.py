@@ -47,7 +47,7 @@ class SyncItem(Gtk.Box):
             self._item = item
             if (item.TYPE == 'movie' or item.TYPE == 'episode'):
                 self._title_label.set_text(item._prettyfilename())
-            elif (item.TYPE == 'album' or item.TYPE == 'playlist' or item.TYPE == 'artist'):
+            elif (item.TYPE == 'album' or item.TYPE == 'playlist' or item.TYPE == 'artist' or item.TYPE == 'show'):
                 self._title_label.set_text(item.title)
 
     def __on_remove_clicked(self, button):
