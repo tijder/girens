@@ -45,7 +45,10 @@ class SyncItem(Gtk.Box):
     def __on_item_retrieved(self, plex, item):
         if (int(item.ratingKey) == int(self._item_dict['rating_key'])):
             self._item = item
-            self._title_label.set_text(item._prettyfilename())
+            if (item.TYPE == 'movie' or item.TYPE == 'episode'):
+                self._title_label.set_text(item._prettyfilename())
+            elif (item.TYPE == 'album' or item.TYPE == 'playlist' or item.TYPE == 'artist'):
+                self._title_label.set_text(item.title)
 
     def __on_remove_clicked(self, button):
         self._plex.remove_from_sync(self._item_dict['rating_key'])

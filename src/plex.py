@@ -185,10 +185,19 @@ class Plex(GObject.Object):
                 sync = self._config['sync'].copy()
                 for item_keys in sync:
                     item = self._server.fetchItem(int(item_keys))
-                    if(self.get_item_download_path(item) == None):
-                        self.__download_item(item, converted=sync[item_keys]['converted'])
-                    if ('item_' + str(item.ratingKey) in download_files):
-                        download_files.remove('item_' + str(item.ratingKey))
+
+                    download_items = []
+                    if (item.TYPE == 'movie' or item.TYPE == 'episode'):
+                        download_items.append(item)
+                    elif (item.TYPE == 'album' or item.TYPE == 'artist'):
+                        download_items = item.tracks()
+                    elif (item.TYPE == 'playlist'):
+                        download_items = item.items()
+                    for download_item in download_items:
+                        if(self.get_item_download_path(download_item) == None):
+                            self.__download_item(download_item, converted=sync[item_keys]['converted'])
+                        if ('item_' + str(download_item.ratingKey) in download_files):
+                            download_files.remove('item_' + str(download_item.ratingKey))
             for file in download_files:
                 path_file = os.path.join(path_dir, file)
                 if os.path.exists(path_file):

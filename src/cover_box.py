@@ -156,7 +156,7 @@ class CoverBox(Gtk.Box):
             self._mark_played_button.set_visible(False)
             self._mark_unplayed_button.set_visible(True)
 
-        if (item.TYPE != 'movie' and item.TYPE != 'episode'):
+        if (item.TYPE != 'movie' and item.TYPE != 'episode' and item.TYPE != 'album' and item.TYPE != 'playlist' and item.TYPE != 'artist'):
             self._download_button.set_visible(False)
         elif (self._plex.get_item_download_path(self._item) != None):
             self._download_button.set_visible(False)
