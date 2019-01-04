@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
 from .gi_composites import GtkTemplate
 from .cover_box import CoverBox
 
@@ -35,10 +35,15 @@ class MediaBox(Gtk.Revealer):
     _subtitle_label = GtkTemplate.Child()
     _progress_bar = GtkTemplate.Child()
 
+    _cover_image = GtkTemplate.Child()
+
     _item = None
     _paused = False
     _playing = False
     _progress = 0
+
+    _download_key = None
+    _download_thumb = None
 
     def __init__(self, plex, player, **kwargs):
         super().__init__(**kwargs)
@@ -49,6 +54,7 @@ class MediaBox(Gtk.Revealer):
 
         self.__update_buttons()
 
+        self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._player.connect("media-paused", self.__on_media_paused)
         self._player.connect("media-playing", self.__on_media_playing)
         self._player.connect("media-time", self.__on_media_time)
@@ -85,7 +91,25 @@ class MediaBox(Gtk.Revealer):
         self._item = item
         self._playqueue = playqueue
         self._offset = offset
+
+        if (playing == True):
+            self.__reload_image()
+
         GLib.idle_add(self.__update_buttons)
+
+    def __reload_image(self):
+        print(self._item)
+
+        if (not self._item.TYPE == 'playlist'):
+            self._download_key = self._item.ratingKey
+            self._download_thumb = self._item.thumb
+        elif (self._item.type == 'playlist'):
+            self._download_key = self._item.ratingKey
+            self._download_thumb = self._item.composite
+
+        thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
+        thread.daemon = True
+        thread.start()
 
     def __on_media_time(self, player, time):
         self._progress = time
@@ -119,3 +143,11 @@ class MediaBox(Gtk.Revealer):
             self._subtitle_label.set_text(subtitle)
 
         self.set_reveal_child(self._playing)
+
+    def __on_cover_downloaded(self, plex, rating_key, path):
+        if(self._download_key == rating_key):
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 50, 50)
+            GLib.idle_add(self.__set_image, pix)
+
+    def __set_image(self, pix):
+        self._cover_image.set_from_pixbuf(pix)
