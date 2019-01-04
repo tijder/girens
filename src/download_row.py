@@ -58,7 +58,7 @@ class DownloadRow(Gtk.Box):
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
-            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 100, 100)
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 50, 50)
             GLib.idle_add(self.__set_image, pix)
 
     def __set_image(self, pix):
