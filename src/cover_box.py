@@ -46,6 +46,9 @@ class CoverBox(Gtk.Box):
     _play_from_beginning_button = GtkTemplate.Child()
     _download_button = GtkTemplate.Child()
 
+    _download_key = None
+    _download_thumb = None
+
     def __init__(self, plex, item, show_view=False, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -53,7 +56,7 @@ class CoverBox(Gtk.Box):
         self._item = item
         self._plex = plex
         self._show_view = show_view
-        self._plex.connect("download-cover", self.__on_cover_downloaded)
+        self._plex_connect_id = self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex.connect("item-retrieved", self.__on_item_retrieved)
         self._plex.connect("item-downloading", self.__on_item_downloading)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
@@ -176,6 +179,7 @@ class CoverBox(Gtk.Box):
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
+            self._plex.disconnect(self._plex_connect_id)
             pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, self._image_width, self._image_height)
             GLib.idle_add(self.__set_image, pix)
 

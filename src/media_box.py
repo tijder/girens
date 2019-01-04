@@ -18,6 +18,7 @@
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
 from .gi_composites import GtkTemplate
 from .cover_box import CoverBox
+from .playqueue_popover import PlayqueuePopover
 
 import threading
 
@@ -35,6 +36,7 @@ class MediaBox(Gtk.Revealer):
     _subtitle_label = GtkTemplate.Child()
     _progress_bar = GtkTemplate.Child()
 
+    _playqueue_button = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
 
     _item = None
@@ -52,12 +54,16 @@ class MediaBox(Gtk.Revealer):
         self._plex = plex
         self._player = player
 
+        self._playqueue_popover = PlayqueuePopover(self._plex, self._player)
+        self._playqueue_button.set_popover(self._playqueue_popover)
+
         self.__update_buttons()
 
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._player.connect("media-paused", self.__on_media_paused)
         self._player.connect("media-playing", self.__on_media_playing)
         self._player.connect("media-time", self.__on_media_time)
+        self._playqueue_popover.connect("show-button", self.__on_playqueue_show_button)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._prev_button.connect("clicked", self.__on_prev_button_clicked)
         self._next_button.connect("clicked", self.__on_next_button_clicked)
@@ -98,8 +104,6 @@ class MediaBox(Gtk.Revealer):
         GLib.idle_add(self.__update_buttons)
 
     def __reload_image(self):
-        print(self._item)
-
         if (not self._item.TYPE == 'playlist'):
             self._download_key = self._item.ratingKey
             self._download_thumb = self._item.thumb
@@ -143,6 +147,9 @@ class MediaBox(Gtk.Revealer):
             self._subtitle_label.set_text(subtitle)
 
         self.set_reveal_child(self._playing)
+
+    def __on_playqueue_show_button(self, playqueue):
+        self._playqueue_button.set_active(False)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):

@@ -47,7 +47,9 @@ girens_sources = [
   'sync_item.py',
   'sync_settings.py',
   'download_row.py',
-  'download_menu.py'
+  'download_menu.py',
+  'playqueue_popover.py',
+  'playqueue_item.py'
 ]
 
 install_data(girens_sources, install_dir: moduledir)

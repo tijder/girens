@@ -27,6 +27,7 @@ class Player(GObject.Object):
         self._stop_command = False
         self._playing = False
         self._play_wait = False
+        self._next_index = None
 
     def set_plex(self, plex):
         self._plex = plex
@@ -61,7 +62,6 @@ class Player(GObject.Object):
 
     def __stop(self):
         self._player.terminate()
-        self.emit('media-playing', False, self._item, self._playqueue, self._offset)
         self._item.updateTimeline(self._progresNow * 1000, state='stopped', duration=self._item.duration)
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
@@ -107,10 +107,16 @@ class Player(GObject.Object):
             if (self._play_wait == True):
                 self._play_wait = False
                 self.start()
+            elif (self._next_index != None):
+                self._offset = self._next_index
+                self._next_index = None
+                self.start()
             elif (self._stop_command == False and self._eof == True or self._next == True):
                 self.__next()
             elif (self._prev == True):
                 self.__prev()
+            else:
+                self.emit('media-playing', False, self._item, self._playqueue, self._offset)
 
     def prev(self):
         self._prev = True
@@ -124,11 +130,15 @@ class Player(GObject.Object):
         if (self._offset + 1 < len(self._playqueue.items)):
             self._offset = self._offset + 1
             self.start()
+        else:
+            self.emit('media-playing', False, self._item, self._playqueue, self._offset)
 
     def __prev(self):
         if (self._offset - 1 >= 0):
             self._offset = self._offset - 1
             self.start()
+        else:
+            self.emit('media-playing', False, self._item, self._playqueue, self._offset)
 
     def pause(self):
         self._player.pause = True
@@ -138,4 +148,8 @@ class Player(GObject.Object):
 
     def stop(self):
         self._stop_command = True
+        self._player.command('stop')
+
+    def play_index(self, index):
+        self._next_index = index
         self._player.command('stop')
