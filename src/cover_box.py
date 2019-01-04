@@ -57,7 +57,7 @@ class CoverBox(Gtk.Box):
         self._plex = plex
         self._show_view = show_view
         self._plex_connect_id = self._plex.connect("download-cover", self.__on_cover_downloaded)
-        self._plex.connect("item-retrieved", self.__on_item_retrieved)
+        self._plex_retrieved_id = self._plex.connect("item-retrieved", self.__on_item_retrieved)
         self._plex.connect("item-downloading", self.__on_item_downloading)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
@@ -235,6 +235,7 @@ class CoverBox(Gtk.Box):
 
     def __on_item_retrieved(self, plex, item):
         if (self._item.ratingKey == item.ratingKey):
+            self._plex.disconnect(self._plex_retrieved_id)
             self._item = item
             self.__set_item(self._item)
             
