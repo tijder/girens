@@ -269,13 +269,13 @@
             "buildsystem" : "meson",
             "builddir" : true,
             "config-opts": [
-                "-Dglade_catalog=false"
+                "-Dglade_catalog=disabled"
             ],
             "sources" : [
                 {
                     "type" : "archive",
-                    "sha256" : "449c9b2354b843755fbd6729c32cad52c2fffe45986ad635bb84edf4c92f55ad",
-                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.6/libhandy-v0.0.6.tar.bz2"
+                    "sha256" : "ba574d13e2434dd0653a4e8ac4b265cf9e65493a37d7f9bd042d113ce39a0905",
+                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.7/libhandy-v0.0.7.tar.bz2"
                 }
             ]
         },
