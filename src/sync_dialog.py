@@ -46,18 +46,15 @@ class SyncDialog(Gtk.Dialog):
 
         self._plex.get_sync_items()
 
-
     def __on_sync_items_retrieved(self, plex, items):
-        for item in self._items:
-            item.destroy_safe()
-        self._items = []
+        GLib.idle_add(self.__on_sync_items_retrieved_process, plex, items)
 
+    def __on_sync_items_retrieved_process(self, plex, items):
         for item in self._item_box.get_children():
-            self._item_box.remove(item)
+            item.destroy()
 
         for item_keys in items:
             sync_item = SyncItem(self._plex, items[item_keys])
-            self._items.append(sync_item)
             self._item_box.add(sync_item)
 
     def __on_ok_clicked(self, button):
