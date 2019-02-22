@@ -47,8 +47,11 @@ class PlayqueuePopover(Gtk.Popover):
         self._playqueue_list.connect("row-selected", self.__on_row_selected)
 
     def __on_media_playing(self, player, playing, item, playqueue, offset):
+        GLib.idle_add(self.__on_media_playing_process, player, playing, item, playqueue, offset)
+
+    def __on_media_playing_process(self, player, playing, item, playqueue, offset):
         for row in self._playqueue_list.get_children():
-            self._playqueue_list.remove(row)
+            row.destroy()
 
         index = 0
         for item_queue in playqueue.items:
