@@ -148,7 +148,7 @@ class Plex(GObject.Object):
             self.emit('download-from-url', name_image, path)
 
     def play_item(self, item, shuffle=0, from_beginning=False):
-        playqueue = PlayQueue.create(self._server, item, shuffle=shuffle)
+        playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1)
         self._player.set_playqueue(playqueue)
         self._player.start(from_beginning=from_beginning)
 
