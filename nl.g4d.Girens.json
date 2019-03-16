@@ -1,10 +1,10 @@
 {
-    "app-id": "nl.g4d.Girens",
-    "runtime": "org.gnome.Platform",
-    "runtime-version": "3.30",
-    "sdk": "org.gnome.Sdk",
-    "command": "girens",
-    "finish-args": [
+    "app-id" : "nl.g4d.Girens",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "3.32",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "girens",
+    "finish-args" : [
         "--share=network",
         "--share=ipc",
         "--socket=pulseaudio",
@@ -15,14 +15,14 @@
         "--talk-name=ca.desrt.dconf",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
     ],
-    "build-options": {
-        "cflags": "-O2 -g",
-        "cxxflags": "-O2 -g",
-        "env": {
-            "V": "1"
+    "build-options" : {
+        "cflags" : "-O2 -g",
+        "cxxflags" : "-O2 -g",
+        "env" : {
+            "V" : "1"
         }
     },
-    "cleanup": [
+    "cleanup" : [
         "/include",
         "/lib/pkgconfig",
         "/man",
@@ -33,8 +33,8 @@
         "*.la",
         "*.a"
     ],
-    "modules": [
-    {
+    "modules" : [
+        {
             "name" : "libmpv",
             "cleanup" : [
                 "/include",
@@ -112,8 +112,8 @@
                         "--disable-ffplay",
                         "--enable-version3",
                         "--disable-programs",
-		        "--disable-encoders",
-		        "--disable-muxers"
+                        "--disable-encoders",
+                        "--disable-muxers"
                     ],
                     "sources" : [
                         {
@@ -137,7 +137,7 @@
                 }
             ]
         },
-    	{
+        {
             "name" : "PlexAPI",
             "buildsystem" : "simple",
             "build-commands" : [
@@ -268,26 +268,28 @@
             "name" : "libhandy",
             "buildsystem" : "meson",
             "builddir" : true,
-            "config-opts": [
+            "config-opts" : [
                 "-Dglade_catalog=disabled"
             ],
             "sources" : [
                 {
                     "type" : "archive",
-                    "sha256" : "28f8fc9cebe805f7958fe5c7b3a0686b5b3c77be3a28f657bdb1f44fe6d34956",
-                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.8/libhandy-v0.0.8.tar.bz2"
+                    "sha256" : "667d9218fb1ac732564238ba6c034d3b868a4ddecf9ea8f217152361f72b24f2",
+                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.9/libhandy-v0.0.9.tar.bz2"
                 }
             ]
         },
         {
-            "name": "girens",
-            "buildsystem": "meson",
-            "config-opts": [ "--libdir=lib" ],
-            "builddir": true,
-            "sources": [
+            "name" : "girens",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "--libdir=lib"
+            ],
+            "builddir" : true,
+            "sources" : [
                 {
-                    "type": "git",
-                    "url": "file:///home/gerben/git/plex"
+                    "type" : "git",
+                    "url" : "file:///home/gerben/git/plex"
                 }
             ]
         }
