@@ -31,6 +31,7 @@ class AlbumView(Handy.Column):
     _cover_image = GtkTemplate.Child()
 
     _download_key = None
+    _key = None
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -44,6 +45,7 @@ class AlbumView(Handy.Column):
     def change_album(self, key):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
+        self._key = key
         for item in self._item_box.get_children():
             self._item_box.remove(item)
 
@@ -52,7 +54,8 @@ class AlbumView(Handy.Column):
         thread.start()
 
     def __album_retrieved(self, plex, album, tracks):
-        GLib.idle_add(self.__album_process, album, tracks)
+        if album.ratingKey == self._key:
+            GLib.idle_add(self.__album_process, album, tracks)
 
     def __album_process(self, album, tracks):
         self._title_label.set_text(album.title)

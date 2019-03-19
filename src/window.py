@@ -28,6 +28,7 @@ from .search_view import SearchView
 from .profile_dialog import ProfileDialog
 from .loading_view import LoadingView
 from .sync_dialog import SyncDialog
+from .artist_view import ArtistView
 from .album_view import AlbumView
 from .download_menu import DownloadMenu
 
@@ -50,6 +51,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _show_revealer = GtkTemplate.Child()
     _section_revealer = GtkTemplate.Child()
     _search_revealer = GtkTemplate.Child()
+    _artist_revealer = GtkTemplate.Child()
     _album_revealer = GtkTemplate.Child()
 
     header = GtkTemplate.Child()
@@ -112,6 +114,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._section_view = SectionView(self._plex)
         self._section_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        self._section_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._section_revealer.add(self._section_view)
 
         self._search_view = SearchView(self._plex)
@@ -125,6 +128,9 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._ShowView = ShowView(self._plex)
         self._show_revealer.add(self._ShowView)
+
+        self._artist_view = ArtistView(self._plex)
+        self._artist_revealer.add(self._artist_view)
 
         self._album_view = AlbumView(self._plex)
         self._album_revealer.add(self._album_view)
@@ -140,6 +146,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._show_revealer.set_visible(False)
         self._section_revealer.set_visible(False)
         self._search_revealer.set_visible(False)
+        self._artist_revealer.set_visible(False)
         self._album_revealer.set_visible(False)
 
         if view_name == 'discover':
@@ -150,6 +157,8 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._section_revealer.set_visible(True)
         elif view_name == 'search':
             self._search_revealer.set_visible(True)
+        elif view_name == 'artist':
+            self._artist_revealer.set_visible(True)
         elif view_name == 'album':
             self._album_revealer.set_visible(True)
 
@@ -237,6 +246,10 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_go_to_show_clicked(self, view, key):
         self._ShowView.change_show(key)
         self.__show_view('show')
+
+    def __on_go_to_artist_clicked(self, view, key):
+        self._artist_view.change_artist(key)
+        self.__show_view('artist')
 
     def __on_go_to_album_clicked(self, view, key):
         self._album_view.change_album(key)

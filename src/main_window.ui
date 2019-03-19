@@ -289,6 +289,22 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkRevealer" id="_artist_revealer">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="transition_type">none</property>
+                                <property name="reveal_child">True</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkRevealer" id="_album_revealer">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>

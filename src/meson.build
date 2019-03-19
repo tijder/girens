@@ -50,6 +50,7 @@ girens_sources = [
   'download_menu.py',
   'playqueue_popover.py',
   'playqueue_item.py',
+  'artist_view.py',
   'album_view.py',
   'album_item.py'
 ]

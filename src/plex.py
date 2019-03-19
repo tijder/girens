@@ -24,6 +24,7 @@ class Plex(GObject.Object):
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'album-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
+        'artist-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'playlists-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'search-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (str,object)),
@@ -104,6 +105,11 @@ class Plex(GObject.Object):
         album = self._server.fetchItem(int(key))
         tracks = album.tracks()
         self.emit('album-retrieved', album, tracks)
+
+    def get_artist(self, key):
+        artist = self._server.fetchItem(int(key))
+        albums = artist.albums()
+        self.emit('artist-retrieved', artist, albums)
 
     def get_servers(self):
         servers = []

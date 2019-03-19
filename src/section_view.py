@@ -27,7 +27,8 @@ class SectionView(Gtk.Box):
     __gtype_name__ = 'section_view'
 
     __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
     _title_label = GtkTemplate.Child()
@@ -132,6 +133,7 @@ class SectionView(Gtk.Box):
         while count < 100 and len(self._items) != 0:
             cover = CoverBox(self._plex, self._items[0])
             cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
+            cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
             self._section_flow.add(cover)
             self._items.remove(self._items[0])
             count = count + 1
@@ -146,3 +148,7 @@ class SectionView(Gtk.Box):
 
     def __on_go_to_show_clicked(self, cover, key):
         self.emit('view-show-wanted', key)
+
+    def __on_go_to_artist_clicked(self, cover, key):
+        self.emit('view-artist-wanted', key)
+

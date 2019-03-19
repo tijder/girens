@@ -29,6 +29,7 @@ class CoverBox(Gtk.Box):
 
     __gsignals__ = {
         'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
@@ -42,7 +43,8 @@ class CoverBox(Gtk.Box):
 
     _menu_button = GtkTemplate.Child()
     _show_view_button = GtkTemplate.Child()
-    _album_view_button= GtkTemplate.Child()
+    _album_view_button = GtkTemplate.Child()
+    _artist_view_button = GtkTemplate.Child()
     _mark_played_button = GtkTemplate.Child()
     _mark_unplayed_button = GtkTemplate.Child()
     _play_from_beginning_button = GtkTemplate.Child()
@@ -66,6 +68,7 @@ class CoverBox(Gtk.Box):
 
         self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
         self._album_view_button.connect("clicked", self.__on_go_to_album_clicked)
+        self._artist_view_button.connect("clicked", self.__on_go_to_artist_clicked)
         self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
         self._mark_unplayed_button.connect("clicked", self.__on_mark_unplayed_clicked)
         self._play_from_beginning_button.connect("clicked", self.__on_play_from_beginning_clicked)
@@ -98,6 +101,7 @@ class CoverBox(Gtk.Box):
         self._image_width = 200
 
         self._album_view_button.set_visible(False)
+        self._artist_view_button.set_visible(False)
 
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
@@ -135,6 +139,7 @@ class CoverBox(Gtk.Box):
             subtitle = None
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
+            self._artist_view_button.set_visible(True)
             self._image_height = 200
         elif (item.TYPE == 'playlist'):
             title = item.title
@@ -203,6 +208,10 @@ class CoverBox(Gtk.Box):
     def __on_go_to_album_clicked(self, button):
         if self._item.TYPE == 'album':
             self.emit('view-album-wanted', self._item.ratingKey)
+
+    def __on_go_to_artist_clicked(self, button):
+        if self._item.TYPE == 'artist':
+            self.emit('view-artist-wanted', self._item.ratingKey)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
