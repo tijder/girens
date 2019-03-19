@@ -37,7 +37,7 @@ class AlbumItem(Gtk.Box):
         self._plex = plex
         self._item = item
         if item.viewCount == 0:
-            style = self._title_label.get_style_context()
+            style = self._time_label.get_style_context()
             style.add_class("unplayed")
         self._index = index
 
