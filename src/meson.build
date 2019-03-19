@@ -49,7 +49,9 @@ girens_sources = [
   'download_row.py',
   'download_menu.py',
   'playqueue_popover.py',
-  'playqueue_item.py'
+  'playqueue_item.py',
+  'album_view.py',
+  'album_item.py'
 ]
 
 install_data(girens_sources, install_dir: moduledir)

@@ -21,5 +21,7 @@
     <file>download_menu.ui</file>
     <file>playqueue_popover.ui</file>
     <file>playqueue_item.ui</file>
+    <file>album_view.ui</file>
+    <file>album_item.ui</file>
   </gresource>
 </gresources>

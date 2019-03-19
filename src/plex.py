@@ -23,6 +23,7 @@ class Plex(GObject.Object):
         'sync-status': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'servers-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'sections-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'album-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'playlists-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'section-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'search-item-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (str,object)),
@@ -99,6 +100,11 @@ class Plex(GObject.Object):
         episodes = show.episodes()
         self.emit('shows-retrieved',show, episodes)
 
+    def get_album(self, key):
+        album = self._server.fetchItem(int(key))
+        tracks = album.tracks()
+        self.emit('album-retrieved', album, tracks)
+
     def get_servers(self):
         servers = []
         for resource in self._account.resources():
@@ -147,9 +153,13 @@ class Plex(GObject.Object):
             path = self.__download(url_image, 'thumb_' + name_image)
             self.emit('download-from-url', name_image, path)
 
-    def play_item(self, item, shuffle=0, from_beginning=False):
-        playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1)
+    def play_item(self, item, shuffle=0, from_beginning=False, index=0):
+        queue_item = item
+        if item.TYPE == "track":
+            queue_item = item.album()
+        playqueue = PlayQueue.create(self._server, queue_item, shuffle=shuffle, continuous=1)
         self._player.set_playqueue(playqueue)
+        self._player._offset = index
         self._player.start(from_beginning=from_beginning)
 
     def get_sync_items(self):

@@ -26,7 +26,8 @@ class DiscoverView(Gtk.Box):
     __gtype_name__ = 'discover_view'
 
     __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
     _deck_shows_box = GtkTemplate.Child()
@@ -79,7 +80,11 @@ class DiscoverView(Gtk.Box):
     def __add_to_hub(self, hub, item):
         cover = CoverBox(self._plex, item)
         cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        cover.connect("view-album-wanted", self.__on_go_to_album_clicked)
         hub.add(cover)
 
     def __on_go_to_show_clicked(self, cover, key):
         self.emit('view-show-wanted', key)
+
+    def __on_go_to_album_clicked(self, cover, key):
+        self.emit('view-album-wanted', key)

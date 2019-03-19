@@ -5,3 +5,7 @@
 .media_box {
   background-color: @theme_base_color;
 }
+
+.unplayed {
+  color: @theme_selected_bg_color;
+}

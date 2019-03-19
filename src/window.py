@@ -28,6 +28,7 @@ from .search_view import SearchView
 from .profile_dialog import ProfileDialog
 from .loading_view import LoadingView
 from .sync_dialog import SyncDialog
+from .album_view import AlbumView
 from .download_menu import DownloadMenu
 
 from .plex import Plex
@@ -49,6 +50,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _show_revealer = GtkTemplate.Child()
     _section_revealer = GtkTemplate.Child()
     _search_revealer = GtkTemplate.Child()
+    _album_revealer = GtkTemplate.Child()
 
     header = GtkTemplate.Child()
     sidebar = GtkTemplate.Child()
@@ -118,10 +120,14 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._discover_view = DiscoverView(self._plex)
         self._discover_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        self._discover_view.connect("view-album-wanted", self.__on_go_to_album_clicked)
         self._discover_revealer.add(self._discover_view)
 
         self._ShowView = ShowView(self._plex)
         self._show_revealer.add(self._ShowView)
+
+        self._album_view = AlbumView(self._plex)
+        self._album_revealer.add(self._album_view)
 
         self.connect("map", self.__screen_mapped)
 
@@ -134,6 +140,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._show_revealer.set_visible(False)
         self._section_revealer.set_visible(False)
         self._search_revealer.set_visible(False)
+        self._album_revealer.set_visible(False)
 
         if view_name == 'discover':
             self._discover_revealer.set_visible(True)
@@ -143,6 +150,8 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._section_revealer.set_visible(True)
         elif view_name == 'search':
             self._search_revealer.set_visible(True)
+        elif view_name == 'album':
+            self._album_revealer.set_visible(True)
 
         if (view_name != 'search'):
             self._search_toggle_button.set_active(False)
@@ -158,7 +167,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_login_success(self, view, status):
         if (status == True):
             self._content_box_wrapper.set_visible(True)
-            self.__show_view('discover')
+            self.__show_view('album')
             thread = threading.Thread(target=self._plex.connect_to_server)
             thread.daemon = True
             thread.start()
@@ -228,6 +237,10 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_go_to_show_clicked(self, view, key):
         self._ShowView.change_show(key)
         self.__show_view('show')
+
+    def __on_go_to_album_clicked(self, view, key):
+        self._album_view.change_album(key)
+        self.__show_view('album')
 
     def __stop_search(self, search):
         self._search_toggle_button.set_active(False)
