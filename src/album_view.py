@@ -54,7 +54,7 @@ class AlbumView(Handy.Column):
         thread.start()
 
     def __album_retrieved(self, plex, album, tracks):
-        if album.ratingKey == self._key:
+        if int(album.ratingKey) == int(self._key):
             GLib.idle_add(self.__album_process, album, tracks)
 
     def __album_process(self, album, tracks):
