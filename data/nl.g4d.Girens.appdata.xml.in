@@ -30,6 +30,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-03-20" version="1.0.3">
+      <description>
+        <ul>
+          <li>List with playqueue items</li>
+          <li>Play ondeck items continuous </li>
+          <li>Sync and download dialog with thumbnails</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-01-02" version="1.0.2">
       <description>
         <ul>
