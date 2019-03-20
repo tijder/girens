@@ -124,6 +124,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._discover_view = DiscoverView(self._plex)
         self._discover_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
         self._discover_view.connect("view-album-wanted", self.__on_go_to_album_clicked)
+        self._discover_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._discover_revealer.add(self._discover_view)
 
         self._ShowView = ShowView(self._plex)
@@ -133,6 +134,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._artist_revealer.add(self._artist_view)
 
         self._album_view = AlbumView(self._plex)
+        self._album_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._album_revealer.add(self._album_view)
 
         self.connect("map", self.__screen_mapped)

@@ -25,22 +25,40 @@ import threading
 class AlbumView(Handy.Column):
     __gtype_name__ = 'album_view'
 
+    __gsignals__ = {
+        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+    }
+
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
     _item_box = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
 
+    _menu_button = GtkTemplate.Child()
+    _play_button = GtkTemplate.Child()
+    _artist_view_button = GtkTemplate.Child()
+    _download_button = GtkTemplate.Child()
+    _shuffle_button = GtkTemplate.Child()
+
     _download_key = None
     _key = None
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, plex, artist_view=False, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._plex = plex
 
+        if artist_view == True:
+            self._artist_view_button.set_visible(False)
+
         self._plex.connect("album-retrieved", self.__album_retrieved)
         self._plex.connect("download-cover", self.__on_cover_downloaded)
+
+        self._play_button.connect("clicked", self.__on_play_button_clicked)
+        self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
+        self._artist_view_button.connect("clicked", self.__on_go_to_artist_clicked)
+        self._download_button.connect("clicked", self.__on_download_button)
 
     def change_album(self, key):
         self._title_label.set_text('')
@@ -58,6 +76,7 @@ class AlbumView(Handy.Column):
             GLib.idle_add(self.__album_process, album, tracks)
 
     def __album_process(self, album, tracks):
+        self._item = album
         self._title_label.set_text(album.title)
         self._subtitle_label.set_text(str(album.year))
 
@@ -78,3 +97,27 @@ class AlbumView(Handy.Column):
 
     def __set_image(self, pix):
         self._cover_image.set_from_pixbuf(pix)
+
+    def __on_go_to_artist_clicked(self, button):
+        self.emit('view-artist-wanted', self._item.parentRatingKey)
+
+    def __on_play_button_clicked(self, button):
+        thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
+        thread.daemon = True
+        thread.start()
+
+    def __on_download_button(self, button):
+        self._menu_button.set_active(False)
+        if (self._item.TYPE == 'show'):
+            self._sync_settings = SyncSettings(self._plex, self._item)
+            self._sync_settings.show()
+        else:
+            thread = threading.Thread(target=self._plex.add_to_sync, args=(self._item,))
+            thread.daemon = True
+            thread.start()
+
+    def __on_shuffle_button_clicked(self, button):
+        self._menu_button.set_active(False)
+        thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
+        thread.daemon = True
+        thread.start()

@@ -133,6 +133,7 @@ class CoverBox(Gtk.Box):
             self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(False)
             self._album_view_button.set_visible(True)
+            self._artist_view_button.set_visible(True)
             self._image_height = 200
         elif (item.TYPE == 'artist'):
             title = item.title
@@ -212,6 +213,8 @@ class CoverBox(Gtk.Box):
     def __on_go_to_artist_clicked(self, button):
         if self._item.TYPE == 'artist':
             self.emit('view-artist-wanted', self._item.ratingKey)
+        elif self._item.TYPE == 'album':
+            self.emit('view-artist-wanted', self._item.parentRatingKey)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))

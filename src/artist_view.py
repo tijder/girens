@@ -52,6 +52,6 @@ class ArtistView(Gtk.Box):
         self._title_label.set_text(artist.title)
 
         for album in albums:
-            album_view = AlbumView(self._plex)
+            album_view = AlbumView(self._plex, artist_view=True)
             album_view.change_album(album.ratingKey)
             self._album_box.add(album_view)
