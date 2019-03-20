@@ -45,14 +45,14 @@ class Player(GObject.Object):
                 self.emit('media-time', 0)
             if value is not None and abs(value - self._progresUpdate) > 5:
                 self._progresUpdate = value
-                self._item.updateTimeline(value * 1000, state='playing', duration=self._item.duration)
+                self._item.updateTimeline(value * 1000, state='playing', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
             pass
 
         @self._player.property_observer('pause')
         def __on_pause(_name, value):
             self.emit('media-paused', value)
             if (value == True):
-                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration)
+                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
 
         @self._player.property_observer('eof-reached')
         def __on_eof(_name, value):
@@ -62,14 +62,18 @@ class Player(GObject.Object):
 
     def __stop(self):
         self._player.terminate()
-        self._item.updateTimeline(self._progresNow * 1000, state='stopped', duration=self._item.duration)
+        self._item.updateTimeline(self._progresNow * 1000, state='stopped', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         self.__createPlayer()
 
     def set_playqueue(self, playqueue):
         self._playqueue = playqueue
-        self._offset = int(self._playqueue.playQueueSelectedItemOffset)
+        i = 0
+        for item in self._playqueue.items:
+            if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
+                self._offset = i
+            i += 1
 
     def start(self, from_beginning=False):
         if (self._playing != False):

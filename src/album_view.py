@@ -68,10 +68,8 @@ class AlbumView(Handy.Column):
         thread.daemon = True
         thread.start()
 
-        i = 0
         for track in tracks:
-            self._item_box.add(AlbumItem(self._plex, track, i))
-            i+= 1
+            self._item_box.add(AlbumItem(self._plex, track))
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):

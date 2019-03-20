@@ -159,13 +159,12 @@ class Plex(GObject.Object):
             path = self.__download(url_image, 'thumb_' + name_image)
             self.emit('download-from-url', name_image, path)
 
-    def play_item(self, item, shuffle=0, from_beginning=False, index=0):
-        queue_item = item
+    def play_item(self, item, shuffle=0, from_beginning=False):
+        parent_item = None
         if item.TYPE == "track":
-            queue_item = item.album()
-        playqueue = PlayQueue.create(self._server, queue_item, shuffle=shuffle, continuous=1)
+            parent_item = item.album()
+        playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1, parent=parent_item)
         self._player.set_playqueue(playqueue)
-        self._player._offset = index
         self._player.start(from_beginning=from_beginning)
 
     def get_sync_items(self):
