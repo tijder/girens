@@ -74,11 +74,7 @@ class Player(GObject.Object):
 
     def set_playqueue(self, playqueue):
         self._playqueue = playqueue
-        i = 0
-        for item in self._playqueue.items:
-            if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
-                self._offset = i
-            i += 1
+        self.__playqueue_refresh()
 
     def start(self, from_beginning=False):
         if (self._playing != False):
@@ -137,6 +133,7 @@ class Player(GObject.Object):
         self._player.command('stop')
 
     def __next(self):
+        self.__playqueue_refresh()
         if (self._offset + 1 < len(self._playqueue.items)):
             self._offset = self._offset + 1
             self.start()
@@ -144,6 +141,7 @@ class Player(GObject.Object):
             self.emit('media-playing', False, self._item, self._playqueue, self._offset)
 
     def __prev(self):
+        self.__playqueue_refresh()
         if (self._offset - 1 >= 0):
             self._offset = self._offset - 1
             self.start()
@@ -163,3 +161,11 @@ class Player(GObject.Object):
     def play_index(self, index):
         self._next_index = index
         self._player.command('stop')
+
+    def __playqueue_refresh(self):
+        self._playqueue.refresh()
+        i = 0
+        for item in self._playqueue.items:
+            if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
+                self._offset = i
+            i += 1
