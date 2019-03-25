@@ -28,6 +28,7 @@ class Player(GObject.Object):
         self._playing = False
         self._play_wait = False
         self._next_index = None
+        self._fullscreen = False
 
     def set_plex(self, plex):
         self._plex = plex
@@ -59,6 +60,10 @@ class Player(GObject.Object):
             if (value == True):
                 self._eof = True
                 self._player.command('stop')
+
+        @self._player.property_observer('fullscreen')
+        def __on_fullscreen(_name, value):
+            self._fullscreen=value
 
     def __stop(self):
         self._player.terminate()
@@ -96,6 +101,7 @@ class Player(GObject.Object):
                 offset = 0
 
             source = self._plex.get_item_download_path(self._item)
+            self._player.fullscreen = self._fullscreen
             if (source == None):
                 source = self._item.getStreamURL(offset=offset)
                 self._player.play(source)
