@@ -34,8 +34,9 @@
       <description>
         <ul>
           <li>List with playqueue items</li>
-          <li>Play ondeck items continuous </li>
-          <li>Sync and download dialog with thumbnails</li>
+          <li>Play ondeck items continuous</li>
+          <li>Added an album view</li>
+          <li>Added an artist view</li>
         </ul>
       </description>
     </release>
