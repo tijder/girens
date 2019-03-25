@@ -36,8 +36,12 @@ class SectionView(Gtk.Box):
 
     _show_more_button = GtkTemplate.Child()
     _filter_box = GtkTemplate.Child()
+    _section_controll_box = GtkTemplate.Child()
+    _play_button = GtkTemplate.Child()
+    _shuffle_button = GtkTemplate.Child()
 
     _sort_active = None
+    _sort_value_active = None
     _load_spinner = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
@@ -50,6 +54,9 @@ class SectionView(Gtk.Box):
         self._show_more_button.connect("clicked", self.__show_more_clicked)
         self._filter_box.connect("changed", self.__filter_changed)
 
+        self._play_button.connect("clicked", self.__on_play_button_clicked)
+        self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
+
 
     def refresh(self, section, sort=None, sort_value=None):
         self._section = section
@@ -61,6 +68,7 @@ class SectionView(Gtk.Box):
                 sort_value = sort_config['sort_value']
 
         self._sort_active = sort
+        self._sort_value_active = sort_value
 
         self._title_label.set_label(self._section.title)
 
@@ -81,7 +89,7 @@ class SectionView(Gtk.Box):
         self._filter_box.pack_start(renderer_text, True)
         self._filter_box.add_attribute(renderer_text, "text", 1)
         self._filter_box.set_active_id(sort)
-        self._filter_box.set_visible(True)
+        self._section_controll_box.set_visible(True)
 
         self._load_spinner.set_visible(True)
 
@@ -98,7 +106,7 @@ class SectionView(Gtk.Box):
             self._section_flow.remove(item)
 
         self._show_more_button.set_visible(False)
-        self._filter_box.set_visible(False)
+        self._section_controll_box.set_visible(False)
 
         self._load_spinner.set_visible(True)
 
@@ -152,3 +160,18 @@ class SectionView(Gtk.Box):
     def __on_go_to_artist_clicked(self, cover, key):
         self.emit('view-artist-wanted', key)
 
+    def __on_play_button_clicked(self, button):
+        sort = None
+        if self._sort_active is not None:
+            sort = self._sort_active + "%3A" + self._sort_value_active
+        thread = threading.Thread(target=self._plex.play_item, args=(self._section,),kwargs={'sort':sort})
+        thread.daemon = True
+        thread.start()
+
+    def __on_shuffle_button_clicked(self, button):
+        if self._sort_active is not None:
+            sort = self._sort_active + "%3A" + self._sort_value_active
+        thread = threading.Thread(target=self._plex.play_item, args=(self._section,),kwargs={'sort':sort, 'shuffle':1})
+        thread.daemon = True
+        thread.start()
+        
