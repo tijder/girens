@@ -30,6 +30,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-03-25" version="1.0.4">
+      <description>
+        <ul>
+          <li>Play and shuffle button added in section view</li>
+          <li>Playqueue will be refreshed when playing next/prev item</li>
+          <li>Keep fullscreen status</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-03-20" version="1.0.3">
       <description>
         <ul>
