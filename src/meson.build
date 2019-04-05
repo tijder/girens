@@ -28,6 +28,7 @@ configure_file(
 girens_sources = [
   '__init__.py',
   'plex.py',
+  'client_server.py',
   'player.py',
   'gi_composites.py',
   'main.py',

@@ -33,6 +33,7 @@ from .album_view import AlbumView
 from .download_menu import DownloadMenu
 
 from .plex import Plex
+from .client_server import ClientServer
 from .player import Player
 
 import os
@@ -75,7 +76,8 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self.__custom_css()
 
-        self._player = Player()
+        self._player = Player.getInstance()
+        print(self._player)
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("sync-status", self.__on_sync)
@@ -180,6 +182,10 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._content_box_wrapper.set_visible(True)
             self.__show_view('discover')
             thread = threading.Thread(target=self._plex.connect_to_server)
+            thread.daemon = True
+            thread.start()
+            self._client_server = ClientServer(self._player)
+            thread = threading.Thread(target=self._client_server.start)
             thread.daemon = True
             thread.start()
         else:

@@ -1,6 +1,10 @@
 import gi
 import mpv
 import threading
+import requests
+
+from urllib.parse import urlparse
+from plexapi import BASE_HEADERS
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, GObject
@@ -17,21 +21,45 @@ class Player(GObject.Object):
         'media-time': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    __instance = None
+    @staticmethod
+    def getInstance():
+        """ Static access method. """
+        if Player.__instance == None:
+            Player()
+        return Player.__instance
 
-        self._player = None
-        self._progresUpdate = None
-        self._progresNow = None
-        self._item = None
-        self._stop_command = False
-        self._playing = False
-        self._play_wait = False
-        self._next_index = None
-        self._fullscreen = False
+    def __init__(self, **kwargs):
+        """ Virtually private constructor. """
+        if Player.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            super().__init__(**kwargs)
+
+            self._player = None
+            self._progresUpdate = None
+            self._progresNow = None
+            self._item = None
+            self._stop_command = False
+            self._playing = False
+            self._play_wait = False
+            self._next_index = None
+            self._fullscreen = False
+            self._controller = None
+            Player.__instance = self
 
     def set_plex(self, plex):
         self._plex = plex
+
+    def set_controller(self, controller):
+        self._controller = controller
+
+    def set_commandID(self, commandID):
+        self._commandID = commandID
+
+    def unset_controller(self):
+        self._controller = None
+
 
     def __createPlayer(self):
         import locale
@@ -46,14 +74,14 @@ class Player(GObject.Object):
                 self.emit('media-time', 0)
             if value is not None and abs(value - self._progresUpdate) > 5:
                 self._progresUpdate = value
-                self._item.updateTimeline(value * 1000, state='playing', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+                self.__on_update(state='playing')
             pass
 
         @self._player.property_observer('pause')
         def __on_pause(_name, value):
             self.emit('media-paused', value)
             if (value == True):
-                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+                self.__on_update(state='paused')
 
         @self._player.property_observer('eof-reached')
         def __on_eof(_name, value):
@@ -67,7 +95,7 @@ class Player(GObject.Object):
 
     def __stop(self):
         self._player.terminate()
-        self._item.updateTimeline(self._progresNow * 1000, state='stopped', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+        self.__on_update(state='stopped')
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         self.__createPlayer()
@@ -169,3 +197,19 @@ class Player(GObject.Object):
             if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
                 self._offset = i
             i += 1
+
+    def __on_update(self, state='paused'):
+        self._item.updateTimeline(self._progresUpdate * 1000, state=state, duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+        if self._controller is not None:
+            xml = self.get_timeline(state=state)
+            print(xml)
+            headers = {'Content-Type': 'application/xml', 'X-Plex-Client-Identifier': BASE_HEADERS['X-Plex-Client-Identifier']} # set what your server accepts
+            print(requests.post(self._controller + '/:/timeline', data=xml, headers=headers).text)
+
+
+    def get_timeline(self, state='paused'):
+        up = urlparse(self._item._server._baseurl)
+        prog = str(int(self._progresUpdate * 1000))
+        return '''<?xml version: "1.0" encoding="UTF-8"?>
+<MediaContainer location="navigation" commandID="''' + self._commandID + '''" machineIdentifier="''' + BASE_HEADERS['X-Plex-Client-Identifier'] + '''">
+<Timeline type="video" itemType="video" state="stopped" controllable="playPause,stop,volume,audioStream,subtitleStream,seekTo,skipPrevious,skipNext,stepBack,stepForward" /><Timeline type="music" itemType="music" state="''' + state + '''" time="''' + prog + '''" duration="''' + str(self._item.duration) + '''" machineIdentifier="''' + self._item._server.machineIdentifier + '''" address="''' + up.hostname + '''" port="''' + str(up.port) + '''" protocol="''' + up.scheme + '''" token="''' + self._item._server._token + '''" containerKey="/playQueues/''' + str(self._playqueue.playQueueID) + '''" key="''' + self._item.key + '''" ratingKey="''' + str(self._item.ratingKey) + '''" playQueueID="''' + str(self._playqueue.playQueueID) + '''" playQueueItemID="''' + self._playqueue.playQueueSelectedItemID + '''" playQueueVersion="''' + str(self._playqueue.playQueueVersion) + '''" volume="100" controllable="playPause,stop,volume,shuffle,repeat,seekTo,skipPrevious,skipNext,stepBack,stepForward" /><Timeline type="photo" itemType="photo" state="stopped" controllable="skipPrevious,skipNext,stop" /></MediaContainer>'''
