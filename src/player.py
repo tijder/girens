@@ -66,8 +66,8 @@ class Player(GObject.Object):
             self._fullscreen=value
 
     def __stop(self):
+        self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
         self._player.terminate()
-        self._item.updateTimeline(self._progresNow * 1000, state='stopped', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         self.__createPlayer()
