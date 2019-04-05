@@ -30,6 +30,13 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-04-05" version="1.0.5">
+      <description>
+        <ul>
+          <li>Fix progres not been updated correctly</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-03-25" version="1.0.4">
       <description>
         <ul>
