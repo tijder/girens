@@ -120,7 +120,7 @@ class CoverBox(Gtk.Box):
         elif (item.TYPE == 'show'):
             title = item.title
             subtitle = str(item.year)
-            self._shuffle_button.set_visible(False)
+            self._shuffle_button.set_visible(True)
             self._show_view_button.set_visible(True)
         elif (item.TYPE == 'season'):
             title = item.parentTitle
