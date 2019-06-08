@@ -29,6 +29,9 @@ class ShowView(Gtk.Box):
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
 
+    _play_button = GtkTemplate.Child()
+    _shuffle_button = GtkTemplate.Child()
+
     _season_stack = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
@@ -38,6 +41,9 @@ class ShowView(Gtk.Box):
         self._plex = plex
 
         self._plex.connect("shows-retrieved", self.__show_retrieved)
+
+        self._play_button.connect("clicked", self.__on_play_button_clicked)
+        self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
 
     def change_show(self, key):
         self._title_label.set_text('')
@@ -50,6 +56,7 @@ class ShowView(Gtk.Box):
         thread.start()
 
     def __show_retrieved(self, plex, show, episodes):
+        self._show = show
         GLib.idle_add(self.__show_process, show, episodes)
 
     def __show_process(self, show, episodes):
@@ -78,3 +85,13 @@ class ShowView(Gtk.Box):
     def __add_to_hub(self, hub, item):
         cover = CoverBox(self._plex, item, show_view=True)
         hub.add(cover)
+
+    def __on_play_button_clicked(self, button):
+        thread = threading.Thread(target=self._plex.play_item, args=(self._show,))
+        thread.daemon = True
+        thread.start()
+
+    def __on_shuffle_button_clicked(self, button):
+        thread = threading.Thread(target=self._plex.play_item, args=(self._show,),kwargs={'shuffle':1})
+        thread.daemon = True
+        thread.start()
