@@ -3,7 +3,7 @@ import mpv
 import threading
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GdkPixbuf, GObject
+from gi.repository import Gtk, GLib, GdkPixbuf, GObject
 
 # import gi
 # gi.require_version('Gtk', '3.0')
@@ -17,8 +17,12 @@ class Player(GObject.Object):
         'media-time': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self, resume_dialog, **kwargs):
         super().__init__(**kwargs)
+
+        self._resume_dialog = resume_dialog
+        self._resume_dialog.connect("beginning-selected", self.__on_beginning_selected)
+        self._resume_dialog.connect("resume-selected", self.__on_resume_selected)
 
         self._player = None
         self._progresUpdate = None
@@ -76,8 +80,11 @@ class Player(GObject.Object):
         self._playqueue = playqueue
         self.__playqueue_refresh()
 
-    def start(self, from_beginning=False):
-        if (self._playing != False):
+    def start(self, from_beginning=None):
+        self._item = self._playqueue.items[self._offset]
+        if self._item.viewOffset != 0 and from_beginning == None:
+            GLib.idle_add(self.__ask_resume_or_beginning)
+        elif (self._playing != False):
             self._play_wait = True
             self._player.command('stop')
         else:
@@ -86,7 +93,6 @@ class Player(GObject.Object):
             self._eof = False
             self._playing = True
             self._stop_command = False
-            self._item = self._playqueue.items[self._offset]
             self.__createPlayer()
             self._progresUpdate = 0
             self._progresNow = 0
@@ -169,3 +175,17 @@ class Player(GObject.Object):
             if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
                 self._offset = i
             i += 1
+
+    def __ask_resume_or_beginning(self):
+        self._resume_dialog.show()
+
+    def __on_beginning_selected(self, dialog, bool):
+        thread = threading.Thread(target=self.start,kwargs={'from_beginning':True})
+        thread.daemon = True
+        thread.start()
+
+    def __on_resume_selected(self, dialog, bool):
+        thread = threading.Thread(target=self.start,kwargs={'from_beginning':False})
+        thread.daemon = True
+        thread.start()
+        

@@ -159,7 +159,7 @@ class Plex(GObject.Object):
             path = self.__download(url_image, 'thumb_' + name_image)
             self.emit('download-from-url', name_image, path)
 
-    def play_item(self, item, shuffle=0, from_beginning=False, sort=None):
+    def play_item(self, item, shuffle=0, from_beginning=None, sort=None):
         parent_item = None
         if item.TYPE == "track":
             parent_item = item.album()

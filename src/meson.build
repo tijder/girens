@@ -52,7 +52,8 @@ girens_sources = [
   'playqueue_item.py',
   'artist_view.py',
   'album_view.py',
-  'album_item.py'
+  'album_item.py',
+  'resume_dialog.py'
 ]
 
 install_data(girens_sources, install_dir: moduledir)

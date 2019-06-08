@@ -31,6 +31,7 @@ from .sync_dialog import SyncDialog
 from .artist_view import ArtistView
 from .album_view import AlbumView
 from .download_menu import DownloadMenu
+from .resume_dialog import ResumeDialog
 
 from .plex import Plex
 from .player import Player
@@ -75,7 +76,13 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self.__custom_css()
 
-        self._player = Player()
+        self.connect("map", self.__screen_mapped)
+
+
+    def __screen_mapped(self, map):
+        resume_dialog = ResumeDialog()
+        resume_dialog.set_transient_for(self)
+        self._player = Player(resume_dialog)
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("sync-status", self.__on_sync)
@@ -137,10 +144,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._album_revealer.add(self._album_view)
 
-        self.connect("map", self.__screen_mapped)
-
-
-    def __screen_mapped(self, map):
         self.__show_login_view()
 
     def __show_view(self, view_name):
