@@ -154,6 +154,12 @@ class Player(GObject.Object):
         else:
             self.emit('media-playing', False, self._item, self._playqueue, self._offset)
 
+    def play_pause(self):
+        if self._player.pause:
+            self.play()
+        else:
+            self.pause()
+
     def pause(self):
         self._player.pause = True
 

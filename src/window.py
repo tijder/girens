@@ -32,6 +32,7 @@ from .artist_view import ArtistView
 from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .resume_dialog import ResumeDialog
+from .media_keys import MediaKeys
 
 from .plex import Plex
 from .player import Player
@@ -83,6 +84,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         resume_dialog = ResumeDialog()
         resume_dialog.set_transient_for(self)
         self._player = Player(resume_dialog)
+        MediaKeys(self._player, self)
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("sync-status", self.__on_sync)
