@@ -30,6 +30,16 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-06-09" version="1.0.6">
+      <description>
+        <ul>
+          <li>Support for mediakeys</li>
+          <li>Resume dialog when media has an offset</li>
+          <li>Play and shuffle button added to show view</li>
+          <li>Load views after main view is loaded</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-04-05" version="1.0.5">
       <description>
         <ul>
