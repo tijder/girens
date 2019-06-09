@@ -40,7 +40,7 @@ class Player(GObject.Object):
     def __createPlayer(self):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
-        self._player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, vo='x11', title=self._item.title, keep_open=True)
+        self._player = mpv.MPV(input_default_bindings=True, osc="yes", input_vo_keyboard=True, vo='x11', title=self._item.title, keep_open=True)
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
