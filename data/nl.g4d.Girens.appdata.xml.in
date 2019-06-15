@@ -30,6 +30,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-06-15" version="1.0.7">
+      <description>
+        <ul>
+          <li>Added media notification (mpris)</li>
+          <li>Added play and shuffle button to artist view</li>
+          <li>Enable mpv default OSC</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-06-09" version="1.0.6">
       <description>
         <ul>
