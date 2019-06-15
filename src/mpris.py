@@ -195,16 +195,27 @@ class MediaPlayer2Service(Server):
         else:
             user_rating = media.userRating / 10
 
+        if media.type == 'movie':
+            index = 0
+            album = media.title
+            artist = media.title
+        else:
+            index = self.player._item.index
+            album = media.parentTitle
+            artist = media.grandparentTitle
+
+
+
         metadata = {
             'mpris:trackid': GLib.Variant('o', song_dbus_path),
             'mpris:length': GLib.Variant('x', length),
-            'xesam:trackNumber': GLib.Variant('i', int(media.index)),
+            'xesam:trackNumber': GLib.Variant('i', int(index)),
             'xesam:useCount': GLib.Variant('i', media.viewCount),
             'xesam:userRating': GLib.Variant('d', user_rating),
             'xesam:title': GLib.Variant('s', media.title),
-            'xesam:album': GLib.Variant('s', media.parentTitle),
-            'xesam:artist': GLib.Variant('as', [media.grandparentTitle]),
-            'xesam:albumArtist': GLib.Variant('as', [media.grandparentTitle])
+            'xesam:album': GLib.Variant('s', album),
+            'xesam:artist': GLib.Variant('as', [artist]),
+            'xesam:albumArtist': GLib.Variant('as', [artist])
         }
 
         last_played = media.viewedAt
@@ -236,7 +247,10 @@ class MediaPlayer2Service(Server):
 
         if not media:
             media = self.player._item
-            index = self.player._item.index
+            if media.type == 'movie':
+                index = 0
+            else:
+                index = self.player._item.index
 
         id_hex = media.key.encode('ascii').hex()
         path = "/nl/g4d/Girens/TrackList/{}_{}".format(
