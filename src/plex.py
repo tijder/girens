@@ -284,9 +284,16 @@ class Plex(GObject.Object):
         item = self._server.fetchItem(int(item_key))
         self.emit('item-retrieved', item)
 
-    def __download(self, url_image, prefix):
+    def path_for_download(self, prefix):
         path_dir = self._data_dir + '/' + self._server.machineIdentifier
         path = path_dir + '/' + prefix
+        return [path_dir, path]
+
+    def __download(self, url_image, prefix):
+        paths = self.path_for_download(prefix)
+        path_dir = paths[0]
+        path = paths[1]
+
 
         if not os.path.exists(path_dir):
             os.makedirs(path_dir)

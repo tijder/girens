@@ -30,6 +30,7 @@ class Player(GObject.Object):
         self._item = None
         self._stop_command = False
         self._playing = False
+        self._paused = False
         self._play_wait = False
         self._next_index = None
         self._fullscreen = False
@@ -44,6 +45,7 @@ class Player(GObject.Object):
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
+            self._progresNow = value
             if value is not None:
                 self.emit('media-time', value * 1000)
             else:
@@ -55,6 +57,7 @@ class Player(GObject.Object):
 
         @self._player.property_observer('pause')
         def __on_pause(_name, value):
+            self._paused = value
             self.emit('media-paused', value)
             if (value == True):
                 self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
@@ -114,6 +117,7 @@ class Player(GObject.Object):
             self.emit('media-playing', True, self._item, self._playqueue, self._offset)
             self._player.wait_for_playback()
             self.__stop()
+            self._item = None
             self._playing = False
 
             if (self._play_wait == True):
@@ -137,6 +141,17 @@ class Player(GObject.Object):
     def next(self):
         self._next = True
         self._player.command('stop')
+
+    def get_position(self):
+        return 0
+
+    def get_state(self):
+        if self._playing == False:
+            return "Stopped"
+        elif self._paused == True:
+            return "Paused"
+        else:
+            return "Playing"
 
     def __next(self):
         self.__playqueue_refresh()

@@ -33,6 +33,7 @@ from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .resume_dialog import ResumeDialog
 from .media_keys import MediaKeys
+from .mpris import MediaPlayer2Service
 
 from .plex import Plex
 from .player import Player
@@ -76,6 +77,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.init_template()
 
         self.__custom_css()
+
+        self._aplication = kwargs["application"]
 
         self.connect("map", self.__screen_mapped)
 
@@ -145,6 +148,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_view = AlbumView(self._plex)
         self._album_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._album_revealer.add(self._album_view)
+
+        MediaPlayer2Service(self)
 
         self.__show_login_view()
 

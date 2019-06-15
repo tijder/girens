@@ -54,7 +54,8 @@ girens_sources = [
   'album_view.py',
   'album_item.py',
   'resume_dialog.py',
-  'media_keys.py'
+  'media_keys.py',
+  'mpris.py'
 ]
 
 install_data(girens_sources, install_dir: moduledir)
