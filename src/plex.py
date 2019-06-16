@@ -96,6 +96,9 @@ class Plex(GObject.Object):
         deck = self._library.onDeck()
         self.emit('shows-deck',deck)
 
+    def get_item(self, key):
+        return self._server.fetchItem(int(key))
+
     def get_show(self, key):
         show = self._server.fetchItem(int(key))
         episodes = show.episodes()

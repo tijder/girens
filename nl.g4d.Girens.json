@@ -13,7 +13,6 @@
         "--filesystem=xdg-run/dconf",
         "--filesystem=~/.config/dconf:ro",
         "--own-name=org.mpris.MediaPlayer2.Girens",
-        "--talk-name=org.gnome.SettingsDaemon.MediaKeys",
         "--talk-name=ca.desrt.dconf",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
     ],

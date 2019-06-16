@@ -54,7 +54,6 @@ girens_sources = [
   'album_view.py',
   'album_item.py',
   'resume_dialog.py',
-  'media_keys.py',
   'mpris.py'
 ]
 

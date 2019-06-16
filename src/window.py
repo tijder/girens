@@ -72,7 +72,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
 
-    def __init__(self, **kwargs):
+    def __init__(self, show_id=None, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
@@ -82,12 +82,18 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self.connect("map", self.__screen_mapped)
 
+    def show_by_id(self, show_id):
+        item = self._plex.get_item(show_id[1])
+        if (item.TYPE == 'artist'):
+            self.__on_go_to_artist(show_id[1])
+        elif (item.TYPE == 'album'):
+            self.__on_go_to_album(show_id[1])
+
 
     def __screen_mapped(self, map):
         resume_dialog = ResumeDialog()
         resume_dialog.set_transient_for(self)
         self._player = Player(resume_dialog)
-        MediaKeys(self._player, self)
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("sync-status", self.__on_sync)
@@ -260,10 +266,16 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__show_view('show')
 
     def __on_go_to_artist_clicked(self, view, key):
+        self.__on_go_to_artist(key)
+
+    def __on_go_to_artist(self, key):
         self._artist_view.change_artist(key)
         self.__show_view('artist')
 
     def __on_go_to_album_clicked(self, view, key):
+        self.__on_go_to_album(key)
+
+    def __on_go_to_album(self, key):
         self._album_view.change_album(key)
         self.__show_view('album')
 
