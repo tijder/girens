@@ -57,7 +57,7 @@ class PlayqueuePopover(Gtk.Popover):
         for item_queue in playqueue.items:
             playqueue_item = PlayqueueItem(self._plex, item_queue, index)
             row = self._playqueue_list.add(playqueue_item)
-            if (item.ratingKey == item_queue.ratingKey):
+            if (item is not None and item.ratingKey == item_queue.ratingKey):
                 self.__offset = index
                 self._playqueue_list.select_row(playqueue_item.get_parent())
             index = 1 + index
