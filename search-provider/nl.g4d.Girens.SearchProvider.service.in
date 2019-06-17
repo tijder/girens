@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=nl.g4d.Girens.SearchProvider
+Exec=@libexecdir@/girens-sp

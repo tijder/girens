@@ -32,7 +32,6 @@ from .artist_view import ArtistView
 from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .resume_dialog import ResumeDialog
-from .media_keys import MediaKeys
 from .mpris import MediaPlayer2Service
 
 from .plex import Plex
@@ -46,6 +45,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'PlexWindow'
 
     _active_view = None
+    _show_id = None
 
     _content_box_wrapper = GtkTemplate.Child()
     _content_leaflet = GtkTemplate.Child()
@@ -79,6 +79,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__custom_css()
 
         self._aplication = kwargs["application"]
+        self._show_id = show_id
 
         self.connect("map", self.__screen_mapped)
 
@@ -88,6 +89,8 @@ class PlexWindow(Gtk.ApplicationWindow):
             self.__on_go_to_artist(show_id[1])
         elif (item.TYPE == 'album'):
             self.__on_go_to_album(show_id[1])
+        elif (item.TYPE == 'show'):
+            self.__on_go_to_show(show_id[1])
 
 
     def __screen_mapped(self, map):
@@ -209,6 +212,11 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box.refresh()
         self._sync_dialog = SyncDialog(self._plex)
         self._sync_dialog.set_transient_for(self)
+        if (self._show_id is not None):
+            self.show_by_id(self._show_id)
+        thread = threading.Thread(target=self._plex.reload_search_provider_data)
+        thread.daemon = True
+        thread.start()
         thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
         thread.daemon = True
         thread.start()
@@ -262,8 +270,12 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._discover_view.refresh()
         
     def __on_go_to_show_clicked(self, view, key):
+        self.__on_go_to_show(key)
+
+    def __on_go_to_show(self, key):
         self._ShowView.change_show(key)
         self.__show_view('show')
+
 
     def __on_go_to_artist_clicked(self, view, key):
         self.__on_go_to_artist(key)

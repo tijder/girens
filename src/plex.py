@@ -35,6 +35,7 @@ class Plex(GObject.Object):
     }
 
     _config = {}
+    _search_provider_data = {}
 
     _server = None
     _account = None
@@ -47,10 +48,16 @@ class Plex(GObject.Object):
         self._data_dir = data_dir
         self._player = player
         self._player.set_plex(self)
-        if(os.path.isfile(self._config_dir + '/config')):
-           with open(self._config_dir + '/config', 'r') as file:
-               lines = file.readlines()
-               self._config = json.loads(lines[0])
+        self._config = self.__open_file(self._config_dir + '/config')
+        self._search_provider_data = self.__open_file(self._config_dir + '/search_provider_data')
+
+
+    def __open_file(self, file_path):
+        if (os.path.isfile(file_path)):
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+                return json.loads(lines[0])
+        return {}
 
     def has_token(self):
         return 'token' in self._config
@@ -76,6 +83,10 @@ class Plex(GObject.Object):
     def __save_config(self):
         with open(self._config_dir + '/config', 'w') as file:
             file.write(json.dumps(self._config))
+
+    def __save_search_provider_data(self):
+        with open(self._config_dir + '/search_provider_data', 'w') as file:
+            file.write(json.dumps(self._search_provider_data))
 
     def logout(self):
         self._config = {}
@@ -146,6 +157,35 @@ class Plex(GObject.Object):
             sort = sort + ':' + sort_value
         items = section.all(sort=sort)
         self.emit('section-item-retrieved', items)
+
+    def reload_search_provider_data(self):
+        #section = self._library.sectionByID('22')
+        self._search_provider_data['sections'] = {}
+        for section in self._library.sections():
+            if (section.type not in  ['photo', 'movie']):
+                items = section.all()
+                self._search_provider_data['sections'][section.uuid] = {
+                    'key': section.key,
+                    'server_machine_identifier': self._server.machineIdentifier,
+                    'title': section.title
+                }
+                self._search_provider_data['sections'][section.uuid]['items'] = []
+                for item in items:
+                    self._search_provider_data['sections'][section.uuid]['items'].append({
+                        'title': item.title,
+                        'titleSort': item.titleSort,
+                        'ratingKey': item.ratingKey,
+                        'type': item.type
+                    })
+                if (section.type == 'artist'):
+                    for item in section.albums():
+                        self._search_provider_data['sections'][section.uuid]['items'].append({
+                        'title': item.title,
+                        'titleSort': item.titleSort,
+                        'ratingKey': item.ratingKey,
+                        'type': item.type
+                    })
+        self.__save_search_provider_data()
 
     def search_library(self, search, libtype=None):
         items = self._library.search(search, limit=10, libtype=libtype)

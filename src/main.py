@@ -52,6 +52,7 @@ class Application(Gtk.Application):
                 params = value.split(";")
         except Exception as e:
             print("Application::__on_command_line(): %s", e)
+        print(params)
         self.do_activate(show_id=params)
         return 0
 

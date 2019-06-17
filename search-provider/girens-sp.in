@@ -1,0 +1,200 @@
+#!@PYTHON@
+# original source https://gitlab.gnome.org/World/lollypop/blob/master/search-provider/lollypop-sp.in
+
+import sys
+
+# Make sure we'll find the pygobject module, even in JHBuild
+sys.path.insert(1, '@pkgdatadir@')
+
+import gi
+import os
+import json
+
+gi.require_version('Secret', '1')
+gi.require_version('GstPbutils', '1.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gst', '1.0')
+from gi.repository import Gio, Gst, GLib
+
+
+class Server:
+    def __init__(self, con, path):
+        print('test')
+        method_outargs = {}
+        method_inargs = {}
+        for interface in Gio.DBusNodeInfo.new_for_xml(self.__doc__).interfaces:
+
+            for method in interface.methods:
+                method_outargs[method.name] = '(' + ''.join(
+                    [arg.signature for arg in method.out_args]) + ')'
+                method_inargs[method.name] = tuple(
+                    arg.signature for arg in method.in_args)
+
+            con.register_object(object_path=path,
+                                interface_info=interface,
+                                method_call_closure=self.on_method_call)
+
+        self.method_inargs = method_inargs
+        self.method_outargs = method_outargs
+
+    def on_method_call(self,
+                       connection,
+                       sender,
+                       object_path,
+                       interface_name,
+                       method_name,
+                       parameters,
+                       invocation):
+
+        args = list(parameters.unpack())
+        for i, sig in enumerate(self.method_inargs[method_name]):
+            if sig is 'h':
+                msg = invocation.get_message()
+                fd_list = msg.get_unix_fd_list()
+                args[i] = fd_list.get(args[i])
+
+        try:
+            result = getattr(self, method_name)(*args)
+
+            # out_args is atleast (signature1).
+            # We therefore always wrap the result as a tuple.
+            # Refer to https://bugzilla.gnome.org/show_bug.cgi?id=765603
+            result = (result,)
+
+            out_args = self.method_outargs[method_name]
+            if out_args != '()':
+                variant = GLib.Variant(out_args, result)
+                invocation.return_value(variant)
+            else:
+                invocation.return_value(None)
+        except Exception as e:
+            pass
+
+
+class SearchGirensService(Server, Gio.Application):
+    '''
+    <!DOCTYPE node PUBLIC
+    '-//freedesktop//DTD D-BUS Object Introspection 1.0//EN'
+    'http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd'>
+    <node>
+    <interface name="org.gnome.Shell.SearchProvider2">
+
+    <method name="GetInitialResultSet">
+      <arg type="as" name="terms" direction="in" />
+      <arg type="as" name="results" direction="out" />
+    </method>
+
+    <method name="GetSubsearchResultSet">
+      <arg type="as" name="previous_results" direction="in" />
+      <arg type="as" name="terms" direction="in" />
+      <arg type="as" name="results" direction="out" />
+    </method>
+
+    <method name="GetResultMetas">
+      <arg type="as" name="identifiers" direction="in" />
+      <arg type="aa{sv}" name="metas" direction="out" />
+    </method>
+
+    <method name="ActivateResult">
+      <arg type="s" name="identifier" direction="in" />
+      <arg type="as" name="terms" direction="in" />
+      <arg type="u" name="timestamp" direction="in" />
+    </method>
+
+    <method name="LaunchSearch">
+      <arg type="as" name="terms" direction="in" />
+      <arg type="u" name="timestamp" direction="in" />
+    </method>
+
+    </interface>
+    </node>
+    '''
+    __GIRENS_BUS = 'nl.g4d.Girens.SearchProvider'
+    __SEARCH_BUS = 'org.gnome.Shell.SearchProvider2'
+    __PATH_BUS = '/nl/g4d/GirensSearchProvider'
+
+    _search_provider_data = {}
+    _tmp_dict = {}
+
+    def __init__(self):
+        Gio.Application.__init__(
+            self,
+            application_id='nl.g4d.Girens.SearchProvider',
+            flags=Gio.ApplicationFlags.IS_SERVICE)
+        self.__bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        Gio.bus_own_name_on_connection(self.__bus,
+                                       self.__SEARCH_BUS,
+                                       Gio.BusNameOwnerFlags.NONE,
+                                       None,
+                                       None)
+        Server.__init__(self, self.__bus, self.__PATH_BUS)
+
+        self._search_provider_data = self.__open_file(os.environ['XDG_CONFIG_HOME'] + '/search_provider_data')
+
+    def ActivateResult(self, search_id, array, utime):
+        try:
+            argv = ["girens", "--show-id", search_id, None]
+            GLib.spawn_async_with_pipes(
+                None, argv, None,
+                GLib.SpawnFlags.SEARCH_PATH |
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD, None)
+        except Exception as e:
+            print("SearchGirensService::ActivateResult():", e)
+
+    def GetInitialResultSet(self, terms):
+        return self.__search(terms)
+
+    def GetResultMetas(self, ids):
+        results = []
+        for search_id in ids:
+            params = search_id.split(";")
+            icon_path = os.environ['XDG_CACHE_HOME'] + '/' + params[0] + '/thumb_' + params[1]
+            d = {'id': GLib.Variant('s', search_id),
+                 'description': GLib.Variant('s', self._tmp_dict[search_id]['type']),
+                 'name': GLib.Variant('s', self._tmp_dict[search_id]['title']),
+                 'gicon': GLib.Variant('s', icon_path)
+                 }
+            results.append(d)
+        return results
+
+    def GetSubsearchResultSet(self, previous_results, new_terms):
+        return self.__search(new_terms)
+
+    def LaunchSearch(self, terms, utime):
+        results = self.__search(terms)
+        argv = ["girens", "--show-id", ";".join(results), None]
+        GLib.spawn_async_with_pipes(
+            None, argv, None,
+            GLib.SpawnFlags.SEARCH_PATH |
+            GLib.SpawnFlags.DO_NOT_REAP_CHILD, None)
+
+    def __search(self, terms):
+        #items = self._search_provider_data['sections']['7e6afa0b-b340-454f-8202-c56c9f89b467']['items']
+        ids = []
+        search = " ".join(terms)
+        for key, section in self._search_provider_data['sections'].items():
+            items = section['items']
+            for item in ([x for x in items if search.lower() in x['title'].lower()]):
+                tmp_id = str(section['server_machine_identifier']) + ";" + str(item['ratingKey'])
+                ids.append(tmp_id)
+                self._tmp_dict[tmp_id] = item
+        return ids
+
+    def __open_file(self, file_path):
+        if (os.path.isfile(file_path)):
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+                return json.loads(lines[0])
+        return {}
+
+
+def main():
+    Gst.init(None)
+    service = SearchGirensService()
+    service.hold()
+    service.run()
+
+
+if __name__ == '__main__':
+    main()
