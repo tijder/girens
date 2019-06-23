@@ -263,27 +263,27 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__refresh_data()
 
     def __on_home_clicked(self, view):
-        self.header.set_visible_child_name("content");
+        self.header.set_visible_child_name("content")
         self._discover_view.refresh()
         self.__show_view('discover')
 
     def __on_playlists_clicked(self, view):
-        self.header.set_visible_child_name("content");
+        self.header.set_visible_child_name("content")
         self._section_view.show_playlists()
         self.__show_view('section')
 
     def __on_player_clicked(self, view):
-        self.header.set_visible_child_name("content");
+        self.header.set_visible_child_name("content")
         self.__show_view('player')
 
     def __on_section_clicked(self, view, section):
-        self.header.set_visible_child_name("content");
+        self.header.set_visible_child_name("content")
         self._section_view.refresh(section)
         self.__show_view('section')
 
     def __on_back_clicked(self, button):
         self._sidebar_box.unselect_all()
-        self.header.set_visible_child_name("sidebar");
+        self.header.set_visible_child_name("sidebar")
 
     def __refresh_data(self):
         if(self._active_view == 'discover'):
@@ -315,7 +315,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         GLib.idle_add(self.__go_to_player)
 
     def __go_to_player(self):
-        self.header.set_visible_child_name("content");
+        self.header.set_visible_child_name("content")
         self.__show_view('player')
 
     def __stop_search(self, search):
@@ -326,7 +326,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_search_changed(self, entry):
         if (entry.get_text() != "" and len(entry.get_text()) >= 3):
-            self.header.set_visible_child_name("content");
+            self.header.set_visible_child_name("content")
             self._search_view.refresh(entry.get_text())
             self.__show_view('search')
 
@@ -350,7 +350,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __fullscreen(self, widged, booleon):
         if booleon:
-            self.header.set_visible_child_name("content");
+            self.header.set_visible_child_name("content")
             self.fullscreen()
             self._media_box.hide()
             self.sidebar.hide()
