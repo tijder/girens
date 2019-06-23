@@ -350,6 +350,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __fullscreen(self, widged, booleon):
         if booleon:
+            self.header.set_visible_child_name("content");
             self.fullscreen()
             self._media_box.hide()
             self.sidebar.hide()
