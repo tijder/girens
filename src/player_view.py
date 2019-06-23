@@ -2,6 +2,7 @@ from gi.repository import Gtk, GLib, GObject, Gdk, GdkPixbuf
 from .gi_composites import GtkTemplate
 
 from .cover_box import CoverBox
+from .media_box import MediaBox
 
 import threading
 
@@ -21,14 +22,10 @@ class PlayerView(Gtk.Box):
     _stack = GtkTemplate.Child()
     _controlls = GtkTemplate.Child()
     _event = GtkTemplate.Child()
-    _play_button = GtkTemplate.Child()
-    _fullscreen_button = GtkTemplate.Child()
-    _play_image = GtkTemplate.Child()
-    _progress_bar = GtkTemplate.Child()
-    _cover_image = GtkTemplate.Child()
-    _deck_shows_box = GtkTemplate.Child()
-
     _box = GtkTemplate.Child()
+    _cover_image = GtkTemplate.Child()
+
+    _deck_shows_box = GtkTemplate.Child()
 
     _download_key = None
     _download_thumb = None
@@ -46,19 +43,21 @@ class PlayerView(Gtk.Box):
         self._event.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
         self._event.connect("motion-notify-event", self.__on_motion)
         window.connect("key-press-event", self.__on_keypress)
-        self._play_button.connect("clicked", self.__on_play_button_clicked)
-        self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
 
     def set_player(self, player):
         self._player = player
         self._player.connect("media-playing", self.__on_media_playing)
-        self._player.connect("media-paused", self.__on_media_paused)
-        self._player.connect("media-time", self.__on_media_time)
 
     def set_plex(self, plex):
         self._plex = plex
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex.connect("section-shows-deck", self.__on_show_deck_update)
+
+        if (self._player != None):
+            self._media_box = MediaBox(self._plex, self._player, fullscreen_button_show=True, show_only_type="video")
+            self._controlls.add(self._media_box)
+            self._media_box.set_visible(True)
+            self._media_box.connect("fullscreen-clicked", self.__on_fullscreen_button_clicked)
 
     def __on_fullscreen_button_clicked(self, button):
         self.__fullscreen()
@@ -107,9 +106,6 @@ class PlayerView(Gtk.Box):
     def __on_media_playing(self, player, playing, item, playqueue, offset):
         self._playing = playing
         self._item = item
-        self._offset = offset
-
-        GLib.idle_add(self.__update_buttons)
 
         if self._playing == True:
             GLib.idle_add(self.__empty_flowbox)
@@ -131,22 +127,6 @@ class PlayerView(Gtk.Box):
             thread.daemon = True
             thread.start()
 
-    def __on_media_paused(self, player, paused):
-        self._paused = paused
-        GLib.idle_add(self.__update_buttons)
-
-    def __on_media_time(self, player, time):
-        self._progress = time
-        GLib.idle_add(self.__update_buttons)
-
-    def __update_buttons(self):
-        if (self._paused == True):
-            self._play_image.set_from_icon_name('media-playback-start-symbolic', 4)
-        else:
-            self._play_image.set_from_icon_name('media-playback-pause-symbolic', 4)
-
-        if (self._item != None):
-            self._progress_bar.set_fraction(self._progress / self._item.duration)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):

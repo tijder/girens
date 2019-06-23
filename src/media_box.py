@@ -26,11 +26,16 @@ import threading
 class MediaBox(Gtk.Revealer):
     __gtype_name__ = 'media_box'
 
+    __gsignals__ = {
+        'fullscreen-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+    }
+
     _close_button = GtkTemplate.Child()
     _play_button = GtkTemplate.Child()
     _prev_button = GtkTemplate.Child()
     _next_button = GtkTemplate.Child()
     _play_image = GtkTemplate.Child()
+    _fullscreen_button = GtkTemplate.Child()
 
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
@@ -47,12 +52,14 @@ class MediaBox(Gtk.Revealer):
     _download_key = None
     _download_thumb = None
 
-    def __init__(self, plex, player, **kwargs):
+    def __init__(self, plex, player, fullscreen_button_show=False, show_only_type="audio", **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._plex = plex
         self._player = player
+
+        self._show_only_type = show_only_type
 
         self._playqueue_popover = PlayqueuePopover(self._plex, self._player)
         self._playqueue_button.set_popover(self._playqueue_popover)
@@ -68,12 +75,21 @@ class MediaBox(Gtk.Revealer):
         self._prev_button.connect("clicked", self.__on_prev_button_clicked)
         self._next_button.connect("clicked", self.__on_next_button_clicked)
         self._close_button.connect("clicked", self.__on_close_button_clicked)
+        self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
+
+        self.set_reveal_child(False)
+
+        if fullscreen_button_show == False:
+            self._fullscreen_button.hide()
 
     def __on_play_button_clicked(self, button):
         self._player.play_pause()
 
     def __on_close_button_clicked(self, button):
         self._player.stop()
+
+    def __on_fullscreen_button_clicked(self, button):
+        self.emit('fullscreen-clicked')
 
     def __on_prev_button_clicked(self, button):
         thread = threading.Thread(target=self._player.prev)
@@ -90,6 +106,13 @@ class MediaBox(Gtk.Revealer):
         GLib.idle_add(self.__update_buttons)
 
     def __on_media_playing(self, player, playing, item, playqueue, offset):
+        if item != None and item.listType == self._show_only_type:
+            self.__update_media_playing(player, playing, item, playqueue, offset)
+            self.set_reveal_child(playing)
+        else:
+            self.set_reveal_child(False)
+
+    def __update_media_playing(self, player, playing, item, playqueue, offset):
         self._playing = playing
         self._item = item
         self._playqueue = playqueue
@@ -142,8 +165,6 @@ class MediaBox(Gtk.Revealer):
 
             self._title_label.set_text(title)
             self._subtitle_label.set_text(subtitle)
-
-        self.set_reveal_child(self._playing)
 
     def __on_playqueue_show_button(self, playqueue):
         self._playqueue_button.set_active(False)
