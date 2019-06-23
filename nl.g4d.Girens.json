@@ -118,8 +118,9 @@
                     ],
                     "sources" : [
                         {
-                            "type" : "git",
-                            "url" : "https://github.com/FFmpeg/FFmpeg.git"
+                            "type" : "archive",
+		            "url" : "https://github.com/FFmpeg/FFmpeg/archive/n4.1.3.tar.gz",
+		            "sha256" : "271405b43f4953fcf0487c66bc455cf94bb7a10ffcb27f72a402463b87b2b8c9"
                         }
                     ]
                 }
