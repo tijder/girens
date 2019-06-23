@@ -33,12 +33,13 @@ class PlayerView(Gtk.Box):
     _paused = True
     _fullscreen = False
 
-    def __init__(self, **kwargs):
+    def __init__(self, window, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._event.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
         self._event.connect("motion-notify-event", self.__on_motion)
+        window.connect("key-press-event", self.__on_keypress)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
 
@@ -53,6 +54,9 @@ class PlayerView(Gtk.Box):
         self._plex.connect("download-cover", self.__on_cover_downloaded)
 
     def __on_fullscreen_button_clicked(self, button):
+        self.__fullscreen()
+
+    def __fullscreen(self):
         self._fullscreen = not self._fullscreen
         self.emit('fullscreen', self._fullscreen)
         if self._fullscreen:
@@ -67,7 +71,21 @@ class PlayerView(Gtk.Box):
     def __on_play_button_clicked(self, button):
         self._player.play_pause()
 
+
+    def __on_keypress(self, widget, key):
+        if key.keyval in [102, 65480]:
+            self.__fullscreen()
+        elif key.string == 'p':
+            self._player.play_pause()
+        elif key.string == 'o':
+            self.__show_controlls()
+        elif key.string == 'q':
+            self._player.stop()
+
     def __on_motion(self, widget, motion):
+        self.__show_controlls()
+
+    def __show_controlls(self):
         self._controlls.show()
         if self._timout != None:
             GLib.source_remove(self._timout)

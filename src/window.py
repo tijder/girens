@@ -101,7 +101,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         resume_dialog = ResumeDialog()
         resume_dialog.set_transient_for(self)
 
-        self._player_view = PlayerView()
+        self._player_view = PlayerView(self)
         self._player_view.connect("fullscreen", self.__fullscreen)
         self._player_revealer.add(self._player_view)
 
