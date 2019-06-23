@@ -26,6 +26,7 @@ class PlayerView(Gtk.Box):
 
     _download_key = None
     _download_thumb = None
+    _item = None
 
     _timout = None
     _progress = 0
