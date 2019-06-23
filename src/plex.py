@@ -15,6 +15,7 @@ class Plex(GObject.Object):
         'login-status': (GObject.SignalFlags.RUN_FIRST, None, (bool,str)),
         'shows-latest': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        'section-shows-deck': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'download-cover': (GObject.SignalFlags.RUN_FIRST, None, (int,str)),
         'download-from-url': (GObject.SignalFlags.RUN_FIRST, None, (str,str)),
         'shows-retrieved': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
@@ -106,6 +107,10 @@ class Plex(GObject.Object):
     def get_deck(self):
         deck = self._library.onDeck()
         self.emit('shows-deck',deck)
+
+    def get_section_deck(self, section_id):
+        deck = self._library.sectionByID(section_id).onDeck()
+        self.emit('section-shows-deck',deck)
 
     def get_item(self, key):
         return self._server.fetchItem(int(key))

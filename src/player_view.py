@@ -1,6 +1,8 @@
 from gi.repository import Gtk, GLib, GObject, Gdk, GdkPixbuf
 from .gi_composites import GtkTemplate
 
+from .cover_box import CoverBox
+
 import threading
 
 @GtkTemplate(ui='/nl/g4d/Girens/player_view.ui')
@@ -9,6 +11,9 @@ class PlayerView(Gtk.Box):
 
     __gsignals__ = {
         'fullscreen': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
+        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
     _frame = GtkTemplate.Child()
@@ -21,6 +26,7 @@ class PlayerView(Gtk.Box):
     _play_image = GtkTemplate.Child()
     _progress_bar = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
+    _deck_shows_box = GtkTemplate.Child()
 
     _box = GtkTemplate.Child()
 
@@ -52,6 +58,7 @@ class PlayerView(Gtk.Box):
     def set_plex(self, plex):
         self._plex = plex
         self._plex.connect("download-cover", self.__on_cover_downloaded)
+        self._plex.connect("section-shows-deck", self.__on_show_deck_update)
 
     def __on_fullscreen_button_clicked(self, button):
         self.__fullscreen()
@@ -105,6 +112,11 @@ class PlayerView(Gtk.Box):
         GLib.idle_add(self.__update_buttons)
 
         if self._playing == True:
+            GLib.idle_add(self.__empty_flowbox)
+            thread = threading.Thread(target=self._plex.get_section_deck, args=(item.librarySectionID,))
+            thread.daemon = True
+            thread.start()
+
             if (not self._item.TYPE == 'playlist' and not self._item.TYPE == 'episode'):
                 self._download_key = self._item.ratingKey
                 self._download_thumb = self._item.thumb
@@ -143,3 +155,27 @@ class PlayerView(Gtk.Box):
 
     def __set_image(self, pix):
         self._cover_image.set_from_pixbuf(pix)
+
+    def __empty_flowbox(self):
+        for item in self._deck_shows_box.get_children():
+            self._deck_shows_box.remove(item)
+
+    def __on_show_deck_update(self, plex, items):
+        for item in items:
+            GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
+
+    def __add_to_hub(self, hub, item):
+        cover = CoverBox(self._plex, item)
+        cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        cover.connect("view-album-wanted", self.__on_go_to_album_clicked)
+        cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
+        hub.add(cover)
+
+    def __on_go_to_show_clicked(self, cover, key):
+        self.emit('view-show-wanted', key)
+
+    def __on_go_to_album_clicked(self, cover, key):
+        self.emit('view-album-wanted', key)
+
+    def __on_go_to_artist_clicked(self, cover, key):
+        self.emit('view-artist-wanted', key)

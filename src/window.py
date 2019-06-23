@@ -103,6 +103,9 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._player_view = PlayerView(self)
         self._player_view.connect("fullscreen", self.__fullscreen)
+        self._player_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
+        self._player_view.connect("view-album-wanted", self.__on_go_to_album_clicked)
+        self._player_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._player_revealer.add(self._player_view)
 
         self._player = Player(resume_dialog, self._player_view)
