@@ -29,6 +29,7 @@ from .profile_dialog import ProfileDialog
 from .loading_view import LoadingView
 from .sync_dialog import SyncDialog
 from .artist_view import ArtistView
+from .player_view import PlayerView
 from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .resume_dialog import ResumeDialog
@@ -56,6 +57,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _search_revealer = GtkTemplate.Child()
     _artist_revealer = GtkTemplate.Child()
     _album_revealer = GtkTemplate.Child()
+    _player_revealer = GtkTemplate.Child()
 
     header = GtkTemplate.Child()
     sidebar = GtkTemplate.Child()
@@ -75,13 +77,15 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __init__(self, show_id=None, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
-
         self.__custom_css()
 
         self._aplication = kwargs["application"]
         self._show_id = show_id
 
         self.connect("map", self.__screen_mapped)
+
+    def __on_motion(self, widget, motion):
+        print(motion)
 
     def show_by_id(self, show_id):
         item = self._plex.get_item(show_id[1])
@@ -96,8 +100,16 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __screen_mapped(self, map):
         resume_dialog = ResumeDialog()
         resume_dialog.set_transient_for(self)
-        self._player = Player(resume_dialog)
+
+        self._player_view = PlayerView()
+        self._player_view.connect("fullscreen", self.__fullscreen)
+        self._player_revealer.add(self._player_view)
+
+        self._player = Player(resume_dialog, self._player_view)
+        self._player.connect("video-starting", self.__on_video_starting)
+        self._player_view.set_player(self._player)
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)
+        self._player_view.set_plex(self._plex)
         self._plex.connect("download-from-url", self.__on_downloaded)
         self._plex.connect("sync-status", self.__on_sync)
         self._plex.connect("connection-to-server", self.__on_connection_to_server)
@@ -131,6 +143,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box.connect("section-clicked", self.__on_section_clicked)
         self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
         self._sidebar_box.connect("playlists-button-clicked", self.__on_playlists_clicked)
+        self._sidebar_box.connect("player-button-clicked", self.__on_player_clicked)
         self._sidebar_viewport.add(self._sidebar_box)
 
         self._section_view = SectionView(self._plex)
@@ -169,6 +182,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._search_revealer.set_visible(False)
         self._artist_revealer.set_visible(False)
         self._album_revealer.set_visible(False)
+        self._player_revealer.set_visible(False)
 
         if view_name == 'discover':
             self._discover_revealer.set_visible(True)
@@ -182,6 +196,8 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._artist_revealer.set_visible(True)
         elif view_name == 'album':
             self._album_revealer.set_visible(True)
+        elif view_name == 'player':
+            self._player_revealer.set_visible(True)
 
         if (view_name != 'search'):
             self._search_toggle_button.set_active(False)
@@ -256,6 +272,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._section_view.show_playlists()
         self.__show_view('section')
 
+    def __on_player_clicked(self, view):
+        self.header.set_visible_child_name("content");
+        self.__show_view('player')
+
     def __on_section_clicked(self, view, section):
         self.header.set_visible_child_name("content");
         self._section_view.refresh(section)
@@ -291,6 +311,13 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_view.change_album(key)
         self.__show_view('album')
 
+    def __on_video_starting(self, widget):
+        GLib.idle_add(self.__go_to_player)
+
+    def __go_to_player(self):
+        self.header.set_visible_child_name("content");
+        self.__show_view('player')
+
     def __stop_search(self, search):
         self._search_toggle_button.set_active(False)
 
@@ -320,6 +347,16 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._content_leaflet.set_visible(True)
 
             self._search_toggle_button.set_sensitive(True)
+
+    def __fullscreen(self, widged, booleon):
+        if booleon:
+            self.fullscreen()
+            self._media_box.hide()
+            self.sidebar.hide()
+        else:
+            self.unfullscreen()
+            self._media_box.show()
+            self.sidebar.show()
 
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)

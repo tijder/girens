@@ -29,6 +29,7 @@ class SidebarBox(Gtk.Box):
     __gsignals__ = {
         'home-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'playlists-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'player-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
@@ -69,6 +70,9 @@ class SidebarBox(Gtk.Box):
 
     def __process_section(self, sections):
         section_grid = SectionGrid()
+        section_grid.set_title('Player')
+        self._section_list.add(section_grid)
+        section_grid = SectionGrid()
         section_grid.set_title('Home')
         self._section_list.add(section_grid)
         section_grid = SectionGrid()
@@ -106,3 +110,5 @@ class SidebarBox(Gtk.Box):
                     self.emit('home-button-clicked')
                 elif (child.get_title() == 'Playlists'):
                     self.emit('playlists-button-clicked')
+                elif (child.get_title() == 'Player'):
+                    self.emit('player-button-clicked')

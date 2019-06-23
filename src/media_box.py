@@ -70,10 +70,7 @@ class MediaBox(Gtk.Revealer):
         self._close_button.connect("clicked", self.__on_close_button_clicked)
 
     def __on_play_button_clicked(self, button):
-        if (self._paused == True):
-            self._player.play()
-        else:
-            self._player.pause()
+        self._player.play_pause()
 
     def __on_close_button_clicked(self, button):
         self._player.stop()

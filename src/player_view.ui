@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <template class="player_view" parent="GtkBox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="vexpand">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkEventBox" id="_event">
+        <property name="height_request">500</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkOverlay" id="_overlay">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkStack" id="_stack">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkFrame" id="_frame">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label_xalign">0</property>
+                    <property name="label_yalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkImage" id="_cover_image">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="stock">gtk-missing-image</property>
+                        <style>
+                          <class name="cover_image"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child type="label_item">
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="name">page0</property>
+                    <property name="title" translatable="yes">page0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="index">-1</property>
+              </packing>
+            </child>
+            <child type="overlay">
+              <object class="GtkBox" id="_controlls">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="valign">end</property>
+                <child>
+                  <object class="GtkButton" id="_play_button">
+                    <property name="width_request">50</property>
+                    <property name="height_request">50</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <child>
+                      <object class="GtkImage" id="_play_image">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">media-playback-start-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkProgressBar" id="_progress_bar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="_fullscreen_button">
+                    <property name="width_request">50</property>
+                    <property name="height_request">50</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">view-fullscreen-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <style>
+                  <class name="media_box"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox" id="_box">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="_title">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </template>
+</interface>

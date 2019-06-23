@@ -1,6 +1,7 @@
 import gi
 import mpv
 import threading
+import time
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib, GdkPixbuf, GObject
@@ -12,13 +13,17 @@ from gi.repository import Gtk, GLib, GdkPixbuf, GObject
 
 class Player(GObject.Object):
     __gsignals__ = {
+        'video-starting': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'media-paused': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int)),
         'media-time': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
 
-    def __init__(self, resume_dialog, **kwargs):
+    def __init__(self, resume_dialog, player_view, **kwargs):
         super().__init__(**kwargs)
+
+
+        self._player_view = player_view
 
         self._resume_dialog = resume_dialog
         self._resume_dialog.connect("beginning-selected", self.__on_beginning_selected)
@@ -41,7 +46,10 @@ class Player(GObject.Object):
     def __createPlayer(self):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
-        self._player = mpv.MPV(input_default_bindings=True, osc="yes", input_vo_keyboard=True, vo='x11', title=self._item.title, keep_open=True)
+        if self._item.listType == 'video':
+            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), input_cursor="no", cursor_autohide="no", input_default_bindings="no")
+        else:
+            self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no")
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
@@ -62,22 +70,9 @@ class Player(GObject.Object):
             if (value == True):
                 self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
 
-        @self._player.property_observer('eof-reached')
-        def __on_eof(_name, value):
-            if (value == True):
-                self._eof = True
-                self._player.command('stop')
-
-        @self._player.property_observer('fullscreen')
-        def __on_fullscreen(_name, value):
-            self._fullscreen=value
-
     def __stop(self):
         self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
         self._player.terminate()
-        import locale
-        locale.setlocale(locale.LC_NUMERIC, 'C')
-        self.__createPlayer()
 
     def set_playqueue(self, playqueue):
         self._playqueue = playqueue
@@ -91,6 +86,10 @@ class Player(GObject.Object):
             self._play_wait = True
             self._player.command('stop')
         else:
+            if self._item.listType == 'video':
+                self.emit('video-starting')
+                while self._player_view._frame.get_property("window") == None:
+                    time.sleep(1)
             self._next = False
             self._prev = False
             self._eof = False
@@ -106,7 +105,6 @@ class Player(GObject.Object):
                 offset = 0
 
             source = self._plex.get_item_download_path(self._item)
-            self._player.fullscreen = self._fullscreen
             if (source == None):
                 source = self._item.getStreamURL(offset=offset)
                 self._player.play(source)
@@ -115,6 +113,7 @@ class Player(GObject.Object):
                 self._player.wait_for_property('seekable')
                 self._player.seek(offset, reference='absolute', precision='exact')
             self.emit('media-playing', True, self._item, self._playqueue, self._offset)
+
             self._player.wait_for_playback()
             self.__stop()
             self._item = None
@@ -127,7 +126,7 @@ class Player(GObject.Object):
                 self._offset = self._next_index
                 self._next_index = None
                 self.start()
-            elif (self._stop_command == False and self._eof == True or self._next == True):
+            elif (self._stop_command == False or self._next == True):
                 self.__next()
             elif (self._prev == True):
                 self.__prev()

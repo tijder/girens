@@ -40,6 +40,7 @@ girens_sources = [
   'show_view.py',
   'section_view.py',
   'search_view.py',
+  'player_view.py',
   'cover_box.py',
   'section_grid.py',
   'loading_view.py',
