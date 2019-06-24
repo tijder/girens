@@ -188,6 +188,12 @@ class Player(GObject.Object):
         self._stop_command = True
         self._player.command('stop')
 
+    def seek_backward(self):
+        self._player.command('seek', -10)
+
+    def seek_forward(self):
+        self._player.command('seek', 30)
+
     def play_index(self, index):
         self._next_index = index
         self._player.command('stop')

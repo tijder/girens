@@ -84,7 +84,7 @@ class PlayerView(Gtk.Box):
 
 
     def __on_keypress(self, widget, key):
-        if key.keyval in [102, 65480]:
+        if key.keyval in [102, 65480]: # f and f11 key
             self.__fullscreen()
         elif key.string == 'p':
             self._player.play_pause()
@@ -92,6 +92,10 @@ class PlayerView(Gtk.Box):
             self.__show_controlls()
         elif key.string == 'q':
             self._player.stop()
+        elif key.keyval == 65361: # left key
+            self._player.seek_backward()
+        elif key.keyval == 65363: #right key
+            self._player.seek_forward()
 
     def __on_motion(self, widget, motion):
         self.__show_controlls()
