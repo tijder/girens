@@ -142,7 +142,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._search_entry.connect("search-changed", self.__on_search_changed)
         self._search_entry.connect("stop-search", self.__stop_search)
 
-        self._sidebar_box = SidebarBox(self._plex)
+        self._sidebar_box = SidebarBox(self._plex, self._player)
         self._sidebar_box.connect("section-clicked", self.__on_section_clicked)
         self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
         self._sidebar_box.connect("playlists-button-clicked", self.__on_playlists_clicked)

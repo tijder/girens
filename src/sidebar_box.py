@@ -36,14 +36,16 @@ class SidebarBox(Gtk.Box):
     _server_box = GtkTemplate.Child()
     _section_list = GtkTemplate.Child()
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, plex, player, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._plex = plex
+        self._player = player
 
         self._plex.connect('servers-retrieved', self.__on_servers_retrieved)
         self._plex.connect('sections-retrieved', self.__on_sections_retrieved)
+        self._player.connect("media-playing", self.__on_media_playing)
 
         self._section_list.connect("row-selected", self.__on_section_clicked)
 
@@ -69,9 +71,10 @@ class SidebarBox(Gtk.Box):
         GLib.idle_add(self.__process_section, sections)
 
     def __process_section(self, sections):
-        section_grid = SectionGrid()
-        section_grid.set_title('Player')
-        self._section_list.add(section_grid)
+        self._section_player = SectionGrid()
+        self._section_player.set_title('Player')
+        self._section_list.add(self._section_player)
+        self._section_player.hide()
         section_grid = SectionGrid()
         section_grid.set_title('Home')
         self._section_list.add(section_grid)
@@ -112,3 +115,9 @@ class SidebarBox(Gtk.Box):
                     self.emit('playlists-button-clicked')
                 elif (child.get_title() == 'Player'):
                     self.emit('player-button-clicked')
+
+    def __on_media_playing(self, player, playing, item, playqueue, offset):
+        if item != None and item.listType == 'video':
+            self._section_player.show()
+        else:
+            self._section_player.hide()
