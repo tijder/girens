@@ -61,6 +61,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     header = GtkTemplate.Child()
     sidebar = GtkTemplate.Child()
+    separator = GtkTemplate.Child()
     _sidebar_viewport = GtkTemplate.Child()
 
     _search_bar = GtkTemplate.Child()
@@ -357,10 +358,12 @@ class PlexWindow(Gtk.ApplicationWindow):
             self.fullscreen()
             self._media_box.hide()
             self.sidebar.hide()
+            self.separator.hide()
         else:
             self.unfullscreen()
             self._media_box.show()
             self.sidebar.show()
+            self.separator.show()
 
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)
