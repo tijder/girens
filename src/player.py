@@ -47,7 +47,7 @@ class Player(GObject.Object):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         if self._item.listType == 'video':
-            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), input_cursor="no", cursor_autohide="no", input_default_bindings="no")
+            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), vo='x11', input_cursor="no", cursor_autohide="no", input_default_bindings="no")
         else:
             self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no")
 
