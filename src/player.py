@@ -13,6 +13,7 @@ from gi.repository import Gtk, GLib, GdkPixbuf, GObject
 
 class Player(GObject.Object):
     __gsignals__ = {
+        'playqueue-ended': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'video-starting': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'media-paused': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int)),
@@ -132,6 +133,7 @@ class Player(GObject.Object):
                 self.__prev()
             else:
                 self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+                self.emit('playqueue-ended')
 
     def prev(self):
         self._prev = True
@@ -159,6 +161,7 @@ class Player(GObject.Object):
             self.start()
         else:
             self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+            self.emit('playqueue-ended')
 
     def __prev(self):
         self.__playqueue_refresh()
@@ -167,6 +170,7 @@ class Player(GObject.Object):
             self.start()
         else:
             self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+            self.emit('playqueue-ended')
 
     def play_pause(self):
         if self._player.pause:

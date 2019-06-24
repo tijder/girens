@@ -47,6 +47,7 @@ class PlayerView(Gtk.Box):
     def set_player(self, player):
         self._player = player
         self._player.connect("media-playing", self.__on_media_playing)
+        self._player.connect("playqueue-ended", self.__on_playqueue_ended)
 
     def set_plex(self, plex):
         self._plex = plex
@@ -73,6 +74,10 @@ class PlayerView(Gtk.Box):
             self._box.show()
             self._overlay.set_vexpand(False)
             self._overlay.set_size_request(-1, 500)
+
+    def __on_playqueue_ended(self, player):
+        if self._fullscreen == True:
+            self.__fullscreen()
 
     def __on_play_button_clicked(self, button):
         self._player.play_pause()
