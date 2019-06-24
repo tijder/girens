@@ -127,10 +127,10 @@ class Player(GObject.Object):
                 self._offset = self._next_index
                 self._next_index = None
                 self.start()
-            elif (self._stop_command == False or self._next == True):
-                self.__next()
             elif (self._prev == True):
                 self.__prev()
+            elif (self._stop_command == False or self._next == True):
+                self.__next()
             else:
                 self.emit('media-playing', False, self._item, self._playqueue, self._offset)
                 self.emit('playqueue-ended')
