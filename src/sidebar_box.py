@@ -118,6 +118,6 @@ class SidebarBox(Gtk.Box):
 
     def __on_media_playing(self, player, playing, item, playqueue, offset):
         if item != None and item.listType == 'video':
-            self._section_player.show()
+            GLib.idle_add(self._section_player.show)
         else:
-            self._section_player.hide()
+            GLib.idle_add(self._section_player.hide)
