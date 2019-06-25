@@ -75,10 +75,17 @@ class PlexWindow(Gtk.ApplicationWindow):
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
 
-    def __init__(self, show_id=None, **kwargs):
+    def __init__(self, show_id=None, video_output_driver=None, deinterlace=None, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
         self.__custom_css()
+
+        self._video_output_driver = "x11,"
+        self._deinterlace = "no"
+        if video_output_driver != None:
+            self._video_output_driver = video_output_driver
+        if deinterlace != None:
+            self._deinterlace = deinterlace
 
         self._aplication = kwargs["application"]
         self._show_id = show_id
@@ -97,6 +104,13 @@ class PlexWindow(Gtk.ApplicationWindow):
         elif (item.TYPE == 'show'):
             self.__on_go_to_show(show_id[1])
 
+    def set_video_output_driver(self, video_output_driver):
+        self._video_output_driver = video_output_driver
+        self._player.set_video_output_driver(self._video_output_driver)
+
+    def set_deinterlace(self, deinterlace):
+        self._deinterlace = deinterlace
+        self._player.set_deinterlace(self._deinterlace)
 
     def __screen_mapped(self, map):
         resume_dialog = ResumeDialog()
@@ -110,6 +124,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._player_revealer.add(self._player_view)
 
         self._player = Player(resume_dialog, self._player_view)
+        self._player.set_video_output_driver(self._video_output_driver)
+        self._player.set_deinterlace(self._deinterlace)
         self._player.connect("video-starting", self.__on_video_starting)
         self._player_view.set_player(self._player)
         self._plex = Plex(os.environ['XDG_CONFIG_HOME'], os.environ['XDG_CACHE_HOME'], self._player)

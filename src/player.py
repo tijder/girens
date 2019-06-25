@@ -40,6 +40,14 @@ class Player(GObject.Object):
         self._play_wait = False
         self._next_index = None
         self._fullscreen = False
+        self._video_output_driver = "x11,"
+        self._deinterlace = "no"
+
+    def set_video_output_driver(self, video_output_driver):
+        self._video_output_driver = video_output_driver
+
+    def set_deinterlace(self, deinterlace):
+        self._deinterlace = deinterlace
 
     def set_plex(self, plex):
         self._plex = plex
@@ -48,7 +56,7 @@ class Player(GObject.Object):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         if self._item.listType == 'video':
-            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), input_cursor="no", cursor_autohide="no", input_default_bindings="no")
+            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no")
         else:
             self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no")
 

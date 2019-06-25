@@ -32,8 +32,9 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
         GLib.set_application_name("Girens")
         GLib.set_prgname("girens")
-        self.add_main_option("show-id", b"s", GLib.OptionFlags.NONE,
-                             GLib.OptionArg.STRING, "Show id", None)
+        self.add_main_option("show-id", b"s", GLib.OptionFlags.NONE,GLib.OptionArg.STRING, "Show id", None)
+        self.add_main_option("video-output-driver", b"v", GLib.OptionFlags.NONE,GLib.OptionArg.STRING, "Which video output driver mpv will use", None)
+        self.add_main_option("deinterlace", b"d", GLib.OptionFlags.NONE,GLib.OptionArg.STRING, "Use deinterlace", None)
         self.connect("command-line", self.__on_command_line)
         self.register(None)
 
@@ -43,27 +44,37 @@ class Application(Gtk.Application):
             @param app as Gio.Application
             @param options as Gio.ApplicationCommandLine
         """
-        params=None
+        show_id=None
+        video_output_driver=None
+        deinterlace=None
         try:
             args = app_cmd_line.get_arguments()
             options = app_cmd_line.get_options_dict()
             if options.contains("show-id"):
                 value = options.lookup_value("show-id").get_string()
-                params = value.split(";")
+                show_id = value.split(";")
+            if options.contains("video-output-driver"):
+                video_output_driver = options.lookup_value("video-output-driver").get_string()
+            if options.contains("deinterlace"):
+                deinterlace = options.lookup_value("deinterlace").get_string()
         except Exception as e:
             print("Application::__on_command_line(): %s", e)
-        print(params)
-        self.do_activate(show_id=params)
+        self.do_activate(show_id=show_id,video_output_driver=video_output_driver,deinterlace=deinterlace)
         return 0
 
 
-    def do_activate(self, show_id=None):
+    def do_activate(self, show_id=None, video_output_driver=None, deinterlace=None):
         GObject.type_register(Handy.Leaflet)
         win = self.props.active_window
         if not win:
-            win = PlexWindow(application=self, show_id=show_id)
+            win = PlexWindow(application=self, show_id=show_id, video_output_driver=video_output_driver, deinterlace=deinterlace)
         else:
-            win.show_by_id(show_id)
+            if show_id != None:
+                win.show_by_id(show_id)
+            if video_output_driver != None:
+                win.set_video_output_driver(video_output_driver)
+            if deinterlace != None:
+                win.set_deinterlace(deinterlace)
         win.present()
 
 
