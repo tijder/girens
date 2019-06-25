@@ -30,6 +30,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-06-25" version="1.0.8">
+      <description>
+        <ul>
+          <li>Commandline options</li>
+          <li>Gnome search provider</li>
+          <li>Onscreen controller</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-06-15" version="1.0.7">
       <description>
         <ul>
