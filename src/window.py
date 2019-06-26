@@ -80,7 +80,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.init_template()
         self.__custom_css()
 
-        self._video_output_driver = "x11,"
+        self._video_output_driver = "xv,"
         self._deinterlace = "no"
         if video_output_driver != None:
             self._video_output_driver = video_output_driver
