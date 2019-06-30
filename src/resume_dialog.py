@@ -43,6 +43,9 @@ class ResumeDialog(Gtk.Dialog):
         self._resume_button.connect("clicked", self.__on_resume_clicked)
         self._beginning_button.connect("clicked", self.__on_beginning_clicked)
 
+    def set_item(self, item):
+        self.set_title("Girens ~ '" + item.title + "'")
+
     def __on_beginning_clicked(self, button):
         self.emit('beginning-selected',True)
         self.hide()

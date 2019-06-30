@@ -90,7 +90,7 @@ class Player(GObject.Object):
     def start(self, from_beginning=None):
         self._item = self._playqueue.items[self._offset]
         if self._item.viewOffset != 0 and from_beginning == None:
-            GLib.idle_add(self.__ask_resume_or_beginning)
+            GLib.idle_add(self.__ask_resume_or_beginning, self._item)
         elif (self._playing != False):
             self._play_wait = True
             self._player.command('stop')
@@ -214,7 +214,8 @@ class Player(GObject.Object):
                 self._offset = i
             i += 1
 
-    def __ask_resume_or_beginning(self):
+    def __ask_resume_or_beginning(self, item):
+        self._resume_dialog.set_item(item)
         self._resume_dialog.show()
 
     def __on_beginning_selected(self, dialog, bool):
