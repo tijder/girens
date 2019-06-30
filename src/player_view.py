@@ -77,10 +77,12 @@ class PlayerView(Gtk.Box):
             self._box.hide()
             self._overlay.set_vexpand(True)
             self._overlay.set_size_request(-1, -1)
+            self.__show_controlls()
         else:
             self._box.show()
             self._overlay.set_vexpand(False)
             self._overlay.set_size_request(-1, 500)
+            self.__show_cursor()
 
     def __on_playqueue_ended(self, player):
         if self._fullscreen == True:
@@ -104,6 +106,12 @@ class PlayerView(Gtk.Box):
         elif key.keyval == 65363: #right key
             self._player.seek_forward()
 
+    def __show_cursor(self):
+        Gdk.Window.set_cursor(self.get_window(), Gdk.Cursor.new_from_name(Gdk.Display.get_default(),"default"))
+
+    def __hide_cursor(self):
+        Gdk.Window.set_cursor(self.get_window(), Gdk.Cursor.new_from_name(Gdk.Display.get_default(),"none"))
+
     def __on_motion(self, widget, motion):
         self.__show_controlls()
 
@@ -119,10 +127,14 @@ class PlayerView(Gtk.Box):
         self._controlls.show()
         self.__stop_controlls_timout()
         self.__start_controlls_timout()
+        if self._fullscreen:
+            self.__show_cursor()
 
     def __on_motion_over(self):
         self._timout = None
         self._controlls.hide()
+        if self._fullscreen:
+            self.__hide_cursor()
 
     def __on_media_playing(self, player, playing, item, playqueue, offset):
         self._playing = playing
