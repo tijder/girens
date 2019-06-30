@@ -28,6 +28,7 @@ class MediaBox(Gtk.Revealer):
 
     __gsignals__ = {
         'fullscreen-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'active': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
     }
 
     _close_button = GtkTemplate.Child()
@@ -71,6 +72,8 @@ class MediaBox(Gtk.Revealer):
         self._player.connect("media-playing", self.__on_media_playing)
         self._player.connect("media-time", self.__on_media_time)
         self._playqueue_popover.connect("show-button", self.__on_playqueue_show_button)
+        self._playqueue_popover.connect("show", self.__on_playqueue_show)
+        self._playqueue_popover.connect("hide", self.__on_playqueue_hide)
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._prev_button.connect("clicked", self.__on_prev_button_clicked)
         self._next_button.connect("clicked", self.__on_next_button_clicked)
@@ -168,6 +171,12 @@ class MediaBox(Gtk.Revealer):
 
     def __on_playqueue_show_button(self, playqueue):
         self._playqueue_button.set_active(False)
+
+    def __on_playqueue_show(self, playqueue):
+        self.emit('active', True)
+
+    def __on_playqueue_hide(self, playqueue):
+        self.emit('active', False)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):

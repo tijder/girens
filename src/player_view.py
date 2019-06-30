@@ -59,9 +59,16 @@ class PlayerView(Gtk.Box):
             self._controlls.add(self._media_box)
             self._media_box.set_visible(True)
             self._media_box.connect("fullscreen-clicked", self.__on_fullscreen_button_clicked)
+            self._media_box.connect("active", self.__on_media_box_active)
 
     def __on_fullscreen_button_clicked(self, button):
         self.__fullscreen()
+
+    def __on_media_box_active(self, mediabox, active):
+        if active:
+            self.__stop_controlls_timout()
+        else:
+            self.__start_controlls_timout()
 
     def __fullscreen(self):
         self._fullscreen = not self._fullscreen
@@ -100,13 +107,18 @@ class PlayerView(Gtk.Box):
     def __on_motion(self, widget, motion):
         self.__show_controlls()
 
-    def __show_controlls(self):
-        self._controlls.show()
+    def __stop_controlls_timout(self):
         if self._timout != None:
             GLib.source_remove(self._timout)
             self._timout = None
 
+    def __start_controlls_timout(self):
         self._timout = GLib.timeout_add(3000, self.__on_motion_over)
+
+    def __show_controlls(self):
+        self._controlls.show()
+        self.__stop_controlls_timout()
+        self.__start_controlls_timout()
 
     def __on_motion_over(self):
         self._timout = None
