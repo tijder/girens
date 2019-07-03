@@ -145,12 +145,20 @@ class Player(GObject.Object):
                 self.emit('playqueue-ended')
 
     def prev(self):
-        self._prev = True
-        self._player.command('stop')
+        if (self._resume_dialog.is_visible()):
+            self._resume_dialog.hide()
+            self.__on_beginning_selected(None, True)
+        else:
+            self._prev = True
+            self._player.command('stop')
 
     def next(self):
-        self._next = True
-        self._player.command('stop')
+        if (self._resume_dialog.is_visible()):
+            self._resume_dialog.hide()
+            self.__on_resume_selected(None, False)
+        else:
+            self._next = True
+            self._player.command('stop')
 
     def get_position(self):
         return 0
