@@ -148,7 +148,7 @@ class Player(GObject.Object):
         if (self._resume_dialog.is_visible()):
             self._resume_dialog.hide()
             self.__on_beginning_selected(None, True)
-        else:
+        elif (self._playing != False):
             self._prev = True
             self._player.command('stop')
 
@@ -156,7 +156,7 @@ class Player(GObject.Object):
         if (self._resume_dialog.is_visible()):
             self._resume_dialog.hide()
             self.__on_resume_selected(None, False)
-        else:
+        elif (self._playing != False):
             self._next = True
             self._player.command('stop')
 
@@ -190,26 +190,32 @@ class Player(GObject.Object):
             self.emit('playqueue-ended')
 
     def play_pause(self):
-        if self._player.pause:
-            self.play()
-        else:
-            self.pause()
+        if (self._playing != False):
+            if self._player.pause:
+                self.play()
+            else:
+                self.pause()
 
     def pause(self):
-        self._player.pause = True
+        if (self._playing != False):
+            self._player.pause = True
 
     def play(self):
-        self._player.pause = False
+        if (self._playing != False):
+            self._player.pause = False
 
     def stop(self):
-        self._stop_command = True
-        self._player.command('stop')
+        if (self._playing != False):
+            self._stop_command = True
+            self._player.command('stop')
 
     def seek_backward(self):
-        self._player.command('seek', -10)
+        if (self._playing != False):
+            self._player.command('seek', -10)
 
     def seek_forward(self):
-        self._player.command('seek', 30)
+        if (self._playing != False):
+            self._player.command('seek', 30)
 
     def play_index(self, index):
         self._next_index = index
