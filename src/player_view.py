@@ -3,6 +3,8 @@ from .gi_composites import GtkTemplate
 
 from .cover_box import CoverBox
 from .media_box import MediaBox
+from .media_box_video_top import MediaBoxVideoTop
+from .media_box_video_bottom import MediaBoxVideoBottom
 
 import threading
 
@@ -20,7 +22,8 @@ class PlayerView(Gtk.Box):
     _frame = GtkTemplate.Child()
     _overlay = GtkTemplate.Child()
     _stack = GtkTemplate.Child()
-    _controlls = GtkTemplate.Child()
+    _controlls_top = GtkTemplate.Child()
+    _controlls_bottom = GtkTemplate.Child()
     _event = GtkTemplate.Child()
     _box = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
@@ -35,6 +38,7 @@ class PlayerView(Gtk.Box):
     _progress = 0
     _paused = True
     _fullscreen = False
+    _playing = False
 
     def __init__(self, window, **kwargs):
         super().__init__(**kwargs)
@@ -55,9 +59,16 @@ class PlayerView(Gtk.Box):
         self._plex.connect("section-shows-deck", self.__on_show_deck_update)
 
         if (self._player != None):
-            self._media_box = MediaBox(self._plex, self._player, fullscreen_button_show=True, show_only_type="video")
-            self._controlls.add(self._media_box)
-            self._media_box.set_visible(True)
+            self._media_box = MediaBox(self._plex, self._player, show_only_type="video")
+            self._media_box_video_top = MediaBoxVideoTop()
+            self._media_box_video_bottom = MediaBoxVideoBottom()
+            self._media_box.set_video_top_ui(self._media_box_video_top)
+            self._media_box.set_video_bottom_ui(self._media_box_video_bottom)
+
+            self._controlls_top.add(self._media_box_video_top)
+            self._controlls_bottom.add(self._media_box_video_bottom)
+            self._controlls_top.set_visible(True)
+            self._controlls_bottom.set_visible(True)
             self._media_box.connect("fullscreen-clicked", self.__on_fullscreen_button_clicked)
             self._media_box.connect("active", self.__on_media_box_active)
 
@@ -124,7 +135,8 @@ class PlayerView(Gtk.Box):
         self._timout = GLib.timeout_add(3000, self.__on_motion_over)
 
     def __show_controlls(self):
-        self._controlls.show()
+        if self._playing == True:
+            self._media_box.set_reveal_child(True)
         self.__stop_controlls_timout()
         self.__start_controlls_timout()
         if self._fullscreen:
@@ -132,7 +144,7 @@ class PlayerView(Gtk.Box):
 
     def __on_motion_over(self):
         self._timout = None
-        self._controlls.hide()
+        self._media_box.set_reveal_child(False)
         if self._fullscreen:
             self.__hide_cursor()
 

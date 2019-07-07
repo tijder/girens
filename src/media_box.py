@@ -22,8 +22,7 @@ from .playqueue_popover import PlayqueuePopover
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/media_box.ui')
-class MediaBox(Gtk.Revealer):
+class MediaBox(GObject.Object):
     __gtype_name__ = 'media_box'
 
     __gsignals__ = {
@@ -31,19 +30,23 @@ class MediaBox(Gtk.Revealer):
         'active': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
     }
 
-    _close_button = GtkTemplate.Child()
-    _play_button = GtkTemplate.Child()
-    _prev_button = GtkTemplate.Child()
-    _next_button = GtkTemplate.Child()
-    _play_image = GtkTemplate.Child()
-    _fullscreen_button = GtkTemplate.Child()
+    _close_button = None
+    _play_button = None
+    _prev_button = None
+    _next_button = None
+    _skip_backward_button = None
+    _skip_forward_button = None
+    _play_image = None
+    _fullscreen_button = None
 
-    _title_label = GtkTemplate.Child()
-    _subtitle_label = GtkTemplate.Child()
-    _progress_bar = GtkTemplate.Child()
+    _title_label = None
+    _subtitle_label = None
+    _progress_bar = None
+    _time_left_label = None
+    _time_right_label = None
 
-    _playqueue_button = GtkTemplate.Child()
-    _cover_image = GtkTemplate.Child()
+    _playqueue_button = None
+    _cover_image = None
 
     _item = None
     _paused = False
@@ -53,37 +56,136 @@ class MediaBox(Gtk.Revealer):
     _download_key = None
     _download_thumb = None
 
-    def __init__(self, plex, player, fullscreen_button_show=False, show_only_type="audio", **kwargs):
+    def __init__(self, plex, player, show_only_type="audio", **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
         self._plex = plex
         self._player = player
 
         self._show_only_type = show_only_type
 
-        self._playqueue_popover = PlayqueuePopover(self._plex, self._player)
-        self._playqueue_button.set_popover(self._playqueue_popover)
-
-        self.__update_buttons()
+        self._boxes = []
 
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._player.connect("media-paused", self.__on_media_paused)
         self._player.connect("media-playing", self.__on_media_playing)
         self._player.connect("media-time", self.__on_media_time)
-        self._playqueue_popover.connect("show-button", self.__on_playqueue_show_button)
-        self._playqueue_popover.connect("show", self.__on_playqueue_show)
-        self._playqueue_popover.connect("hide", self.__on_playqueue_hide)
-        self._play_button.connect("clicked", self.__on_play_button_clicked)
-        self._prev_button.connect("clicked", self.__on_prev_button_clicked)
-        self._next_button.connect("clicked", self.__on_next_button_clicked)
-        self._close_button.connect("clicked", self.__on_close_button_clicked)
-        self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
+
+    def set_visible(self, booleon):
+        for box in self._boxes:
+            box.set_visible(booleon)
+
+    def set_reveal_child(self, booleon):
+        for box in self._boxes:
+            box.set_reveal_child(booleon)
+
+
+    def set_music_ui(self, box):
+        self._boxes.append(box)
+        box.set_visible(True)
+        self.__set_playque_button(box._playqueue_button)
+        self.__set_play_button(box._play_button)
+        self.__set_prev_button(box._prev_button)
+        self.__set_next_button(box._next_button)
+        self.__set_close_button(box._close_button)
+        self.__set_progress_bar(box._progress_bar)
+        self.__set_title_label(box._title_label)
+        self.__set_subtitle_label(box._subtitle_label)
+        self.__set_play_image(box._play_image)
+        self.__set_cover_image(box._cover_image)
 
         self.set_reveal_child(False)
 
-        if fullscreen_button_show == False:
-            self._fullscreen_button.hide()
+    def set_video_top_ui(self, box):
+        self._boxes.append(box)
+        box.set_visible(True)
+        self.__set_fullscreen_button(box._fullscreen_button)
+        self.__set_close_button(box._close_button)
+        self.__set_title_label(box._title_label)
+        self.__set_subtitle_label(box._subtitle_label)
+
+        self.set_reveal_child(False)
+
+    def set_video_bottom_ui(self, box):
+        self._boxes.append(box)
+        box.set_visible(True)
+        self.__set_playque_button(box._playqueue_button)
+        self.__set_play_button(box._play_button)
+        self.__set_prev_button(box._prev_button)
+        self.__set_next_button(box._next_button)
+        self.__set_progress_bar(box._progress_bar)
+        self.__set_play_image(box._play_image)
+        self.__set_cover_image(box._cover_image)
+        self.__set_skip_backward_button(box._skip_backward_button)
+        self.__set_skip_forward_button(box._skip_forward_button)
+        self.__set_time_left_label(box._time_left_label)
+        self.__set_time_right_label(box._time_right_label)
+
+        self.set_reveal_child(False)
+
+    def __set_playque_button(self, button):
+        self._playqueue_button = button
+        self._playqueue_popover = PlayqueuePopover(self._plex, self._player)
+        self._playqueue_button.set_popover(self._playqueue_popover)
+
+        self._playqueue_popover.connect("show-button", self.__on_playqueue_show_button)
+        self._playqueue_popover.connect("show", self.__on_playqueue_show)
+        self._playqueue_popover.connect("hide", self.__on_playqueue_hide)
+
+    def __set_skip_backward_button(self, button):
+        self._skip_backward_button = button
+        self._skip_backward_button.connect("clicked", self.__on_skip_backward_button_clicked)
+
+    def __set_skip_forward_button(self, button):
+        self._skip_forward_button = button
+        self._skip_forward_button.connect("clicked", self.__on_skip_forward_button_clicked)
+
+    def __set_time_left_label(self, label):
+        self._time_left_label = label
+
+    def __set_time_right_label(self, label):
+        self._time_right_label = label
+
+    def __set_play_button(self, button):
+        self._play_button = button
+        self._play_button.connect("clicked", self.__on_play_button_clicked)
+
+    def __set_prev_button(self, button):
+        self._prev_button = button
+        self._prev_button.connect("clicked", self.__on_prev_button_clicked)
+
+    def __set_next_button(self, button):
+        self._next_button = button
+        self._next_button.connect("clicked", self.__on_next_button_clicked)
+
+    def __set_close_button(self, button):
+        self._close_button = button
+        self._close_button.connect("clicked", self.__on_close_button_clicked)
+
+    def __set_fullscreen_button(self, button):
+        self._fullscreen_button = button
+        self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
+
+    def __set_progress_bar(self, bar):
+        self._progress_bar = bar
+
+    def __set_title_label(self, label):
+        self._title_label = label
+
+    def __set_subtitle_label(self, label):
+        self._subtitle_label = label
+
+    def __set_play_image(self, image):
+        self._play_image = image
+
+    def __set_cover_image(self, image):
+        self._cover_image = image
+
+    def __on_skip_forward_button_clicked(self, button):
+        self._player.seek_forward()
+
+    def __on_skip_backward_button_clicked(self, button):
+        self._player.seek_backward()
 
     def __on_play_button_clicked(self, button):
         self._player.play_pause()
@@ -121,7 +223,7 @@ class MediaBox(Gtk.Revealer):
         self._playqueue = playqueue
         self._offset = offset
 
-        if (playing == True):
+        if (playing == True and self._cover_image != None):
             self.__reload_image()
 
         GLib.idle_add(self.__update_buttons)
@@ -142,16 +244,42 @@ class MediaBox(Gtk.Revealer):
         self._progress = time
         GLib.idle_add(self.__update_buttons)
 
+    def __update_play_image_icon(self, string, number):
+        if self._play_image != None:
+            self._play_image.set_from_icon_name(string, number)
+
+    def __updat_time_left_label(self, string):
+        if self._time_left_label != None:
+            self._time_left_label.set_text(str(string))
+
+    def __updat_time_right_label(self, string):
+        if self._time_right_label != None:
+            self._time_right_label.set_text(str(string))
+
+    def __convertMillis(self, millis):
+        string = ""
+        seconds=format(int((millis/1000)%60), '02')
+        minutes=format(int((millis/(1000*60))%60), '02')
+        hours=format(int((millis/(1000*60*60))%24), '02')
+
+        if hours != "00":
+            string += str(hours) + ":"
+        string += str(minutes) + ":" + str(seconds)
+        return string
+
     def __update_buttons(self):
         if (self._paused == True):
-            self._play_image.set_from_icon_name('media-playback-start-symbolic', 4)
+            self.__update_play_image_icon('media-playback-start-symbolic', 4)
         else:
-            self._play_image.set_from_icon_name('media-playback-pause-symbolic', 4)
+            self.__update_play_image_icon('media-playback-pause-symbolic', 4)
 
         if (self._item != None):
             self._prev_button.set_sensitive(self._offset - 1 >= 0)
             self._next_button.set_sensitive(self._offset + 1 < len(self._playqueue.items))
             self._progress_bar.set_fraction(self._progress / self._item.duration)
+
+            self.__updat_time_left_label(self.__convertMillis(self._progress))
+            self.__updat_time_right_label("-" + self.__convertMillis(self._item.duration - self._progress))
 
             title = ''
             subtitle = ''

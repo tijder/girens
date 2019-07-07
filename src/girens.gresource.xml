@@ -5,7 +5,9 @@
     <file>main_window.ui</file>
     <file>profile_dialog.ui</file>
     <file>sidebar_box.ui</file>
-    <file>media_box.ui</file>
+    <file>media_box_music.ui</file>
+    <file>media_box_video_top.ui</file>
+    <file>media_box_video_bottom.ui</file>
     <file>discover_view.ui</file>
     <file>login_view.ui</file>
     <file>show_view.ui</file>

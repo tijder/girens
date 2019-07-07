@@ -20,6 +20,7 @@ from .gi_composites import GtkTemplate
 
 from .sidebar_box import SidebarBox
 from .media_box import MediaBox
+from .media_box_music import MediaBoxMusic
 from .login_view import LoginView
 from .discover_view import DiscoverView
 from .show_view import ShowView
@@ -151,9 +152,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._loading_view.set_visible(False)
         self._loading_view.set_vexpand(True)
 
-        self._media_box = MediaBox(self._plex, self._player)
-        self._content_box_wrapper.add(self._media_box)
-        self._media_box.set_visible(True)
+        self._media_box = MediaBox(self._plex, self._player, show_only_type="audio")
+        self._media_box_music = MediaBoxMusic()
+        self._media_box.set_music_ui(self._media_box_music)
+        self._content_box_wrapper.add(self._media_box_music)
 
         self._search_toggle_button.connect("toggled", self.__on_search_toggled)
         self._search_entry.connect("search-changed", self.__on_search_changed)
@@ -372,12 +374,12 @@ class PlexWindow(Gtk.ApplicationWindow):
         if booleon:
             self.header.set_visible_child_name("content")
             self.fullscreen()
-            self._media_box.hide()
+            #self._media_box.set_visible(False)
             self.sidebar.hide()
             self.separator.hide()
         else:
             self.unfullscreen()
-            self._media_box.show()
+            #self._media_box.set_visible(True)
             self.sidebar.show()
             self.separator.show()
 
