@@ -112,9 +112,9 @@ class PlayerView(Gtk.Box):
             self.__show_controlls()
         elif key.string == 'q':
             self._player.stop()
-        elif key.keyval == 65361: # left key
+        elif key.keyval in [91, 65361]: # [ and left key
             self._player.seek_backward()
-        elif key.keyval == 65363: #right key
+        elif key.keyval in [93, 65363]: # ] and right key
             self._player.seek_forward()
 
     def __show_cursor(self):
