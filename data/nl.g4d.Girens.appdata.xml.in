@@ -30,6 +30,20 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-07-07" version="1.0.9">
+      <description>
+        <ul>
+          <li>Redesigned media controlbox for video player</li>
+          <li>Use [ and ] for seeking media</li>
+          <li>Use media keys to select resume action</li>
+          <li>Hide cursor on video fullscreen</li>
+          <li>Dont hide media controlls when playqueue is active</li>
+          <li>Fix starting wrong offset when new media is started</li>
+          <li>Show media title in resume dialog</li>
+          <li>Default mpv video output driver changed to xv</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-06-25" version="1.0.8">
       <description>
         <ul>
