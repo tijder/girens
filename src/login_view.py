@@ -33,8 +33,13 @@ class LoginView(Gtk.Dialog):
 
     _username_entry = GtkTemplate.Child()
     _password_entry = GtkTemplate.Child()
-    _login_button = GtkTemplate.Child()
-    _cancel_button = GtkTemplate.Child()
+    _connect_user_button = GtkTemplate.Child()
+    _cancel_user_button = GtkTemplate.Child()
+
+    _server_url_entry = GtkTemplate.Child()
+    _server_token_entry = GtkTemplate.Child()
+    _connect_url_button = GtkTemplate.Child()
+    _cancel_url_button = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -45,11 +50,15 @@ class LoginView(Gtk.Dialog):
         self._plex.connect("login-status", self.__plex_login_status)
         self._password_entry.connect("changed", self.__entry_changed)
         self._username_entry.connect("changed", self.__entry_changed)
-        self._login_button.connect("clicked", self.__on_login_clicked)
-        self._cancel_button.connect("clicked", self.__on_cancel_clicked)
+        self._connect_url_button.connect("clicked", self.__on_connect_url_clicked)
+        self._connect_user_button.connect("clicked", self.__on_login_clicked)
+        self._cancel_user_button.connect("clicked", self.__on_cancel_clicked)
+        self._cancel_url_button.connect("clicked", self.__on_cancel_clicked)
 
         if (self._plex.has_token()):
             self.__login_with_token()
+        elif (self._plex.has_url()):
+            self._plex.login_with_url(self._plex._config['server_url'], self._plex._config['server_token'])
         else:
             self.show()
 
@@ -93,9 +102,22 @@ class LoginView(Gtk.Dialog):
             thread.daemon = True
             thread.start()
 
+    def __on_connect_url_clicked(self, button):
+        if (self._loading == False):
+            self._loading = True
+            self.__show_loading()
+
+            url = self._server_url_entry.get_text()
+            token = self._server_token_entry.get_text()
+            thread = threading.Thread(target=self._plex.login_with_url, args=(url, token))
+            thread.daemon = True
+            thread.start()
+
     def __show_loading(self):
         self._password_entry.set_progress_fraction(0.10)
-        self._login_button.set_sensitive(not self._loading)
+        self._connect_user_button.set_sensitive(not self._loading)
+        self._connect_url_button.set_sensitive(not self._loading)
+        self._server_url_entry.set_can_focus(False)
         self._username_entry.set_can_focus(False)
         self._password_entry.set_can_focus(False)
 
@@ -106,6 +128,9 @@ class LoginView(Gtk.Dialog):
         self._loading = False
         self._password_entry.set_progress_fraction(0.00)
         self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
-        self._login_button.set_sensitive(not self._loading)
+        self._server_url_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
+        self._connect_user_button.set_sensitive(not self._loading)
+        self._connect_url_button.set_sensitive(not self._loading)
+        self._server_url_entry.set_can_focus(True)
         self._username_entry.set_can_focus(True)
         self._password_entry.set_can_focus(True)

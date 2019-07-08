@@ -255,9 +255,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         thread = threading.Thread(target=self._plex.reload_search_provider_data)
         thread.daemon = True
         thread.start()
-        thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
-        thread.daemon = True
-        thread.start()
+        if (self._plex.has_token()):
+            thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
+            thread.daemon = True
+            thread.start()
 
     def __on_downloaded(self, plex, name_image, path):
         if(self._plex._account.username == name_image):

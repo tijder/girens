@@ -61,7 +61,10 @@ class Plex(GObject.Object):
         return {}
 
     def has_token(self):
-        return 'token' in self._config
+        return 'token' in self._config and self._config['token'] is not None
+
+    def has_url(self):
+        return 'server_url' in self._config
 
     def login_token(self, token):
         try:
@@ -80,6 +83,24 @@ class Plex(GObject.Object):
             self.emit('login-status',True,'')
         except:
             self.emit('login-status',False,'Login failed')
+
+    def login_with_url(self, baseurl, token):
+        try:
+            self.emit('loading', 'Connecting to ' + baseurl, True)
+            self._server = PlexServer(baseurl, token)
+            self._account = self._server.account()
+            self._library = self._server.library
+            self._config['server_url'] = self._server._baseurl
+            self._config['server_token'] = self._server._token
+            self._config['token'] = None
+            self.__save_config()
+            self.emit('connection-to-server')
+            self.emit('loading', 'Success', False)
+            self.emit('login-status',True,'')
+        except:
+            self.emit('loading', 'Connecting to ' + baseurl + ' failed.', True)
+            self.emit('login-status',False,'Login failed')
+            print('connection failed')
 
     def __save_config(self):
         with open(self._config_dir + '/config', 'w') as file:
@@ -132,9 +153,12 @@ class Plex(GObject.Object):
 
     def get_servers(self):
         servers = []
-        for resource in self._account.resources():
-            if (resource.provides == 'server'):
-                servers.append(resource)
+        if (self.has_token()):
+            for resource in self._account.resources():
+                if (resource.provides == 'server'):
+                    servers.append(resource)
+        else:
+            servers.append(self._server)
         self.emit('servers-retrieved', servers)
 
     def get_playlists(self):

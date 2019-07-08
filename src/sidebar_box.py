@@ -20,6 +20,8 @@ from .gi_composites import GtkTemplate
 
 from .section_grid import SectionGrid
 
+from plexapi.server import PlexServer
+
 import threading
 
 @GtkTemplate(ui='/nl/g4d/Girens/sidebar_box.ui')
@@ -93,7 +95,12 @@ class SidebarBox(Gtk.Box):
         self._server_store = Gtk.ListStore(object, str)
 
         for server in servers:
-            self._server_store.append([server, server.name])
+            name = ''
+            if type(server) == PlexServer:
+                name = server.friendlyName
+            else:
+                name = server.name
+            self._server_store.append([server, name])
 
         self._server_box.clear()
         self._server_box.set_model(self._server_store)
@@ -101,7 +108,7 @@ class SidebarBox(Gtk.Box):
         renderer_text = Gtk.CellRendererText()
         self._server_box.pack_start(renderer_text, True)
         self._server_box.add_attribute(renderer_text, "text", 1)
-        self._server_box.set_active_id(server.name)
+        self._server_box.set_active_id(name)
 
     def __on_section_clicked(self, listbox, listboxrow):
         if(listboxrow != None):

@@ -44,14 +44,29 @@ class ProfileDialog(Gtk.Dialog):
         self._ok_button.connect("clicked", self.__on_ok_clicked)
         self._logout_button.connect("clicked", self.__on_logout_clicked)
 
-        self._username_value_label.set_text(self._plex._account.username)
-        self._email_value_label.set_text(self._plex._account.email)
-        self._subscriptionplan_value_label.set_text(self._plex._account.subscriptionPlan)
-        self._secure_value_label.set_text(str(self._plex._account.secure))
+        username = ''
+        email = ''
+        subscriptionPlan = ''
+        secure = ''
 
-        thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
-        thread.daemon = True
-        thread.start()
+        if (hasattr(self._plex._account, 'username')):
+            username = self._plex._account.username
+        if (hasattr(self._plex._account, 'email')):
+            email = self._plex._account.email
+        if (hasattr(self._plex._account, 'subscriptionPlansubscriptionPlan')):
+            subscriptionPlan = self._plex._account.subscriptionPlan
+        if (hasattr(self._plex._account, 'secure')):
+            secure = str(self._plex._account.secure)
+
+        self._username_value_label.set_text(username)
+        self._email_value_label.set_text(email)
+        self._subscriptionplan_value_label.set_text(subscriptionPlan)
+        self._secure_value_label.set_text(secure)
+
+        if (hasattr(self._plex._account, 'thumb')):
+            thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
+            thread.daemon = True
+            thread.start()
 
     def __on_downloaded(self, plex, name_image, path):
         if(self._plex._account.username == name_image):
