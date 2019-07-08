@@ -179,6 +179,7 @@
                   <object class="GtkEntry" id="_server_url_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">The url to the Plex server with the port number</property>
                     <property name="placeholder_text" translatable="yes">http://127.0.0.1:32400</property>
                   </object>
                   <packing>
@@ -234,7 +235,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="_connect_url_button">
-                        <property name="label" translatable="yes">Login</property>
+                        <property name="label" translatable="yes">Connect</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -259,6 +260,7 @@
                   <object class="GtkEntry" id="_server_token_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">The token from the server can be empty</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
