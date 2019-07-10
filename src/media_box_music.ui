@@ -3,6 +3,11 @@
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <!-- interface-css-provider-path plex.css -->
+  <object class="GtkAdjustment" id="_scale_adjustment">
+    <property name="upper">1</property>
+    <property name="step_increment">0.01</property>
+    <property name="page_increment">0.01</property>
+  </object>
   <template class="media_box_music" parent="GtkRevealer">
     <property name="can_focus">False</property>
     <property name="reveal_child">True</property>
@@ -15,6 +20,7 @@
             <property name="height_request">50</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_top">5</property>
             <child>
               <object class="GtkOverlay">
                 <property name="visible">True</property>
@@ -228,20 +234,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkProgressBar" id="_progress_bar">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="valign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="hexpand">True</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="_time_right_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -254,6 +246,24 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="_scale_bar">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="adjustment">_scale_adjustment</property>
+                <property name="restrict_to_fill_level">False</property>
+                <property name="fill_level">0.5</property>
+                <property name="round_digits">1</property>
+                <property name="digits">2</property>
+                <property name="draw_value">False</property>
+                <property name="value_pos">left</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>

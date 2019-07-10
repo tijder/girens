@@ -41,6 +41,8 @@ class MediaBox(GObject.Object):
 
     _title_label = None
     _subtitle_label = None
+    _scale_bar = None
+    _scale_adjustment = None
     _progress_bar = None
     _time_left_label = None
     _time_right_label = None
@@ -52,6 +54,7 @@ class MediaBox(GObject.Object):
     _paused = False
     _playing = False
     _progress = 0
+    _fraction = 0
 
     _download_key = None
     _download_thumb = None
@@ -88,7 +91,8 @@ class MediaBox(GObject.Object):
         self.__set_prev_button(box._prev_button)
         self.__set_next_button(box._next_button)
         self.__set_close_button(box._close_button)
-        self.__set_progress_bar(box._progress_bar)
+        self.__set_scale_bar(box._scale_bar)
+        self.__set_scale_adjustment(box._scale_adjustment)
         self.__set_title_label(box._title_label)
         self.__set_subtitle_label(box._subtitle_label)
         self.__set_play_image(box._play_image)
@@ -171,6 +175,13 @@ class MediaBox(GObject.Object):
     def __set_progress_bar(self, bar):
         self._progress_bar = bar
 
+    def __set_scale_bar(self, bar):
+        self._scale_bar = bar
+
+    def __set_scale_adjustment(self, adjustment):
+        self._scale_adjustment = adjustment
+        self._scale_adjustment.connect("value_changed", self.__on_scale_time_change)
+
     def __set_title_label(self, label):
         self._title_label = label
 
@@ -225,6 +236,9 @@ class MediaBox(GObject.Object):
         self._playqueue = playqueue
         self._offset = offset
 
+        if playing == True:
+            self._progress = 0
+
         if (playing == True and self._cover_image != None):
             self.__reload_image()
 
@@ -258,6 +272,12 @@ class MediaBox(GObject.Object):
         if self._time_right_label != None:
             self._time_right_label.set_text(str(string))
 
+    def __update_progress_bar(self, fraction):
+        if self._progress_bar != None:
+            self._progress_bar.set_fraction(fraction)
+        if self._scale_adjustment != None:
+            self._scale_adjustment.set_value(fraction)
+
     def __convertMillis(self, millis):
         string = ""
         seconds=format(int((millis/1000)%60), '02')
@@ -278,7 +298,8 @@ class MediaBox(GObject.Object):
         if (self._item != None):
             self._prev_button.set_sensitive(self._offset - 1 >= 0)
             self._next_button.set_sensitive(self._offset + 1 < len(self._playqueue.items))
-            self._progress_bar.set_fraction(self._progress / self._item.duration)
+            self._fraction = self._progress / self._item.duration
+            self.__update_progress_bar(self._fraction)
 
             self.__updat_time_left_label(self.__convertMillis(self._progress))
             self.__updat_time_right_label("-" + self.__convertMillis(self._item.duration - self._progress))
@@ -298,6 +319,11 @@ class MediaBox(GObject.Object):
 
             self._title_label.set_text(title)
             self._subtitle_label.set_text(subtitle)
+
+    def __on_scale_time_change(self, scale):
+        value = scale.get_value()
+        if self._item != None and self._fraction != value:
+            self._player.seek_to_time(value * self._item.duration / 1000)
 
     def __on_playqueue_show_button(self, playqueue):
         self._playqueue_button.set_active(False)
