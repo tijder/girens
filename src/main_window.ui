@@ -5,7 +5,7 @@
   <requires lib="libhandy" version="0.0"/>
   <template class="PlexWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
-    <property name="default_width">440</property>
+    <property name="default_width">640</property>
     <property name="default_height">800</property>
     <property name="icon_name">applications-multimedia</property>
     <child type="titlebar">
