@@ -166,6 +166,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._sidebar_box.connect("home-button-clicked", self.__on_home_clicked)
         self._sidebar_box.connect("playlists-button-clicked", self.__on_playlists_clicked)
         self._sidebar_box.connect("player-button-clicked", self.__on_player_clicked)
+        self._sidebar_box.connect("other-server-selected", self.__on_other_server_selected)
         self._sidebar_viewport.add(self._sidebar_box)
 
         self._section_view = SectionView(self._plex)
@@ -241,6 +242,11 @@ class PlexWindow(Gtk.ApplicationWindow):
             thread.start()
         else:
             self.destroy()
+
+    def __on_other_server_selected(self, sidebox, resource):
+        thread = threading.Thread(target=self._plex.connect_to_resource, args=(resource,))
+        thread.daemon = True
+        thread.start()
 
     def __on_logout(self, plex):
         self.__show_login_view()

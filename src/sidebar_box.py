@@ -32,6 +32,7 @@ class SidebarBox(Gtk.Box):
         'home-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'playlists-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'player-button-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'other-server-selected': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
@@ -48,6 +49,7 @@ class SidebarBox(Gtk.Box):
         self._plex.connect('servers-retrieved', self.__on_servers_retrieved)
         self._plex.connect('sections-retrieved', self.__on_sections_retrieved)
         self._player.connect("media-playing", self.__on_media_playing)
+        self._server_box.connect("changed", self.__server_changed)
 
         self._section_list.connect("row-selected", self.__on_section_clicked)
 
@@ -65,6 +67,14 @@ class SidebarBox(Gtk.Box):
 
     def unselect_all(self):
         self._section_list.unselect_all()
+
+    def __server_changed(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            server_object, server_string = model[tree_iter][:2]
+            if (self._plex._server.friendlyName != server_string):
+                self.emit('other-server-selected', server_object)
 
     def __on_servers_retrieved(self, plex, servers):
         GLib.idle_add(self.__process_servers, servers)
@@ -108,7 +118,7 @@ class SidebarBox(Gtk.Box):
         renderer_text = Gtk.CellRendererText()
         self._server_box.pack_start(renderer_text, True)
         self._server_box.add_attribute(renderer_text, "text", 1)
-        self._server_box.set_active_id(name)
+        self._server_box.set_active_id(self._plex._server.friendlyName)
 
     def __on_section_clicked(self, listbox, listboxrow):
         if(listboxrow != None):

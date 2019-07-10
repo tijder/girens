@@ -392,18 +392,24 @@ class Plex(GObject.Object):
         for resource in self._account.resources():
             servers_found = True
             if ('server' in resource.provides.split(',')):
-                try:
-                    self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
-                    self._server = resource.connect(ssl=self._account.secure)
-                    self._library = self._server.library
-                    self._config['server_url'] = self._server._baseurl
-                    self._config['server_token'] = self._server._token
-                    self.__save_config()
-                    self.emit('connection-to-server')
-                    self.emit('loading', 'Success', False)
+                if self.connect_to_resource(resource):
                     break
-                except:
-                    self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
-                    print('connection failed')
+
         if (servers_found == False):
             self.emit('loading', 'No servers found for this account.', True)
+
+    def connect_to_resource(self, resource):
+        try:
+            self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
+            self._server = resource.connect(ssl=self._account.secure)
+            self._library = self._server.library
+            self._config['server_url'] = self._server._baseurl
+            self._config['server_token'] = self._server._token
+            self.__save_config()
+            self.emit('connection-to-server')
+            self.emit('loading', 'Success', False)
+            return True
+        except:
+            self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
+            print('connection failed')
+            return False
