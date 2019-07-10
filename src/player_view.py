@@ -153,6 +153,7 @@ class PlayerView(Gtk.Box):
         self._item = item
 
         if self._playing == True:
+            self.__show_controlls()
             GLib.idle_add(self.__empty_flowbox)
             thread = threading.Thread(target=self._plex.get_section_deck, args=(item.librarySectionID,))
             thread.daemon = True
