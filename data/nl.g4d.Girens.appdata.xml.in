@@ -30,6 +30,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-07-10" version="1.0.10">
+      <description>
+        <ul>
+          <li>Allow connecting to url instead of Plex user</li>
+          <li>Improve multi server support</li>
+          <li>Change sorting asc or desc</li>
+          <li>Hide media controlls after two seconds if new media started playing</li>
+          <li>Seek to certain time when playing music</li>
+          <li>Default width 640px</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-07-07" version="1.0.9">
       <description>
         <ul>
