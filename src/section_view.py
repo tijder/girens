@@ -39,6 +39,8 @@ class SectionView(Gtk.Box):
     _section_controll_box = GtkTemplate.Child()
     _play_button = GtkTemplate.Child()
     _shuffle_button = GtkTemplate.Child()
+    _order_button = GtkTemplate.Child()
+    _order_image = GtkTemplate.Child()
 
     _sort_active = None
     _sort_value_active = None
@@ -60,6 +62,7 @@ class SectionView(Gtk.Box):
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
+        self._order_button.connect("clicked", self.__on_order_button_clicked)
 
 
     def refresh(self, section, sort=None, sort_value=None):
@@ -73,6 +76,9 @@ class SectionView(Gtk.Box):
 
         self._sort_active = sort
         self._sort_value_active = sort_value
+        if self._sort_value_active == None:
+            self._sort_value_active = 'desc'
+        self.__set_correct_order_image()
 
         self._title_label.set_label(self._section.title)
 
@@ -126,7 +132,20 @@ class SectionView(Gtk.Box):
             model = combo.get_model()
             sort_object, sort_string = model[tree_iter][:2]
             if (self._sort_active != sort_string):
-                self.refresh(self._section, sort=sort_string, sort_value="desc")
+                self.refresh(self._section, sort=sort_string, sort_value=self._sort_value_active)
+
+    def __on_order_button_clicked(self, button):
+        if self._sort_value_active == 'desc':
+            self._sort_value_active = 'asc'
+        else:
+            self._sort_value_active = 'desc'
+        self.refresh(self._section, sort=self._sort_active, sort_value=self._sort_value_active)
+
+    def __set_correct_order_image(self):
+        if self._sort_value_active == 'desc':
+            self._order_image.set_from_icon_name('go-down-symbolic', 4)
+        else:
+            self._order_image.set_from_icon_name('go-up-symbolic', 4)
 
     def __on_playlists_retrieved(self, plex, playlists):
         GLib.idle_add(self.__process_playlists, playlists)
