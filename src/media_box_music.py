@@ -39,6 +39,9 @@ class MediaBoxMusic(Gtk.Revealer):
     _playqueue_button = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
 
+    _time_left_label = GtkTemplate.Child()
+    _time_right_label = GtkTemplate.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()

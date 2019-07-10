@@ -93,6 +93,8 @@ class MediaBox(GObject.Object):
         self.__set_subtitle_label(box._subtitle_label)
         self.__set_play_image(box._play_image)
         self.__set_cover_image(box._cover_image)
+        self.__set_time_left_label(box._time_left_label)
+        self.__set_time_right_label(box._time_right_label)
 
         self.set_reveal_child(False)
 
