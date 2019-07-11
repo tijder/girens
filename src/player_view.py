@@ -26,6 +26,7 @@ class PlayerView(Gtk.Box):
     _controlls_bottom = GtkTemplate.Child()
     _event = GtkTemplate.Child()
     _box = GtkTemplate.Child()
+    _label = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
 
     _deck_shows_box = GtkTemplate.Child()
@@ -159,9 +160,9 @@ class PlayerView(Gtk.Box):
                 thread = threading.Thread(target=self._plex.get_section_deck, args=(item.librarySectionID,))
                 thread.daemon = True
                 thread.start()
-                GLib.idle_add(self.__set_box_vissible, True)
+                GLib.idle_add(self.__set_box_visible, True)
             else:
-                GLib.idle_add(self.__set_box_vissible, False)
+                GLib.idle_add(self.__set_box_visible, False)
 
             if (not self._item.TYPE == 'playlist' and not self._item.TYPE == 'episode'):
                 self._download_key = self._item.ratingKey
@@ -177,8 +178,8 @@ class PlayerView(Gtk.Box):
             thread.daemon = True
             thread.start()
 
-    def __set_box_vissible(self, booleon):
-        self._box.set_visible(booleon)
+    def __set_box_visible(self, booleon):
+        self._label.set_visible(booleon)
 
 
     def __on_cover_downloaded(self, plex, rating_key, path):
