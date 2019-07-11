@@ -102,7 +102,7 @@ class AlbumView(Handy.Column):
     def __show_more_items(self):
         self.__stop_add_items_timout()
         if len(self._tracks) > 0:
-            i = 5
+            i = 10
             while len(self._tracks) > 0:
                 self.__add_track(self._tracks[0])
                 i -= 1
