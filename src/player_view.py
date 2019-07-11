@@ -155,9 +155,13 @@ class PlayerView(Gtk.Box):
         if self._playing == True:
             self.__show_controlls()
             GLib.idle_add(self.__empty_flowbox)
-            thread = threading.Thread(target=self._plex.get_section_deck, args=(item.librarySectionID,))
-            thread.daemon = True
-            thread.start()
+            if self._item.type != 'clip':
+                thread = threading.Thread(target=self._plex.get_section_deck, args=(item.librarySectionID,))
+                thread.daemon = True
+                thread.start()
+                GLib.idle_add(self.__set_box_vissible, True)
+            else:
+                GLib.idle_add(self.__set_box_vissible, False)
 
             if (not self._item.TYPE == 'playlist' and not self._item.TYPE == 'episode'):
                 self._download_key = self._item.ratingKey
@@ -172,6 +176,9 @@ class PlayerView(Gtk.Box):
             thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
             thread.daemon = True
             thread.start()
+
+    def __set_box_vissible(self, booleon):
+        self._box.set_visible(booleon)
 
 
     def __on_cover_downloaded(self, plex, rating_key, path):

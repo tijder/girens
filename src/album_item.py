@@ -27,6 +27,7 @@ class AlbumItem(Gtk.Box):
     _title_label = GtkTemplate.Child()
     _time_label = GtkTemplate.Child()
     _play_button = GtkTemplate.Child()
+    _music_clip_button = GtkTemplate.Child()
 
     def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
@@ -39,6 +40,10 @@ class AlbumItem(Gtk.Box):
         if item.viewCount == 0:
             style = self._time_label.get_style_context()
             style.add_class("unplayed")
+
+        if item.primaryExtraKey != None:
+            self._music_clip_button.set_visible(True)
+            self._music_clip_button.connect("clicked", self.__on_music_clip_button_clicked)
 
         self._title_label.set_text(self._item.title)
         con_sec, con_min, con_hour = self.__convertMillis(int(self._item.duration))
@@ -53,5 +58,10 @@ class AlbumItem(Gtk.Box):
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
+        thread.daemon = True
+        thread.start()
+
+    def __on_music_clip_button_clicked(self, button):
+        thread = threading.Thread(target=self._plex.play_item, args=(self._item.primaryExtraKey,))
         thread.daemon = True
         thread.start()

@@ -172,7 +172,7 @@ class MediaPlayer2Service(Server):
         else:
             user_rating = media.userRating / 10
 
-        if media.type == 'movie':
+        if media.type in {'movie', 'clip'}:
             index = 0
             album = media.title
             artist = media.title
