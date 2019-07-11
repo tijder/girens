@@ -113,6 +113,8 @@ class PlayerView(Gtk.Box):
             self.__show_controlls()
         elif key.string == 'q':
             self._player.stop()
+        elif key.string == 'm':
+            self._player.toggle_play_music_clip_instead_of_track()
         elif key.keyval in [91, 65361]: # [ and left key
             self._player.seek_backward()
         elif key.keyval in [93, 65363]: # ] and right key
@@ -136,7 +138,7 @@ class PlayerView(Gtk.Box):
         self._timout = GLib.timeout_add(3000, self.__on_motion_over)
 
     def __show_controlls(self):
-        if self._playing == True:
+        if self._playing == True and self._item.listType == 'video':
             self._media_box.set_reveal_child(True)
         self.__stop_controlls_timout()
         self.__start_controlls_timout()
@@ -149,14 +151,14 @@ class PlayerView(Gtk.Box):
         if self._fullscreen:
             self.__hide_cursor()
 
-    def __on_media_playing(self, player, playing, item, playqueue, offset):
+    def __on_media_playing(self, player, playing, playqueue_item, playqueue, offset, item):
         self._playing = playing
         self._item = item
 
         if self._playing == True:
             self.__show_controlls()
             GLib.idle_add(self.__empty_flowbox)
-            if self._item.type != 'clip':
+            if self._item.type not in {'clip', 'track'}:
                 thread = threading.Thread(target=self._plex.get_section_deck, args=(item.librarySectionID,))
                 thread.daemon = True
                 thread.start()

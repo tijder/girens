@@ -133,7 +133,7 @@ class SidebarBox(Gtk.Box):
                 elif (child.get_title() == 'Player'):
                     self.emit('player-button-clicked')
 
-    def __on_media_playing(self, player, playing, item, playqueue, offset):
+    def __on_media_playing(self, player, playing, playqueue_item, playqueue, offset, item):
         if item != None and item.listType == 'video':
             GLib.idle_add(self._section_player.show)
         else:

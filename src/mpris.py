@@ -238,7 +238,7 @@ class MediaPlayer2Service(Server):
         self.Seeked(time * 1000)
 
 
-    def _on_current_song_changed(self, player, playing, item, playqueue, offset):
+    def _on_current_song_changed(self, player, playing, playqueue_item, playqueue, offset, item):
         properties = {}
         properties["Metadata"] = GLib.Variant("a{sv}", self._get_metadata(media=player._item))
         properties["CanGoNext"] = GLib.Variant("b", True)

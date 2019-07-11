@@ -223,7 +223,7 @@ class MediaBox(GObject.Object):
         self._paused = paused
         GLib.idle_add(self.__update_buttons)
 
-    def __on_media_playing(self, player, playing, item, playqueue, offset):
+    def __on_media_playing(self, player, playing, playqueue_item, playqueue, offset, item):
         if item != None and item.listType == self._show_only_type:
             self.__update_media_playing(player, playing, item, playqueue, offset)
             self.set_reveal_child(playing)

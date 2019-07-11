@@ -16,7 +16,7 @@ class Player(GObject.Object):
         'playqueue-ended': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'video-starting': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'media-paused': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
-        'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int)),
+        'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int, object)),
         'media-time': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
 
@@ -43,6 +43,7 @@ class Player(GObject.Object):
         self._fullscreen = False
         self._video_output_driver = "x11,"
         self._deinterlace = "no"
+        self._play_music_clip_instead_of_track = False
 
     def set_video_output_driver(self, video_output_driver):
         self._video_output_driver = video_output_driver
@@ -56,7 +57,7 @@ class Player(GObject.Object):
     def __createPlayer(self):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
-        if self._item.listType == 'video':
+        if self._item_loading.listType == 'video':
             self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no")
         else:
             self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no")
@@ -71,7 +72,7 @@ class Player(GObject.Object):
                 self.emit('media-time', value * 1000)
             if value is not None and abs(value - self._progresUpdate) > 5:
                 self._progresUpdate = value
-                self._item.updateTimeline(value * 1000, state='playing', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+                self._item.updateTimeline(value * 1000, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
             pass
 
         @self._player.property_observer('pause')
@@ -79,10 +80,10 @@ class Player(GObject.Object):
             self._paused = value
             self.emit('media-paused', value)
             if (value == True):
-                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
 
     def __stop(self):
-        self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item.duration, playQueueItemID=self._item.playQueueItemID)
+        self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
         self._player.terminate()
 
     def set_playqueue(self, playqueue):
@@ -98,7 +99,11 @@ class Player(GObject.Object):
             GLib.idle_add(self.__ask_resume_or_beginning, new_item)
         else:
             self._item = new_item
-            if self._item.listType == 'video':
+            self._item_loading = self._item
+            if self._play_music_clip_instead_of_track and self._item.type == 'track' and self._item.primaryExtraKey != None:
+                self._item_clip = self._plex._server.fetchItem(self._item.primaryExtraKey)
+                self._item_loading = self._item_clip
+            if self._item_loading.listType == 'video':
                 self.emit('video-starting')
                 while self._player_view._frame.get_property("window") == None:
                     time.sleep(1)
@@ -113,23 +118,24 @@ class Player(GObject.Object):
             self._progresNow = 0
 
             if (from_beginning == False):
-                offset = self._item.viewOffset / 1000
+                offset = self._item_loading.viewOffset / 1000
             else:
                 offset = 0
 
-            source = self._plex.get_item_download_path(self._item)
+            source = self._plex.get_item_download_path(self._item_loading)
             if (source == None):
-                source = self._item.getStreamURL(offset=offset)
+                source = self._item_loading.getStreamURL(offset=offset)
                 self._player.play(source)
             else:
                 self._player.play(source)
                 self._player.wait_for_property('seekable')
                 self._player.seek(offset, reference='absolute', precision='exact')
-            self.emit('media-playing', True, self._item, self._playqueue, self._offset)
+            self.emit('media-playing', True, self._item, self._playqueue, self._offset, self._item_loading)
 
             self._player.wait_for_playback()
             self.__stop()
             self._item = None
+            self._item_loading = None
             self._playing = False
 
             if (self._play_wait == True):
@@ -144,7 +150,7 @@ class Player(GObject.Object):
             elif (self._stop_command == False or self._next == True):
                 self.__next()
             else:
-                self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+                self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
                 self.emit('playqueue-ended')
 
     def prev(self):
@@ -226,6 +232,9 @@ class Player(GObject.Object):
     def play_index(self, index):
         self._next_index = index
         self._player.command('stop')
+
+    def toggle_play_music_clip_instead_of_track(self):
+        self._play_music_clip_instead_of_track = not self._play_music_clip_instead_of_track
 
     def __playqueue_refresh(self):
         self._playqueue.refresh()
