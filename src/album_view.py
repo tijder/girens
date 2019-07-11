@@ -26,7 +26,8 @@ class AlbumView(Handy.Column):
     __gtype_name__ = 'album_view'
 
     __gsignals__ = {
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
+        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'done-loading': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     _title_label = GtkTemplate.Child()
@@ -43,6 +44,8 @@ class AlbumView(Handy.Column):
     _download_key = None
     _key = None
 
+    _timout = None
+
     def __init__(self, plex, artist_view=False, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -52,7 +55,6 @@ class AlbumView(Handy.Column):
         if artist_view == True:
             self._artist_view_button.set_visible(False)
 
-        self._plex.connect("album-retrieved", self.__album_retrieved)
         self._plex.connect("download-cover", self.__on_cover_downloaded)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
@@ -67,11 +69,14 @@ class AlbumView(Handy.Column):
         for item in self._item_box.get_children():
             self._item_box.remove(item)
 
+        self._connection_album_retrieved = self._plex.connect("album-retrieved", self.__album_retrieved)
+
         thread = threading.Thread(target=self._plex.get_album, args=(key,))
         thread.daemon = True
         thread.start()
 
     def __album_retrieved(self, plex, album, tracks):
+        self._plex.disconnect(self._connection_album_retrieved)
         if self._key is not None and int(album.ratingKey) == int(self._key):
             GLib.idle_add(self.__album_process, album, tracks)
 
@@ -87,8 +92,35 @@ class AlbumView(Handy.Column):
         thread.daemon = True
         thread.start()
 
-        for track in tracks:
-            self._item_box.add(AlbumItem(self._plex, track))
+        self._tracks = tracks
+        self.__start_add_items_timout()
+
+    def __add_track(self, track):
+        self._item_box.add(AlbumItem(self._plex, track))
+        self._tracks.remove(track)
+
+    def __show_more_items(self):
+        self.__stop_add_items_timout()
+        if len(self._tracks) > 0:
+            i = 5
+            while len(self._tracks) > 0:
+                self.__add_track(self._tracks[0])
+                i -= 1
+                if (i == 0):
+                    break
+            if len(self._tracks) == 0:
+                self.emit('done-loading')
+            else:
+                self.__start_add_items_timout()
+
+    def __stop_add_items_timout(self):
+        if self._timout != None:
+            GLib.source_remove(self._timout)
+            self._timout = None
+
+    def __start_add_items_timout(self):
+        if len(self._tracks) > 0:
+            self._timout = GLib.timeout_add(100, self.__show_more_items)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
