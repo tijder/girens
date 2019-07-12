@@ -19,6 +19,7 @@
             <property name="margin_left">10</property>
             <property name="margin_bottom">5</property>
             <property name="label">label</property>
+            <property name="ellipsize">end</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
