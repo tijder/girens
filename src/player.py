@@ -186,7 +186,7 @@ class Player(GObject.Object):
             self._offset = self._offset + 1
             self.start()
         else:
-            self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+            self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
             self.emit('playqueue-ended')
 
     def __prev(self):
@@ -195,7 +195,7 @@ class Player(GObject.Object):
             self._offset = self._offset - 1
             self.start()
         else:
-            self.emit('media-playing', False, self._item, self._playqueue, self._offset)
+            self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
             self.emit('playqueue-ended')
 
     def play_pause(self):
