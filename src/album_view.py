@@ -41,6 +41,12 @@ class AlbumView(Handy.Column):
     _download_button = GtkTemplate.Child()
     _shuffle_button = GtkTemplate.Child()
 
+    _button_box = GtkTemplate.Child()
+    _button2_box = GtkTemplate.Child()
+    _cover_box = GtkTemplate.Child()
+    _cover2_box = GtkTemplate.Child()
+    _left_box = GtkTemplate.Child()
+
     _download_key = None
     _key = None
 
@@ -153,3 +159,21 @@ class AlbumView(Handy.Column):
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
         thread.daemon = True
         thread.start()
+
+    def width_changed(self, width):
+        cover_box = self._cover_box
+        button_box = self._button_box
+        left_vissible = True
+        if width < 550:
+            cover_box = self._cover2_box
+            button_box = self._button2_box
+            left_vissible = False
+
+        if self._play_button.get_parent() != button_box:
+            self._play_button.reparent(button_box)
+            self._play_button.set_hexpand(left_vissible)
+            self._menu_button.reparent(button_box)
+            self._left_box.set_visible(left_vissible)
+        if self._cover_image.get_parent() != cover_box:
+            self._cover_image.reparent(cover_box)
+            self._cover_image.set_hexpand(not left_vissible)

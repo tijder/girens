@@ -78,6 +78,7 @@ class ArtistView(Gtk.Box):
         self.__stop_add_items_timout()
         if len(self._albums) > 0:
             album_view = AlbumView(self._plex, artist_view=True)
+            album_view.width_changed(self._screen_width)
             album_view.change_album(self._albums[0].ratingKey)
             self._album_box.add(album_view)
             self._albums.remove(self._albums[0])
@@ -113,3 +114,8 @@ class ArtistView(Gtk.Box):
         thread = threading.Thread(target=self._plex.play_item, args=(self._artist,),kwargs={'shuffle':1})
         thread.daemon = True
         thread.start()
+
+    def width_changed(self, width):
+        self._screen_width = width
+        for item in self._album_box.get_children():
+            item.width_changed(width)
