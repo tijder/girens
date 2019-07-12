@@ -171,9 +171,8 @@ class AlbumView(Handy.Column):
 
         if self._play_button.get_parent() != button_box:
             self._play_button.reparent(button_box)
-            self._play_button.set_hexpand(left_vissible)
+            button_box.child_set_property(self._play_button, 'expand', GObject.Value(value_type=GObject.TYPE_BOOLEAN, py_value=True))
             self._menu_button.reparent(button_box)
             self._left_box.set_visible(left_vissible)
         if self._cover_image.get_parent() != cover_box:
             self._cover_image.reparent(cover_box)
-            self._cover_image.set_hexpand(not left_vissible)
