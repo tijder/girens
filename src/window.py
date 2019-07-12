@@ -76,6 +76,8 @@ class PlexWindow(Gtk.ApplicationWindow):
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
 
+    _window_placement_update_timeout = None
+
     def __init__(self, show_id=None, video_output_driver=None, deinterlace=None, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -195,6 +197,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_revealer.add(self._album_view)
 
         MediaPlayer2Service(self)
+
+        self.connect("configure-event", self.__on_configure_event)
 
         self.__show_login_view()
 
@@ -392,6 +396,19 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)
+
+    def __on_configure_event(self, widget, event):
+        if self._window_placement_update_timeout is None:
+            self._window_placement_update_timeout = GLib.timeout_add(
+                500, self.__update_screen_size_change, widget)
+
+    def __update_screen_size_change(self, widget):
+        size = widget.get_size()
+        self._media_box_music.width_changed(size[0])
+        GLib.source_remove(self._window_placement_update_timeout)
+        self._window_placement_update_timeout = None
+        return False
+
 
     def __custom_css(self):
         screen = Gdk.Screen.get_default()

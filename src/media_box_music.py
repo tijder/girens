@@ -43,6 +43,19 @@ class MediaBoxMusic(Gtk.Revealer):
     _time_left_label = GtkTemplate.Child()
     _time_right_label = GtkTemplate.Child()
 
+    _label_box = GtkTemplate.Child()
+    _label2_box = GtkTemplate.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
+
+    def width_changed(self, width):
+        box = self._label_box
+        if width < 550:
+            box = self._label2_box
+
+        if self._title_label.get_parent() != box:
+            self._title_label.reparent(box)
+            self._subtitle_label.reparent(box)
+
