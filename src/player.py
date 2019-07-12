@@ -72,7 +72,7 @@ class Player(GObject.Object):
                 self.emit('media-time', value * 1000)
             if value is not None and abs(value - self._progresUpdate) > 5:
                 self._progresUpdate = value
-                self._item.updateTimeline(value * 1000, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+                self.__updateTimeline(value * 1000, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
             pass
 
         @self._player.property_observer('pause')
@@ -80,10 +80,10 @@ class Player(GObject.Object):
             self._paused = value
             self.emit('media-paused', value)
             if (value == True):
-                self._item.updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+                self.__updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
 
     def __stop(self):
-        self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+        self.__updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
         self._player.terminate()
 
     def set_playqueue(self, playqueue):
@@ -255,6 +255,11 @@ class Player(GObject.Object):
 
     def __on_resume_selected(self, dialog, bool):
         thread = threading.Thread(target=self.start,kwargs={'from_beginning':False})
+        thread.daemon = True
+        thread.start()
+        
+    def __updateTimeline(self, progres, state=None, duration=None, playQueueItemID=None):
+        thread = threading.Thread(target=self._item.updateTimeline,args={progres},kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID})
         thread.daemon = True
         thread.start()
         
