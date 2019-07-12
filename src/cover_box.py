@@ -53,12 +53,13 @@ class CoverBox(Gtk.Box):
     _download_key = None
     _download_thumb = None
 
-    def __init__(self, plex, item, show_view=False, **kwargs):
+    def __init__(self, plex, item, show_view=False, cover_width=200, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
 
         self._item = item
         self._plex = plex
+        self._cover_width = cover_width
         self._show_view = show_view
         self._plex_connect_id = self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex_retrieved_id = self._plex.connect("item-retrieved", self.__on_item_retrieved)
@@ -98,7 +99,7 @@ class CoverBox(Gtk.Box):
             self._progress_bar.set_visible(False)
 
         self._image_height = 300
-        self._image_width = 200
+        self._image_width = self._cover_width
 
         self._album_view_button.set_visible(False)
         self._artist_view_button.set_visible(False)
@@ -188,6 +189,8 @@ class CoverBox(Gtk.Box):
             self._subtitle_label.set_visible(True)
         else:
             self._subtitle_label.set_visible(False)
+
+        self._cover_image.set_size_request(self._image_width, -1)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):

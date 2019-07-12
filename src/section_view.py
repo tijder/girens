@@ -49,6 +49,7 @@ class SectionView(Gtk.Box):
     _timout = None
     _add_items_to_view = 0
     _add_items_first = False
+    _cover_width = 200
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -181,7 +182,7 @@ class SectionView(Gtk.Box):
         self._add_items_to_view -= items_to_add
         if self._add_items_to_view > 0:
             while count < items_to_add and len(self._items) != 0:
-                cover = CoverBox(self._plex, self._items[0])
+                cover = CoverBox(self._plex, self._items[0], cover_width=self._cover_width)
                 cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
                 cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
                 self._section_flow.add(cover)
@@ -223,3 +224,8 @@ class SectionView(Gtk.Box):
         thread.daemon = True
         thread.start()
         
+    def width_changed(self, width):
+        if width < 450:
+            self._cover_width = width / 2 - 10
+        else:
+            self._cover_width = 200

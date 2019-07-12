@@ -36,6 +36,8 @@ class DiscoverView(Gtk.Box):
     _seasons_shows_box = GtkTemplate.Child()
     _music_shows_box = GtkTemplate.Child()
 
+    _cover_width = 200
+
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -79,7 +81,7 @@ class DiscoverView(Gtk.Box):
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
     def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, item)
+        cover = CoverBox(self._plex, item, cover_width=self._cover_width)
         cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
         cover.connect("view-album-wanted", self.__on_go_to_album_clicked)
         cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
@@ -94,3 +96,9 @@ class DiscoverView(Gtk.Box):
     def __on_go_to_artist_clicked(self, cover, key):
         self.emit('view-artist-wanted', key)
 
+    def width_changed(self, width):
+        if width < 450:
+            self._cover_width = width / 2 - 10
+        else:
+            self._cover_width = 200
+            
