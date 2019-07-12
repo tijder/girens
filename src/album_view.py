@@ -164,7 +164,7 @@ class AlbumView(Handy.Column):
         cover_box = self._cover_box
         button_box = self._button_box
         left_vissible = True
-        if width < 550:
+        if width < 750:
             cover_box = self._cover2_box
             button_box = self._button2_box
             left_vissible = False
