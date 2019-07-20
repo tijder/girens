@@ -30,6 +30,14 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-07-11" version="1.0.11">
+      <description>
+        <ul>
+          <li>Enchanted smallscreen support</li>
+          <li>Play music clips from music track</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-07-10" version="1.0.10">
       <description>
         <ul>
