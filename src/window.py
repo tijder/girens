@@ -410,6 +410,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._discover_view.width_changed(size[0])
         self._album_view.width_changed(size[0])
         self._artist_view.width_changed(size[0])
+        self._ShowView.width_changed(size[0])
         GLib.source_remove(self._window_placement_update_timeout)
         self._window_placement_update_timeout = None
         return False

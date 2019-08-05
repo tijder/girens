@@ -34,6 +34,8 @@ class ShowView(Gtk.Box):
 
     _season_stack = GtkTemplate.Child()
 
+    _cover_width = 200
+
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -83,7 +85,7 @@ class ShowView(Gtk.Box):
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
     def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, item, show_view=True)
+        cover = CoverBox(self._plex, item, show_view=True, cover_width=self._cover_width)
         hub.add(cover)
 
     def __on_play_button_clicked(self, button):
@@ -95,3 +97,9 @@ class ShowView(Gtk.Box):
         thread = threading.Thread(target=self._plex.play_item, args=(self._show,),kwargs={'shuffle':1})
         thread.daemon = True
         thread.start()
+
+    def width_changed(self, width):
+        if width < 450:
+            self._cover_width = width / 2 - 10
+        else:
+            self._cover_width = 200
