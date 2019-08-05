@@ -89,13 +89,13 @@ class PlayerView(Gtk.Box):
         self.emit('fullscreen', self._fullscreen)
         if self._fullscreen:
             self._box.hide()
-            self._overlay.set_vexpand(True)
-            self._overlay.set_size_request(-1, -1)
+            self._event.set_vexpand(True)
+            self._event.set_size_request(-1, -1)
             self.__show_controlls()
         else:
             self._box.show()
-            self._overlay.set_vexpand(False)
-            self._overlay.set_size_request(-1, 500)
+            self._event.set_vexpand(False)
+            self._event.set_size_request(-1, 500)
             self.__show_cursor()
 
     def __on_playqueue_ended(self, player):
