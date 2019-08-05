@@ -223,3 +223,8 @@ class PlayerView(Gtk.Box):
             self._cover_width = width / 2 - 10
         else:
             self._cover_width = 200
+
+        if width < 850:
+            self._event.set_size_request(-1, 300)
+        else:
+            self._event.set_size_request(-1, 500)
