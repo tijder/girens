@@ -240,6 +240,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_login_success(self, view, status):
         if (status == True):
             self._content_box_wrapper.set_visible(True)
+            self.header.set_visible_child_name("content")
             self.__show_view('discover')
             thread = threading.Thread(target=self._plex.connect_to_server)
             thread.daemon = True
