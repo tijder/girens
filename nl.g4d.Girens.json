@@ -276,8 +276,8 @@
             "sources" : [
                 {
                     "type" : "archive",
-                    "sha256" : "366350c0c15f53b8de4032780de4c5a5c41dfe2001d7b3d39ec6399123c2cb73",
-                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.10/libhandy-v0.0.10.tar.bz2"
+                    "sha256" : "cfa0089046a0b04c128e0ff24422058611cb53173ba68a7bbeb028b994a16d17",
+                    "url" : "https://source.puri.sm/Librem5/libhandy/-/archive/v0.0.11/libhandy-v0.0.11.tar.bz2"
                 }
             ]
         },
