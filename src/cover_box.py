@@ -248,13 +248,13 @@ class CoverBox(Gtk.Box):
 
     def __on_mark_played_clicked(self, button):
         self._menu_button.set_active(False)
-        thread = threading.Thread(target=self._plex.mark_as_played, args=(self._item))
+        thread = threading.Thread(target=self._plex.mark_as_played, args=(self._item,))
         thread.daemon = True
         thread.start()
 
     def __on_mark_unplayed_clicked(self, button):
         self._menu_button.set_active(False)
-        thread = threading.Thread(target=self._plex.mark_as_unplayed, args=(self._item))
+        thread = threading.Thread(target=self._plex.mark_as_unplayed, args=(self._item,))
         thread.daemon = True
         thread.start()
 
