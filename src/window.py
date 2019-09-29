@@ -71,6 +71,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _avatar_image = GtkTemplate.Child()
     _profile_button = GtkTemplate.Child()
     _sync_button = GtkTemplate.Child()
+    _shortcuts_button = GtkTemplate.Child()
     _sync_image = GtkTemplate.Child()
     _download_button = GtkTemplate.Child()
     _back_button = GtkTemplate.Child()
@@ -148,6 +149,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._download_button.set_visible(False)
 
         self._sync_button.connect("clicked", self.__on_sync_clicked)
+        self._shortcuts_button.connect("clicked", self.__on_shortcuts_activate)
 
         self._loading_view = LoadingView(self._plex)
         self._content_box_wrapper.add(self._loading_view)
@@ -397,6 +399,13 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)
+
+    def __on_shortcuts_activate(self, button):
+        builder = Gtk.Builder()
+        builder.add_from_resource("/nl/g4d/Girens/shortcuts.ui")
+        builder.get_object("shortcuts").set_transient_for(self)
+        builder.get_object("shortcuts").show()
+
 
     def __on_configure_event(self, widget, event):
         if self._window_placement_update_timeout is None:

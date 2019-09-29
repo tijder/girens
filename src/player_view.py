@@ -107,6 +107,7 @@ class PlayerView(Gtk.Box):
 
 
     def __on_keypress(self, widget, key):
+        print(key.string)
         if key.keyval in [102, 65480]: # f and f11 key
             self.__fullscreen()
         elif key.string == 'p':
@@ -115,6 +116,10 @@ class PlayerView(Gtk.Box):
             self.__show_controlls()
         elif key.string == 'q':
             self._player.stop()
+        elif key.string == ',':
+            self._player.prev()
+        elif key.string == '.':
+            self._player.next()
         elif key.string == 'm':
             self._player.toggle_play_music_clip_instead_of_track()
         elif key.keyval in [91, 65361]: # [ and left key

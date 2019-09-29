@@ -119,6 +119,21 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkButton" id="_shortcuts_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <child>
+                          <object class="GtkImage" id="_shortcuts_image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">fcitx-kbd-symbolic</property>
+                            <property name="icon_size">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkMenuButton" id="_download_button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>

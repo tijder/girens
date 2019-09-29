@@ -28,5 +28,6 @@
     <file>album_item.ui</file>
     <file>resume_dialog.ui</file>
     <file>player_view.ui</file>
+    <file>shortcuts.ui</file>
   </gresource>
 </gresources>
