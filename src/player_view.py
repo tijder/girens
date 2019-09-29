@@ -107,7 +107,6 @@ class PlayerView(Gtk.Box):
 
 
     def __on_keypress(self, widget, key):
-        print(key.string)
         if key.keyval in [102, 65480]: # f and f11 key
             self.__fullscreen()
         elif key.string == 'p':
