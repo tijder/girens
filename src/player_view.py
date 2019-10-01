@@ -84,6 +84,10 @@ class PlayerView(Gtk.Box):
         else:
             self.__start_controlls_timout()
 
+    def go_fullscreen(self):
+        if (self._fullscreen == False):
+            self.__fullscreen()
+
     def __fullscreen(self):
         self._fullscreen = not self._fullscreen
         self.emit('fullscreen', self._fullscreen)
@@ -100,7 +104,7 @@ class PlayerView(Gtk.Box):
 
     def __on_playqueue_ended(self, player):
         if self._fullscreen == True:
-            self.__fullscreen()
+            GLib.idle_add(self.__fullscreen)
 
     def __on_play_button_clicked(self, button):
         self._player.play_pause()

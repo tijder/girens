@@ -35,6 +35,8 @@ from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .resume_dialog import ResumeDialog
 from .mpris import MediaPlayer2Service
+from .remote_player import RemotePlayer
+from plex_mpv_shim.plex_remote_client import PlexRemoteClient
 
 from .plex import Plex
 from .player import Player
@@ -95,6 +97,13 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._show_id = show_id
 
         self.connect("map", self.__screen_mapped)
+        self.connect("unrealize", self.__on_destroy)
+
+
+    def __on_destroy(self, widget):
+        thread = threading.Thread(target=self.plexRemoteClient.stop)
+        thread.daemon = True
+        thread.start()
 
     def __on_motion(self, widget, motion):
         print(motion)
@@ -197,6 +206,13 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_view = AlbumView(self._plex)
         self._album_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._album_revealer.add(self._album_view)
+
+        remote_player = RemotePlayer(self._player, self)
+
+        self.plexRemoteClient = PlexRemoteClient(remote_player)
+        thread = threading.Thread(target=self.plexRemoteClient.start)
+        thread.daemon = True
+        thread.start()
 
         MediaPlayer2Service(self)
 
@@ -383,6 +399,9 @@ class PlexWindow(Gtk.ApplicationWindow):
             self._content_leaflet.set_visible(True)
 
             self._search_toggle_button.set_sensitive(True)
+
+    def go_fullscreen(self):
+        self._player_view.go_fullscreen()
 
     def __fullscreen(self, widged, booleon):
         if booleon:

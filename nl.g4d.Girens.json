@@ -282,6 +282,19 @@
             ]
         },
         {
+            "name" : "plex-mpv-shim",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "pip3 install --prefix=/app ./"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://github.com/tijder/plex-mpv-shim"
+                }
+            ]
+        },
+        {
             "name" : "girens",
             "buildsystem" : "meson",
             "config-opts" : [

@@ -31,6 +31,7 @@ class Player(GObject.Object):
         self._resume_dialog.connect("resume-selected", self.__on_resume_selected)
 
         self._player = None
+        self._playqueue = None
         self._progresUpdate = None
         self._lastInternUpdate = None
         self._progresNow = None
@@ -90,12 +91,12 @@ class Player(GObject.Object):
         self._playqueue = playqueue
         self.__playqueue_refresh()
 
-    def start(self, from_beginning=None):
+    def start(self, from_beginning=None, offset_param=None):
         new_item = self._playqueue.items[self._offset]
         if (self._playing != False):
             self._play_wait = True
             self._player.command('stop')
-        elif new_item.viewOffset != 0 and from_beginning == None:
+        elif new_item.viewOffset != 0 and from_beginning == None and offset_param == None:
             GLib.idle_add(self.__ask_resume_or_beginning, new_item)
         else:
             self._item = new_item
@@ -119,6 +120,8 @@ class Player(GObject.Object):
 
             if (from_beginning == False):
                 offset = self._item_loading.viewOffset / 1000
+            elif offset_param != False:
+                offset = offset_param
             else:
                 offset = 0
 
@@ -170,7 +173,17 @@ class Player(GObject.Object):
             self._player.command('stop')
 
     def get_position(self):
-        return 0
+        return self._progresNow
+
+    def get_volume(self, percent=False):
+        if self._player:
+            if not percent:
+                return self._player.volume / 100
+            return self._player.volume
+
+    def set_volume(self, percent):
+        if not self._player.playback_abort:
+            self._player.volume = percent
 
     def get_state(self):
         if self._playing == False:
@@ -197,6 +210,18 @@ class Player(GObject.Object):
         else:
             self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
             self.emit('playqueue-ended')
+
+    def has_next(self):
+        return (self._offset + 1 < len(self._playqueue.items))
+
+    def has_prev(self):
+        return (self._offset - 1 >= 0)
+
+    def has_media_item(self):
+        if (self._playing == False):
+            return False
+        else:
+            return True
 
     def play_pause(self):
         if (self._playing != False):
@@ -233,8 +258,20 @@ class Player(GObject.Object):
         self._next_index = index
         self._player.command('stop')
 
+    def play_from_key(self, key):
+        if self._playqueue is not None:
+            i = 0
+            for item in self._playqueue.items:
+                if (item.key == key):
+                    self._next_index = i
+                    self._player.command('stop')
+                i += 1
+
     def toggle_play_music_clip_instead_of_track(self):
         self._play_music_clip_instead_of_track = not self._play_music_clip_instead_of_track
+
+    def refresh_playqueue(self):
+        self.__playqueue_refresh()
 
     def __playqueue_refresh(self):
         self._playqueue.refresh()
