@@ -120,7 +120,7 @@ class Player(GObject.Object):
 
             if (from_beginning == False):
                 offset = self._item_loading.viewOffset / 1000
-            elif offset_param != False:
+            elif offset_param != None:
                 offset = offset_param
             else:
                 offset = 0
