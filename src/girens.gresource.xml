@@ -29,5 +29,6 @@
     <file>resume_dialog.ui</file>
     <file>player_view.ui</file>
     <file>shortcuts.ui</file>
+    <file>about_dialog.ui</file>
   </gresource>
 </gresources>

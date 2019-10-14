@@ -81,6 +81,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _search_toggle_button = GtkTemplate.Child()
     _prefer_music_clips_check_button = GtkTemplate.Child()
     _advertise_as_client_check_button = GtkTemplate.Child()
+    _about_button = GtkTemplate.Child()
 
     _window_placement_update_timeout = None
 
@@ -156,6 +157,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
+        self._about_button.connect("clicked", self.__on_about_clicked)
 
         self._download_menu = DownloadMenu(self._plex)
         self._download_menu.connect("show-button", self.__on_show_download_button)
@@ -409,6 +411,16 @@ class PlexWindow(Gtk.ApplicationWindow):
             thread.daemon = True
             thread.start()
             self._remote_client_active = False
+
+    def __on_about_clicked(self, button):
+        builder = Gtk.Builder()
+        builder.add_from_resource("/nl/g4d/Girens/about_dialog.ui")
+        about_dialog = builder.get_object("about_dialog")
+        about_dialog.set_modal(True)
+        if self is not NotImplemented:
+            about_dialog.set_transient_for(self)
+        about_dialog.present()
+
 
     def __on_plex_load(self, plex, load_text, status):
         if (status == True):
