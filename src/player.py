@@ -18,6 +18,7 @@ class Player(GObject.Object):
         'media-paused': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int, object)),
         'media-time': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
+        'play-music-clip-instead-of-track': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
     }
 
     def __init__(self, resume_dialog, player_view, **kwargs):
@@ -269,6 +270,10 @@ class Player(GObject.Object):
 
     def toggle_play_music_clip_instead_of_track(self):
         self._play_music_clip_instead_of_track = not self._play_music_clip_instead_of_track
+        self.emit("play-music-clip-instead-of-track", self._play_music_clip_instead_of_track)
+
+    def set_play_music_clip_instead_of_track(self, value):
+        self._play_music_clip_instead_of_track = value
 
     def refresh_playqueue(self):
         self.__playqueue_refresh()

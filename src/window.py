@@ -50,6 +50,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     _active_view = None
     _show_id = None
+    _remote_client_active = None
 
     _content_box_wrapper = GtkTemplate.Child()
     _content_leaflet = GtkTemplate.Child()
@@ -78,6 +79,8 @@ class PlexWindow(Gtk.ApplicationWindow):
     _download_button = GtkTemplate.Child()
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
+    _prefer_music_clips_check_button = GtkTemplate.Child()
+    _advertise_as_client_check_button = GtkTemplate.Child()
 
     _window_placement_update_timeout = None
 
@@ -101,9 +104,10 @@ class PlexWindow(Gtk.ApplicationWindow):
 
 
     def __on_destroy(self, widget):
-        thread = threading.Thread(target=self.plexRemoteClient.stop)
-        thread.daemon = True
-        thread.start()
+        if self._remote_client_active is True:
+            thread = threading.Thread(target=self.plexRemoteClient.stop)
+            thread.daemon = True
+            thread.start()
 
     def __on_motion(self, widget, motion):
         print(motion)
@@ -148,6 +152,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._plex.connect("connection-to-server", self.__on_connection_to_server)
         self._plex.connect("logout", self.__on_logout)
         self._plex.connect("loading", self.__on_plex_load)
+        self._player.connect("play-music-clip-instead-of-track", self.__on_prefer_music_clips_changed)
 
         self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
@@ -156,6 +161,9 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._download_menu.connect("show-button", self.__on_show_download_button)
         self._download_button.set_popover(self._download_menu)
         self._download_button.set_visible(False)
+
+        self._prefer_music_clips_check_button.connect("toggled", self.__on_prefer_music_clips_check_button_clicked)
+        self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
 
         self._sync_button.connect("clicked", self.__on_sync_clicked)
         self._shortcuts_button.connect("clicked", self.__on_shortcuts_activate)
@@ -210,11 +218,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         remote_player = RemotePlayer(self._player, self)
 
         self.plexRemoteClient = PlexRemoteClient(remote_player)
-        thread = threading.Thread(target=self.plexRemoteClient.start)
-        thread.daemon = True
-        thread.start()
-
-        MediaPlayer2Service(self)
 
         self.connect("configure-event", self.__on_configure_event)
 
@@ -386,6 +389,26 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._profile_dialog = ProfileDialog(self._plex)
         self._profile_dialog.set_transient_for(self)
         self._profile_dialog.show()
+
+    def __on_prefer_music_clips_check_button_clicked(self, button):
+        self._player.set_play_music_clip_instead_of_track(button.get_active())
+
+    def __on_prefer_music_clips_changed(self, player, value):
+        self._prefer_music_clips_check_button.set_active(value)
+
+    def __advertise_as_client_check_button_clicked(self, button):
+        if button.get_active():
+            thread = threading.Thread(target=self.plexRemoteClient.start)
+            thread.daemon = True
+            thread.start()
+            if self._remote_client_active is None:
+                MediaPlayer2Service(self)
+            self._remote_client_active = True
+        else:
+            thread = threading.Thread(target=self.plexRemoteClient.stop)
+            thread.daemon = True
+            thread.start()
+            self._remote_client_active = False
 
     def __on_plex_load(self, plex, load_text, status):
         if (status == True):
