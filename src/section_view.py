@@ -218,6 +218,7 @@ class SectionView(Gtk.Box):
         thread.start()
 
     def __on_shuffle_button_clicked(self, button):
+        sort = None
         if self._sort_active is not None:
             sort = self._sort_active + "%3A" + self._sort_value_active
         thread = threading.Thread(target=self._plex.play_item, args=(self._section,),kwargs={'sort':sort, 'shuffle':1})
