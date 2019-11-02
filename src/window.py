@@ -221,6 +221,8 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self.plexRemoteClient = PlexRemoteClient(remote_player)
 
+        MediaPlayer2Service(self)
+
         self.connect("configure-event", self.__on_configure_event)
 
         self.__show_login_view()
@@ -403,8 +405,6 @@ class PlexWindow(Gtk.ApplicationWindow):
             thread = threading.Thread(target=self.plexRemoteClient.start)
             thread.daemon = True
             thread.start()
-            if self._remote_client_active is None:
-                MediaPlayer2Service(self)
             self._remote_client_active = True
         else:
             thread = threading.Thread(target=self.plexRemoteClient.stop)
