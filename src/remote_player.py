@@ -104,10 +104,10 @@ class RemotePlayer(PlayerAbstract):
         playqueue = PlayQueue.get_from_url(tmp_server, playQueue, key)
         GLib.idle_add(self._window.go_fullscreen)
         self._player.set_playqueue(playqueue)
-        #self._player.start(offset_param=offset)
-        thread = threading.Thread(target=self._player.start,kwargs={'offset_param':offset,})
-        thread.daemon = True
-        thread.start()
+        GLib.idle_add(self._player.start(offset_param=offset))
+        #thread = threading.Thread(target=self._player.start,kwargs={'offset_param':offset,})
+        #thread.daemon = True
+        #thread.start()
 
     def stop(self):
         self._player.stop()

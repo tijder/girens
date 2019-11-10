@@ -6,7 +6,7 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from plexapi import utils
 from plexapi.playqueue import PlayQueue
-from gi.repository import GObject
+from gi.repository import GObject, GLib
 
 import json
 
@@ -239,7 +239,7 @@ class Plex(GObject.Object):
             parent_item = item.album()
         playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1, parent=parent_item, sort=sort)
         self._player.set_playqueue(playqueue)
-        self._player.start(from_beginning=from_beginning)
+        GLib.idle_add(self._player.start(from_beginning=from_beginning))
 
     def get_sync_items(self):
         if 'sync' in self._config:
