@@ -102,7 +102,8 @@ class RemotePlayer(PlayerAbstract):
     def handle_play(self, address, protocol, port, key, offset, playQueue, token):
         tmp_server = PlexServer(protocol + "://" + address + ":" + port, token)
         playqueue = PlayQueue.get_from_url(tmp_server, playQueue, key)
-        GLib.idle_add(self._window.go_fullscreen)
+        if playqueue.items[0].listType == 'video':
+            GLib.idle_add(self._window.go_fullscreen)
         self._player.set_playqueue(playqueue)
         GLib.idle_add(self._player.start(offset_param=offset))
         #thread = threading.Thread(target=self._player.start,kwargs={'offset_param':offset,})
