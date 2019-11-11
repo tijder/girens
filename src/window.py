@@ -131,6 +131,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._player.set_deinterlace(self._deinterlace)
 
     def __screen_mapped(self, map):
+        self._settings = Gio.Settings ("nl.g4d.Girens")
         resume_dialog = ResumeDialog()
         resume_dialog.set_transient_for(self)
 
@@ -163,9 +164,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._download_menu.connect("show-button", self.__on_show_download_button)
         self._download_button.set_popover(self._download_menu)
         self._download_button.set_visible(False)
-
-        self._prefer_music_clips_check_button.connect("toggled", self.__on_prefer_music_clips_check_button_clicked)
-        self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
 
         self._sync_button.connect("clicked", self.__on_sync_clicked)
         self._shortcuts_button.connect("clicked", self.__on_shortcuts_activate)
@@ -220,6 +218,11 @@ class PlexWindow(Gtk.ApplicationWindow):
         remote_player = RemotePlayer(self._player, self)
 
         self.plexRemoteClient = PlexRemoteClient(remote_player)
+
+        self._prefer_music_clips_check_button.connect("toggled", self.__on_prefer_music_clips_check_button_clicked)
+        self._settings.bind ("prefer-music-clips", self._prefer_music_clips_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
+        self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
+        self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
 
         MediaPlayer2Service(self)
 
