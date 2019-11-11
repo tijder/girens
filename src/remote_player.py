@@ -85,10 +85,10 @@ class RemotePlayer(PlayerAbstract):
         return self._player._playqueue.playQueueVersion
 
     def get_playQueueItemID(self):
-        return self._player._playqueue.playQueueSelectedItemID
+        return self._player._item.playQueueItemID
 
     def get_playQueueKey(self):
-        return self._player._playqueue.key
+        return "/playQueues/" + self._player._playqueue.playQueueID
 
     def has_next(self):
         return self._player.has_next()

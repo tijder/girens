@@ -14,6 +14,7 @@ from gi.repository import Gtk, GLib, GdkPixbuf, GObject
 class Player(GObject.Object):
     __gsignals__ = {
         'playqueue-ended': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'playqueue-refreshed': (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
         'video-starting': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'media-paused': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'media-playing': (GObject.SignalFlags.RUN_FIRST, None, (bool,object, object, int, object)),
@@ -284,7 +285,9 @@ class Player(GObject.Object):
         for item in self._playqueue.items:
             if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
                 self._offset = i
+                playQueueSelectedItem = item
             i += 1
+        self.emit("playqueue-refreshed", playQueueSelectedItem, self._playqueue)
 
     def __ask_resume_or_beginning(self, item):
         self._resume_dialog.set_item(item)

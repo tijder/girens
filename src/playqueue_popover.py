@@ -44,12 +44,16 @@ class PlayqueuePopover(Gtk.Popover):
         self._player = player
 
         self._player.connect("media-playing", self.__on_media_playing)
+        self._player.connect("playqueue-refreshed", self.__on_playqueue_refreshed)
         self._playqueue_list.connect("row-selected", self.__on_row_selected)
 
     def __on_media_playing(self, player, playing, item, playqueue, offset, item_loaded):
-        GLib.idle_add(self.__on_media_playing_process, player, playing, item, playqueue, offset)
+        GLib.idle_add(self.__on_media_playing_process, item, playqueue)
 
-    def __on_media_playing_process(self, player, playing, item, playqueue, offset):
+    def __on_playqueue_refreshed(self, player, item, playqueue):
+        GLib.idle_add(self.__on_media_playing_process, item, playqueue)
+
+    def __on_media_playing_process(self, item, playqueue):
         for row in self._playqueue_list.get_children():
             row.destroy()
 
