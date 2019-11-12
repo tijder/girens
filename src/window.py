@@ -227,6 +227,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         MediaPlayer2Service(self)
 
         self.connect("configure-event", self.__on_configure_event)
+        self.connect("window-state-event", self.__on_window_state_event)
 
         self.__show_login_view()
 
@@ -443,16 +444,24 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __fullscreen(self, widged, booleon):
         if booleon:
-            self.header.set_visible_child_name("content")
             self.fullscreen()
-            #self._media_box.set_visible(False)
-            self.sidebar.hide()
-            self.separator.hide()
         else:
             self.unfullscreen()
-            #self._media_box.set_visible(True)
-            self.sidebar.show()
-            self.separator.show()
+
+    def __on_window_state_event(self, widget, event):
+        if (event.changed_mask == Gdk.WindowState.FULLSCREEN):
+            if (Gdk.WindowState.FULLSCREEN & int(event.new_window_state)): # Is fullscreen
+                self.header.set_visible_child_name("content")
+                #self._media_box.set_visible(False)
+                self.sidebar.hide()
+                self.separator.hide()
+                self._player_view.set_fullscreen_state()
+            else: # Is not fullscreen
+                #self._media_box.set_visible(True)
+                self.sidebar.show()
+                self.separator.show()
+                self._player_view.set_unfullscreen_state()
+
 
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)

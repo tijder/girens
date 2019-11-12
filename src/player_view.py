@@ -42,10 +42,12 @@ class PlayerView(Gtk.Box):
     _playing = False
 
     _cover_width = 200
+    _old_screensize = 640
 
     def __init__(self, window, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
+        self._window = window
 
         self._event.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
         self._event.connect("motion-notify-event", self.__on_motion)
@@ -90,17 +92,22 @@ class PlayerView(Gtk.Box):
 
     def __fullscreen(self):
         self._fullscreen = not self._fullscreen
-        self.emit('fullscreen', self._fullscreen)
         if self._fullscreen:
-            self._box.hide()
-            self._event.set_vexpand(True)
-            self._event.set_size_request(-1, -1)
-            self.__show_controlls()
-        else:
-            self._box.show()
-            self._event.set_vexpand(False)
-            self._event.set_size_request(-1, 500)
-            self.__show_cursor()
+            self._old_screensize = self._window.get_size()[0]
+        self.emit('fullscreen', self._fullscreen)
+
+    def set_fullscreen_state(self):
+        self._box.hide()
+        self._event.set_vexpand(True)
+        self._event.set_size_request(-1, -1)
+        self.__show_controlls()
+
+    def set_unfullscreen_state(self):
+        self.__set_correct_event_size(self._old_screensize)
+        self._box.show()
+        self._event.set_vexpand(False)
+        #self._event.set_size_request(-1, 500)
+        self.__show_cursor()
 
     def __on_playqueue_ended(self, player):
         if self._fullscreen == True:
@@ -232,6 +239,9 @@ class PlayerView(Gtk.Box):
         else:
             self._cover_width = 200
 
+        self.__set_correct_event_size(width)
+
+    def __set_correct_event_size(self, width):
         if width < 850:
             self._event.set_size_request(-1, 300)
         elif width < 1500:
