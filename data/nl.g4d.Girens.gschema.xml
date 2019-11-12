@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="girens">
-	<schema id="nl.g4d.Girens" path="/nl/g4d/Girens/">
-	  <key type="i" name="window-size-width">
+<schemalist>
+	<schema id="nl.g4d.Girens" path="/nl/g4d/Girens/" gettext-domain="girens">
+    <key type="i" name="window-size-width">
         <default>360</default>
         <summary>Window size width</summary>
         <description>Window size (width).</description>
