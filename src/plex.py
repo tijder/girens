@@ -6,7 +6,7 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from plexapi import utils
 from plexapi.playqueue import PlayQueue
-from gi.repository import GObject, GLib
+from gi.repository import GObject, GLib, Secret, Gio
 
 import json
 
@@ -45,12 +45,18 @@ class Plex(GObject.Object):
 
     def __init__(self, config_dir, data_dir, player, **kwargs):
         super().__init__(**kwargs)
+        self._settings = Gio.Settings ("nl.g4d.Girens")
         self._config_dir = config_dir
         self._data_dir = data_dir
         self._player = player
         self._player.set_plex(self)
         self._config = self.__open_file(self._config_dir + '/config')
         self._search_provider_data = self.__open_file(self._config_dir + '/search_provider_data')
+        self._user_uuid = self._settings.get_string("user-uuid")
+        self._token = self.get_token(self._user_uuid)
+        self._server_uuid = self._settings.get_string("server-uuid")
+        self._server_token = self.get_server_token(self._server_uuid)
+        self._server_url = self._settings.get_string("server-url")
 
 
     def __open_file(self, file_path):
@@ -61,16 +67,30 @@ class Plex(GObject.Object):
         return {}
 
     def has_token(self):
-        return 'token' in self._config and self._config['token'] is not None
+        return self._token is not None
+
+    def get_server_token(self, uuid):
+        return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+
+    def get_token(self, uuid):
+        return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+
+    def set_server_token(self, token, server_url, server_uuid, name):
+        self._settings.set_string("server-url", self._server._baseurl)
+        self._settings.set_string("server-uuid", self._server.machineIdentifier)
+        Secret.password_store(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'name': Secret.SchemaAttributeType.STRING, 'url': Secret.SchemaAttributeType.STRING, 'uuid': Secret.SchemaAttributeType.STRING}), {'name': name, 'url': server_url, 'uuid': server_uuid}, Secret.COLLECTION_DEFAULT, 'Girens server token', token, None, None)
+
+    def set_token(self, token, username, email, uuid):
+        self._settings.set_string("user-uuid", uuid)
+        Secret.password_store(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'username': Secret.SchemaAttributeType.STRING, 'email': Secret.SchemaAttributeType.STRING, 'uuid': Secret.SchemaAttributeType.STRING}), {'username': username, 'email': email, 'uuid': uuid}, Secret.COLLECTION_DEFAULT, 'Girens token', token, None, None)
 
     def has_url(self):
-        return 'server_url' in self._config
+        return self._server_url is not None
 
     def login_token(self, token):
         try:
             self._account = MyPlexAccount(token=token)
-            self._config['token'] = self._account._token
-            self.__save_config()
+            self.set_token(self._account._token, self._account.username, self._account.email, self._account.uuid)
             self.emit('login-status',True,'')
         except:
             self.emit('login-status',False,'Login failed')
@@ -78,8 +98,7 @@ class Plex(GObject.Object):
     def login(self, username, password):
         try:
             self._account = MyPlexAccount(username, password)
-            self._config['token'] = self._account._token
-            self.__save_config()
+            self.set_token(self._account._token, self._account.username, self._account.email, self._account.uuid)
             self.emit('login-status',True,'')
         except:
             self.emit('login-status',False,'Login failed')
@@ -90,10 +109,10 @@ class Plex(GObject.Object):
             self._server = PlexServer(baseurl, token)
             self._account = self._server.account()
             self._library = self._server.library
-            self._config['server_url'] = self._server._baseurl
-            self._config['server_token'] = self._server._token
-            self._config['token'] = None
-            self.__save_config()
+            self.set_server_token(self._server._token, self._server._baseurl, self._server.machineIdentifier, self._server.friendlyName)
+            Secret.password_clear_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': self._user_uuid}, None)
+            self._user_uuid = None
+            self._token = None
             self.emit('connection-to-server')
             self.emit('loading', 'Success', False)
             self.emit('login-status',True,'')
@@ -120,6 +139,17 @@ class Plex(GObject.Object):
 
     def __remove_login(self):
         os.remove(self._config_dir + '/config')
+        Secret.password_clear_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': self._server_uuid}, None)
+        Secret.password_clear_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': self._user_uuid}, None)
+        self._settings.set_string("server-url", '')
+        self._settings.set_string("server-uuid", '')
+        self._settings.set_string("user-uuid", '')
+
+        self._user_uuid = None
+        self._token = None
+        self._server_uuid = None
+        self._server_token = None
+        self._server_url = None
 
     def get_latest(self):
         latest = self._library.recentlyAdded()
@@ -378,11 +408,12 @@ class Plex(GObject.Object):
             return path
 
     def connect_to_server(self):
-        if ('server_url' in self._config and 'server_token' in self._config):
+        if (self._server_token is not None and self._server_url is not None):
             try:
-                self.emit('loading', 'Connecting to ' + self._config['server_url'] + '.', True)
-                self._server = PlexServer(self._config['server_url'], self._config['server_token'])
+                self.emit('loading', 'Connecting to ' + self._server_url + '.', True)
+                self._server = PlexServer(self._server_url, self._server_token)
                 self._library = self._server.library
+                self.set_server_token(self._server._token, self._server._baseurl, self._server.machineIdentifier, self._server.friendlyName)
                 self.emit('connection-to-server')
                 self.emit('loading', 'Success', False)
                 return None
@@ -405,9 +436,7 @@ class Plex(GObject.Object):
             self.emit('loading', 'Connecting to ' + resource.name + '.\nThere are ' + str(len(resource.connections)) + ' connection urls.\nThis may take a while', True)
             self._server = resource.connect(ssl=self._account.secure)
             self._library = self._server.library
-            self._config['server_url'] = self._server._baseurl
-            self._config['server_token'] = self._server._token
-            self.__save_config()
+            self.set_server_token(self._server._token, self._server._baseurl, self._server.machineIdentifier, self._server.friendlyName)
             self.emit('connection-to-server')
             self.emit('loading', 'Success', False)
             return True

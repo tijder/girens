@@ -21,5 +21,20 @@
         <summary>When playing music and the track has a music clip, play that instead of the audio</summary>
         <description></description>
     </key>
+	  <key type="s" name="user-uuid">
+        <default>""</default>
+        <summary>The plex user uuid</summary>
+        <description></description>
+    </key>
+	  <key type="s" name="server-uuid">
+        <default>""</default>
+        <summary>The plex server uuid</summary>
+        <description></description>
+    </key>
+	  <key type="s" name="server-url">
+        <default>""</default>
+        <summary>The plex server url</summary>
+        <description></description>
+    </key>
 	</schema>
 </schemalist>

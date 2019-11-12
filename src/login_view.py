@@ -58,7 +58,7 @@ class LoginView(Gtk.Dialog):
         if (self._plex.has_token()):
             self.__login_with_token()
         elif (self._plex.has_url()):
-            self._plex.login_with_url(self._plex._config['server_url'], self._plex._config['server_token'])
+            self._plex.login_with_url(self._plex._server_url, self._plex._server_token)
         else:
             self.show()
 
@@ -83,7 +83,7 @@ class LoginView(Gtk.Dialog):
         self._loading = True
         self.__show_loading()
 
-        thread = threading.Thread(target=self._plex.login_token, args=(self._plex._config['token'],))
+        thread = threading.Thread(target=self._plex.login_token, args=(self._plex._token,))
         thread.daemon = True
         thread.start()
 
