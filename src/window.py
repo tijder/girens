@@ -224,6 +224,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
 
+        width = self._settings.get_int("window-size-width")
+        height = self._settings.get_int("window-size-height")
+        self.resize(width, height)
+
         MediaPlayer2Service(self)
 
         self.connect("configure-event", self.__on_configure_event)
@@ -480,6 +484,8 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __update_screen_size_change(self, widget):
         size = widget.get_size()
+        self._settings.set_int("window-size-width", size[0])
+        self._settings.set_int("window-size-height", size[1])
         self._media_box_music.width_changed(size[0])
         self._section_view.width_changed(size[0])
         self._player_view.width_changed(size[0])
