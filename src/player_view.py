@@ -91,18 +91,19 @@ class PlayerView(Gtk.Box):
             self.__fullscreen()
 
     def __fullscreen(self):
-        self._fullscreen = not self._fullscreen
-        if self._fullscreen:
+        if not self._fullscreen:
             self._old_screensize = self._window.get_size()[0]
-        self.emit('fullscreen', self._fullscreen)
+        self.emit('fullscreen', not self._fullscreen)
 
     def set_fullscreen_state(self):
+        self._fullscreen = True
         self._box.hide()
         self._event.set_vexpand(True)
         self._event.set_size_request(-1, -1)
         self.__show_controlls()
 
     def set_unfullscreen_state(self):
+        self._fullscreen = False
         self.__set_correct_event_size(self._old_screensize)
         self._box.show()
         self._event.set_vexpand(False)

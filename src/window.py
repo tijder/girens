@@ -484,8 +484,9 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __update_screen_size_change(self, widget):
         size = widget.get_size()
-        self._settings.set_int("window-size-width", size[0])
-        self._settings.set_int("window-size-height", size[1])
+        if not self._player_view._fullscreen:
+            self._settings.set_int("window-size-width", size[0])
+            self._settings.set_int("window-size-height", size[1])
         self._media_box_music.width_changed(size[0])
         self._section_view.width_changed(size[0])
         self._player_view.width_changed(size[0])
