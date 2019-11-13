@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="girens">
-	<schema id="nl.g4d.Girens" path="/nl/g4d/Girens/">
-	  <key type="i" name="window-size-width">
+<schemalist>
+  <schema id="nl.g4d.Girens" path="/nl/g4d/Girens/" gettext-domain="girens">
+    <key type="i" name="window-size-width">
         <default>360</default>
         <summary>Window size width</summary>
         <description>Window size (width).</description>
     </key>
-	  <key type="i" name="window-size-height">
+    <key type="i" name="window-size-height">
         <default>720</default>
         <summary>Window size width</summary>
         <description>Window size (height).</description>
     </key>
-	  <key type="b" name="advertise-as-client">
+    <key type="b" name="advertise-as-client">
         <default>false</default>
         <summary>Allow other devices on this network to find Girens and control this client</summary>
         <description></description>
     </key>
-	  <key type="b" name="prefer-music-clips">
+    <key type="b" name="prefer-music-clips">
         <default>false</default>
         <summary>When playing music and the track has a music clip, play that instead of the audio</summary>
         <description></description>
     </key>
-	  <key type="s" name="user-uuid">
+    <key type="s" name="user-uuid">
         <default>""</default>
         <summary>The plex user uuid</summary>
         <description></description>
     </key>
-	  <key type="s" name="server-uuid">
+    <key type="s" name="server-uuid">
         <default>""</default>
         <summary>The plex server uuid</summary>
         <description></description>
@@ -36,5 +36,5 @@
         <summary>The plex server url</summary>
         <description></description>
     </key>
-	</schema>
+  </schema>
 </schemalist>
