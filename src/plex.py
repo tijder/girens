@@ -55,8 +55,12 @@ class Plex(GObject.Object):
         self._user_uuid = self._settings.get_string("user-uuid")
         self._token = self.get_token(self._user_uuid)
         self._server_uuid = self._settings.get_string("server-uuid")
-        self._server_token = self.get_server_token(self._server_uuid)
-        self._server_url = self._settings.get_string("server-url")
+        if (self._server_uuid is not ''):
+            self._server_token = self.get_server_token(self._server_uuid)
+            self._server_url = self._settings.get_string("server-url")
+        else:
+            self._server_token = None
+            self._server_url = None
 
 
     def __open_file(self, file_path):
