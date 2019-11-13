@@ -273,7 +273,10 @@ class Plex(GObject.Object):
             parent_item = item.album()
         playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1, parent=parent_item, sort=sort)
         self._player.set_playqueue(playqueue)
-        GLib.idle_add(self._player.start(from_beginning=from_beginning))
+        GLib.idle_add(self.__play_item, from_beginning)
+
+    def __play_item(self, from_beginning):
+        self._player.start(from_beginning=from_beginning)
 
     def get_sync_items(self):
         if 'sync' in self._config:

@@ -44,6 +44,8 @@ class Player(GObject.Object):
         self._play_wait = False
         self._next_index = None
         self._fullscreen = False
+        self._offset_param = None
+        self._from_beginning = None
         self._video_output_driver = "x11,"
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
@@ -94,9 +96,13 @@ class Player(GObject.Object):
         self.__playqueue_refresh()
 
     def start(self, from_beginning=None, offset_param=None):
+        self._offset_param = None
+        self._from_beginning = None
         new_item = self._playqueue.items[self._offset]
         if (self._playing != False):
             self._play_wait = True
+            self._offset_param = offset_param
+            self._from_beginning = from_beginning
             self._player.command('stop')
         elif new_item.viewOffset != 0 and from_beginning == None and offset_param == None:
             GLib.idle_add(self.__ask_resume_or_beginning, new_item)
@@ -136,27 +142,34 @@ class Player(GObject.Object):
                 self._player.wait_for_property('seekable')
                 self._player.seek(offset, reference='absolute', precision='exact')
             self.emit('media-playing', True, self._item, self._playqueue, self._offset, self._item_loading)
+            thread = threading.Thread(target=self.__wait_for_playback)
+            thread.daemon = True
+            thread.start()
 
-            self._player.wait_for_playback()
-            self.__stop()
-            self._item = None
-            self._item_loading = None
-            self._playing = False
+    def start_with_params(self, from_beginning, offset_param):
+        self.start(from_beginning=from_beginning, offset_param=offset_param)
 
-            if (self._play_wait == True):
-                self._play_wait = False
-                self.start()
-            elif (self._next_index != None):
-                self._offset = self._next_index
-                self._next_index = None
-                self.start()
-            elif (self._prev == True):
-                self.__prev()
-            elif (self._stop_command == False or self._next == True):
-                self.__next()
-            else:
-                self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
-                self.emit('playqueue-ended')
+    def __wait_for_playback(self):
+        self._player.wait_for_playback()
+        self.__stop()
+        self._item = None
+        self._item_loading = None
+        self._playing = False
+
+        if (self._play_wait == True):
+            self._play_wait = False
+            GLib.idle_add(self.start_with_params, self._from_beginning, self._offset_param)
+        elif (self._next_index != None):
+            self._offset = self._next_index
+            self._next_index = None
+            GLib.idle_add(self.start)
+        elif (self._prev == True):
+            self.__prev()
+        elif (self._stop_command == False or self._next == True):
+            self.__next()
+        else:
+            self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
+            self.emit('playqueue-ended')
 
     def prev(self):
         if (self._resume_dialog.is_visible()):
@@ -199,7 +212,7 @@ class Player(GObject.Object):
         self.__playqueue_refresh()
         if (self._offset + 1 < len(self._playqueue.items)):
             self._offset = self._offset + 1
-            self.start()
+            GLib.idle_add(self.start)
         else:
             self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
             self.emit('playqueue-ended')
@@ -208,7 +221,7 @@ class Player(GObject.Object):
         self.__playqueue_refresh()
         if (self._offset - 1 >= 0):
             self._offset = self._offset - 1
-            self.start()
+            GLib.idle_add(self.start)
         else:
             self.emit('media-playing', False, self._item, self._playqueue, self._offset, self._item_loading)
             self.emit('playqueue-ended')
@@ -294,14 +307,10 @@ class Player(GObject.Object):
         self._resume_dialog.show()
 
     def __on_beginning_selected(self, dialog, bool):
-        thread = threading.Thread(target=self.start,kwargs={'from_beginning':True})
-        thread.daemon = True
-        thread.start()
+        GLib.idle_add(self.start_with_params, True, None)
 
     def __on_resume_selected(self, dialog, bool):
-        thread = threading.Thread(target=self.start,kwargs={'from_beginning':False})
-        thread.daemon = True
-        thread.start()
+        GLib.idle_add(self.start_with_params, False, None)
         
     def __updateTimeline(self, progres, state=None, duration=None, playQueueItemID=None):
         thread = threading.Thread(target=self._item.updateTimeline,args={progres},kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID})
