@@ -220,8 +220,9 @@ class MediaBox(GObject.Object):
         thread.start()
 
     def __on_media_paused(self, player, paused):
-        self._paused = paused
-        GLib.idle_add(self.__update_buttons)
+        if player._item != None and player._item.listType == self._show_only_type:
+            self._paused = paused
+            GLib.idle_add(self.__update_buttons)
 
     def __on_media_playing(self, player, playing, playqueue_item, playqueue, offset, item):
         if item != None and item.listType == self._show_only_type:
@@ -257,8 +258,9 @@ class MediaBox(GObject.Object):
         thread.start()
 
     def __on_media_time(self, player, time):
-        self._progress = time
-        GLib.idle_add(self.__update_buttons)
+        if player._item != None and player._item.listType == self._show_only_type:
+            self._progress = time
+            GLib.idle_add(self.__update_buttons)
 
     def __update_play_image_icon(self, string, number):
         if self._play_image != None:
