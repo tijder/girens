@@ -382,12 +382,12 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__show_view('album')
 
     def __on_video_starting(self, widget):
-        time.sleep(1)
         GLib.idle_add(self.__go_to_player)
 
     def __go_to_player(self):
         self.header.set_visible_child_name("content")
         self.__show_view('player')
+        self._player.view_shown()
 
     def __stop_search(self, search):
         self._search_toggle_button.set_active(False)

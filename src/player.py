@@ -140,10 +140,14 @@ class Player(GObject.Object):
 
             self.__createPlayer(offset=offset)
             self._player.play(source)
-            self.emit('media-playing', True, self._item, self._playqueue, self._offset, self._item_loading)
             thread = threading.Thread(target=self.__wait_for_playback)
             thread.daemon = True
             thread.start()
+
+    def view_shown(self):
+        thread = threading.Thread(target=self.emit,args=('media-playing', True, self._item, self._playqueue, self._offset, self._item_loading))
+        thread.daemon = True
+        thread.start()
 
     def start_with_params(self, from_beginning, offset_param):
         self.start(from_beginning=from_beginning, offset_param=offset_param)
