@@ -150,7 +150,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://github.com/tijder/python-plexapi"
+                    "url" : "https://github.com/tijder/python-plexapi",
+                    "commit" : "61fe6a7dfb1e1f674d8dbd1a90299f5a92fb9d5d"
                 }
             ],
             "modules" : [
