@@ -113,10 +113,6 @@ class Player(GObject.Object):
             if self._play_music_clip_instead_of_track and self._item.type == 'track' and self._item.primaryExtraKey != None:
                 self._item_clip = self._plex._server.fetchItem(self._item.primaryExtraKey)
                 self._item_loading = self._item_clip
-            if self._item_loading.listType == 'video':
-                thread = threading.Thread(target=self.emit,args={'video-starting'})
-                thread.daemon = True
-                thread.start()
             self._next = False
             self._prev = False
             self._eof = False
@@ -140,6 +136,12 @@ class Player(GObject.Object):
 
             self.__createPlayer(offset=offset)
             self._player.play(source)
+            if self._item_loading.listType == 'video':
+                thread = threading.Thread(target=self.emit,args={'video-starting'})
+                thread.daemon = True
+                thread.start()
+            else:
+                self.view_shown()
             thread = threading.Thread(target=self.__wait_for_playback)
             thread.daemon = True
             thread.start()
