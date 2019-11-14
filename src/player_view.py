@@ -157,7 +157,7 @@ class PlayerView(Gtk.Box):
 
     def __show_controlls(self):
         if self._playing == True and self._item.listType == 'video':
-            self._media_box.set_reveal_child(True)
+            GLib.idle_add(self._media_box.set_reveal_child, True)
         self.__stop_controlls_timout()
         self.__start_controlls_timout()
         if self._fullscreen:
@@ -165,7 +165,7 @@ class PlayerView(Gtk.Box):
 
     def __on_motion_over(self):
         self._timout = None
-        self._media_box.set_reveal_child(False)
+        GLib.idle_add(self._media_box.set_reveal_child, False)
         if self._fullscreen:
             self.__hide_cursor()
 
