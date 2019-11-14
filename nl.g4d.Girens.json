@@ -149,8 +149,8 @@
             ],
             "sources" : [
                 {
-                    "type" : "dir",
-                    "path" : "/home/gerben/git/python-plexapi"
+                    "type" : "git",
+                    "url" : "https://github.com/tijder/python-plexapi"
                 }
             ],
             "modules" : [
