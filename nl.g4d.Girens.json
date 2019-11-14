@@ -306,7 +306,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/gerben/git/plex"
+                    "url" : "https://gitlab.gnome.org/tijder/girens"
                 }
             ]
         }
