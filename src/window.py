@@ -43,6 +43,7 @@ from .player import Player
 
 import os
 import threading
+import time
 
 @GtkTemplate(ui='/nl/g4d/Girens/main_window.ui')
 class PlexWindow(Gtk.ApplicationWindow):
@@ -80,6 +81,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
     _prefer_music_clips_check_button = GtkTemplate.Child()
+    _direct_play_check_button = GtkTemplate.Child()
     _advertise_as_client_check_button = GtkTemplate.Child()
     _about_button = GtkTemplate.Child()
 
@@ -221,6 +223,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._prefer_music_clips_check_button.connect("toggled", self.__on_prefer_music_clips_check_button_clicked)
         self._settings.bind ("prefer-music-clips", self._prefer_music_clips_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
+        self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
 
@@ -379,6 +382,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__show_view('album')
 
     def __on_video_starting(self, widget):
+        time.sleep(1)
         GLib.idle_add(self.__go_to_player)
 
     def __go_to_player(self):

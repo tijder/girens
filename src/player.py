@@ -4,7 +4,7 @@ import threading
 import time
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib, GdkPixbuf, GObject
+from gi.repository import Gtk, GLib, GdkPixbuf, GObject, Gio
 
 # import gi
 # gi.require_version('Gtk', '3.0')
@@ -24,6 +24,7 @@ class Player(GObject.Object):
 
     def __init__(self, resume_dialog, player_view, **kwargs):
         super().__init__(**kwargs)
+        self._settings = Gio.Settings("nl.g4d.Girens")
 
 
         self._player_view = player_view
@@ -59,11 +60,11 @@ class Player(GObject.Object):
     def set_plex(self, plex):
         self._plex = plex
 
-    def __createPlayer(self):
+    def __createPlayer(self, offset=0):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         if self._item_loading.listType == 'video':
-            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no")
+            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
         else:
             self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no")
 
@@ -113,15 +114,14 @@ class Player(GObject.Object):
                 self._item_clip = self._plex._server.fetchItem(self._item.primaryExtraKey)
                 self._item_loading = self._item_clip
             if self._item_loading.listType == 'video':
-                self.emit('video-starting')
-                while self._player_view._frame.get_property("window") == None:
-                    time.sleep(1)
+                thread = threading.Thread(target=self.emit,args={'video-starting'})
+                thread.daemon = True
+                thread.start()
             self._next = False
             self._prev = False
             self._eof = False
             self._playing = True
             self._stop_command = False
-            self.__createPlayer()
             self._progresUpdate = 0
             self._lastInternUpdate = 0
             self._progresNow = 0
@@ -135,12 +135,11 @@ class Player(GObject.Object):
 
             source = self._plex.get_item_download_path(self._item_loading)
             if (source == None):
-                source = self._item_loading.getStreamURL(offset=offset)
-                self._player.play(source)
-            else:
-                self._player.play(source)
-                self._player.wait_for_property('seekable')
-                self._player.seek(offset, reference='absolute', precision='exact')
+                direct = self._settings.get_boolean("play-media-direct")
+                source = self._item_loading.getStreamURL(offset=offset, directPlay=direct)
+
+            self.__createPlayer(offset=offset)
+            self._player.play(source)
             self.emit('media-playing', True, self._item, self._playqueue, self._offset, self._item_loading)
             thread = threading.Thread(target=self.__wait_for_playback)
             thread.daemon = True
