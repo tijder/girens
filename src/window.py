@@ -103,14 +103,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._show_id = show_id
 
         self.connect("map", self.__screen_mapped)
-        self.connect("unrealize", self.__on_destroy)
-
-
-    def __on_destroy(self, widget):
-        if self._remote_client_active is True:
-            thread = threading.Thread(target=self.plexRemoteClient.stop)
-            thread.daemon = True
-            thread.start()
 
     def __on_motion(self, widget, motion):
         print(motion)
