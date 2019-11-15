@@ -47,6 +47,7 @@ class Player(GObject.Object):
         self._fullscreen = False
         self._offset_param = None
         self._from_beginning = None
+        self._playqueue_refreshed = False
         self._video_output_driver = "x11,"
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
@@ -118,6 +119,7 @@ class Player(GObject.Object):
             self._eof = False
             self._playing = True
             self._stop_command = False
+            self._playqueue_refreshed = False
             self._progresUpdate = 0
             self._lastInternUpdate = 0
             self._progresNow = 0
@@ -142,6 +144,7 @@ class Player(GObject.Object):
                 thread.start()
             else:
                 self.view_shown()
+            self.__updateTimeline(0, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
             thread = threading.Thread(target=self.__wait_for_playback)
             thread.daemon = True
             thread.start()
@@ -214,7 +217,6 @@ class Player(GObject.Object):
             return "Playing"
 
     def __next(self):
-        self.__playqueue_refresh()
         if (self._offset + 1 < len(self._playqueue.items)):
             self._offset = self._offset + 1
             GLib.idle_add(self.start)
@@ -223,7 +225,6 @@ class Player(GObject.Object):
             self.emit('playqueue-ended')
 
     def __prev(self):
-        self.__playqueue_refresh()
         if (self._offset - 1 >= 0):
             self._offset = self._offset - 1
             GLib.idle_add(self.start)
@@ -321,4 +322,9 @@ class Player(GObject.Object):
         thread = threading.Thread(target=self._item.updateTimeline,args={progres},kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID})
         thread.daemon = True
         thread.start()
+        if progres > 1000 and self._playqueue_refreshed == False:
+            self._playqueue_refreshed = True
+            thread = threading.Thread(target=self.__playqueue_refresh)
+            thread.daemon = True
+            thread.start()
         
