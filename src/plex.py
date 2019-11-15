@@ -142,7 +142,8 @@ class Plex(GObject.Object):
         self.emit('logout')
 
     def __remove_login(self):
-        os.remove(self._config_dir + '/config')
+        if (os.path.isfile(self._config_dir + '/config')):
+            os.remove(self._config_dir + '/config')
         Secret.password_clear_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': self._server_uuid}, None)
         Secret.password_clear_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': self._user_uuid}, None)
         self._settings.set_string("server-url", '')
