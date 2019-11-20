@@ -426,7 +426,7 @@ class Plex(GObject.Object):
                 self.emit('loading', 'Success', False)
                 return None
             except:
-                self.emit('loading', 'Connecting to ' + resource.name + ' failed.', True)
+                self.emit('loading', 'Connecting to ' + self._server_url + ' failed.', True)
                 print('custom url connection failed')
 
         servers_found = False
