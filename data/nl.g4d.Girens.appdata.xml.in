@@ -30,6 +30,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2019-11-20" version="1.1.0">
+      <description>
+        <ul>
+          <li>Plex token saved with Secret Service</li>
+          <li>Advertise as Client on the local network</li>
+          <li>Add option to play media without transcoding</li>
+          <li>About dialog added</li>
+          <li>Shortcut dialog added</li>
+          <li>Fix crash when playing media</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-07-11" version="1.0.11">
       <description>
         <ul>
