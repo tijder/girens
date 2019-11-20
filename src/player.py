@@ -72,11 +72,10 @@ class Player(GObject.Object):
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
             self._progresNow = value
-            if value is None :
-                self.emit('media-time', 0)
-            elif abs(value - self._lastInternUpdate) > 0.5:
+            if value is not None and abs(value - self._lastInternUpdate) > 0.5:
                 self._lastInternUpdate = value
-                self.emit('media-time', value * 1000)
+                if (self._stop_command_given is False):
+                    self.emit('media-time', value * 1000)
             if value is not None and abs(value - self._progresUpdate) > 5:
                 self._progresUpdate = value
                 self.__updateTimeline(value * 1000, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
@@ -85,7 +84,8 @@ class Player(GObject.Object):
         @self._player.property_observer('pause')
         def __on_pause(_name, value):
             self._paused = value
-            self.emit('media-paused', value)
+            if (self._stop_command_given == False):
+                self.emit('media-paused', value)
             if (value == True):
                 self.__updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
 
@@ -105,10 +105,12 @@ class Player(GObject.Object):
             self._play_wait = True
             self._offset_param = offset_param
             self._from_beginning = from_beginning
+            self._stop_command_given = True
             self._player.command('stop')
         elif new_item.viewOffset != 0 and from_beginning == None and offset_param == None:
             GLib.idle_add(self.__ask_resume_or_beginning, new_item)
         else:
+            self._stop_command_given = False
             self._item = new_item
             self._item_loading = self._item
             if self._play_music_clip_instead_of_track and self._item.type == 'track' and self._item.primaryExtraKey != None:
@@ -185,6 +187,7 @@ class Player(GObject.Object):
             self.__on_beginning_selected(None, True)
         elif (self._playing != False):
             self._prev = True
+            self._stop_command_given = True
             self._player.command('stop')
 
     def next(self):
@@ -193,6 +196,7 @@ class Player(GObject.Object):
             self.__on_resume_selected(None, False)
         elif (self._playing != False):
             self._next = True
+            self._stop_command_given = True
             self._player.command('stop')
 
     def get_position(self):
@@ -262,6 +266,7 @@ class Player(GObject.Object):
     def stop(self):
         if (self._playing != False):
             self._stop_command = True
+            self._stop_command_given = True
             self._player.command('stop')
 
     def seek_backward(self):
@@ -277,6 +282,7 @@ class Player(GObject.Object):
 
     def play_index(self, index):
         self._next_index = index
+        self._stop_command_given = True
         self._player.command('stop')
 
     def play_from_key(self, key):
@@ -285,6 +291,7 @@ class Player(GObject.Object):
             for item in self._playqueue.items:
                 if (item.key == key):
                     self._next_index = i
+                    self._stop_command_given = True
                     self._player.command('stop')
                 i += 1
 
