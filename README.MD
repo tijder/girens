@@ -8,11 +8,23 @@ There are more Plex clients that can be used on Linux. For example the Plex webs
 
 ## How to install
 
-Setup [flatpak](https://www.flatpak.org/setup/) for your Linux distro. Download the Girens flatpak from the Gitlab pipeline. Then install the flatpak.
+Flatpak is the recommended installation method. You can get Girens Flatpak on Flathub.
+
+<a href="https://flathub.org/apps/details/nl.g4d.Girens">
+<img src="https://flathub.org/assets/badges/flathub-badge-i-en.png" width="190px" />
+</a>
 
 ```bash
 flatpak install nl.g4d.girens.flatpak
 ```
+
+## Password Storage
+
+Girens uses [Secret Service](https://www.freedesktop.org/wiki/Specifications/secret-storage-spec/)
+to store the password so you should have something providing 
+that service on your system. If you're using GNOME or KDE
+this should work for you out of the box with gnome-keyring or
+ksecretservice.
 
 ## How to build
 
