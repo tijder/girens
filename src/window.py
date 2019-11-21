@@ -432,8 +432,11 @@ class PlexWindow(Gtk.ApplicationWindow):
         about_dialog.set_modal(True)
         if self is not NotImplemented:
             about_dialog.set_transient_for(self)
+        about_dialog.connect("response", self.__on_about_activate_response)
         about_dialog.present()
 
+    def __on_about_activate_response(self, dialog, response_id):
+        dialog.destroy()
 
     def __on_plex_load(self, plex, load_text, status):
         if (status == True):
