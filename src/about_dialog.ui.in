@@ -6,13 +6,15 @@
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">Girens</property>
+    <property name="program_name">@PRETTYNAME@</property>
+    <property name="version">@VERSION@</property>
     <property name="copyright">© 2018-2019 Gerben Droogers.</property>
     <property name="comments" translatable="yes">A Plex GTK client for playing movies, TV shows and music from your Plex library.</property>
-    <property name="website">https://gitlab.gnome.org/tijder/girens</property>
+    <property name="website">@PACKAGE_URL@</property>
     <property name="website_label" translatable="yes">Learn more about Girens</property>
-    <property name="authors">Gerben Droogers</property>
+    <property name="authors">@CONTRIBUTORS@</property>
     <property name="translator_credits" translatable="yes" comments="Add your name to the translator credits list">translator-credits</property>
-    <property name="logo_icon_name">nl.g4d.Girens</property>
+    <property name="logo_icon_name">@APPID@</property>
     <property name="license_type">gpl-3-0</property>
     <child>
       <placeholder/>

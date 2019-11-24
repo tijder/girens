@@ -7,20 +7,17 @@ gnome.compile_resources('girens',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
+  dependencies: configure_file(
+    input: 'about_dialog.ui.in',
+    output: 'about_dialog.ui',
+    configuration: conf_service
+  )
 )
-
-python3 = import('python3')
-
-conf = configuration_data()
-conf.set('PYTHON', python3.find_python().path())
-conf.set('VERSION', meson.project_version())
-conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
-conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
   input: 'girens.in',
   output: 'girens',
-  configuration: conf,
+  configuration: conf_service,
   install: true,
   install_dir: get_option('bindir')
 )
