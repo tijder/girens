@@ -67,7 +67,7 @@ class Player(GObject.Object):
         if self._item_loading.listType == 'video':
             self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
         else:
-            self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no")
+            self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
