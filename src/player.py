@@ -89,6 +89,17 @@ class Player(GObject.Object):
             if (value == True):
                 self.__updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
 
+        @self._player.property_observer('track-list')
+        def __on_track_list(_name, value):
+            plex_sub = self._item.getSelectedSubtitleStream()
+            plex_audio = self._item.getSelectedAudioStream()
+
+            for i in value:
+                if plex_sub is not None and plex_sub.index is i['ff-index']:
+                    self._player.sid = i['id']
+                if plex_audio is not None and plex_audio.index is i['ff-index']:
+                    self._player.aid = i['id']
+
     def __stop(self):
         self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
         self._player.terminate()
@@ -142,6 +153,9 @@ class Player(GObject.Object):
             self._player.volume = self._settings.get_int("volume-level")
             self._player.play(source)
             if self._item_loading.listType == 'video':
+                sub = self._item.getSelectedSubtitleStream()
+                if direct is True and sub is not None and sub.key is not None:
+                    self._player.command('sub-add', sub.getDownloadUrl())
                 thread = threading.Thread(target=self.emit,args={'video-starting'})
                 thread.daemon = True
                 thread.start()
