@@ -84,6 +84,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _direct_play_check_button = GtkTemplate.Child()
     _advertise_as_client_check_button = GtkTemplate.Child()
     _about_button = GtkTemplate.Child()
+    _volume_adjustment = GtkTemplate.Child()
 
     _window_placement_update_timeout = None
 
@@ -227,6 +228,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
+        self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
 
         width = self._settings.get_int("window-size-width")
         height = self._settings.get_int("window-size-height")
@@ -384,6 +386,10 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     def __on_video_starting(self, widget):
         GLib.idle_add(self.__go_to_player)
+
+    def _on_volume_value_changed(self, scale):
+        value = scale.get_value()
+        self._player.set_volume(value)
 
     def __go_to_player(self):
         self.header.set_visible_child_name("content")

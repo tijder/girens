@@ -339,7 +339,7 @@ class MediaPlayer2Service(Server):
                 'CanPause': GLib.Variant('b', self.player._item is not None),
                 'CanSeek': GLib.Variant('b', True),
                 'CanControl': GLib.Variant('b', True),
-                'Volume': GLib.Variant('d', 1.0)
+                'Volume': GLib.Variant('d', self.player.get_volume())
             }
         elif interface_name == 'org.freedesktop.DBus.Properties':
             return {}
@@ -362,7 +362,7 @@ class MediaPlayer2Service(Server):
                 pass
         elif interface_name == MediaPlayer2Service.MEDIA_PLAYER2_PLAYER_IFACE:
             if property_name in ['Rate', 'Volume']:
-                pass
+                self.player.set_volume(new_value * 100)
             elif property_name == 'LoopStatus':
                 if new_value == 'None':
                     self.player.props.repeat_mode = RepeatMode.NONE

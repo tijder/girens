@@ -139,6 +139,7 @@ class Player(GObject.Object):
                 source = self._item_loading.getStreamURL(offset=offset, directPlay=direct)
 
             self.__createPlayer(offset=offset)
+            self._player.volume = self._settings.get_int("volume-level")
             self._player.play(source)
             if self._item_loading.listType == 'video':
                 thread = threading.Thread(target=self.emit,args={'video-starting'})
@@ -203,13 +204,14 @@ class Player(GObject.Object):
         return self._progresNow
 
     def get_volume(self, percent=False):
-        if self._player:
-            if not percent:
-                return self._player.volume / 100
-            return self._player.volume
+        volume = self._settings.get_int("volume-level")
+        if not percent:
+            return volume / 100
+        return volume
 
     def set_volume(self, percent):
-        if not self._player.playback_abort:
+        self._settings.set_int("volume-level", percent)
+        if self._player and not self._player.playback_abort:
             self._player.volume = percent
 
     def get_state(self):

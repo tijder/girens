@@ -97,7 +97,7 @@ class RemotePlayer(PlayerAbstract):
         return self._player.has_prev()
 
     def get_volume(self):
-        return self._player.get_volume()
+        return self._player.get_volume(percent=True)
 
     def handle_play(self, address, protocol, port, key, offset_param, playQueue, token):
         tmp_server = PlexServer(protocol + "://" + address + ":" + port, token)
