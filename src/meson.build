@@ -1,18 +1,5 @@
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
 moduledir = join_paths(pkgdatadir, 'girens')
-gnome = import('gnome')
-
-gnome.compile_resources('girens',
-  'girens.gresource.xml',
-  gresource_bundle: true,
-  install: true,
-  install_dir: pkgdatadir,
-  dependencies: configure_file(
-    input: 'about_dialog.ui.in',
-    output: 'about_dialog.ui',
-    configuration: conf_service
-  )
-)
 
 configure_file(
   input: 'girens.in',

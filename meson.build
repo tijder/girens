@@ -4,6 +4,7 @@ project(
   meson_version: '>= 0.40.0',
 )
 python3 = import('python3')
+gnome = import('gnome')
 
 service_dir = join_paths(get_option('datadir'), 'dbus-1', 'services')
 search_provider_dir = join_paths(get_option('datadir'), 'gnome-shell', 'search-providers')
