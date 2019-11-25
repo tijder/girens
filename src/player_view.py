@@ -29,6 +29,12 @@ class PlayerView(Gtk.Box):
     _label = GtkTemplate.Child()
     _cover_image = GtkTemplate.Child()
 
+    _title_label = GtkTemplate.Child()
+    _subtitle_label = GtkTemplate.Child()
+    _left_subtitle_label = GtkTemplate.Child()
+    _right_subtitle_label = GtkTemplate.Child()
+    _discription_label = GtkTemplate.Child()
+
     _deck_shows_box = GtkTemplate.Child()
 
     _download_key = None
@@ -194,13 +200,37 @@ class PlayerView(Gtk.Box):
                 self._download_key = self._item.grandparentRatingKey
                 self._download_thumb = self._item.grandparentThumb
 
+            title = ''
+            subtitle = ''
+            leftsubtitle = ''
+            rightsubtitle = ''
+            sumary = ''
+
+            if (self._item.TYPE == 'episode'):
+                title = self._item.grandparentTitle
+                subtitle = self._item.seasonEpisode + ' - ' + self._item.title
+                rightsubtitle = str(self._item.originallyAvailableAt.strftime('%d %b %Y'))
+            elif (self._item.TYPE == 'movie'):
+                title = self._item.title
+                subtitle = str(self._item.year)
+                for genre in self._item.genres:
+                    rightsubtitle = rightsubtitle + genre.tag + " "
+            if self._item.TYPE in ['movie', 'episode']:
+                leftsubtitle = str(self.__convertMillis(self._item.duration))
+                sumary = self._item.summary
+
+            self._title_label.set_text(title)
+            self._subtitle_label.set_text(subtitle)
+            self._left_subtitle_label.set_text(leftsubtitle)
+            self._right_subtitle_label.set_text(rightsubtitle)
+            self._discription_label.set_text(sumary)
+
             thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
             thread.daemon = True
             thread.start()
 
     def __set_box_visible(self, booleon):
         self._label.set_visible(booleon)
-
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
@@ -249,3 +279,15 @@ class PlayerView(Gtk.Box):
             self._event.set_size_request(-1, 500)
         else:
             self._event.set_size_request(-1, 800)
+
+    def __convertMillis(self, millis):
+        seconds=(millis/1000)%60
+        minutes=(millis/(1000*60))%60
+        hours=(millis/(1000*60*60))%24
+        text = ''
+        if hours > 1:
+            print(hours)
+            text = str("{0} hr ".format(int(hours)))
+        if minutes > 1:
+            text = text + str("{0} min".format(int(minutes)))
+        return text
