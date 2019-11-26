@@ -14,6 +14,7 @@ Flatpak is the recommended installation method. You can get Girens Flatpak on Fl
 <img src="https://flathub.org/assets/badges/flathub-badge-i-en.png" width="190px" />
 </a>
 
+Or download the latest development [flatpak](https://gitlab.gnome.org/tijder/girens/-/jobs/artifacts/master/raw/nl.g4d.Girens.flatpak?job=flatpak) from gitlab. Then install that flatpak with:
 ```bash
 flatpak install nl.g4d.girens.flatpak
 ```
