@@ -270,6 +270,9 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._active_view = view_name
 
+        if view_name == 'player':
+            self._sidebar_box.select_player()
+
     def __show_login_view(self):
         self._content_box_wrapper.set_visible(False)
         self._login_view = LoginView(self._plex)

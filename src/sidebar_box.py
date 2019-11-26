@@ -68,6 +68,9 @@ class SidebarBox(Gtk.Box):
     def unselect_all(self):
         self._section_list.unselect_all()
 
+    def select_player(self):
+        self._section_list.select_row(self._section_list.get_row_at_index(0))
+
     def __server_changed(self, combo):
         tree_iter = combo.get_active_iter()
         if tree_iter is not None:
