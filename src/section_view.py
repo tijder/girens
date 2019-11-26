@@ -51,6 +51,8 @@ class SectionView(Gtk.Box):
     _add_items_first = False
     _cover_width = 200
 
+    _section_key = None
+
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -67,6 +69,11 @@ class SectionView(Gtk.Box):
 
 
     def refresh(self, section, sort=None, sort_value=None):
+        if (section.key != self._section_key):
+            self._section_key = section.key
+            self.__refresh(section, sort=sort, sort_value=sort_value)
+
+    def __refresh(self, section, sort=None, sort_value=None):
         self._section = section
 
         if (sort == None):
