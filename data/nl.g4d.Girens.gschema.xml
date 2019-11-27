@@ -21,6 +21,11 @@
         <summary>Allow other devices on this network to find Girens and control this client</summary>
         <description></description>
     </key>
+    <key type="b" name="gtk-dark-theme">
+        <default>true</default>
+        <summary>Use dark GTK theme</summary>
+        <description></description>
+    </key>
     <key type="b" name="play-media-direct">
         <default>false</default>
         <summary>Play media direct from server instead of transcoding it</summary>

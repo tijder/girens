@@ -80,6 +80,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _download_button = GtkTemplate.Child()
     _back_button = GtkTemplate.Child()
     _search_toggle_button = GtkTemplate.Child()
+    _dark_theme_check_button = GtkTemplate.Child()
     _prefer_music_clips_check_button = GtkTemplate.Child()
     _direct_play_check_button = GtkTemplate.Child()
     _advertise_as_client_check_button = GtkTemplate.Child()
@@ -229,6 +230,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
+        self._dark_theme_check_button.connect("toggled", self.__dark_theme_check_button_clicked)
+        self._settings.bind ("gtk-dark-theme", self._dark_theme_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
 
         width = self._settings.get_int("window-size-width")
         height = self._settings.get_int("window-size-height")
@@ -517,6 +520,12 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._window_placement_update_timeout = None
         return False
 
+    def __dark_theme_check_button_clicked(self, button):
+        GLib.idle_add(self.__set_gtk_theme, button.get_active())
+
+    def __set_gtk_theme(self, booleon):
+        gtk_settings = Gtk.Settings.get_default()
+        gtk_settings.set_property('gtk-application-prefer-dark-theme', booleon)
 
     def __custom_css(self):
         screen = Gdk.Screen.get_default()
