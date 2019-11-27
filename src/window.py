@@ -477,11 +477,13 @@ class PlexWindow(Gtk.ApplicationWindow):
                 self.sidebar.hide()
                 self.separator.hide()
                 self._player_view.set_fullscreen_state()
+                self.get_style_context().add_class("black_background")
             else: # Is not fullscreen
                 #self._media_box.set_visible(True)
                 self.sidebar.show()
                 self.separator.show()
                 self._player_view.set_unfullscreen_state()
+                self.get_style_context().remove_class("black_background")
 
 
     def __on_show_download_button(self, menu):
