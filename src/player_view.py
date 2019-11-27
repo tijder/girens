@@ -127,7 +127,7 @@ class PlayerView(Gtk.Box):
     def __on_keypress(self, widget, key):
         if key.keyval in [102, 65480]: # f and f11 key
             self.__fullscreen()
-        elif key.string == 'p':
+        elif key.keyval in [32, 112]: # spacebar and p
             self._player.play_pause()
         elif key.string == 'o':
             self.__show_controlls()
