@@ -120,6 +120,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="label">Title</property>
+                <property name="ellipsize">end</property>
                 <attributes>
                   <attribute name="weight" value="ultraheavy"/>
                 </attributes>
@@ -170,6 +171,7 @@
                 <property name="hexpand">True</property>
                 <property name="label">Action, Comedy</property>
                 <property name="justify">right</property>
+                <property name="ellipsize">end</property>
                 <attributes>
                   <attribute name="style" value="italic"/>
                   <attribute name="weight" value="semilight"/>
