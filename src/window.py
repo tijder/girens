@@ -68,6 +68,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     sidebar = GtkTemplate.Child()
     separator = GtkTemplate.Child()
     _sidebar_viewport = GtkTemplate.Child()
+    _main_scrolled_window = GtkTemplate.Child()
 
     _search_bar = GtkTemplate.Child()
     _search_entry = GtkTemplate.Child()
@@ -481,12 +482,14 @@ class PlexWindow(Gtk.ApplicationWindow):
                 self.separator.hide()
                 self._player_view.set_fullscreen_state()
                 self.get_style_context().add_class("black_background")
+                self._main_scrolled_window.get_style_context().add_class("black_background")
             else: # Is not fullscreen
                 #self._media_box.set_visible(True)
                 self.sidebar.show()
                 self.separator.show()
                 self._player_view.set_unfullscreen_state()
                 self.get_style_context().remove_class("black_background")
+                self._main_scrolled_window.get_style_context().remove_class("black_background")
 
 
     def __on_show_download_button(self, menu):
