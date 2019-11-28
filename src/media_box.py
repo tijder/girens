@@ -43,7 +43,6 @@ class MediaBox(GObject.Object):
     _subtitle_label = None
     _scale_bar = None
     _scale_adjustment = None
-    _progress_bar = None
     _time_left_label = None
     _time_right_label = None
 
@@ -119,7 +118,8 @@ class MediaBox(GObject.Object):
         self.__set_play_button(box._play_button)
         self.__set_prev_button(box._prev_button)
         self.__set_next_button(box._next_button)
-        self.__set_progress_bar(box._progress_bar)
+        self.__set_scale_bar(box._scale_bar)
+        self.__set_scale_adjustment(box._scale_adjustment)
         self.__set_play_image(box._play_image)
         self.__set_cover_image(box._cover_image)
         self.__set_skip_backward_button(box._skip_backward_button)
@@ -171,9 +171,6 @@ class MediaBox(GObject.Object):
     def __set_fullscreen_button(self, button):
         self._fullscreen_button = button
         self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
-
-    def __set_progress_bar(self, bar):
-        self._progress_bar = bar
 
     def __set_scale_bar(self, bar):
         self._scale_bar = bar
@@ -275,8 +272,6 @@ class MediaBox(GObject.Object):
             self._time_right_label.set_text(str(string))
 
     def __update_progress_bar(self, fraction):
-        if self._progress_bar != None:
-            self._progress_bar.set_fraction(fraction)
         if self._scale_adjustment != None:
             self._scale_adjustment.set_value(fraction)
 
