@@ -95,7 +95,7 @@ class Player(GObject.Object):
         def __on_track_list(_name, value):
             self._tracklist = value
 
-            if self._direct:
+            if self._direct and self._item_loading.listType == 'video':
                 self.__set_selected_stream()
 
 
