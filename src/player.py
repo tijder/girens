@@ -337,8 +337,8 @@ class Player(GObject.Object):
         if (self._playing != False):
             self._player.command('seek', 30)
 
-    def seek_to_time(self, time):
-        self._player.seek(time, reference='absolute', precision='exact')
+    def seek_to_time(self, time, reference='absolute'):
+        self._player.seek(time, reference=reference, precision='exact')
 
     def play_index(self, index):
         self._next_index = index

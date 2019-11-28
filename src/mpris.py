@@ -290,7 +290,7 @@ class MediaPlayer2Service(Server):
         self.player.play()
 
     def Seek(self, offset_msecond):
-        pass
+        self.player.seek_to_time(offset_msecond / 1000000, reference='relative')
 
     def SetPosition(self, track_id, position_msecond):
         pass
