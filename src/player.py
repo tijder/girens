@@ -189,8 +189,6 @@ class Player(GObject.Object):
             else:
                 offset = 0
 
-            print(offset)
-
             source = self._plex.get_item_download_path(self._item_loading)
             if (source == None):
                 self._direct = self._settings.get_boolean("play-media-direct")
