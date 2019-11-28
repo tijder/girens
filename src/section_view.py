@@ -69,7 +69,7 @@ class SectionView(Gtk.Box):
 
 
     def refresh(self, section, sort=None, sort_value=None):
-        if (section.key != self._section_key):
+        if (section.key != self._section_key or (self._sort_value_active != sort_value and sort_value != None) or (self._sort_active != sort and sort != None)):
             self._section_key = section.key
             self.__refresh(section, sort=sort, sort_value=sort_value)
 
@@ -144,10 +144,10 @@ class SectionView(Gtk.Box):
 
     def __on_order_button_clicked(self, button):
         if self._sort_value_active == 'desc':
-            self._sort_value_active = 'asc'
+            new_sort_value = 'asc'
         else:
-            self._sort_value_active = 'desc'
-        self.refresh(self._section, sort=self._sort_active, sort_value=self._sort_value_active)
+            new_sort_value = 'desc'
+        self.refresh(self._section, sort=self._sort_active, sort_value=new_sort_value)
 
     def __set_correct_order_image(self):
         if self._sort_value_active == 'desc':

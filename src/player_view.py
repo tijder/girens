@@ -113,6 +113,7 @@ class PlayerView(Gtk.Box):
         self._event.set_vexpand(True)
         self._event.set_size_request(-1, -1)
         self.__show_controlls()
+        self._controlls_top.get_style_context().add_class("black_background")
 
     def set_unfullscreen_state(self):
         self._fullscreen = False
@@ -121,6 +122,7 @@ class PlayerView(Gtk.Box):
         self._event.set_vexpand(False)
         #self._event.set_size_request(-1, 500)
         self.__show_cursor()
+        self._controlls_top.get_style_context().remove_class("black_background")
 
     def __on_playqueue_ended(self, player):
         if self._fullscreen == True:
@@ -133,7 +135,7 @@ class PlayerView(Gtk.Box):
     def __on_keypress(self, widget, key):
         if key.keyval in [102, 65480]: # f and f11 key
             self.__fullscreen()
-        elif key.string == 'p':
+        elif key.keyval in [32, 112]: # spacebar and p
             self._player.play_pause()
         elif key.string == 'o':
             self.__show_controlls()

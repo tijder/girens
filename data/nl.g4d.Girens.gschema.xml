@@ -12,13 +12,18 @@
         <description>Window size (height).</description>
     </key>
     <key type="i" name="volume-level">
-        <default>1</default>
+        <default>75</default>
         <summary>The volume level of the audio</summary>
         <description></description>
     </key>
     <key type="b" name="advertise-as-client">
         <default>false</default>
         <summary>Allow other devices on this network to find Girens and control this client</summary>
+        <description></description>
+    </key>
+    <key type="b" name="gtk-dark-theme">
+        <default>true</default>
+        <summary>Use dark GTK theme</summary>
         <description></description>
     </key>
     <key type="b" name="play-media-direct">

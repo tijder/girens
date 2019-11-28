@@ -9,3 +9,8 @@
 .unplayed {
   color: @theme_selected_bg_color;
 }
+
+.black_background {
+  background-color: black;
+}
+
