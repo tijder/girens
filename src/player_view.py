@@ -1,4 +1,4 @@
-from gi.repository import Gtk, GLib, GObject, Gdk, GdkPixbuf
+from gi.repository import Gtk, GLib, Gio, GObject, Gdk, GdkPixbuf
 from .gi_composites import GtkTemplate
 
 from .cover_box import CoverBox
@@ -34,6 +34,10 @@ class PlayerView(Gtk.Box):
     _left_subtitle_label = GtkTemplate.Child()
     _right_subtitle_label = GtkTemplate.Child()
     _discription_label = GtkTemplate.Child()
+    _subtitle_box = GtkTemplate.Child()
+    _sub_label = GtkTemplate.Child()
+    _audio_box = GtkTemplate.Child()
+    _audio_label = GtkTemplate.Child()
 
     _deck_shows_box = GtkTemplate.Child()
 
@@ -57,6 +61,8 @@ class PlayerView(Gtk.Box):
 
         self._event.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
         self._event.connect("motion-notify-event", self.__on_motion)
+        self._subtitle_box.connect("changed", self.__on_subtitle_selected)
+        self._audio_box.connect("changed", self.__on_audio_selected)
         window.connect("key-press-event", self.__on_keypress)
 
     def set_player(self, player):
@@ -225,9 +231,78 @@ class PlayerView(Gtk.Box):
             self._right_subtitle_label.set_text(rightsubtitle)
             self._discription_label.set_text(sumary)
 
+            GLib.idle_add(self.__set_stream_widgets)
+
             thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
             thread.daemon = True
             thread.start()
+
+    def __set_stream_widgets(self):
+        self._selected_subtitle_stream = None
+        self._sub_store = Gtk.ListStore(object, str)
+        sub_selected = -1
+        self._selected_audio_stream = None
+        self._audio_store = Gtk.ListStore(object, str)
+        audio_selected = -1
+
+        self._sub_store.append([None, 'None'])
+
+        i = 0
+        y = 0
+        for parts in self._item.iterParts():
+            for stream in parts.subtitleStreams():
+                i = i + 1
+                self._sub_store.append([stream, stream.displayTitle])
+                if stream.selected is True:
+                    self._selected_subtitle_stream = stream
+                    sub_selected = i
+
+            for stream in parts.audioStreams():
+                self._audio_store.append([stream, stream.displayTitle])
+                if stream.selected is True:
+                    self._selected_audio_stream = stream
+                    audio_selected = y
+                y = y + 1
+
+        self.__set_combobox(self._subtitle_box, self._sub_store, sub_selected)
+        self.__set_combobox(self._audio_box, self._audio_store, audio_selected)
+
+        self._sub_label.set_visible(len(self._sub_store) > 1)
+        self._audio_label.set_visible(len(self._audio_store) > 1)
+
+    def __set_combobox(self, box, store, selected):
+        box.clear()
+        box.set_model(store)
+        box.set_id_column(1)
+        renderer_text = Gtk.CellRendererText()
+        box.pack_start(renderer_text, True)
+        box.add_attribute(renderer_text, "text", 1)
+        box.set_active(selected)
+        box.set_visible(len(store) > 1)
+
+    def __on_subtitle_selected(self, combo):
+        self.__on_process_slected(combo, 'subtitle')
+
+    def __on_audio_selected(self, combo):
+        self.__on_process_slected(combo, 'audio')
+
+    def __on_process_slected(self, combo, what):
+        if what is 'audio':
+            current_stream = self._selected_audio_stream
+        elif what is 'subtitle':
+            current_stream = self._selected_subtitle_stream
+
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            stream, stream_name = model[tree_iter][:2]
+            if (current_stream is None or stream is not current_stream):
+                if what is 'audio':
+                    self._selected_audio_stream = stream
+                    self._player.set_audio(stream)
+                elif what is 'subtitle':
+                    self._selected_subtitle_stream = stream
+                    self._player.set_subtitle(stream)
 
     def __set_box_visible(self, booleon):
         self._label.set_visible(booleon)

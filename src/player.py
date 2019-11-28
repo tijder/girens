@@ -52,6 +52,8 @@ class Player(GObject.Object):
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
 
+        self._tracklist = None
+
     def set_video_output_driver(self, video_output_driver):
         self._video_output_driver = video_output_driver
 
@@ -91,14 +93,55 @@ class Player(GObject.Object):
 
         @self._player.property_observer('track-list')
         def __on_track_list(_name, value):
-            plex_sub = self._item.getSelectedSubtitleStream()
-            plex_audio = self._item.getSelectedAudioStream()
+            self._tracklist = value
 
-            for i in value:
-                if plex_sub is not None and plex_sub.index is i['ff-index']:
-                    self._player.sid = i['id']
-                if plex_audio is not None and plex_audio.index is i['ff-index']:
-                    self._player.aid = i['id']
+            if self._direct:
+                self.__set_selected_stream()
+
+
+    def __set_selected_stream(self):
+        plex_audio = self._item.getSelectedAudioStream()
+        plex_sub = self._item.getSelectedSubtitleStream()
+
+        self.__set_stream(plex_sub, 'sid')
+        self.__set_stream(plex_audio, 'aid')
+
+    def __set_stream(self, plex_stream, param):
+        stream_id = False
+        extern_stream_title = False
+
+        if self._direct is True and plex_stream is not None and plex_stream.key is not None:
+            extern_stream_title = plex_stream.id
+
+        for i in self._tracklist:
+            if plex_stream is not None and (plex_stream.index is i['ff-index'] or ('title' in i and str(extern_stream_title) == str(i['title']))):
+                stream_id = i['id']
+
+        if param is 'sid':
+            self._player.sid = stream_id
+        elif param is 'aid':
+            self._player.aid = stream_id
+
+        if stream_id == False and extern_stream_title != False:
+            self._player.command('sub-add', plex_stream.getDownloadUrl(), 'auto', extern_stream_title)
+
+    def set_subtitle(self, plex_stream):
+        self._item.setDefaultSubtitleStream(plex_stream)
+        if self._direct:
+            self.__set_stream(plex_stream, 'sid')
+        else:
+            self._restart = True
+            self._restart_offset = self._progresNow
+            self._player.command('stop')
+
+    def set_audio(self, plex_stream):
+        self._item.setDefaultAudioStream(plex_stream)
+        if self._direct:
+            self.__set_stream(plex_stream, 'aid')
+        else:
+            self._restart = True
+            self._restart_offset = self._progresNow
+            self._player.command('stop')
 
     def __stop(self):
         self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
@@ -111,6 +154,8 @@ class Player(GObject.Object):
     def start(self, from_beginning=None, offset_param=None):
         self._offset_param = None
         self._from_beginning = None
+        self._restart = None
+        self._restart_offset = 0
         new_item = self._playqueue.items[self._offset]
         if (self._playing != False):
             self._play_wait = True
@@ -137,25 +182,22 @@ class Player(GObject.Object):
             self._lastInternUpdate = 0
             self._progresNow = 0
 
-            if (from_beginning == False):
+            if (from_beginning == False and offset_param != None):
+                offset = offset_param / 1000
+            elif from_beginning == False:
                 offset = self._item_loading.viewOffset / 1000
-            elif offset_param != None:
-                offset = offset_param
             else:
                 offset = 0
 
             source = self._plex.get_item_download_path(self._item_loading)
             if (source == None):
-                direct = self._settings.get_boolean("play-media-direct")
-                source = self._item_loading.getStreamURL(offset=offset, directPlay=direct)
+                self._direct = self._settings.get_boolean("play-media-direct")
+                source = self._item_loading.getStreamURL(offset=offset, directPlay=self._direct)
 
             self.__createPlayer(offset=offset)
             self._player.volume = self._settings.get_int("volume-level")
             self._player.play(source)
             if self._item_loading.listType == 'video':
-                sub = self._item.getSelectedSubtitleStream()
-                if direct is True and sub is not None and sub.key is not None:
-                    self._player.command('sub-add', sub.getDownloadUrl())
                 thread = threading.Thread(target=self.emit,args={'video-starting'})
                 thread.daemon = True
                 thread.start()
@@ -184,6 +226,8 @@ class Player(GObject.Object):
         if (self._play_wait == True):
             self._play_wait = False
             GLib.idle_add(self.start_with_params, self._from_beginning, self._offset_param)
+        elif (self._restart):
+            GLib.idle_add(self.start_with_params, False, self._restart_offset * 1000)
         elif (self._next_index != None):
             self._offset = self._next_index
             self._next_index = None

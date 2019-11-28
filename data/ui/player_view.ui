@@ -181,16 +181,59 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="_discription_label">
+              <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. </property>
-                <property name="wrap">True</property>
+                <child>
+                  <object class="GtkLabel" id="_audio_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Audio </property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="_sub_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Subtitle </property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="_subtitle_box">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="_audio_box">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">3</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -203,7 +246,21 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">4</property>
+                <property name="width">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="_discription_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. </property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">5</property>
                 <property name="width">2</property>
               </packing>
             </child>

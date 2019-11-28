@@ -151,7 +151,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/tijder/python-plexapi",
-                    "commit" : "5de82783eabc8a1c4cfed9eba52e2b8bac8f638c"
+                    "commit" : "91ba0c00341314f89d175663fab9e5170a630775"
                 }
             ],
             "modules" : [
