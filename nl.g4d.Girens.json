@@ -151,7 +151,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/tijder/python-plexapi",
-                    "commit" : "91ba0c00341314f89d175663fab9e5170a630775"
+                    "commit" : "0530bc635de6b1b668aa373c7cd6a091dc57db63"
                 }
             ],
             "modules" : [
@@ -280,7 +280,7 @@
                 {
                     "type" : "git",
                     "url" : "https://source.puri.sm/Librem5/libhandy",
-                    "commit" : "f5909a897f70143bdd2f89f47a63c1bf848330ce"
+                    "commit" : "63afc4071c27ad3d722e72ae058ebcc1dc082d20"
                 }
             ]
         },
