@@ -191,7 +191,7 @@ class Player(GObject.Object):
 
             source = self._plex.get_item_download_path(self._item_loading)
             if (source == None):
-                self._direct = self._settings.get_boolean("play-media-direct")
+                self._direct = (self._settings.get_boolean("play-media-direct") or self._item_loading.listType != 'video')
                 source = self._item_loading.getStreamURL(offset=offset, directPlay=self._direct)
 
             self.__createPlayer(offset=offset)
