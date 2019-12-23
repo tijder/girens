@@ -117,6 +117,7 @@ class SectionView(Gtk.Box):
         thread.start()
 
     def show_playlists(self):
+        self._section_key = None
         self._sort_active = None
 
         self._title_label.set_label("Playlists")
