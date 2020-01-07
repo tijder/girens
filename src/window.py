@@ -36,7 +36,7 @@ from .download_menu import DownloadMenu
 from .resume_dialog import ResumeDialog
 from .mpris import MediaPlayer2Service
 from .remote_player import RemotePlayer
-from plex_mpv_shim.plex_remote_client import PlexRemoteClient
+from plex_remote.plex_remote_client import PlexRemoteClient
 
 from .plex import Plex
 from .player import Player

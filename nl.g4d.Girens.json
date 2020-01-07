@@ -285,7 +285,7 @@
             ]
         },
         {
-            "name" : "plex-mpv-shim",
+            "name" : "plex-remote",
             "buildsystem" : "simple",
             "build-commands" : [
                 "pip3 install --prefix=/app ./"
@@ -293,8 +293,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://github.com/tijder/plex-mpv-shim",
-                    "commit" : "b943f02dd12efacba1fb0fcd759fa6e6e22a6061"
+                    "url" : "https://github.com/tijder/plex-remote",
+                    "commit" : "c29ef9549c166902e53b3a1b603b365d70ebdf93"
                 }
             ]
         },

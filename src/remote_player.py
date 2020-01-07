@@ -1,4 +1,4 @@
-from plex_mpv_shim.player_abstract import PlayerAbstract
+from plex_remote.player_abstract import PlayerAbstract
 from urllib.parse import urlsplit
 from plexapi.server import PlexServer
 from plexapi.playqueue import PlayQueue
