@@ -110,6 +110,14 @@ class Player(GObject.Object):
         stream_id = False
         extern_stream_title = False
 
+        if isinstance(plex_stream, str) or isinstance(plex_stream, int):
+            plex_stream = self._item.getStream(int(plex_stream))
+
+        if plex_stream is None:
+            pindex = 0
+        else:
+            pindex = plex_stream.index
+
         if self._direct is True and plex_stream is not None and plex_stream.key is not None:
             extern_stream_title = plex_stream.id
 
@@ -119,8 +127,10 @@ class Player(GObject.Object):
 
         if param is 'sid':
             self._player.sid = stream_id
+            self.sid = pindex
         elif param is 'aid':
             self._player.aid = stream_id
+            self.aid = pindex
 
         if stream_id == False and extern_stream_title != False:
             self._player.command('sub-add', plex_stream.getDownloadUrl(), 'auto', extern_stream_title)
@@ -181,6 +191,8 @@ class Player(GObject.Object):
             self._progresUpdate = 0
             self._lastInternUpdate = 0
             self._progresNow = 0
+            self.sid = None
+            self.aid = None
 
             if (from_beginning == False and offset_param != None):
                 offset = offset_param / 1000
@@ -260,6 +272,9 @@ class Player(GObject.Object):
 
     def get_position(self):
         return self._progresNow
+
+    def get_track_ids(self):
+        return self.aid, self.sid
 
     def get_volume(self, percent=False):
         volume = self._settings.get_int("volume-level")

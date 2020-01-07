@@ -151,7 +151,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/tijder/python-plexapi",
-                    "commit" : "0530bc635de6b1b668aa373c7cd6a091dc57db63"
+                    "commit" : "bc967d232521a311c212e4120b230c021534c343"
                 }
             ],
             "modules" : [
@@ -293,7 +293,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://github.com/tijder/plex-mpv-shim"
+                    "url" : "https://github.com/tijder/plex-mpv-shim",
+                    "commit" : "b943f02dd12efacba1fb0fcd759fa6e6e22a6061"
                 }
             ]
         },

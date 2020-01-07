@@ -134,6 +134,15 @@ class RemotePlayer(PlayerAbstract):
     def set_volume(self, percent):
         self._player.set_volume(percent)
 
+    def get_track_ids(self):
+        return self._player.get_track_ids()
+
+    def set_streams(self, audioStreamID, subtitleStreamID):
+        if subtitleStreamID is not None:
+            self._player.set_subtitle(subtitleStreamID)
+        if audioStreamID is not None:
+            self._player.set_audio(audioStreamID)
+
     def update_play_queue(self):
         self._player.refresh_playqueue()
 
