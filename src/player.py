@@ -154,7 +154,10 @@ class Player(GObject.Object):
             self._player.command('stop')
 
     def __stop(self):
-        self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+        try:
+            self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+        except:
+            print("Error by updating timeline")
         self._player.terminate()
 
     def set_playqueue(self, playqueue):
