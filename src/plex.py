@@ -417,7 +417,10 @@ class Plex(GObject.Object):
             password_mgr.add_password(None, parse.scheme + "://" + parse.hostname, auth_user, auth_passwd)
             handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
             opener = urllib.request.build_opener(handler)
-            url_img_combined = parse.scheme + "://" + parse.hostname + ":" + str(parse.port) + parse.path + "?" + parse.query
+            port = ""
+            if parse.port != None:
+                port = ":" + str(parse.port)
+            url_img_combined = parse.scheme + "://" + parse.hostname + port + parse.path + "?" + parse.query
             img_raw = opener.open(url_img_combined)
             with open(path, 'w+b') as file:
                 file.write(img_raw.read())
