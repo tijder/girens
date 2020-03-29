@@ -279,7 +279,7 @@
                 {
                     "type" : "git",
                     "url" : "https://source.puri.sm/Librem5/libhandy",
-                    "commit" : "63afc4071c27ad3d722e72ae058ebcc1dc082d20"
+                    "commit" : "7a193d7692c9c76a1a94f17c4d30b585f77d177c"
                 }
             ]
         },
