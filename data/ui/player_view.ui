@@ -28,14 +28,7 @@
                     <property name="label_yalign">0</property>
                     <property name="shadow_type">none</property>
                     <child>
-                      <object class="GtkImage" id="_cover_image">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="stock">gtk-missing-image</property>
-                        <style>
-                          <class name="cover_image"/>
-                        </style>
-                      </object>
+                      <placeholder/>
                     </child>
                     <child type="label_item">
                       <placeholder/>
@@ -304,6 +297,21 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage" id="_cover_image">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-missing-image</property>
+            <style>
+              <class name="cover_image"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>

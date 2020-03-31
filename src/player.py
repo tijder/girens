@@ -2,9 +2,14 @@ import gi
 import mpv
 import threading
 import time
+import ctypes
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib, GdkPixbuf, GObject, Gio
+
+gi.require_version('GL', '1.0')
+from OpenGL import GL, GLX
+from mpv import MPV, MpvRenderContext, OpenGlCbGetProcAddrFn
 
 # import gi
 # gi.require_version('Gtk', '3.0')
@@ -52,6 +57,10 @@ class Player(GObject.Object):
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
 
+        self.area = OpenGlArea()
+        self._player_view._frame.add(self.area)
+        self.area.show()
+
         self._tracklist = None
 
     def set_video_output_driver(self, video_output_driver):
@@ -67,7 +76,8 @@ class Player(GObject.Object):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         if self._item_loading.listType == 'video':
-            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
+            self._player = mpv.MPV(deinterlace=self._deinterlace, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
+            self.area.set_mpv(self._player)
         else:
             self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
 
@@ -155,7 +165,10 @@ class Player(GObject.Object):
 
     def __stop(self):
         self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
-        self._player.terminate()
+        print('stop')
+        #self.area.ctx.free()
+        #self._player.terminate()
+        #self._player_view._frame.remove(self.area)
 
     def set_playqueue(self, playqueue):
         self._playqueue = playqueue
@@ -417,4 +430,63 @@ class Player(GObject.Object):
             thread = threading.Thread(target=self.__playqueue_refresh)
             thread.daemon = True
             thread.start()
+
+def get_process_address(_, name):
+    address = GLX.glXGetProcAddress(name.decode("utf-8"))
+    return ctypes.cast(address, ctypes.c_void_p).value
+
+class OpenGlArea(Gtk.GLArea):
+
+    def __init__(self, **properties):
+        super().__init__(**properties)
         
+        self.mpv = mpv.MPV()
+
+        self._proc_addr_wrapper = OpenGlCbGetProcAddrFn(get_process_address)
+
+        self.ctx = None
+
+        self.connect("realize", self.on_realize)
+        self.connect("render", self.on_render)
+        self.connect("unrealize", self.on_unrealize)
+
+    def on_realize(self, area):
+        print('\033[91mon_realize called\033[0m')
+        self.make_current()
+        self.ctx = MpvRenderContext(self.mpv, 'opengl',
+                                    opengl_init_params={'get_proc_address': self._proc_addr_wrapper})
+        self.ctx.update_cb = self.wrapped_c_render_func
+
+    def on_unrealize(self, arg):
+        print('\033[91munrealize called\033[0m')
+        self.ctx.free()
+        self.mpv.terminate()
+
+    def wrapped_c_render_func(self):
+        print('\033[91mwrapped_c_render_func called\033[0m')
+        GLib.idle_add(self.call_frame_ready, None, GLib.PRIORITY_HIGH)
+        #self.call_frame_ready(None, GLib.PRIORITY_HIGH)
+
+    def call_frame_ready(self, *args):
+        print('\033[91mcall_frame_ready called\033[0m')
+        if self.ctx.update():
+            self.queue_render()
+
+    def on_render(self, arg1, arg2):
+        print('\033[91mon_render called\033[0m')
+        if self.ctx:
+            factor = self.get_scale_factor()
+            rect = self.get_allocated_size()[0]
+
+            width = rect.width * factor
+            height = rect.height * factor
+
+            fbo = GL.glGetIntegerv(GL.GL_DRAW_FRAMEBUFFER_BINDING)
+            self.ctx.render(flip_y=True, opengl_fbo={'w': width, 'h': height, 'fbo': fbo})
+            return True
+        return False
+
+    def set_mpv(self, mpv):
+        self.mpv = mpv
+        self.on_realize(None)
+    

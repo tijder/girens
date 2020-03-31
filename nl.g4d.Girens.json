@@ -1,7 +1,7 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "3.34",
+    "runtime-version" : "3.36",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
@@ -44,7 +44,7 @@
             ],
             "buildsystem" : "simple",
             "build-commands" : [
-                "python3 waf configure --prefix=${FLATPAK_DEST} --enable-libmpv-shared --disable-cplayer --disable-oss-audio --disable-alsa --disable-manpage-build --disable-debug-build",
+                "python3 waf configure --prefix=${FLATPAK_DEST} --enable-libmpv-shared --disable-cplayer --disable-build-date --disable-oss-audio --disable-alsa",
                 "python3 waf build",
                 "python3 waf install"
             ],
@@ -52,7 +52,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "3a8abbee2fd25f9d137098cd4ed9f7cedf478fbd"
+                    "commit" : "091aa96c4d7acb9f6294b108c6053df59fa6cb6e"
                 },
                 {
                     "type" : "file",
@@ -121,7 +121,7 @@
                         {
                             "type" : "git",
 		            "url" : "https://github.com/FFmpeg/FFmpeg",
-		            "commit" : "1529dfb73a5157dcb8762051ec4c8d8341762478"
+		            "commit" : "192d1d34eb3668fa27f433e96036340e1e5077a0"
                         }
                     ]
                 }
@@ -137,7 +137,21 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "4f69531721e3d6afdfb08277bccfba12ed0c3c14"
+                    "commit" : "fc775920def39309b1debedfb42045eacdb5db6d"
+                }
+            ]
+        },
+        {
+            "name" : "PyOpenGL",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "pip3 install --prefix=/app PyOpenGL-3.1.5-py3-none-any.whl"
+            ],
+            "sources" : [
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/47/9a/8d9364533ebcaa13621994a63dcc6a6051e27671ae5e1715dac4af18cac2/PyOpenGL-3.1.5-py3-none-any.whl",
+                    "sha256" : "36b4ac28220e4bfa29e5557525ad2967ca74558a94bccea48864fc742b18db11"
                 }
             ]
         },
