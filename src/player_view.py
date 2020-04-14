@@ -6,6 +6,8 @@ from .media_box import MediaBox
 from .media_box_video_top import MediaBoxVideoTop
 from .media_box_video_bottom import MediaBoxVideoBottom
 
+import time
+
 import threading
 
 @GtkTemplate(ui='/nl/g4d/Girens/player_view.ui')
@@ -54,6 +56,8 @@ class PlayerView(Gtk.Box):
     _cover_width = 200
     _old_screensize = 640
 
+    _last_button_click = 0
+
     def __init__(self, window, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -61,6 +65,7 @@ class PlayerView(Gtk.Box):
 
         self._event.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
         self._event.connect("motion-notify-event", self.__on_motion)
+        self._event.connect("button-press-event", self.__button_press_event)
         self._subtitle_box.connect("changed", self.__on_subtitle_selected)
         self._audio_box.connect("changed", self.__on_audio_selected)
         window.connect("key-press-event", self.__on_keypress)
@@ -179,6 +184,13 @@ class PlayerView(Gtk.Box):
         self.__start_controlls_timout()
         if self._fullscreen:
             self.__show_cursor()
+
+    def __button_press_event(self, widget, event):
+        if ((time.time() - self._last_button_click) < 0.2):
+            self._last_button_click = 0
+            self.__fullscreen()
+        else:
+            self._last_button_click = time.time()
 
     def __on_motion_over(self):
         self._timout = None
