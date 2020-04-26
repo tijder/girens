@@ -194,7 +194,7 @@
                       <object class="GtkImage" id="_avatar_image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="icon_name">preferences-desktop-personal</property>
+                        <property name="icon_name">preferences-desktop-personal-symbolic</property>
                         <property name="icon_size">1</property>
                       </object>
                     </child>
