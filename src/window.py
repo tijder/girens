@@ -56,6 +56,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _content_box_wrapper = GtkTemplate.Child()
     _content_leaflet = GtkTemplate.Child()
 
+    _login_revealer = GtkTemplate.Child()
     _discover_revealer = GtkTemplate.Child()
     _show_revealer = GtkTemplate.Child()
     _section_revealer = GtkTemplate.Child()
@@ -75,6 +76,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
     _avatar_image = GtkTemplate.Child()
     _profile_button = GtkTemplate.Child()
+    _menu_button = GtkTemplate.Child()
     _sync_button = GtkTemplate.Child()
     _shortcuts_button = GtkTemplate.Child()
     _sync_image = GtkTemplate.Child()
@@ -221,6 +223,12 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         self._album_revealer.add(self._album_view)
 
+        self._login_view = LoginView(self._plex)
+        self._login_view.connect("login-success", self.__on_login_success)
+        self._login_view.connect("login-failed", self.__on_login_failed)
+        self._login_view.connect("login-not-found", self.__on_login_not_found)
+        self._login_revealer.add(self._login_view)
+
         remote_player = RemotePlayer(self._player, self)
 
         self.plexRemoteClient = PlexRemoteClient(remote_player)
@@ -243,9 +251,11 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.connect("configure-event", self.__on_configure_event)
         self.connect("window-state-event", self.__on_window_state_event)
 
-        self.__show_login_view()
+        self.__show_loading_view(True, 'Starting Girens')
+        self._login_view.try_login()
 
     def __show_view(self, view_name):
+        self._login_revealer.set_visible(False)
         self._discover_revealer.set_visible(False)
         self._show_revealer.set_visible(False)
         self._section_revealer.set_visible(False)
@@ -254,7 +264,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._album_revealer.set_visible(False)
         self._player_revealer.set_visible(False)
 
-        if view_name == 'discover':
+        if view_name == 'login':
+            self._login_revealer.set_visible(True)
+            self.__set_vissible_headbar_buttons(False)
+        elif view_name == 'discover':
             self._discover_revealer.set_visible(True)
         elif view_name == 'show':
             self._show_revealer.set_visible(True)
@@ -269,6 +282,9 @@ class PlexWindow(Gtk.ApplicationWindow):
         elif view_name == 'player':
             self._player_revealer.set_visible(True)
 
+        if (view_name != 'login'):
+            self.__set_vissible_headbar_buttons(True)
+
         if (view_name != 'search'):
             self._search_toggle_button.set_active(False)
 
@@ -277,11 +293,24 @@ class PlexWindow(Gtk.ApplicationWindow):
         if view_name == 'player':
             self._sidebar_box.select_player()
 
+    def __set_vissible_headbar_buttons(self, status):
+        self._profile_button.set_visible(status)
+        self._search_toggle_button.set_visible(status)
+        self._sync_button.set_visible(status)
+        self._menu_button.set_visible(status)
+        self._content_leaflet.set_visible(status)
+
     def __show_login_view(self):
-        self._content_box_wrapper.set_visible(False)
-        self._login_view = LoginView(self._plex)
-        self._login_view.connect("login-success", self.__on_login_success)
-        self._login_view.set_transient_for(self)
+        self.__show_view('login')
+
+    def __on_login_not_found(self, view):
+        self.__show_loading_view(False, '')
+        self.__show_login_view()
+
+    def __on_login_failed(self,view):
+        self.__show_loading_view(False, '')
+        self.__show_login_view()
+
 
     def __on_login_success(self, view, status):
         if (status == True):
@@ -452,17 +481,17 @@ class PlexWindow(Gtk.ApplicationWindow):
         dialog.destroy()
 
     def __on_plex_load(self, plex, load_text, status):
-        if (status == True):
-            self._loading_view.set_text(load_text)
-            self._loading_view.set_visible(True)
-            self._content_leaflet.set_visible(False)
+        self.__show_loading_view(status, load_text)
 
-            self._search_toggle_button.set_sensitive(False)
-        else:
-            self._loading_view.set_visible(False)
-            self._content_leaflet.set_visible(True)
+    def __show_loading_view(self, show, load_text):
+        self._loading_view.set_text(load_text)
+        self._loading_view.set_visible(show)
+        self._content_leaflet.set_visible(not show)
+        if (show):
+            self._login_revealer.set_visible(False)
+        self.__set_vissible_headbar_buttons(not show)
 
-            self._search_toggle_button.set_sensitive(True)
+        self._search_toggle_button.set_sensitive(not show)
 
     def go_fullscreen(self):
         self._player_view.go_fullscreen()

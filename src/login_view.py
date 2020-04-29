@@ -21,11 +21,13 @@ from .gi_composites import GtkTemplate
 import threading
 
 @GtkTemplate(ui='/nl/g4d/Girens/login_view.ui')
-class LoginView(Gtk.Dialog):
+class LoginView(Gtk.Box):
     __gtype_name__ = 'login_view'
 
     __gsignals__ = {
-        'login-success': (GObject.SignalFlags.RUN_FIRST, None, (bool,))
+        'login-success': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
+        'login-failed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'login-not-found': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     _loading = False
@@ -55,24 +57,30 @@ class LoginView(Gtk.Dialog):
         self._cancel_user_button.connect("clicked", self.__on_cancel_clicked)
         self._cancel_url_button.connect("clicked", self.__on_cancel_clicked)
 
+    def try_login(self):
         if (self._plex.has_token()):
             self.__login_with_token()
         elif (self._plex.has_url()):
             self._plex.login_with_url(self._plex._server_url, self._plex._server_token)
         else:
-            self.show()
+            self.emit('login-not-found')
 
     def __plex_login_status(self, plex, success, message):
         GLib.idle_add(self.__plex_login_status_process, success, message)
 
     def __plex_login_status_process(self, success, message):
+        self._loading = False
+        self._connect_user_button.set_sensitive(not self._loading)
+        self._connect_url_button.set_sensitive(not self._loading)
+        self._server_url_entry.set_can_focus(True)
+        self._username_entry.set_can_focus(True)
+        self._password_entry.set_can_focus(True)
         if(success):
             self.__show_correct_login()
             self.emit('login-success',True)
-            self.destroy()
         else:
             if (self._try_token == True):
-                self.show()
+                self.emit('login-failed')
             self.__show_incorrect_login()
 
     def __entry_changed(self, entry):
@@ -89,7 +97,6 @@ class LoginView(Gtk.Dialog):
 
     def __on_cancel_clicked(self, button):
         self.emit('login-success',False)
-        self.destroy()
 
     def __on_login_clicked(self, button):
         if (self._loading == False):
@@ -125,12 +132,7 @@ class LoginView(Gtk.Dialog):
         self._password_entry.set_progress_fraction(1.00)
 
     def __show_incorrect_login(self):
-        self._loading = False
         self._password_entry.set_progress_fraction(0.00)
         self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
         self._server_url_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
-        self._connect_user_button.set_sensitive(not self._loading)
-        self._connect_url_button.set_sensitive(not self._loading)
-        self._server_url_entry.set_can_focus(True)
-        self._username_entry.set_can_focus(True)
-        self._password_entry.set_can_focus(True)
+        
