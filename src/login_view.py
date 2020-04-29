@@ -36,12 +36,10 @@ class LoginView(Gtk.Box):
     _username_entry = GtkTemplate.Child()
     _password_entry = GtkTemplate.Child()
     _connect_user_button = GtkTemplate.Child()
-    _cancel_user_button = GtkTemplate.Child()
 
     _server_url_entry = GtkTemplate.Child()
     _server_token_entry = GtkTemplate.Child()
     _connect_url_button = GtkTemplate.Child()
-    _cancel_url_button = GtkTemplate.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
@@ -54,8 +52,6 @@ class LoginView(Gtk.Box):
         self._username_entry.connect("changed", self.__entry_changed)
         self._connect_url_button.connect("clicked", self.__on_connect_url_clicked)
         self._connect_user_button.connect("clicked", self.__on_login_clicked)
-        self._cancel_user_button.connect("clicked", self.__on_cancel_clicked)
-        self._cancel_url_button.connect("clicked", self.__on_cancel_clicked)
 
     def try_login(self):
         if (self._plex.has_token()):
@@ -94,9 +90,6 @@ class LoginView(Gtk.Box):
         thread = threading.Thread(target=self._plex.login_token, args=(self._plex._token,))
         thread.daemon = True
         thread.start()
-
-    def __on_cancel_clicked(self, button):
-        self.emit('login-success',False)
 
     def __on_login_clicked(self, button):
         if (self._loading == False):
