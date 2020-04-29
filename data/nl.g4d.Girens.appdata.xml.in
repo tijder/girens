@@ -30,6 +30,16 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2020-04-29" version="1.1.5">
+      <description>
+        <ul>
+          <li>New app icon</li>
+          <li>Double click to toggle fullscreen</li>
+          <li>Redesigned login view</li>
+          <li>Press k to toggle play or pause media</li>
+        </ul>
+      </description>
+    </release>
     <release date="2020-03-29" version="1.1.4">
       <description>
         <ul>
