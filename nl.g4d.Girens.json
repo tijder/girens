@@ -19,7 +19,6 @@
     ],
     "build-options" : {
         "cflags" : "-O2 -g",
-        "cxxflags" : "-O2 -g",
         "env" : {
             "V" : "1"
         }
@@ -52,7 +51,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "091aa96c4d7acb9f6294b108c6053df59fa6cb6e"
+                    "commit" : "70b991749df389bcc0a4e145b5687233a03b4ed7"
                 },
                 {
                     "type" : "file",
@@ -121,7 +120,7 @@
                         {
                             "type" : "git",
 		            "url" : "https://github.com/FFmpeg/FFmpeg",
-		            "commit" : "192d1d34eb3668fa27f433e96036340e1e5077a0"
+		            "commit" : "d1e8be34114d5782a5a4ea79ef0b9e92b6b37bc7"
                         }
                     ]
                 }
@@ -137,7 +136,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "fc775920def39309b1debedfb42045eacdb5db6d"
+                    "commit" : "0013328ff2df09c63cd06fb82a50a63a7c76b763"
                 }
             ]
         },
@@ -294,7 +293,7 @@
                 {
                     "type" : "git",
                     "url" : "https://source.puri.sm/Librem5/libhandy",
-                    "commit" : "63afc4071c27ad3d722e72ae058ebcc1dc082d20"
+                    "commit" : "7a193d7692c9c76a1a94f17c4d30b585f77d177c"
                 }
             ]
         },

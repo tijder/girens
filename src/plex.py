@@ -410,7 +410,20 @@ class Plex(GObject.Object):
         if not os.path.exists(path_dir):
             os.makedirs(path_dir)
         if not os.path.exists(path):
-            urllib.request.urlretrieve(url_image, path)
+            parse = urllib.parse.urlparse(url_image)
+            auth_user = parse.username
+            auth_passwd = parse.password
+            password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+            password_mgr.add_password(None, parse.scheme + "://" + parse.hostname, auth_user, auth_passwd)
+            handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
+            opener = urllib.request.build_opener(handler)
+            port = ""
+            if parse.port != None:
+                port = ":" + str(parse.port)
+            url_img_combined = parse.scheme + "://" + parse.hostname + port + parse.path + "?" + parse.query
+            img_raw = opener.open(url_img_combined)
+            with open(path, 'w+b') as file:
+                file.write(img_raw.read())
             return path
         else:
             return path

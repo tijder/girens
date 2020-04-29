@@ -169,6 +169,11 @@ class Player(GObject.Object):
         #self.area.ctx.free()
         #self._player.terminate()
         #self._player_view._frame.remove(self.area)
+        try:
+            self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+        except:
+            print("Error by updating timeline")
+        self._player.terminate()
 
     def set_playqueue(self, playqueue):
         self._playqueue = playqueue

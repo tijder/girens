@@ -151,6 +151,9 @@ class PlayerView(Gtk.Box):
             self._player.seek_backward()
         elif key.keyval in [93, 65363]: # ] and right key
             self._player.seek_forward()
+        elif key.keyval == 65307: # escape
+            if (self._fullscreen == True):
+                self.__fullscreen()
 
     def __show_cursor(self):
         Gdk.Window.set_cursor(self.get_window(), Gdk.Cursor.new_from_name(Gdk.Display.get_default(),"default"))
