@@ -31,6 +31,11 @@
         <summary>Play media direct from server instead of transcoding it</summary>
         <description></description>
     </key>
+    <key type="s" name="transcode-media-to-resolution">
+        <default>"1920x1080"</default>
+        <summary>Resolution to transcode media to</summary>
+        <description></description>
+    </key>
     <key type="b" name="prefer-music-clips">
         <default>false</default>
         <summary>When playing music and the track has a music clip, play that instead of the audio</summary>

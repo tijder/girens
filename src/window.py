@@ -85,10 +85,15 @@ class PlexWindow(Gtk.ApplicationWindow):
     _search_toggle_button = GtkTemplate.Child()
     _dark_theme_check_button = GtkTemplate.Child()
     _prefer_music_clips_check_button = GtkTemplate.Child()
-    _direct_play_check_button = GtkTemplate.Child()
     _advertise_as_client_check_button = GtkTemplate.Child()
     _about_button = GtkTemplate.Child()
     _volume_adjustment = GtkTemplate.Child()
+
+    _transcode_media_switch = GtkTemplate.Child()
+    _res_set_1080 = GtkTemplate.Child()
+    _res_set_720 = GtkTemplate.Child()
+    _res_set_480 = GtkTemplate.Child()
+    _res_set_240 = GtkTemplate.Child()
 
     _window_placement_update_timeout = None
 
@@ -235,12 +240,28 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._prefer_music_clips_check_button.connect("state-set", self.__on_prefer_music_clips_check_button_clicked)
         self._settings.bind ("prefer-music-clips", self._prefer_music_clips_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
-        self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
+        #self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._advertise_as_client_check_button.connect("state-set", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
         self._dark_theme_check_button.connect("state-set", self.__dark_theme_check_button_clicked)
         self._settings.bind ("gtk-dark-theme", self._dark_theme_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
+
+        sr = self._settings.get_string("transcode-media-to-resolution")
+        if (sr == "1920x1080"):
+            self._res_set_1080.set_active(True)
+        elif (sr == "1280x720"):
+            self._res_set_720.set_active(True)
+        elif (sr == "854x480"):
+            self._res_set_480.set_active(True)
+        elif (sr == "427x240"):
+            self._res_set_240.set_active(True)
+
+        self._res_set_1080.connect("toggled", self.__res_changed_1080)
+        self._res_set_720.connect("toggled", self.__res_changed_720)
+        self._res_set_480.connect("toggled", self.__res_changed_480)
+        self._res_set_240.connect("toggled", self.__res_changed_240)
+        self._settings.bind ("play-media-direct", self._transcode_media_switch, "enable-expansion", Gio.SettingsBindFlags.INVERT_BOOLEAN);
 
         width = self._settings.get_int("window-size-width")
         height = self._settings.get_int("window-size-height")
@@ -253,6 +274,22 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self.__show_loading_view(True, 'Starting Girens')
         self._login_view.try_login()
+
+    def __res_changed_1080(self, res_button):
+        if(res_button.get_active()):
+            self._settings.set_string("transcode-media-to-resolution", "1920x1080")
+
+    def __res_changed_720(self, res_button):
+        if(res_button.get_active()):
+            self._settings.set_string("transcode-media-to-resolution", "1280x720")
+
+    def __res_changed_480(self, res_button):
+        if(res_button.get_active()):
+            self._settings.set_string("transcode-media-to-resolution", "854x480")
+
+    def __res_changed_240(self, res_button):
+        if(res_button.get_active()):
+            self._settings.set_string("transcode-media-to-resolution", "427x240")
 
     def __show_view(self, view_name):
         self._login_revealer.set_visible(False)
