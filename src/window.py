@@ -402,7 +402,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_go_to_show(self, key):
         self._ShowView.change_show(key)
         self.__show_view('show')
-
+        self._sidebar_box.unselect_all()
 
     def __on_go_to_artist_clicked(self, view, key):
         self.__on_go_to_artist(key)
@@ -410,6 +410,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_go_to_artist(self, key):
         self._artist_view.change_artist(key)
         self.__show_view('artist')
+        self._sidebar_box.unselect_all()
 
     def __on_go_to_album_clicked(self, view, key):
         self.__on_go_to_album(key)
@@ -417,6 +418,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     def __on_go_to_album(self, key):
         self._album_view.change_album(key)
         self.__show_view('album')
+        self._sidebar_box.unselect_all()
 
     def __on_video_starting(self, widget):
         GLib.idle_add(self.__go_to_player)
