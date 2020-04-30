@@ -316,7 +316,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         if (status == True):
             self._content_box_wrapper.set_visible(True)
             self.header.set_visible_child_name("content")
-            self.__show_view('discover')
             thread = threading.Thread(target=self._plex.connect_to_server)
             thread.daemon = True
             thread.start()
@@ -332,7 +331,6 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.__show_login_view()
 
     def __on_connection_to_server(self, plex):
-        self._discover_view.refresh()
         self._sidebar_box.refresh()
         self._sync_dialog = SyncDialog(self._plex)
         self._sync_dialog.set_transient_for(self)

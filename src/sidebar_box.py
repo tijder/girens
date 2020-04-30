@@ -71,6 +71,9 @@ class SidebarBox(Gtk.Box):
     def select_player(self):
         self._section_list.select_row(self._section_list.get_row_at_index(0))
 
+    def select_home(self):
+        self._section_list.select_row(self._section_list.get_row_at_index(1))
+
     def __server_changed(self, combo):
         tree_iter = combo.get_active_iter()
         if tree_iter is not None:
@@ -102,7 +105,7 @@ class SidebarBox(Gtk.Box):
                 section_grid.set_title(section.title)
                 section_grid.set_data(section)
                 self._section_list.add(section_grid)
-        self.show()
+        self.select_home()
 
     def __process_servers(self, servers):
         self._server_store = Gtk.ListStore(object, str)
