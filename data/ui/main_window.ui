@@ -9,156 +9,159 @@
     <property name="page_increment">1.00000000000000001</property>
   </object>
   <object class="GtkPopover" id="_menu_popover">
-    <property name="width_request">200</property>
+    <property name="width_request">250</property>
     <property name="can_focus">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
+        <property name="margin_top">10</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
+        <property name="margin_bottom">10</property>
         <child>
-          <object class="GtkModelButton" id="_shortcuts_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="text" translatable="yes">Shortcuts</property>
-            <property name="centered">True</property>
-            <property name="height_request">50</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkModelButton" id="_about_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="text" translatable="yes">About Girens</property>
-            <property name="centered">True</property>
-            <property name="height_request">50</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+          <object class="HdyPreferencesGroup">
+          <property name="title" translatable="yes">Settings</property>
+          <property name="visible">True</property>
             <child>
-              <object class="GtkScale" id="volume">
+              <object class="HdyPreferencesRow">
+                <property name="use_underline">True</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="adjustment">_volume_adjustment</property>
-                <property name="round_digits">1</property>
-                <property name="draw_value">False</property>
-                <signal name="value-changed" handler="_on_volume_value_changed" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">10</property>
+                    <property name="margin_right">10</property>
+                    <child>
+                      <object class="GtkScale" id="volume">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="adjustment">_volume_adjustment</property>
+                        <property name="round_digits">1</property>
+                        <property name="draw_value">False</property>
+                        <signal name="value-changed" handler="_on_volume_value_changed" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">audio-speakers-symbolic</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkImage">
+              <object class="HdyActionRow">
+                <property name="activatable_widget">_advertise_as_client_check_button</property>
+                <property name="title" translatable="yes">Advertise as client</property>
+                <property name="use_underline">True</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">audio-speakers-symbolic</property>
+                <child type="action">
+                  <object class="GtkSwitch" id="_advertise_as_client_check_button">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
+            </child>
+            <child>
+              <object class="HdyActionRow">
+                <property name="activatable_widget">_prefer_music_clips_check_button</property>
+                <property name="title" translatable="yes">Prefer music clips</property>
+                <property name="use_underline">True</property>
+                <property name="visible">True</property>
+                <child type="action">
+                  <object class="GtkSwitch" id="_prefer_music_clips_check_button">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="HdyActionRow">
+                <property name="activatable_widget">_direct_play_check_button</property>
+                <property name="title" translatable="yes">Play media direct</property>
+                <property name="use_underline">True</property>
+                <property name="visible">True</property>
+                <child type="action">
+                  <object class="GtkSwitch" id="_direct_play_check_button">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="HdyActionRow">
+                <property name="activatable_widget">_dark_theme_check_button</property>
+                <property name="title" translatable="yes">Dark Theme</property>
+                <property name="use_underline">True</property>
+                <property name="visible">True</property>
+                <child type="action">
+                  <object class="GtkSwitch" id="_dark_theme_check_button">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkCheckButton" id="_advertise_as_client_check_button">
-            <property name="label" translatable="yes">Advertise as client</property>
-            <property name="height_request">50</property>
+          <object class="HdyPreferencesGroup">
+            <property name="title" translatable="yes">Info</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">Allow other devices on this network to find Girens and control this client.</property>
-            <property name="draw_indicator">True</property>
+            <property name="margin_top">20</property>
+            <child>
+              <object class="HdyPreferencesRow">
+                <property name="use_underline">True</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkModelButton" id="_shortcuts_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="text" translatable="yes">Shortcuts</property>
+                    <property name="centered">True</property>
+                    <property name="height_request">50</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="HdyPreferencesRow">
+                <property name="use_underline">True</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkModelButton" id="_about_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="text" translatable="yes">About Girens</property>
+                    <property name="centered">True</property>
+                    <property name="height_request">50</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="_prefer_music_clips_check_button">
-            <property name="label" translatable="yes">Prefer music clips</property>
-            <property name="height_request">50</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">When playing music and the track has a music clip, play that instead of the audio.</property>
-            <property name="draw_indicator">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="_direct_play_check_button">
-            <property name="label" translatable="yes">Play media direct</property>
-            <property name="height_request">50</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">Play media direct instead of transcoding.</property>
-            <property name="draw_indicator">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="_dark_theme_check_button">
-            <property name="label" translatable="yes">Dark Theme</property>
-            <property name="height_request">50</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">Use dark GTK theme.</property>
-            <property name="draw_indicator">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
     </child>

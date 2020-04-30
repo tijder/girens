@@ -233,13 +233,13 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self.plexRemoteClient = PlexRemoteClient(remote_player)
 
-        self._prefer_music_clips_check_button.connect("toggled", self.__on_prefer_music_clips_check_button_clicked)
+        self._prefer_music_clips_check_button.connect("state-set", self.__on_prefer_music_clips_check_button_clicked)
         self._settings.bind ("prefer-music-clips", self._prefer_music_clips_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
-        self._advertise_as_client_check_button.connect("toggled", self.__advertise_as_client_check_button_clicked)
+        self._advertise_as_client_check_button.connect("state-set", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
-        self._dark_theme_check_button.connect("toggled", self.__dark_theme_check_button_clicked)
+        self._dark_theme_check_button.connect("state-set", self.__dark_theme_check_button_clicked)
         self._settings.bind ("gtk-dark-theme", self._dark_theme_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
 
         width = self._settings.get_int("window-size-width")
@@ -449,14 +449,14 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._profile_dialog.set_transient_for(self)
         self._profile_dialog.show()
 
-    def __on_prefer_music_clips_check_button_clicked(self, button):
-        self._player.set_play_music_clip_instead_of_track(button.get_active())
+    def __on_prefer_music_clips_check_button_clicked(self, button, state):
+        self._player.set_play_music_clip_instead_of_track(state)
 
     def __on_prefer_music_clips_changed(self, player, value):
         self._prefer_music_clips_check_button.set_active(value)
 
-    def __advertise_as_client_check_button_clicked(self, button):
-        if button.get_active():
+    def __advertise_as_client_check_button_clicked(self, button, state):
+        if state:
             thread = threading.Thread(target=self.plexRemoteClient.start)
             thread.daemon = True
             thread.start()
@@ -552,8 +552,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self._window_placement_update_timeout = None
         return False
 
-    def __dark_theme_check_button_clicked(self, button):
-        GLib.idle_add(self.__set_gtk_theme, button.get_active())
+    def __dark_theme_check_button_clicked(self, button, state):
+        GLib.idle_add(self.__set_gtk_theme, state)
 
     def __set_gtk_theme(self, booleon):
         gtk_settings = Gtk.Settings.get_default()
