@@ -273,6 +273,9 @@ class Player(GObject.Object):
             self._stop_command_given = True
             self._player.command('stop')
 
+    def set_repeat(self, state):
+        self._player.loop_file = state
+
     def get_position(self):
         return self._progresNow
 
