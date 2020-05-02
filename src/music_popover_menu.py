@@ -68,14 +68,14 @@ class MusicPopoverMenu(Gtk.PopoverMenu):
         self._player.set_repeat(state)
 
     def __set_shuffle_state(self, state):
-        self._shuffle_button.set_active(state)
+        GLib.idle_add(self._shuffle_button.set_active, state)
 
     def __on_media_playing(self, player, playing, item, playqueue, offset, item_loaded):
         if (item != None):
             self.__set_stars(int(round(item.userRating/2)))
             self._current_item = item
             self.__set_shuffle_state(playqueue.playQueueShuffled)
-            self._repeat_button.set_active(False)
+            GLib.idle_add(self._repeat_button.set_active, False)
 
     def __set_item_stars(self, rating):
         if (self._current_item != None):
@@ -103,28 +103,28 @@ class MusicPopoverMenu(Gtk.PopoverMenu):
 
     def __set_stars(self, stars):
         if (stars >= 1):
-            self._star_1_img.set_from_icon_name('starred-symbolic', 4)
+            GLib.idle_add(self._star_1_img.set_from_icon_name, 'starred-symbolic', 4)
         else:
-            self._star_1_img.set_from_icon_name('non-starred-symbolic', 4)
+            GLib.idle_add(self._star_1_img.set_from_icon_name, 'non-starred-symbolic', 4)
 
         if (stars >= 2):
-            self._star_2_img.set_from_icon_name('starred-symbolic', 4)
+            GLib.idle_add(self._star_2_img.set_from_icon_name, 'starred-symbolic', 4)
         else:
-            self._star_2_img.set_from_icon_name('non-starred-symbolic', 4)
+            GLib.idle_add(self._star_2_img.set_from_icon_name, 'non-starred-symbolic', 4)
 
         if (stars >= 3):
-            self._star_3_img.set_from_icon_name('starred-symbolic', 4)
+            GLib.idle_add(self._star_3_img.set_from_icon_name, 'starred-symbolic', 4)
         else:
-            self._star_3_img.set_from_icon_name('non-starred-symbolic', 4)
+            GLib.idle_add(self._star_3_img.set_from_icon_name, 'non-starred-symbolic', 4)
 
         if (stars >= 4):
-            self._star_4_img.set_from_icon_name('starred-symbolic', 4)
+            GLib.idle_add(self._star_4_img.set_from_icon_name, 'starred-symbolic', 4)
         else:
-            self._star_4_img.set_from_icon_name('non-starred-symbolic', 4)
+            GLib.idle_add(self._star_4_img.set_from_icon_name, 'non-starred-symbolic', 4)
 
         if (stars >= 5):
-            self._star_5_img.set_from_icon_name('starred-symbolic', 4)
+            GLib.idle_add(self._star_5_img.set_from_icon_name, 'starred-symbolic', 4)
         else:
-            self._star_5_img.set_from_icon_name('non-starred-symbolic', 4)
+            GLib.idle_add(self._star_5_img.set_from_icon_name, 'non-starred-symbolic', 4)
 
         
