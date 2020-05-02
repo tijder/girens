@@ -391,8 +391,19 @@ class Player(GObject.Object):
     def refresh_playqueue(self):
         self.__playqueue_refresh()
 
+    def shuffle(self):
+        self._playqueue.shuffle()
+        self.__playqueue_refreshed()
+
+    def unshuffle(self):
+        self._playqueue.unshuffle()
+        self.__playqueue_refreshed()
+
     def __playqueue_refresh(self):
         self._playqueue.refresh()
+        self.__playqueue_refreshed()
+
+    def __playqueue_refreshed(self):
         i = 0
         for item in self._playqueue.items:
             if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:

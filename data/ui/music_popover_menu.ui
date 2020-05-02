@@ -141,6 +141,20 @@
                 <property name="position">0</property>
               </packing>
             </child>
+            <child>
+              <object class="HdyActionRow">
+                <property name="activatable_widget">_shuffle_button</property>
+                <property name="title" translatable="yes">Shuffle</property>
+                <property name="use_underline">True</property>
+                <property name="visible">True</property>
+                <child type="action">
+                  <object class="GtkSwitch" id="_shuffle_button">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>

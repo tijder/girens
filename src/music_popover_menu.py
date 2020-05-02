@@ -39,6 +39,8 @@ class MusicPopoverMenu(Gtk.PopoverMenu):
     _star_5_button = GtkTemplate.Child()
     _star_5_img = GtkTemplate.Child()
 
+    _shuffle_button = GtkTemplate.Child()
+
     def __init__(self, player, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -52,9 +54,21 @@ class MusicPopoverMenu(Gtk.PopoverMenu):
         self._star_4_button.connect("clicked", self.__star_4_clicked)
         self._star_5_button.connect("clicked", self.__star_5_clicked)
 
+        self._shuffle_button.connect("state-set", self.__shuffle_button_clicked)
+
+    def __shuffle_button_clicked(self, button, state):
+        if (state == True):
+            self._player.shuffle()
+        else:
+            self._player.unshuffle()
+
+    def __set_shuffle_state(self, state):
+        self._shuffle_button.set_active(state)
+
     def __on_media_playing(self, player, playing, item, playqueue, offset, item_loaded):
         self.__set_stars(int(round(item.userRating/2)))
         self._current_item = item
+        self.__set_shuffle_state(playqueue.playQueueShuffled)
 
     def __set_item_stars(self, rating):
         if (self._current_item != None):
