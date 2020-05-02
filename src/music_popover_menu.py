@@ -71,10 +71,11 @@ class MusicPopoverMenu(Gtk.PopoverMenu):
         self._shuffle_button.set_active(state)
 
     def __on_media_playing(self, player, playing, item, playqueue, offset, item_loaded):
-        self.__set_stars(int(round(item.userRating/2)))
-        self._current_item = item
-        self.__set_shuffle_state(playqueue.playQueueShuffled)
-        self._repeat_button.set_active(False)
+        if (item != None):
+            self.__set_stars(int(round(item.userRating/2)))
+            self._current_item = item
+            self.__set_shuffle_state(playqueue.playQueueShuffled)
+            self._repeat_button.set_active(False)
 
     def __set_item_stars(self, rating):
         if (self._current_item != None):
