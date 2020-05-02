@@ -32,6 +32,8 @@ class MediaBoxMusic(Gtk.Revealer):
     _next_button = GtkTemplate.Child()
     _play_image = GtkTemplate.Child()
 
+    _media_settings = GtkTemplate.Child()
+
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
     _scale_bar = GtkTemplate.Child()

@@ -19,6 +19,7 @@ from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
 from .gi_composites import GtkTemplate
 from .cover_box import CoverBox
 from .playqueue_popover import PlayqueuePopover
+from .music_popover_menu import MusicPopoverMenu
 
 import threading
 
@@ -38,6 +39,9 @@ class MediaBox(GObject.Object):
     _skip_forward_button = None
     _play_image = None
     _fullscreen_button = None
+
+    _media_settings = None
+    _music_popover_menu = None
 
     _title_label = None
     _subtitle_label = None
@@ -86,6 +90,7 @@ class MediaBox(GObject.Object):
         self._boxes.append(box)
         box.set_visible(True)
         self.__set_playque_button(box._playqueue_button)
+        self.__set_media_settings(box._media_settings)
         self.__set_play_button(box._play_button)
         self.__set_prev_button(box._prev_button)
         self.__set_next_button(box._next_button)
@@ -167,6 +172,11 @@ class MediaBox(GObject.Object):
     def __set_close_button(self, button):
         self._close_button = button
         self._close_button.connect("clicked", self.__on_close_button_clicked)
+
+    def __set_media_settings(self, button):
+        self._music_popover_menu = MusicPopoverMenu(self._player)
+        self._media_settings = button
+        self._media_settings.set_popover(self._music_popover_menu)
 
     def __set_fullscreen_button(self, button):
         self._fullscreen_button = button

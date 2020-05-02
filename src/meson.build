@@ -43,6 +43,7 @@ girens_sources = [
   'album_item.py',
   'resume_dialog.py',
   'remote_player.py',
+  'music_popover_menu.py',
   'mpris.py'
 ]
 
