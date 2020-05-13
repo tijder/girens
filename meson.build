@@ -15,6 +15,7 @@ i18n = import('i18n')
 project_id = 'nl.g4d.Girens'
 
 conf_service = configuration_data()
+conf_service.set('projectname', meson.project_name())
 conf_service.set('libexecdir', libexecdir)
 conf_service.set('PYTHON', python3.find_python().path())
 conf_service.set('VERSION', meson.project_version())

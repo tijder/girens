@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gettext import gettext as _
 from gi.repository import Gtk, GLib, GObject
 from .gi_composites import GtkTemplate
 
@@ -120,7 +121,7 @@ class SectionView(Gtk.Box):
         self._section_key = None
         self._sort_active = None
 
-        self._title_label.set_label("Playlists")
+        self._title_label.set_label(_("Playlists"))
 
         self.__stop_add_items_timout()
         for item in self._section_flow.get_children():

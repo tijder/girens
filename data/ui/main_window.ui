@@ -70,6 +70,7 @@
               <object class="HdyActionRow">
                 <property name="activatable_widget">_advertise_as_client_check_button</property>
                 <property name="title" translatable="yes">Advertise as client</property>
+                <property name="tooltip_text" translatable="yes">Allow other devices on this network to find Girens and control this client.</property>
                 <property name="use_underline">True</property>
                 <property name="visible">True</property>
                 <child type="action">
@@ -84,6 +85,7 @@
               <object class="HdyActionRow">
                 <property name="activatable_widget">_prefer_music_clips_check_button</property>
                 <property name="title" translatable="yes">Prefer music clips</property>
+                <property name="tooltip_text" translatable="yes">When playing music and the track has a music clip, play that instead of the audio.</property>
                 <property name="use_underline">True</property>
                 <property name="visible">True</property>
                 <child type="action">
@@ -98,6 +100,7 @@
               <object class="HdyActionRow">
                 <property name="activatable_widget">_dark_theme_check_button</property>
                 <property name="title" translatable="yes">Dark Theme</property>
+                <property name="tooltip_text" translatable="yes">Use dark GTK theme.</property>
                 <property name="use_underline">True</property>
                 <property name="visible">True</property>
                 <child type="action">
@@ -111,6 +114,7 @@
             <child>
               <object class="HdyExpanderRow" id="_transcode_media_switch">
                 <property name="title" translatable="yes">Transcode media</property>
+                <property name="tooltip_text" translatable="yes">Transcode media instead of playing directly.</property>
                 <property name="use_underline">True</property>
                 <property name="visible">True</property>
                 <property name="show-enable-switch">True</property>

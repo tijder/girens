@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import locale
 import os
 import sys
 import signal
@@ -34,6 +35,12 @@ if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
+
+    locale.textdomain('@projectname@')
+    locale.bindtextdomain('@projectname@', '@localedir@')
+    gettext.textdomain('@projectname@')
+    gettext.bindtextdomain('@projectname@', '@localedir@')
+
     resource = Gio.Resource.load(os.path.join(pkgdatadir, 'girens.gresource'))
     resource._register()
 

@@ -46,5 +46,8 @@ class SectionGrid(Gtk.Grid):
         self._title = title
         self._title_button.set_label(title)
 
+    def set_custom_title(self, title):
+        self._title_button.set_label(title)
+
     def get_title(self):
         return self._title

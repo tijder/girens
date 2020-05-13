@@ -119,8 +119,8 @@
                     "sources" : [
                         {
                             "type" : "git",
-		            "url" : "https://github.com/FFmpeg/FFmpeg",
-		            "commit" : "192d1d34eb3668fa27f433e96036340e1e5077a0"
+                            "url" : "https://github.com/FFmpeg/FFmpeg",
+                            "commit" : "192d1d34eb3668fa27f433e96036340e1e5077a0"
                         }
                     ]
                 }

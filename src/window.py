@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gettext import gettext as _
 from gi.repository import Gtk, Gdk, Gio, GLib, GdkPixbuf
 from .gi_composites import GtkTemplate
 
@@ -272,7 +273,7 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.connect("configure-event", self.__on_configure_event)
         self.connect("window-state-event", self.__on_window_state_event)
 
-        self.__show_loading_view(True, 'Starting Girens')
+        self.__show_loading_view(True, _('Starting Girens'))
         self._login_view.try_login()
 
     def __res_changed_1080(self, res_button):

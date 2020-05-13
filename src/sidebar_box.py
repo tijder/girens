@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gettext import gettext as _
 from gi.repository import Gtk, GLib, GObject
 from .gi_composites import GtkTemplate
 
@@ -91,13 +92,16 @@ class SidebarBox(Gtk.Box):
     def __process_section(self, sections):
         self._section_player = SectionGrid()
         self._section_player.set_title('Player')
+        self._section_player.set_custom_title(_('Player'))
         self._section_list.add(self._section_player)
         self._section_player.hide()
         section_grid = SectionGrid()
         section_grid.set_title('Home')
+        section_grid.set_custom_title(_('Home'))
         self._section_list.add(section_grid)
         section_grid = SectionGrid()
         section_grid.set_title('Playlists')
+        section_grid.set_custom_title(_('Playlists'))
         self._section_list.add(section_grid)
         for section in sections:
             if(section.type == 'movie' or section.type == 'show' or section.type == 'artist'):
