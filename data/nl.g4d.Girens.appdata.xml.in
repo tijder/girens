@@ -30,6 +30,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2020-05-13" version="1.1.6">
+      <description>
+        <ul>
+          <li>Dutch translation added</li>
+          <li>Update layout of settings menu with libhandy widgets</li>
+          <li>Setting for changing transcoding video resolution</li>
+          <li>Unselect sidebar item when changing section</li>
+          <li>More music play options</li>
+        </ul>
+      </description>
+    </release>
     <release date="2020-04-29" version="1.1.5">
       <description>
         <ul>

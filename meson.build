@@ -1,6 +1,6 @@
 project(
   'girens',
-  version: '1.1.5',
+  version: '1.1.6',
   meson_version: '>= 0.40.0',
 )
 python3 = import('python3')
