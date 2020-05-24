@@ -200,15 +200,14 @@
     </release>
     <release date="2019-01-02" version="1.0.1">
       <description>
-      <p>Media controll buttons/images with more contrast.</p>
+        <p>Media controll buttons/images with more contrast.</p>
       </description>
     </release>
     <release date="2019-01-02" version="1.0.0">
       <description>
-      <p>First release.</p>
+        <p>First release.</p>
       </description>
     </release>
-  </release>
   </releases>
   <url type="homepage">https://gitlab.gnome.org/tijder/girens</url>
   <url type="bugtracker">https://gitlab.gnome.org/tijder/girens/issues</url>
