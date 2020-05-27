@@ -30,6 +30,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2020-05-27" version="1.1.7">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Load only needed items of sections</li>
+          <li>Use readable name for sorting</li>
+        </ul>
+      </description>
+    </release>
     <release date="2020-05-13" version="1.1.6">
       <description>
         <p>Changes:</p>
