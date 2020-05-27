@@ -32,6 +32,19 @@ class SectionView(Gtk.Box):
         'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
+    _sort_lables = {
+        'addedAt': _('Added at'),
+        'lastViewedAt': _('Last viewed at'),
+        'originallyAvailableAt': _('Originally available at'),
+        'titleSort': _('Title'),
+        'rating': _('Rating'),
+        'unwatched': _('Unwatched'),
+        'viewCount': _('View count'),
+        'userRating': _('User rating'),
+        'mediaHeight': _('Media height'),
+        'duration': _('Duration'),
+    }
+
     _title_label = GtkTemplate.Child()
     _section_flow = GtkTemplate.Child()
 
@@ -102,15 +115,23 @@ class SectionView(Gtk.Box):
 
         self._filter_box.clear()
         self._sort_store = Gtk.ListStore(object, str)
+        sort_lable_active = sort
         for sort_avaible in self._section.ALLOWED_SORT:
-            self._sort_store.append([sort_avaible, str(sort_avaible)])
+            lable = sort_avaible
+            if sort_avaible in self._sort_lables:
+                lable = self._sort_lables[sort_avaible]
+                if sort_avaible == sort:
+                    sort_lable_active = self._sort_lables[sort_avaible]
+            else:
+                print(sort_avaible)
+            self._sort_store.append([sort_avaible, str(lable)])
 
         self._filter_box.set_model(self._sort_store)
         self._filter_box.set_id_column(1)
         renderer_text = Gtk.CellRendererText()
         self._filter_box.pack_start(renderer_text, True)
         self._filter_box.add_attribute(renderer_text, "text", 1)
-        self._filter_box.set_active_id(sort)
+        self._filter_box.set_active_id(sort_lable_active)
         self._section_controll_box.set_visible(True)
 
         self._load_spinner.set_visible(True)
@@ -143,8 +164,8 @@ class SectionView(Gtk.Box):
         if tree_iter is not None:
             model = combo.get_model()
             sort_object, sort_string = model[tree_iter][:2]
-            if (self._sort_active != sort_string):
-                self.refresh(self._section, sort=sort_string, sort_value=self._sort_value_active)
+            if (self._sort_active != sort_object):
+                self.refresh(self._section, sort=sort_object, sort_value=self._sort_value_active)
 
     def __on_order_button_clicked(self, button):
         if self._sort_value_active == 'desc':
