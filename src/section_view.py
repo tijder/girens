@@ -48,9 +48,10 @@ class SectionView(Gtk.Box):
     _load_spinner = GtkTemplate.Child()
 
     _timout = None
-    _add_items_to_view = 0
     _add_items_first = False
     _cover_width = 200
+    _container_start = 0
+    _container_size = 50
 
     _section_key = None
 
@@ -76,6 +77,7 @@ class SectionView(Gtk.Box):
 
     def __refresh(self, section, sort=None, sort_value=None):
         self._section = section
+        self._container_start = 0
 
         if (sort == None):
             sort_config = self._plex.get_section_filter(section)
@@ -113,11 +115,11 @@ class SectionView(Gtk.Box):
 
         self._load_spinner.set_visible(True)
 
-        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':sort, 'sort_value': sort_value})
-        thread.daemon = True
-        thread.start()
+        self.__start_adding_items()
 
     def show_playlists(self):
+        self._section = None
+        self._container_start = 0
         self._section_key = None
         self._sort_active = None
 
@@ -168,8 +170,11 @@ class SectionView(Gtk.Box):
 
     def __process_section_items(self, items):
         self._items = items
-        self.__start_adding_items()
+        #self.__start_adding_items()
         #self.__show_more_items()
+        self._add_items_first = True
+        self.__start_add_items_timout()
+
         self._load_spinner.set_visible(False)
 
     def __stop_add_items_timout(self):
@@ -188,29 +193,32 @@ class SectionView(Gtk.Box):
             self._add_items_first = False
         else:
             items_to_add = 2
-        self._add_items_to_view -= items_to_add
-        if self._add_items_to_view > 0:
-            while count < items_to_add and len(self._items) != 0:
-                cover = CoverBox(self._plex, self._items[0], cover_width=self._cover_width)
-                cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
-                cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-                self._section_flow.add(cover)
-                self._items.remove(self._items[0])
-                count = count + 1
+        while count < items_to_add and len(self._items) != 0:
+            cover = CoverBox(self._plex, self._items[0], cover_width=self._cover_width)
+            cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
+            cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
+            self._section_flow.add(cover)
+            self._items.remove(self._items[0])
+            count = count + 1
 
-            if (len(self._items) == 0):
-                self._show_more_button.set_visible(False)
-            else:
-                self.__start_add_items_timout()
-                self._show_more_button.set_visible(True)
+        if (len(self._items) != 0):
+            self._show_more_button.set_visible(False)
+            self.__start_add_items_timout()
+        elif (self._section == None or self._section.totalSize <= self._container_start):
+            self._show_more_button.set_visible(False)
+        else:
+            self._show_more_button.set_visible(True)
+            self._show_more_button.set_sensitive(True)
 
     def __show_more_clicked(self, button):
         self.__start_adding_items()
 
     def __start_adding_items(self):
-        self._add_items_to_view = 50
-        self._add_items_first = True
-        self.__start_add_items_timout()
+        self._show_more_button.set_sensitive(False)
+        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':self._sort_active, 'sort_value': self._sort_value_active, 'container_start':self._container_start, 'container_size':self._container_size})
+        thread.daemon = True
+        thread.start()
+        self._container_start = self._container_start + self._container_size
 
     def __on_go_to_show_clicked(self, cover, key):
         self.emit('view-show-wanted', key)

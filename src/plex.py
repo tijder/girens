@@ -210,7 +210,7 @@ class Plex(GObject.Object):
             return self._config['sections'][section.uuid]
         return None
 
-    def get_section_items(self, section, sort=None, sort_value=None):
+    def get_section_items(self, section, container_start=0, container_size=10, sort=None, sort_value=None):
         if (sort != None):
             if 'sections' not in self._config:
                 self._config['sections'] = {}
@@ -220,7 +220,7 @@ class Plex(GObject.Object):
             self._config['sections'][section.uuid]['sort_value'] = sort_value
             self.__save_config()
             sort = sort + ':' + sort_value
-        items = section.all(sort=sort)
+        items = section.all(container_start=container_start, container_size=container_size, sort=sort)
         self.emit('section-item-retrieved', items)
 
     def reload_search_provider_data(self):
