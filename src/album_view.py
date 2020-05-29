@@ -47,6 +47,8 @@ class AlbumView(Handy.Column):
     _cover2_box = GtkTemplate.Child()
     _left_box = GtkTemplate.Child()
 
+    _discs = {}
+
     _download_key = None
     _key = None
 
@@ -75,6 +77,8 @@ class AlbumView(Handy.Column):
         for item in self._item_box.get_children():
             self._item_box.remove(item)
 
+        self._discs = {}
+
         self._connection_album_retrieved = self._plex.connect("album-retrieved", self.__album_retrieved)
 
         thread = threading.Thread(target=self._plex.get_album, args=(key,))
@@ -101,8 +105,8 @@ class AlbumView(Handy.Column):
         self._tracks = tracks
         self.__start_add_items_timout()
 
-    def __add_track(self, track):
-        self._item_box.add(AlbumItem(self._plex, track))
+    def __add_track(self, track, itemBox):
+        itemBox.add(AlbumItem(self._plex, track))
         self._tracks.remove(track)
 
     def __show_more_items(self):
@@ -110,7 +114,21 @@ class AlbumView(Handy.Column):
         if len(self._tracks) > 0:
             i = 10
             while len(self._tracks) > 0:
-                self.__add_track(self._tracks[0])
+                parentindex = '1'
+                if self._tracks[0].parentIndex is not None:
+                    parentindex = self._tracks[0].parentIndex
+                if parentindex not in self._discs:
+                    listBox = Gtk.ListBox()
+                    self._discs[parentindex] = listBox
+                    listBox.set_margin_bottom(10)
+                    listBox.set_visible(True)
+
+                    label = Gtk.Label(_('Disc ') + str(parentindex))
+                    label.set_margin_bottom(10)
+                    label.set_visible(True)
+                    self._item_box.add(label)
+                    self._item_box.add(listBox)
+                self.__add_track(self._tracks[0], self._discs[parentindex])
                 i -= 1
                 if (i == 0):
                     break
