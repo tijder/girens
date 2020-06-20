@@ -120,7 +120,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "192d1d34eb3668fa27f433e96036340e1e5077a0"
+                            "commit" : "8e12af29d1a3f95c9e952d78354e3c8b1c0431a8"
                         }
                     ]
                 }
@@ -136,7 +136,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "c1df201b26bb1481e273bbb5043d483106ede191"
+                    "commit" : "2c75f236230f3abe502688f76dd8995d4953ea9a"
                 }
             ]
         },
