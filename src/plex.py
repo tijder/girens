@@ -124,7 +124,7 @@ class Plex(GObject.Object):
         except:
             self.emit('loading', _('Connecting to ') + baseurl + _(' failed.'), True)
             self.emit('login-status',False,'Login failed')
-            print('connection failed')
+            print('connection failed (login with url)')
 
     def __save_config(self):
         with open(self._config_dir + '/config', 'w') as file:
@@ -464,5 +464,5 @@ class Plex(GObject.Object):
             return True
         except:
             self.emit('loading', _('Connecting to ') + resource.name + _(' failed.'), True)
-            print('connection failed')
+            print('connection failed (when trying to connect to resource)')
             return False

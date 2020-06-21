@@ -57,6 +57,7 @@ class LoginView(Gtk.Box):
         if (self._plex.has_token()):
             self.__login_with_token()
         elif (self._plex.has_url()):
+            self._try_token = True
             self._plex.login_with_url(self._plex._server_url, self._plex._server_token)
         else:
             self.emit('login-not-found')
