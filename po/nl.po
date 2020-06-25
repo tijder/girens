@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-29 19:59+0200\n"
+"POT-Creation-Date: 2020-06-26 00:01+0200\n"
 "PO-Revision-Date: 2020-05-29 20:00+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -795,6 +795,10 @@ msgstr "Duur"
 #: src/section_view.py:147 src/sidebar_box.py:104
 msgid "Playlists"
 msgstr "Afspeellijsten"
+
+#: src/player_view.py:265
+msgid "None"
+msgstr "Geen"
 
 #: src/sidebar_box.py:95
 msgid "Player"

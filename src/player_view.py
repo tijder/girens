@@ -262,7 +262,7 @@ class PlayerView(Gtk.Box):
         self._audio_store = Gtk.ListStore(object, str)
         audio_selected = -1
 
-        self._sub_store.append([None, 'None'])
+        self._sub_store.append([None, _('None')])
 
         i = 0
         y = 0
