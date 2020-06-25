@@ -257,7 +257,7 @@ class PlayerView(Gtk.Box):
     def __set_stream_widgets(self):
         self._selected_subtitle_stream = None
         self._sub_store = Gtk.ListStore(object, str)
-        sub_selected = -1
+        sub_selected = 0
         self._selected_audio_stream = None
         self._audio_store = Gtk.ListStore(object, str)
         audio_selected = -1
