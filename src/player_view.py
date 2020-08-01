@@ -16,6 +16,7 @@ class PlayerView(Gtk.Box):
 
     __gsignals__ = {
         'fullscreen': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
+        'windowed': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
@@ -51,6 +52,7 @@ class PlayerView(Gtk.Box):
     _progress = 0
     _paused = True
     _fullscreen = False
+    _windowed = False
     _playing = False
 
     _cover_width = 200
@@ -92,10 +94,22 @@ class PlayerView(Gtk.Box):
             self._controlls_top.set_visible(True)
             self._controlls_bottom.set_visible(True)
             self._media_box.connect("fullscreen-clicked", self.__on_fullscreen_button_clicked)
+            self._media_box.connect("fullscreen-windowed-clicked", self.__on_fullscreen_windowed_button_clicked)
             self._media_box.connect("active", self.__on_media_box_active)
 
     def __on_fullscreen_button_clicked(self, button):
         self.__fullscreen()
+
+    def __on_fullscreen_windowed_button_clicked(self, button):
+        self.__toggle_windowed()
+
+    def __toggle_windowed(self):
+        if self._windowed:
+            self.__add_extra_widgets()
+        else:
+            self.__remove_extra_widgets()
+        self.emit('windowed', self._windowed)
+        self._windowed = not self._windowed
 
     def __on_media_box_active(self, mediabox, active):
         if active:
@@ -114,6 +128,10 @@ class PlayerView(Gtk.Box):
 
     def set_fullscreen_state(self):
         self._fullscreen = True
+        self._media_box.hide_windowed_button()
+        self.__remove_extra_widgets()
+
+    def __remove_extra_widgets(self):
         self._box.hide()
         self._event.set_vexpand(True)
         self._event.set_size_request(-1, -1)
@@ -122,6 +140,11 @@ class PlayerView(Gtk.Box):
 
     def set_unfullscreen_state(self):
         self._fullscreen = False
+        self._media_box.show_windowed_button()
+        self._windowed = False
+        self.__add_extra_widgets()
+
+    def __add_extra_widgets(self):
         self.__set_correct_event_size(self._old_screensize)
         self._box.show()
         self._event.set_vexpand(False)
@@ -132,6 +155,8 @@ class PlayerView(Gtk.Box):
     def __on_playqueue_ended(self, player):
         if self._fullscreen == True:
             GLib.idle_add(self.__fullscreen)
+        elif self._windowed == True:
+            GLib.idle_add(self.__toggle_windowed)
 
     def __on_play_button_clicked(self, button):
         self._player.play_pause()

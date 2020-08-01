@@ -24,6 +24,7 @@ class MediaBoxVideoTop(Gtk.Revealer):
 
     _close_button = GtkTemplate.Child()
     _fullscreen_button = GtkTemplate.Child()
+    _fullscreen_windowed_button = GtkTemplate.Child()
 
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()

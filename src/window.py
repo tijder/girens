@@ -151,6 +151,7 @@ class PlexWindow(Gtk.ApplicationWindow):
 
         self._player_view = PlayerView(self)
         self._player_view.connect("fullscreen", self.__fullscreen)
+        self._player_view.connect("windowed", self.__windowed)
         self._player_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
         self._player_view.connect("view-album-wanted", self.__on_go_to_album_clicked)
         self._player_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
@@ -540,23 +541,35 @@ class PlexWindow(Gtk.ApplicationWindow):
         else:
             self.unfullscreen()
 
+    def __windowed(self, widged, booleon):
+        if booleon:
+            self.__add_extra_widgets()
+        else:
+            self.__remove_extra_widgets()
+
+    def __remove_extra_widgets(self):
+        #self._media_box.set_visible(False)
+        self.sidebar.hide()
+        self.separator.hide()
+        self.get_style_context().add_class("black_background")
+        self._main_scrolled_window.get_style_context().add_class("black_background")
+
+    def __add_extra_widgets(self):
+        #self._media_box.set_visible(True)
+        self.sidebar.show()
+        self.separator.show()
+        self.get_style_context().remove_class("black_background")
+        self._main_scrolled_window.get_style_context().remove_class("black_background")
+
     def __on_window_state_event(self, widget, event):
         if (event.changed_mask == Gdk.WindowState.FULLSCREEN):
             if (Gdk.WindowState.FULLSCREEN & int(event.new_window_state)): # Is fullscreen
-                self.header.set_visible_child_name("content")
-                #self._media_box.set_visible(False)
-                self.sidebar.hide()
-                self.separator.hide()
                 self._player_view.set_fullscreen_state()
-                self.get_style_context().add_class("black_background")
-                self._main_scrolled_window.get_style_context().add_class("black_background")
+                self.__remove_extra_widgets()
             else: # Is not fullscreen
-                #self._media_box.set_visible(True)
-                self.sidebar.show()
-                self.separator.show()
                 self._player_view.set_unfullscreen_state()
-                self.get_style_context().remove_class("black_background")
-                self._main_scrolled_window.get_style_context().remove_class("black_background")
+                self.__add_extra_widgets()
+
 
 
     def __on_show_download_button(self, menu):

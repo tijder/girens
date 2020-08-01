@@ -28,6 +28,7 @@ class MediaBox(GObject.Object):
 
     __gsignals__ = {
         'fullscreen-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'fullscreen-windowed-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'active': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
     }
 
@@ -39,6 +40,7 @@ class MediaBox(GObject.Object):
     _skip_forward_button = None
     _play_image = None
     _fullscreen_button = None
+    _fullscreen_windowed_button = None
 
     _media_settings = None
     _music_popover_menu = None
@@ -110,6 +112,7 @@ class MediaBox(GObject.Object):
         self._boxes.append(box)
         box.set_visible(True)
         self.__set_fullscreen_button(box._fullscreen_button)
+        self.__set_fullscreen_windowed_button(box._fullscreen_windowed_button)
         self.__set_close_button(box._close_button)
         self.__set_title_label(box._title_label)
         self.__set_subtitle_label(box._subtitle_label)
@@ -133,6 +136,14 @@ class MediaBox(GObject.Object):
         self.__set_time_right_label(box._time_right_label)
 
         self.set_reveal_child(False)
+
+    def hide_windowed_button(self):
+        if self._fullscreen_windowed_button != None:
+            self._fullscreen_windowed_button.hide()
+
+    def show_windowed_button(self):
+        if self._fullscreen_windowed_button != None:
+            self._fullscreen_windowed_button.show()
 
     def __set_playque_button(self, button):
         self._playqueue_button = button
@@ -182,6 +193,10 @@ class MediaBox(GObject.Object):
         self._fullscreen_button = button
         self._fullscreen_button.connect("clicked", self.__on_fullscreen_button_clicked)
 
+    def __set_fullscreen_windowed_button(self, button):
+        self._fullscreen_windowed_button = button
+        self._fullscreen_windowed_button.connect("clicked", self.__on_fullscreen_windowed_button_clicked)
+
     def __set_scale_bar(self, bar):
         self._scale_bar = bar
 
@@ -215,6 +230,9 @@ class MediaBox(GObject.Object):
 
     def __on_fullscreen_button_clicked(self, button):
         self.emit('fullscreen-clicked')
+
+    def __on_fullscreen_windowed_button_clicked(self, button):
+        self.emit('fullscreen-windowed-clicked')
 
     def __on_prev_button_clicked(self, button):
         thread = threading.Thread(target=self._player.prev)
