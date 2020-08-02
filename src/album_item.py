@@ -51,7 +51,13 @@ class AlbumItem(Gtk.Box):
             self._index_label.set_text(self._item.index)
         con_sec, con_min, con_hour = self.__convertMillis(int(self._item.duration))
 
-        self._time_label.set_text(str("{0}:{1}".format(int(con_min), format(int(con_sec), '02'))))
+        time = ""
+        if con_hour >= 1:
+            time = str("{0}:{1}:{2}".format(int(con_hour), int(con_min), format(int(con_sec), '02')))
+        else:
+            time = str("{0}:{1}".format(int(con_min), format(int(con_sec), '02')))
+
+        self._time_label.set_text(time)
 
     def __convertMillis(self, millis):
         seconds=(millis/1000)%60
