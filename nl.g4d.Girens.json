@@ -1,7 +1,7 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "3.36",
+    "runtime-version" : "3.38",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
@@ -242,13 +242,13 @@
                     "name" : "six",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app six-1.12.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app six-1.15.0-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl",
-                            "sha256" : "3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c"
+                            "url" : "https://files.pythonhosted.org/packages/ee/ff/48bde5c0f013094d729fe4b0316ba2a24774b3ff1c52d924a8a4cb04078a/six-1.15.0-py2.py3-none-any.whl",
+                            "sha256" : "8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
                         }
                     ]
                 },
