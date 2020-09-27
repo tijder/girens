@@ -30,6 +30,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2020-09-27" version="1.1.8">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Add option to play video fullscreen within the Window</li>
+          <li>Show track and disc number in album view</li>
+	  <li>Select name None if no subtitle is selected</li>
+	  <li>Show hours of audio item</li>
+        </ul>
+      </description>
+    </release>
     <release date="2020-05-27" version="1.1.7">
       <description>
         <p>Changes:</p>
