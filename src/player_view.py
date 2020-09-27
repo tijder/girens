@@ -340,7 +340,7 @@ class PlayerView(Gtk.Box):
         if tree_iter is not None:
             model = combo.get_model()
             stream, stream_name = model[tree_iter][:2]
-            if (current_stream is None or stream is not current_stream):
+            if (stream is not current_stream):
                 if what is 'audio':
                     self._selected_audio_stream = stream
                     self._player.set_audio(stream)
