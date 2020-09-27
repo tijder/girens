@@ -122,6 +122,7 @@ class AlbumView(Handy.Column):
                     self._discs[parentindex] = listBox
                     listBox.set_margin_bottom(10)
                     listBox.set_visible(True)
+                    listBox.set_selection_mode(Gtk.SelectionMode(0))
 
                     label = Gtk.Label(_('Disc ') + str(parentindex))
                     label.set_margin_bottom(10)
