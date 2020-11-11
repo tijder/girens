@@ -283,7 +283,7 @@ class MediaBox(GObject.Object):
         thread.start()
 
     def __on_media_time(self, player, time):
-        if player._item != None and player._item.listType == self._show_only_type:
+        if player._item != None and player._item_loading.listType == self._show_only_type:
             self._progress = time
             GLib.idle_add(self.__update_buttons)
 
