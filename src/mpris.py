@@ -181,7 +181,7 @@ class MediaPlayer2Service(Server):
             album = media.parentTitle
             artist = media.grandparentTitle
 
-
+        index = 0 if index == None else index
 
         metadata = {
             'mpris:trackid': GLib.Variant('o', song_dbus_path),
