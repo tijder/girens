@@ -43,7 +43,7 @@
             ],
             "buildsystem" : "simple",
             "build-commands" : [
-                "python3 waf configure --prefix=${FLATPAK_DEST} --enable-libmpv-shared --disable-cplayer --disable-oss-audio --disable-alsa --disable-manpage-build --disable-debug-build",
+                "python3 waf configure --prefix=${FLATPAK_DEST} --enable-libmpv-shared --disable-cplayer --disable-alsa --disable-manpage-build --disable-debug-build",
                 "python3 waf build",
                 "python3 waf install"
             ],
@@ -51,12 +51,12 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "70b991749df389bcc0a4e145b5687233a03b4ed7"
+                    "commit" : "0728b514980cccd13543eea53a8e23332e233a6c"
                 },
                 {
                     "type" : "file",
-                    "url" : "https://waf.io/waf-2.0.18",
-                    "sha256" : "2e0cf83a63843da127610420cef1d3126f1187d8e572b6b3a28052fc2250d4bf",
+                    "url" : "https://waf.io/waf-2.0.21",
+                    "sha256" : "7cebf2c5efe53cbb9a4b5bdc4b49ae90ecd64a8fce7a3222d58e591b58215306",
                     "dest-filename" : "waf"
                 }
             ],
