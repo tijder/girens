@@ -31,7 +31,7 @@ class Server:
 
         args = list(parameters.unpack())
         for i, sig in enumerate(self.method_inargs[method_name]):
-            if sig is 'h':
+            if sig == 'h':
                 msg = invocation.get_message()
                 fd_list = msg.get_unix_fd_list()
                 args[i] = fd_list.get(args[i])
@@ -167,7 +167,7 @@ class MediaPlayer2Service(Server):
 
 
         length = media.duration * 1000
-        if media.type is not 'track':
+        if media.type != 'track':
             user_rating = 1.0
         else:
             user_rating = media.userRating / 10

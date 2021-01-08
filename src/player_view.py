@@ -331,9 +331,9 @@ class PlayerView(Gtk.Box):
         self.__on_process_slected(combo, 'audio')
 
     def __on_process_slected(self, combo, what):
-        if what is 'audio':
+        if what == 'audio':
             current_stream = self._selected_audio_stream
-        elif what is 'subtitle':
+        elif what == 'subtitle':
             current_stream = self._selected_subtitle_stream
 
         tree_iter = combo.get_active_iter()
@@ -341,10 +341,10 @@ class PlayerView(Gtk.Box):
             model = combo.get_model()
             stream, stream_name = model[tree_iter][:2]
             if (stream is not current_stream):
-                if what is 'audio':
+                if what == 'audio':
                     self._selected_audio_stream = stream
                     self._player.set_audio(stream)
-                elif what is 'subtitle':
+                elif what == 'subtitle':
                     self._selected_subtitle_stream = stream
                     self._player.set_subtitle(stream)
 
