@@ -8,7 +8,7 @@
     <property name="program_name">Girens</property>
     <property name="program_name">@PRETTYNAME@</property>
     <property name="version">@VERSION@</property>
-    <property name="copyright">© 2018-2020 Gerben Droogers.</property>
+    <property name="copyright">© 2018-2021 Gerben Droogers.</property>
     <property name="comments" translatable="yes">A Plex GTK client for playing movies, TV shows and music from your Plex library.</property>
     <property name="website">@PACKAGE_URL@</property>
     <property name="website_label" translatable="yes">Learn more about Girens</property>
