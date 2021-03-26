@@ -4,7 +4,7 @@ variables:
     BUNDLE: "nl.g4d.Girens.flatpak"
 
 flatpak:
-    image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:3.38'
+    image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:40'
     stage: 'test'
     variables:
         MANIFEST_PATH: "nl.g4d.Girens.json"
