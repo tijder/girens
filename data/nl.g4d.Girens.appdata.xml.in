@@ -30,6 +30,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2021-03-26" version="1.1.9">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Use gnome SDK 40</li>
+          <li>Fix build warnings</li>
+	        <li>Update mpv to 33</li>
+	        <li>Fix play buttons not updating for musicclips</li>
+        </ul>
+      </description>
+    </release>
     <release date="2020-09-27" version="1.1.8">
       <description>
         <p>Changes:</p>
