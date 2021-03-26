@@ -125,10 +125,10 @@ class Player(GObject.Object):
             if plex_stream is not None and (plex_stream.index is i['ff-index'] or ('title' in i and str(extern_stream_title) == str(i['title']))):
                 stream_id = i['id']
 
-        if param is 'sid':
+        if param == 'sid':
             self._player.sid = stream_id
             self.sid = pindex
-        elif param is 'aid':
+        elif param == 'aid':
             self._player.aid = stream_id
             self.aid = pindex
 
