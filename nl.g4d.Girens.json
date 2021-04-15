@@ -51,12 +51,12 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "0728b514980cccd13543eea53a8e23332e233a6c"
+                    "commit" : "b5d3e43198b9d57af5620b63537885aaa41fa8cd"
                 },
                 {
                     "type" : "file",
-                    "url" : "https://waf.io/waf-2.0.21",
-                    "sha256" : "7cebf2c5efe53cbb9a4b5bdc4b49ae90ecd64a8fce7a3222d58e591b58215306",
+                    "url" : "https://waf.io/waf-2.0.22",
+                    "sha256" : "0a09ad26a2cfc69fa26ab871cb558165b60374b5a653ff556a0c6aca63a00df1",
                     "dest-filename" : "waf"
                 }
             ],
@@ -74,8 +74,8 @@
                     "sources" : [
                         {
                             "type" : "archive",
-                            "url" : "https://github.com/libass/libass/releases/download/0.14.0/libass-0.14.0.tar.xz",
-                            "sha256" : "881f2382af48aead75b7a0e02e65d88c5ebd369fe46bc77d9270a94aa8fd38a2"
+                            "url" : "https://github.com/libass/libass/releases/download/0.15.0/libass-0.15.0.tar.xz",
+                            "sha256" : "9f09230c9a0aa68ef7aa6a9e2ab709ca957020f842e52c5b2e52b801a7d9e833"
                         }
                     ],
                     "modules" : [
@@ -91,8 +91,8 @@
                             "sources" : [
                                 {
                                     "type" : "archive",
-                                    "url" : "https://github.com/fribidi/fribidi/releases/download/v1.0.7/fribidi-1.0.7.tar.bz2",
-                                    "sha256" : "5ab5f21e9f2fc57b4b40f8ea8f14dba78a5cc46d9cf94bc5e00a58e6886a935d"
+                                    "url" : "https://github.com/fribidi/fribidi/releases/download/v1.0.10/fribidi-1.0.10.tar.xz",
+                                    "sha256" : "7f1c687c7831499bcacae5e8675945a39bacbad16ecaa945e9454a32df653c01"
                                 }
                             ]
                         }
@@ -120,7 +120,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "6b6b9e593dd4d3aaf75f48d40a13ef03bdef9fdb"
+                            "commit" : "dc91b913b6260e85e1304c74ff7bb3c22a8c9fb1"
                         }
                     ]
                 }
@@ -136,7 +136,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "2c75f236230f3abe502688f76dd8995d4953ea9a"
+                    "commit" : "03e847d8a1c83d0b29a96420095c31298c71cd45"
                 }
             ]
         },
@@ -172,13 +172,13 @@
                     "name" : "certifi",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app certifi-2019.9.11-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app certifi-2020.12.5-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/18/b0/8146a4f8dd402f60744fa380bc73ca47303cccf8b9190fd16a827281eac2/certifi-2019.9.11-py2.py3-none-any.whl",
-                            "sha256" : "fd7c7c74727ddcf00e9acd26bba8da604ffec95bf1c2144e67aff7a8b50e6cef"
+                            "url" : "https://files.pythonhosted.org/packages/5e/a0/5f06e1e1d463903cf0c0eebeb751791119ed7a4b3737fdc9a77f1cdfb51f/certifi-2020.12.5-py2.py3-none-any.whl",
+                            "sha256" : "719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"
                         }
                     ]
                 },
@@ -186,13 +186,13 @@
                     "name" : "chardet",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app chardet-3.0.4-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app chardet-4.0.0-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl",
-                            "sha256" : "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
+                            "url" : "https://files.pythonhosted.org/packages/19/c7/fa589626997dd07bd87d9269342ccb74b1720384a4d739a1872bd84fbe68/chardet-4.0.0-py2.py3-none-any.whl",
+                            "sha256" : "f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"
                         }
                     ]
                 },
@@ -200,13 +200,13 @@
                     "name" : "urllib3",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app urllib3-1.25.7-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app urllib3-1.26.4-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/b4/40/a9837291310ee1ccc242ceb6ebfd9eb21539649f193a7c8c86ba15b98539/urllib3-1.25.7-py2.py3-none-any.whl",
-                            "sha256" : "a8a318824cc77d1fd4b2bec2ded92646630d7fe8619497b142c84a9e6f5a7293"
+                            "url" : "https://files.pythonhosted.org/packages/09/c6/d3e3abe5b4f4f16cf0dfc9240ab7ce10c2baa0e268989a4e3ec19e90c84e/urllib3-1.26.4-py2.py3-none-any.whl",
+                            "sha256" : "2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df"
                         }
                     ]
                 },
@@ -214,13 +214,13 @@
                     "name" : "requests",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app requests-2.22.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app requests-2.25.1-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/51/bd/23c926cd341ea6b7dd0b2a00aba99ae0f828be89d72b2190f27c11d4b7fb/requests-2.22.0-py2.py3-none-any.whl",
-                            "sha256" : "9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"
+                            "url" : "https://files.pythonhosted.org/packages/29/c1/24814557f1d22c56d50280771a17307e6bf87b70727d975fd6b2ce6b014a/requests-2.25.1-py2.py3-none-any.whl",
+                            "sha256" : "c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"
                         }
                     ]
                 },
@@ -228,13 +228,13 @@
                     "name" : "tqdm",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app tqdm-4.38.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app tqdm-4.60.0-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/b9/08/8505f192efc72bfafec79655e1d8351d219e2b80b0dec4ae71f50934c17a/tqdm-4.38.0-py2.py3-none-any.whl",
-                            "sha256" : "9de4722323451eb7818deb0161d9d5523465353a6707a9f500d97ee42919b902"
+                            "url" : "https://files.pythonhosted.org/packages/72/8a/34efae5cf9924328a8f34eeb2fdaae14c011462d9f0e3fcded48e1266d1c/tqdm-4.60.0-py2.py3-none-any.whl",
+                            "sha256" : "daec693491c52e9498632dfbe9ccfc4882a557f5fa08982db1b4d3adbe0887c3"
                         }
                     ]
                 },
@@ -256,13 +256,13 @@
                     "name" : "websocket-client",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app websocket_client-0.56.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app websocket_client-0.58.0-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/29/19/44753eab1fdb50770ac69605527e8859468f3c0fd7dc5a76dd9c4dbd7906/websocket_client-0.56.0-py2.py3-none-any.whl",
-                            "sha256" : "1151d5fb3a62dc129164292e1227655e4bbc5dd5340a5165dfae61128ec50aa9"
+                            "url" : "https://files.pythonhosted.org/packages/08/33/80e0d4f60e84a1ddd9a03f340be1065a2a363c47ce65c4bd3bae65ce9631/websocket_client-0.58.0-py2.py3-none-any.whl",
+                            "sha256" : "44b5df8f08c74c3d82d28100fdc81f4536809ce98a17f0757557813275fbb663"
                         }
                     ]
                 }
