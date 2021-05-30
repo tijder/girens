@@ -53,6 +53,7 @@ class PlexWindow(Gtk.ApplicationWindow):
     _active_view = None
     _show_id = None
     _remote_client_active = None
+    _inhibitCookie = None
 
     _content_box_wrapper = GtkTemplate.Child()
     _content_leaflet = GtkTemplate.Child()
@@ -553,6 +554,8 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.separator.hide()
         self.get_style_context().add_class("black_background")
         self._main_scrolled_window.get_style_context().add_class("black_background")
+        if (self._inhibitCookie == None):
+            self._inhibitCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.IDLE, "Screen is fullscreen")
 
     def __add_extra_widgets(self):
         #self._media_box.set_visible(True)
@@ -560,6 +563,10 @@ class PlexWindow(Gtk.ApplicationWindow):
         self.separator.show()
         self.get_style_context().remove_class("black_background")
         self._main_scrolled_window.get_style_context().remove_class("black_background")
+        if (self._inhibitCookie != None):
+            self.get_application().uninhibit(self._inhibitCookie)
+            self._inhibitCookie = None
+
 
     def __on_window_state_event(self, widget, event):
         if (event.changed_mask == Gdk.WindowState.FULLSCREEN):
