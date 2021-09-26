@@ -1,7 +1,7 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "40",
+    "runtime-version" : "41",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
@@ -130,7 +130,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "03e847d8a1c83d0b29a96420095c31298c71cd45"
+                    "commit" : "b5f03dd2b7d55b9a632c8771be4ae1a05c2f7fb8"
                 }
             ]
         },
@@ -236,13 +236,13 @@
                     "name" : "six",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app six-1.15.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app six-1.16.0-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/ee/ff/48bde5c0f013094d729fe4b0316ba2a24774b3ff1c52d924a8a4cb04078a/six-1.15.0-py2.py3-none-any.whl",
-                            "sha256" : "8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
+                            "url" : "https://files.pythonhosted.org/packages/d9/5a/e7c31adbe875f2abbb91bd84cf2dc52d792b5a01506781dbcf25c91daf11/six-1.16.0-py2.py3-none-any.whl",
+                            "sha256" : "8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
                         }
                     ]
                 },
