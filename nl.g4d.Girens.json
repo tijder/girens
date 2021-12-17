@@ -45,7 +45,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "b5d3e43198b9d57af5620b63537885aaa41fa8cd"
+                    "commit" : "9ca9066d052acecb5b05369141a76993a753ee1e"
                 },
                 {
                     "type" : "file",
@@ -114,7 +114,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "dc91b913b6260e85e1304c74ff7bb3c22a8c9fb1"
+                            "commit" : "7e0d640edf6c3eee1816b105c2f7498c4f948e74"
                         }
                     ]
                 }
