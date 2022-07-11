@@ -2,9 +2,11 @@ import gi
 import mpv
 import threading
 import time
+import ctypes
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib, GdkPixbuf, GObject, Gio
+from OpenGL import GL
 
 # import gi
 # gi.require_version('Gtk', '3.0')
@@ -67,7 +69,16 @@ class Player(GObject.Object):
         import locale
         locale.setlocale(locale.LC_NUMERIC, 'C')
         if self._item_loading.listType == 'video':
-            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
+            print(self._item_loading)
+            self._ctx = None
+            self._ctx_opengl_params = {'get_proc_address': mpv.MpvGlGetProcAddressFn(GetProcAddressGetter().wrap)}
+
+            self._player = mpv.MPV(vo="libmpv", keep_open="yes")
+
+            self._player_view._frame.set_auto_render(False)
+            self.on_realize()
+            #self._player = mpv.MPV(vo="libmpv", keep_open="yes")
+            #self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
         else:
             self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
 
@@ -97,7 +108,6 @@ class Player(GObject.Object):
 
             if self._direct and self._item_loading.listType == 'video':
                 self.__set_selected_stream()
-
 
     def __set_selected_stream(self):
         plex_audio = self._item.getSelectedAudioStream()
@@ -211,6 +221,7 @@ class Player(GObject.Object):
 
             self.__createPlayer(offset=offset)
             self._player.volume = self._settings.get_int("volume-level")
+            print(source)
             self._player.play(source)
             if self._item_loading.listType == 'video':
                 thread = threading.Thread(target=self.emit,args={'video-starting'})
@@ -434,4 +445,69 @@ class Player(GObject.Object):
             thread = threading.Thread(target=self.__playqueue_refresh)
             thread.daemon = True
             thread.start()
-        
+
+
+    def on_realize(self, *_):
+        self._player_view._frame.make_current()
+        self._ctx = mpv.MpvRenderContext(self._player, 'opengl', opengl_init_params=self._ctx_opengl_params)
+        self._player_view._frame.connect("render", self.do_render)
+        self._ctx.update_cb = self.on_mpv_callback
+
+    def on_mpv_callback(self):
+        GLib.idle_add(self.call_frame_ready, None, GLib.PRIORITY_HIGH)
+
+    def call_frame_ready(self, *_):
+        if self._ctx.update():
+            self._player_view._frame.queue_render()
+
+    def do_render(self, *_):
+        if not self._ctx:
+            return False
+
+        factor = self._player_view._frame.get_scale_factor()
+        width = self._player_view._frame.get_allocated_width() * factor
+        height = self._player_view._frame.get_allocated_height() * factor
+        fbo = GL.glGetIntegerv(GL.GL_DRAW_FRAMEBUFFER_BINDING)
+        self._ctx.render(
+            flip_y=True,
+            opengl_fbo={'w': width, 'h': height, 'fbo': fbo},
+            block_for_target_time=False
+        )
+
+
+
+
+class GetProcAddressGetter:
+
+    def __init__(self):
+        self._func = self._find_platform_wrapper()
+
+    def _find_platform_wrapper(self):
+        return self._init_linux()
+
+    def _init_linux(self):
+        try:
+            from OpenGL import GLX
+            return self._glx_impl
+        except AttributeError:
+            pass
+        try:
+            from OpenGL import EGL
+            return self._egl_impl
+        except AttributeError:
+            pass
+        raise 'Cannot initialize OpenGL'
+
+    def wrap(self, _, name: bytes):
+        address = self._func(name)
+        return ctypes.cast(address, ctypes.c_void_p).value
+
+    @staticmethod
+    def _glx_impl(name: bytes):
+        from OpenGL import GLX
+        return GLX.glXGetProcAddress(name.decode("utf-8"))
+
+    @staticmethod
+    def _egl_impl(name: bytes):
+        from OpenGL import EGL
+        return EGL.eglGetProcAddress(name.decode("utf-8"))

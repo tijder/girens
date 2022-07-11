@@ -45,7 +45,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "9ca9066d052acecb5b05369141a76993a753ee1e"
+                    "commit" : "349e437466163cb52f7d0aa227d4606edd9db501"
                 },
                 {
                     "type" : "file",
@@ -114,7 +114,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "7e0d640edf6c3eee1816b105c2f7498c4f948e74"
+                            "commit" : "9687cae2b468e09e35df4cea92cc2e6a0e6c93b3"
                         }
                     ]
                 }
@@ -130,7 +130,21 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "b5f03dd2b7d55b9a632c8771be4ae1a05c2f7fb8"
+                    "commit" : "85aaed090f05198ce84f2c8c653ebe44c4288f8d"
+                }
+            ]
+        },
+        {
+            "name" : "PyOpenGL",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "pip3 install --prefix=/app PyOpenGL-3.1.6-py3-none-any.whl"
+            ],
+            "sources" : [
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/80/07/003fe74d2af04be917035b42c53c7ea9e3abe1e353753cebccfe792b4e52/PyOpenGL-3.1.6-py3-none-any.whl",
+                    "sha256" : "a7139bc3e15d656feae1f7e3ef68c799941ed43fadc78177a23db7e946c20738"
                 }
             ]
         },

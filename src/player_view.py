@@ -30,7 +30,7 @@ class PlayerView(Gtk.Box):
     _event = GtkTemplate.Child()
     _box = GtkTemplate.Child()
     _label = GtkTemplate.Child()
-    _cover_image = GtkTemplate.Child()
+    #_cover_image = GtkTemplate.Child()
 
     _title_label = GtkTemplate.Child()
     _subtitle_label = GtkTemplate.Child()
@@ -354,10 +354,10 @@ class PlayerView(Gtk.Box):
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
             pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 300, 300)
-            GLib.idle_add(self.__set_image, pix)
+            #GLib.idle_add(self.__set_image, pix)
 
-    def __set_image(self, pix):
-        self._cover_image.set_from_pixbuf(pix)
+    #def __set_image(self, pix):
+    #    self._cover_image.set_from_pixbuf(pix)
 
     def __empty_flowbox(self):
         for item in self._deck_shows_box.get_children():
