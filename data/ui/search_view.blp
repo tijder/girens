@@ -1,0 +1,28 @@
+using Gtk 4.0;
+
+template search_view : Box {
+  visible: true;
+  can-focus: false;
+  margin-top: 20;
+  orientation: vertical;
+
+  Label _title_label {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    margin-bottom: 5;
+    label: "label";
+  }
+
+  FlowBox _section_flow {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    valign: start;
+    hexpand: true;
+    vexpand: true;
+    homogeneous: true;
+    max-children-per-line: 30;
+    selection-mode: none;
+  }
+}

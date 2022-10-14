@@ -1,0 +1,44 @@
+using Gtk 4.0;
+
+template resume_dialog : Dialog {
+  can-focus: false;
+  resizable: false;
+  modal: true;
+  deletable: false;
+
+  [internal-child vbox]
+  Box {
+    can-focus: false;
+    orientation: vertical;
+    spacing: 2;
+
+    [internal-child action_area]
+    Box {
+
+      Button _beginning_button {
+        label: _("Beginning");
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+        clicked => __on_beginning_clicked();
+      }
+
+      Button _resume_button {
+        label: _("Resume");
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+        clicked => __on_resume_clicked();
+      }
+    }
+
+    Label {
+      visible: true;
+      can-focus: false;
+      margin-top: 5;
+      margin-bottom: 5;
+      label: _("Do you want resume watching or start from the beginning?");
+      wrap: true;
+    }
+  }
+}

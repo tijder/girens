@@ -25,31 +25,18 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
-                    <property name="label_yalign">0</property>
-                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkImage" id="_cover_image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="stock">gtk-missing-image</property>
                         <style>
                           <class name="cover_image"/>
                         </style>
                       </object>
                     </child>
-                    <child type="label_item">
-                      <placeholder/>
-                    </child>
                   </object>
-                  <packing>
-                    <property name="name">page0</property>
-                    <property name="title" translatable="yes">page0</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="index">-1</property>
-              </packing>
             </child>
             <child type="overlay">
               <object class="GtkBox" id="_controlls_top">
@@ -88,18 +75,10 @@
                   <class name="media_box"/>
                 </style>
               </object>
-              <packing>
-                <property name="index">1</property>
-              </packing>
             </child>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="_box">
@@ -110,8 +89,6 @@
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">5</property>
-            <property name="margin_right">5</property>
             <property name="margin_top">10</property>
             <property name="margin_bottom">5</property>
             <child>
@@ -121,15 +98,7 @@
                 <property name="halign">start</property>
                 <property name="label">Title</property>
                 <property name="ellipsize">end</property>
-                <attributes>
-                  <attribute name="weight" value="ultraheavy"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_subtitle_label">
@@ -137,15 +106,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="label">2000</property>
-                <attributes>
-                  <attribute name="weight" value="normal"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_left_subtitle_label">
@@ -153,15 +114,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="label">2 hr 45 min</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_right_subtitle_label">
@@ -172,15 +125,7 @@
                 <property name="label">Action, Comedy</property>
                 <property name="justify">right</property>
                 <property name="ellipsize">end</property>
-                <attributes>
-                  <attribute name="style" value="italic"/>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkGrid">
@@ -193,10 +138,6 @@
                     <property name="halign">start</property>
                     <property name="label" translatable="yes">Audio </property>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="_sub_label">
@@ -205,10 +146,6 @@
                     <property name="halign">start</property>
                     <property name="label" translatable="yes">Subtitle </property>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkComboBox" id="_subtitle_box">
@@ -216,10 +153,6 @@
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkComboBox" id="_audio_box">
@@ -227,17 +160,8 @@
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator">
@@ -246,11 +170,6 @@
                 <property name="margin_top">5</property>
                 <property name="margin_bottom">5</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_discription_label">
@@ -260,18 +179,8 @@
                 <property name="label" translatable="yes">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. </property>
                 <property name="wrap">True</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">5</property>
-                <property name="width">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="_label">
@@ -281,15 +190,7 @@
             <property name="margin_top">20</property>
             <property name="margin_bottom">5</property>
             <property name="label" translatable="yes">Ondeck</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkFlowBox" id="_deck_shows_box">
@@ -300,18 +201,8 @@
             <property name="max_children_per_line">30</property>
             <property name="selection_mode">none</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </template>
 </interface>

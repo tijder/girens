@@ -29,11 +29,6 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="_ok_button">
@@ -42,18 +37,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid">
@@ -66,26 +51,15 @@
                 <property name="height_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="stock">gtk-missing-image</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="margin_right">10</property>
                 <property name="label" translatable="yes">Username</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_username_value_label">
@@ -95,53 +69,31 @@
                 <property name="hexpand">True</property>
                 <property name="label">label</property>
                 <property name="ellipsize">end</property>
-                <attributes>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="margin_right">10</property>
                 <property name="label" translatable="yes">Email</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="margin_right">10</property>
                 <property name="label" translatable="yes">Subscription plan</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="margin_right">10</property>
                 <property name="label" translatable="yes">Secure</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_subscriptionplan_value_label">
@@ -150,14 +102,7 @@
                 <property name="halign">start</property>
                 <property name="label">label</property>
                 <property name="ellipsize">end</property>
-                <attributes>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_email_value_label">
@@ -166,14 +111,7 @@
                 <property name="halign">start</property>
                 <property name="label">label</property>
                 <property name="ellipsize">end</property>
-                <attributes>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_secure_value_label">
@@ -182,21 +120,9 @@
                 <property name="halign">start</property>
                 <property name="label">label</property>
                 <property name="ellipsize">end</property>
-                <attributes>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">4</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>

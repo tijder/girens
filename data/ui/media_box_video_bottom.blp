@@ -1,0 +1,176 @@
+using Gtk 4.0;
+
+Adjustment _scale_adjustment {
+  upper: 1;
+  step-increment: 0.01;
+  page-increment: 0.01;
+}
+
+template media_box_video_bottom : Revealer {
+  can-focus: false;
+  reveal-child: true;
+
+  Grid {
+    visible: true;
+    can-focus: false;
+
+    Grid {
+      height-request: 50;
+      visible: true;
+      can-focus: false;
+      hexpand: true;
+
+      Overlay {
+        visible: true;
+        can-focus: false;
+
+        Image _cover_image {
+          width-request: 50;
+          height-request: 50;
+          visible: true;
+          can-focus: false;
+        }
+
+        [overlay]
+        Image _watched_image {
+          can-focus: false;
+          halign: end;
+          valign: start;
+          icon-name: "dialog-information";
+        }
+      }
+
+      Box {
+        visible: true;
+        can-focus: false;
+
+        Button _skip_backward_button {
+          width-request: 50;
+          height-request: 50;
+          visible: true;
+          can-focus: true;
+          receives-default: true;
+
+          Image {
+            visible: true;
+            can-focus: false;
+            icon-name: "media-skip-backward-symbolic";
+          }
+        }
+
+        Button _prev_button {
+          width-request: 50;
+          height-request: 50;
+          visible: true;
+          can-focus: true;
+          receives-default: true;
+
+          Image {
+            visible: true;
+            can-focus: false;
+            icon-name: "media-seek-backward-symbolic";
+          }
+        }
+
+        Button _play_button {
+          width-request: 50;
+          height-request: 50;
+          visible: true;
+          can-focus: true;
+          receives-default: true;
+
+          Image _play_image {
+            visible: true;
+            can-focus: false;
+            icon-name: "media-playback-start-symbolic";
+          }
+        }
+
+        Button _next_button {
+          width-request: 50;
+          height-request: 50;
+          visible: true;
+          can-focus: true;
+          receives-default: true;
+
+          Image {
+            visible: true;
+            can-focus: false;
+            icon-name: "media-seek-forward-symbolic";
+          }
+        }
+
+        Button _skip_forward_button {
+          width-request: 50;
+          height-request: 50;
+          visible: true;
+          can-focus: true;
+          receives-default: true;
+
+          Image {
+            visible: true;
+            can-focus: false;
+            icon-name: "media-skip-forward-symbolic";
+          }
+        }
+
+        styles [
+          "linked",
+        ]
+      }
+
+      MenuButton _playqueue_button {
+        width-request: 50;
+        height-request: 50;
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+        direction: up;
+      }
+
+      Label {
+        visible: true;
+        can-focus: false;
+        hexpand: true;
+      }
+
+      styles [
+        "media_box",
+      ]
+    }
+
+    Grid {
+      visible: true;
+      can-focus: false;
+      margin-top: 5;
+
+      Label _time_left_label {
+        visible: true;
+        can-focus: false;
+        halign: start;
+        valign: center;
+        label: _("00:00");
+      }
+
+      Label _time_right_label {
+        visible: true;
+        can-focus: false;
+        halign: end;
+        valign: center;
+        label: _("99:00");
+      }
+
+      Scale _scale_bar {
+        visible: true;
+        can-focus: true;
+        hexpand: true;
+        adjustment: _scale_adjustment;
+        restrict-to-fill-level: false;
+        fill-level: 0.5;
+        digits: 2;
+        draw-value: false;
+        value-pos: left;
+      }
+    }
+  }
+}

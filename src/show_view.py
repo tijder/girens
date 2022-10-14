@@ -16,36 +16,37 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 
 from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/show_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/show_view.ui')
 class ShowView(Gtk.Box):
     __gtype_name__ = 'show_view'
 
-    _title_label = GtkTemplate.Child()
-    _subtitle_label = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _subtitle_label = Gtk.Template.Child()
 
-    _play_button = GtkTemplate.Child()
-    _shuffle_button = GtkTemplate.Child()
+    _play_button = Gtk.Template.Child()
+    _shuffle_button = Gtk.Template.Child()
 
-    _season_stack = GtkTemplate.Child()
+    _season_stack = Gtk.Template.Child()
 
     _cover_width = 200
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
-        self._plex = plex
-
-        self._plex.connect("shows-retrieved", self.__show_retrieved)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
+
+
+    def set_plex(self, plex):
+        self._plex = plex
+
+        self._plex.connect("shows-retrieved", self.__show_retrieved)
 
     def change_show(self, key):
         self._title_label.set_text('')

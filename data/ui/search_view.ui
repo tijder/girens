@@ -14,15 +14,7 @@
         <property name="halign">start</property>
         <property name="margin_bottom">5</property>
         <property name="label">label</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkFlowBox" id="_section_flow">
@@ -36,11 +28,6 @@
         <property name="max_children_per_line">30</property>
         <property name="selection_mode">none</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </template>
 </interface>

@@ -16,15 +16,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 from .download_row import DownloadRow
 from .playqueue_item import PlayqueueItem
+from .item_bin import ItemBin
+from .list_playqueue import ListPlayqueue
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/playqueue_popover.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/playqueue_popover.ui')
 class PlayqueuePopover(Gtk.Popover):
     __gtype_name__ = 'playqueue_popover'
 
@@ -32,26 +34,29 @@ class PlayqueuePopover(Gtk.Popover):
         'show-button': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    _playqueue_list = GtkTemplate.Child()
+    _playqueue_list = Gtk.Template.Child()
 
     __offset = None
 
     def __init__(self, plex, player, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+
 
         self._plex = plex
         self._player = player
 
+        self._playqueue_list.set_plex(plex)
+
         self._player.connect("media-playing", self.__on_media_playing)
         self._player.connect("playqueue-refreshed", self.__on_playqueue_refreshed)
-        self._playqueue_list.connect("row-selected", self.__on_row_selected)
+        #self._playqueue_list.connect("row-selected", self.__on_row_selected)
+        self._playqueue_list.connect("activate", self.__on_row_activated)
 
     def __on_media_playing(self, player, playing, item, playqueue, offset, item_loaded):
-        GLib.idle_add(self.__on_media_playing_process, item, playqueue)
+        GLib.idle_add(self.__add_to_list, item, playqueue)
 
     def __on_playqueue_refreshed(self, player, item, playqueue):
-        GLib.idle_add(self.__on_media_playing_process, item, playqueue)
+        GLib.idle_add(self.__add_to_list, item, playqueue)
 
     def __on_media_playing_process(self, item, playqueue):
         for row in self._playqueue_list.get_children():
@@ -65,6 +70,18 @@ class PlayqueuePopover(Gtk.Popover):
                 self.__offset = index
                 self._playqueue_list.select_row(playqueue_item.get_parent())
             index = 1 + index
+
+    def __add_to_list(self, item, playqueue):
+        self._playqueue_list.empty_list()
+        for item_queue in playqueue.items:
+            item_bin = ItemBin()
+            item_bin.set_item(item_queue)
+            self._playqueue_list.add_item(item_bin)
+
+    def __on_row_activated(self, list_playqueue, position):
+        thread = threading.Thread(target=self._player.play_index, args=(position,))
+        thread.daemon = True
+        thread.start()
 
     def __on_row_selected(self, listbox, listboxrow):
         if(listboxrow != None):

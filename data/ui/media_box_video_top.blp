@@ -1,0 +1,84 @@
+using Gtk 4.0;
+
+template media_box_video_top : Revealer {
+  can-focus: false;
+  reveal-child: true;
+
+  Grid {
+    height-request: 50;
+    visible: true;
+    can-focus: false;
+
+    Label _title_label {
+      visible: true;
+      can-focus: false;
+      margin-top: 5;
+      hexpand: true;
+      label: "Title";
+      ellipsize: end;
+    }
+
+    Label _subtitle_label {
+      visible: true;
+      can-focus: false;
+      margin-bottom: 5;
+      label: "subtitle";
+      ellipsize: end;
+    }
+
+    Button _close_button {
+      width-request: 50;
+      height-request: 50;
+      visible: true;
+      can-focus: true;
+      receives-default: true;
+
+      Image {
+        visible: true;
+        can-focus: false;
+        icon-name: "media-playback-stop-symbolic";
+      }
+    }
+
+    Box {
+      visible: true;
+      can-focus: false;
+
+      Button _fullscreen_button {
+        width-request: 50;
+        height-request: 50;
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+
+        Image {
+          visible: true;
+          can-focus: false;
+          icon-name: "view-fullscreen-symbolic";
+        }
+      }
+
+      Button _fullscreen_windowed_button {
+        width-request: 50;
+        height-request: 50;
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+
+        Image {
+          visible: true;
+          can-focus: false;
+          icon-name: "video-display-symbolic";
+        }
+      }
+
+      styles [
+        "linked",
+      ]
+    }
+
+    styles [
+      "media_box",
+    ]
+  }
+}

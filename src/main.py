@@ -18,16 +18,16 @@
 import sys
 import gi
 
-gi.require_version('Gtk', '3.0')
-gi.require_version('Handy', '0.0')
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
 gi.require_version('Secret', '1')
 
-from gi.repository import Gtk, Gio, GObject, Handy, GLib
+from gi.repository import Gtk, Gio, GObject, GLib, Adw
 
 from .window import PlexWindow
 
 
-class Application(Gtk.Application):
+class Application(Adw.Application):
     def __init__(self):
         super().__init__(application_id='nl.g4d.Girens',
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
@@ -65,7 +65,6 @@ class Application(Gtk.Application):
 
 
     def do_activate(self, show_id=None, video_output_driver=None, deinterlace=None):
-        GObject.type_register(Handy.Leaflet)
         win = self.props.active_window
         if not win:
             win = PlexWindow(application=self, show_id=show_id, video_output_driver=video_output_driver, deinterlace=deinterlace)

@@ -32,11 +32,7 @@
                     <property name="height_request">50</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="stock">gtk-missing-image</property>
                   </object>
-                  <packing>
-                    <property name="index">-1</property>
-                  </packing>
                 </child>
                 <child type="overlay">
                   <object class="GtkImage" id="_watched_image">
@@ -44,15 +40,9 @@
                     <property name="halign">end</property>
                     <property name="valign">start</property>
                     <property name="icon_name">dialog-information</property>
-                    <property name="icon_size">3</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-                <property name="height">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -73,11 +63,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="_play_button">
@@ -94,11 +79,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="_next_button">
@@ -115,11 +95,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="_close_button">
@@ -136,11 +111,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">3</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkMenuButton" id="_media_settings">
@@ -154,21 +124,11 @@
                       <placeholder/>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">4</property>
-                  </packing>
                 </child>
                 <style>
                   <class name="linked"/>
                 </style>
               </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">0</property>
-                <property name="height">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkMenuButton" id="_playqueue_button">
@@ -182,11 +142,6 @@
                   <placeholder/>
                 </child>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-                <property name="height">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkGrid" id="_label_box">
@@ -199,52 +154,26 @@
                   <object class="GtkLabel" id="_title_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
                     <property name="label">Title</property>
                     <property name="ellipsize">end</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="_subtitle_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
                     <property name="label">subtitle</property>
                     <property name="ellipsize">end</property>
-                    <attributes>
-                      <attribute name="weight" value="semilight"/>
-                    </attributes>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-                <property name="height">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">5</property>
-            <property name="margin_right">5</property>
             <property name="margin_top">5</property>
             <child>
               <object class="GtkLabel" id="_time_left_label">
@@ -253,14 +182,7 @@
                 <property name="halign">start</property>
                 <property name="valign">center</property>
                 <property name="label" translatable="yes">00:00</property>
-                <attributes>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="_time_right_label">
@@ -269,14 +191,7 @@
                 <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="label" translatable="yes">99:00</property>
-                <attributes>
-                  <attribute name="weight" value="semilight"/>
-                </attributes>
               </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="_scale_bar">
@@ -291,16 +206,8 @@
                 <property name="draw_value">False</property>
                 <property name="value_pos">left</property>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid" id="_label2_box">
@@ -336,10 +243,6 @@
               <placeholder/>
             </child>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
         </child>
         <style>
           <class name="media_box"/>

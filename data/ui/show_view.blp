@@ -1,0 +1,97 @@
+using Gtk 4.0;
+
+template show_view : Box {
+  visible: true;
+  can-focus: false;
+  orientation: vertical;
+
+  Box {
+    visible: true;
+    can-focus: false;
+    margin-start: 5;
+    margin-end: 10;
+    margin-top: 20;
+    margin-bottom: 10;
+
+    Grid {
+      visible: true;
+      can-focus: false;
+
+      Label _title_label {
+        visible: true;
+        can-focus: false;
+        halign: start;
+        label: "label";
+      }
+
+      Label _subtitle_label {
+        visible: true;
+        can-focus: false;
+        halign: start;
+        label: "label";
+      }
+    }
+
+    Box _section_controll_box {
+      visible: true;
+      can-focus: false;
+
+      Button _play_button {
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+
+        Image {
+          visible: true;
+          can-focus: false;
+          icon-name: "media-playback-start-symbolic";
+        }
+      }
+
+      Button _shuffle_button {
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+
+        Image {
+          visible: true;
+          can-focus: false;
+          icon-name: "media-playlist-shuffle-symbolic";
+        }
+      }
+
+      styles [
+        "linked",
+      ]
+    }
+  }
+
+  Box {
+    visible: true;
+    can-focus: false;
+    orientation: vertical;
+
+    ScrolledWindow {
+      visible: true;
+      can-focus: true;
+
+      Viewport {
+        visible: true;
+        can-focus: false;
+
+        StackSwitcher _season_switcher {
+          visible: true;
+          can-focus: false;
+          stack: _season_stack;
+        }
+      }
+    }
+
+    Stack _season_stack {
+      visible: true;
+      can-focus: false;
+      hhomogeneous: false;
+      vhomogeneous: false;
+    }
+  }
+}

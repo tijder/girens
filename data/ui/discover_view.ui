@@ -11,26 +11,16 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
-        <property name="margin_left">10</property>
         <property name="margin_top">20</property>
         <property name="margin_bottom">5</property>
         <property name="label" translatable="yes">Ondeck</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="vscrollbar_policy">never</property>
-        <property name="shadow_type">in</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
@@ -48,37 +38,22 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
-        <property name="margin_left">10</property>
         <property name="margin_top">20</property>
         <property name="margin_bottom">5</property>
         <property name="label" translatable="yes">Recently added TV</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="vscrollbar_policy">never</property>
-        <property name="shadow_type">in</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
@@ -96,37 +71,22 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
-        <property name="margin_left">10</property>
         <property name="margin_top">20</property>
         <property name="margin_bottom">5</property>
         <property name="label" translatable="yes">Recently added Movies</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="vscrollbar_policy">never</property>
-        <property name="shadow_type">in</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
@@ -144,37 +104,22 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
-        <property name="margin_left">10</property>
         <property name="margin_top">20</property>
         <property name="margin_bottom">5</property>
         <property name="label" translatable="yes">Recently added Music</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="vscrollbar_policy">never</property>
-        <property name="shadow_type">in</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
@@ -192,11 +137,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">7</property>
-      </packing>
     </child>
   </template>
 </interface>

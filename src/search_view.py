@@ -16,13 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 
 from .cover_box import CoverBox
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/search_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/search_view.ui')
 class SearchView(Gtk.Box):
     __gtype_name__ = 'search_view'
 
@@ -30,13 +30,13 @@ class SearchView(Gtk.Box):
         'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
-    _title_label = GtkTemplate.Child()
-    _section_flow = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _section_flow = Gtk.Template.Child()
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
+    def set_plex(self, plex):
         self._plex = plex
         self._plex.connect("search-item-retrieved", self.__on_search_items_retrieved)
 

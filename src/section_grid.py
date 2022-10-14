@@ -16,11 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/section_grid.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/section_grid.ui')
 class SectionGrid(Gtk.Grid):
     __gtype_name__ = 'section_grid'
 
@@ -28,13 +27,12 @@ class SectionGrid(Gtk.Grid):
         'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
-    _title_button = GtkTemplate.Child()
+    _title_button = Gtk.Template.Child()
     _data = None
     _title = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
     def set_data(self, data):
         self._data = data

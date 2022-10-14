@@ -18,11 +18,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_download_button">
@@ -31,11 +26,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_shuffle_button">
@@ -44,11 +34,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">6</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -69,7 +54,6 @@
             <property name="can_focus">False</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
-            <property name="margin_right">10</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkBox" id="_cover_box">
@@ -82,23 +66,12 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="valign">center</property>
-                    <property name="stock">gtk-missing-image</property>
                     <style>
                       <class name="cover_image"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox" id="_button_box">
@@ -112,7 +85,6 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="margin_top">5</property>
-                    <property name="always_show_image">True</property>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -121,11 +93,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkMenuButton" id="_menu_button">
@@ -138,28 +105,13 @@
                       <placeholder/>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <style>
                   <class name="linked"/>
                 </style>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -179,14 +131,7 @@
                     <property name="hexpand">True</property>
                     <property name="label">label</property>
                     <property name="ellipsize">end</property>
-                    <attributes>
-                      <attribute name="weight" value="semilight"/>
-                    </attributes>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="_title_label">
@@ -196,14 +141,7 @@
                     <property name="hexpand">True</property>
                     <property name="label">label</property>
                     <property name="ellipsize">end</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox" id="_button2_box">
@@ -219,11 +157,6 @@
                       <class name="linked"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
-                    <property name="height">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox" id="_cover2_box">
@@ -234,18 +167,8 @@
                       <placeholder/>
                     </child>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">2</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -262,11 +185,6 @@
                   <placeholder/>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox" id="_item_box">
@@ -274,16 +192,11 @@
                 <property name="can_focus">False</property>
                 <property name="margin_top">20</property>
                 <property name="orientation">vertical</property>
-                <child>
-                </child>
+              <child>
+            </child>
 	      </object>
 	    </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>

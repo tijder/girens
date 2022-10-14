@@ -17,11 +17,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_album_view_button">
@@ -30,11 +25,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_show_view_button">
@@ -43,11 +33,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_mark_played_button">
@@ -56,11 +41,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_mark_unplayed_button">
@@ -69,11 +49,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_download_button">
@@ -82,11 +57,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_shuffle_button">
@@ -95,11 +65,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_play_from_beginning_button">
@@ -108,11 +73,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">7</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -124,7 +84,6 @@
     <child>
       <object class="GtkOverlay">
         <property name="visible">True</property>
-        <property name="app_paintable">True</property>
         <property name="can_focus">False</property>
         <property name="halign">center</property>
         <child>
@@ -132,14 +91,10 @@
             <property name="width_request">200</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="stock">gtk-missing-image</property>
             <style>
               <class name="cover_image"/>
             </style>
           </object>
-          <packing>
-            <property name="index">-1</property>
-          </packing>
         </child>
         <child type="overlay">
           <object class="GtkImage" id="_watched_image">
@@ -147,23 +102,14 @@
             <property name="halign">end</property>
             <property name="valign">start</property>
             <property name="icon_name">dialog-information</property>
-            <property name="icon_size">3</property>
           </object>
         </child>
         <child type="overlay">
           <object class="GtkProgressBar" id="_progress_bar">
             <property name="can_focus">False</property>
           </object>
-          <packing>
-            <property name="index">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkGrid" id="grid1">
@@ -178,11 +124,6 @@
             <property name="ellipsize">end</property>
             <property name="max_width_chars">1</property>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="_subtitle_label">
@@ -191,15 +132,7 @@
             <property name="label" translatable="yes">label</property>
             <property name="ellipsize">end</property>
             <property name="max_width_chars">1</property>
-            <attributes>
-              <attribute name="weight" value="semilight"/>
-            </attributes>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -213,7 +146,6 @@
                 <property name="receives_default">True</property>
                 <property name="margin_top">5</property>
                 <property name="hexpand">True</property>
-                <property name="always_show_image">True</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
@@ -222,11 +154,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkMenuButton" id="_menu_button">
@@ -239,28 +166,13 @@
                   <placeholder/>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <style>
               <class name="linked"/>
             </style>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-            <property name="width">2</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </template>
 </interface>

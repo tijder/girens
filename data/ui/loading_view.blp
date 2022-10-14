@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using Adw 1;
+
+template loading_view : Box {
+  orientation: vertical;
+
+  Adw.HeaderBar {}
+
+  Box {
+    halign: center;
+    valign: center;
+    hexpand: true;
+    vexpand: true;
+    orientation: vertical;
+
+    Spinner {
+      spinning: true;
+      height-request: 50;
+      width-request: 50;
+    }
+
+    Label _loading_text_label {
+      label: "Loading text";
+      margin-top: 10;
+      ellipsize: end;
+    }
+  }
+}

@@ -9,6 +9,8 @@
     <file>media_box_video_top.ui</file>
     <file>media_box_video_bottom.ui</file>
     <file>discover_view.ui</file>
+    <file>list.ui</file>
+    <file>list_playqueue.ui</file>
     <file>login_view.ui</file>
     <file>show_view.ui</file>
     <file>section_view.ui</file>

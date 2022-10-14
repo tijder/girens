@@ -1,0 +1,159 @@
+using Gtk 4.0;
+using Adw 1;
+
+Popover popover1 {
+  can-focus: false;
+
+  Box {
+    visible: true;
+    can-focus: false;
+    orientation: vertical;
+
+    Button _artist_view_button {
+      label: _("Go to artist view");
+      visible: true;
+      can-focus: true;
+      receives-default: true;
+    }
+
+    Button _download_button {
+      label: _("Sync");
+      visible: true;
+      can-focus: true;
+      receives-default: true;
+    }
+
+    Button _shuffle_button {
+      label: _("Shuffle");
+      visible: true;
+      can-focus: true;
+      receives-default: true;
+    }
+  }
+}
+
+template album_view : Gtk.Box {
+  Adw.Leaflet {
+    Box {
+      visible: true;
+      can-focus: false;
+      margin-top: 10;
+      margin-bottom: 10;
+
+      Box _left_box {
+        visible: true;
+        can-focus: false;
+        halign: start;
+        valign: start;
+        orientation: vertical;
+
+        Box _cover_box {
+          visible: true;
+          can-focus: false;
+          orientation: vertical;
+
+          Image _cover_image {
+            height-request: 150;
+            visible: true;
+            can-focus: false;
+            valign: center;
+
+            styles [
+              "cover_image",
+            ]
+          }
+        }
+
+        Box _button_box {
+          width-request: 150;
+          visible: true;
+          can-focus: false;
+          halign: end;
+
+          Button _play_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+            margin-top: 5;
+
+            Image {
+              visible: true;
+              can-focus: false;
+              icon-name: "media-playback-start-symbolic";
+            }
+          }
+
+          MenuButton _menu_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+            margin-top: 5;
+            popover: popover1;
+          }
+
+          styles [
+            "linked",
+          ]
+        }
+      }
+
+      Box {
+        visible: true;
+        can-focus: false;
+        margin-top: 20;
+        orientation: vertical;
+
+        Grid {
+          visible: true;
+          can-focus: false;
+
+          Label _subtitle_label {
+            visible: true;
+            can-focus: false;
+            halign: start;
+            hexpand: true;
+            label: "label";
+            ellipsize: end;
+          }
+
+          Label _title_label {
+            visible: true;
+            can-focus: false;
+            halign: start;
+            hexpand: true;
+            label: "label";
+            ellipsize: end;
+          }
+
+          Box _button2_box {
+            visible: true;
+            can-focus: false;
+
+            styles [
+              "linked",
+            ]
+          }
+
+          Box _cover2_box {
+            visible: true;
+            can-focus: false;
+            orientation: vertical;
+          }
+        }
+
+        Box {
+          visible: true;
+          can-focus: false;
+          orientation: vertical;
+        }
+
+        Box _item_box {
+          visible: true;
+          can-focus: false;
+          margin-top: 20;
+          orientation: vertical;
+        }
+      }
+    }
+  }
+}

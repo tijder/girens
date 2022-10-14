@@ -1,0 +1,64 @@
+using Gtk 4.0;
+
+ShortcutsWindow shortcuts {
+  modal: true;
+
+  ShortcutsSection {
+    visible: true;
+    section-name: "shortcuts";
+    max-height: 10;
+
+    ShortcutsGroup {
+      visible: true;
+      title: C_("shortcut window", "Playback");
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Play/Pause");
+        accelerator: "p";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Previous");
+        accelerator: "comma";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Next");
+        accelerator: "period";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Seek forwards");
+        accelerator: "bracketright";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Seek backwards");
+        accelerator: "bracketleft";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Stop playing");
+        accelerator: "q";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Fullscreen");
+        accelerator: "F11";
+      }
+
+      ShortcutsShortcut {
+        visible: true;
+        title: C_("shortcut window", "Play musicclips instead of audio track");
+        accelerator: "m";
+      }
+    }
+  }
+}

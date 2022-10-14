@@ -16,32 +16,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 from .cover_box import CoverBox
 from .playqueue_popover import PlayqueuePopover
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/media_box_video_bottom.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/media_box_video_bottom.ui')
 class MediaBoxVideoBottom(Gtk.Revealer):
     __gtype_name__ = 'media_box_video_bottom'
 
-    _play_button = GtkTemplate.Child()
-    _prev_button = GtkTemplate.Child()
-    _next_button = GtkTemplate.Child()
-    _play_image = GtkTemplate.Child()
+    _play_button = Gtk.Template.Child()
+    _prev_button = Gtk.Template.Child()
+    _next_button = Gtk.Template.Child()
+    _play_image = Gtk.Template.Child()
 
-    _skip_backward_button = GtkTemplate.Child()
-    _skip_forward_button = GtkTemplate.Child()
-    _time_left_label = GtkTemplate.Child()
-    _time_right_label = GtkTemplate.Child()
+    _skip_backward_button = Gtk.Template.Child()
+    _skip_forward_button = Gtk.Template.Child()
+    _time_left_label = Gtk.Template.Child()
+    _time_right_label = Gtk.Template.Child()
 
-    _scale_bar = GtkTemplate.Child()
-    _scale_adjustment = GtkTemplate.Child()
+    _scale_bar = Gtk.Template.Child()
+    _scale_adjustment = Gtk.Template.Child()
 
-    _playqueue_button = GtkTemplate.Child()
-    _cover_image = GtkTemplate.Child()
+    _playqueue_button = Gtk.Template.Child()
+    _cover_image = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        

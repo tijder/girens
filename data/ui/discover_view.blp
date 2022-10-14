@@ -1,0 +1,71 @@
+using Gtk 4.0;
+
+template discover_view : ScrolledWindow { height-request: 300; hscrollbar-policy: never; Box {
+  visible: true;
+  can-focus: false;
+  orientation: vertical;
+
+  Label _label {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    margin-top: 20;
+    margin-bottom: 5;
+    label: _("Ondeck");
+  }
+
+  ScrolledWindow {
+    height-request: 300;
+    vscrollbar-policy: never;
+    .list _deck_shows_box{}
+  }
+
+  Label {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    margin-top: 20;
+    margin-bottom: 5;
+    label: _("Recently added TV");
+  }
+
+  ScrolledWindow {
+    height-request: 300;
+    vscrollbar-policy: never;
+    overlay-scrolling: true;
+    .list _seasons_shows_box{}
+  }
+
+  Label {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    margin-top: 20;
+    margin-bottom: 5;
+    label: _("Recently added Movies");
+  }
+
+  ScrolledWindow {
+    height-request: 300;
+    vscrollbar-policy: never;
+
+    .list _movies_shows_box{}
+  }
+
+  Label {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    margin-top: 20;
+    margin-bottom: 5;
+    label: _("Recently added Music");
+  }
+
+  ScrolledWindow {
+    height-request: 300;
+    vscrollbar-policy: never;
+
+    .list _music_shows_box{}
+  }
+}
+}

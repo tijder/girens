@@ -16,11 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/login_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/login_view.ui')
 class LoginView(Gtk.Box):
     __gtype_name__ = 'login_view'
 
@@ -33,25 +33,25 @@ class LoginView(Gtk.Box):
     _loading = False
     _try_token = False
 
-    _username_entry = GtkTemplate.Child()
-    _password_entry = GtkTemplate.Child()
-    _connect_user_button = GtkTemplate.Child()
+    _username_entry = Gtk.Template.Child()
+    _password_entry = Gtk.Template.Child()
+    _connect_user_button = Gtk.Template.Child()
 
-    _server_url_entry = GtkTemplate.Child()
-    _server_token_entry = GtkTemplate.Child()
-    _connect_url_button = GtkTemplate.Child()
+    _server_url_entry = Gtk.Template.Child()
+    _server_token_entry = Gtk.Template.Child()
+    _connect_url_button = Gtk.Template.Child()
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
-        self._plex = plex
-
-        self._plex.connect("login-status", self.__plex_login_status)
         self._password_entry.connect("changed", self.__entry_changed)
         self._username_entry.connect("changed", self.__entry_changed)
         self._connect_url_button.connect("clicked", self.__on_connect_url_clicked)
         self._connect_user_button.connect("clicked", self.__on_login_clicked)
+
+    def set_plex(self, plex):
+        self._plex = plex
+        self._plex.connect("login-status", self.__plex_login_status)
 
     def try_login(self):
         if (self._plex.has_token()):

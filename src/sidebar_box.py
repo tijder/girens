@@ -17,7 +17,7 @@
 
 from gettext import gettext as _
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 
 from .section_grid import SectionGrid
 
@@ -25,7 +25,7 @@ from plexapi.server import PlexServer
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/sidebar_box.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/sidebar_box.ui')
 class SidebarBox(Gtk.Box):
     __gtype_name__ = 'sidebar_box'
 
@@ -37,12 +37,11 @@ class SidebarBox(Gtk.Box):
         'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
-    _server_box = GtkTemplate.Child()
-    _section_list = GtkTemplate.Child()
+    _server_box = Gtk.Template.Child()
+    _section_list = Gtk.Template.Child()
 
     def __init__(self, plex, player, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
         self._plex = plex
         self._player = player
@@ -59,8 +58,13 @@ class SidebarBox(Gtk.Box):
         thread.daemon = True
         thread.start()
 
-        for item in self._section_list.get_children():
+        #for item in self._section_list.get_children():
+        #    self._section_list.remove(item)
+
+        item = self._section_list.get_row_at_index(0)
+        while item != None:
             self._section_list.remove(item)
+            self._section_list.get_row_at_index(0)
 
         thread = threading.Thread(target=self._plex.get_sections)
         thread.daemon = True
@@ -93,22 +97,22 @@ class SidebarBox(Gtk.Box):
         self._section_player = SectionGrid()
         self._section_player.set_title('Player')
         self._section_player.set_custom_title(_('Player'))
-        self._section_list.add(self._section_player)
+        self._section_list.append(self._section_player)
         self._section_player.hide()
         section_grid = SectionGrid()
         section_grid.set_title('Home')
         section_grid.set_custom_title(_('Home'))
-        self._section_list.add(section_grid)
+        self._section_list.append(section_grid)
         section_grid = SectionGrid()
         section_grid.set_title('Playlists')
         section_grid.set_custom_title(_('Playlists'))
-        self._section_list.add(section_grid)
+        self._section_list.append(section_grid)
         for section in sections:
             if(section.type == 'movie' or section.type == 'show' or section.type == 'artist'):
                 section_grid = SectionGrid()
                 section_grid.set_title(section.title)
                 section_grid.set_data(section)
-                self._section_list.add(section_grid)
+                self._section_list.append(section_grid)
         self.select_home()
 
     def __process_servers(self, servers):

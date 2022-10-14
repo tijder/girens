@@ -1,0 +1,111 @@
+using Gtk 4.0;
+using Adw 1;
+
+template music_popover_menu : PopoverMenu {
+  width-request: 300;
+  can-focus: false;
+
+  child: Box {
+    visible: true;
+    can-focus: false;
+    margin-top: 10;
+    margin-bottom: 10;
+    orientation: vertical;
+
+    Adw.PreferencesGroup {
+
+      Adw.PreferencesRow {
+        use-underline: true;
+
+        Box {
+          height-request: 50;
+          visible: true;
+          can-focus: false;
+          homogeneous: true;
+
+          Button _star_1_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+
+            Image _star_1_img {
+              visible: true;
+              can-focus: false;
+              icon-name: "starred-symbolic";
+            }
+          }
+
+          Button _star_2_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+
+            Image _star_2_img {
+              visible: true;
+              can-focus: false;
+              icon-name: "non-starred-symbolic";
+            }
+          }
+
+          Button _star_3_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+
+            Image _star_3_img {
+              visible: true;
+              can-focus: false;
+              icon-name: "non-starred-symbolic";
+            }
+          }
+
+          Button _star_4_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+
+            Image _star_4_img {
+              visible: true;
+              can-focus: false;
+              icon-name: "non-starred-symbolic";
+            }
+          }
+
+          Button _star_5_button {
+            visible: true;
+            can-focus: true;
+            receives-default: true;
+
+            Image _star_5_img {
+              visible: true;
+              can-focus: false;
+              icon-name: "non-starred-symbolic";
+            }
+          }
+        }
+      }
+
+      Adw.ActionRow {
+        activatable-widget: _shuffle_button;
+        title: _("Shuffle");
+        use-underline: true;
+
+        Switch _shuffle_button {
+          valign: center;
+          visible: true;
+        }
+      }
+
+      Adw.ActionRow {
+        activatable-widget: _repeat_button;
+        title: _("Repeat");
+        use-underline: true;
+
+        Switch _repeat_button {
+          valign: center;
+          visible: true;
+        }
+      }
+    }
+  };
+}

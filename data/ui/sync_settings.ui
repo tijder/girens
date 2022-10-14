@@ -26,25 +26,15 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">5</property>
-            <property name="margin_right">5</property>
+            <property name="margin_start">5</property>
+            <property name="margin_end">5</property>
             <property name="row_spacing">5</property>
             <property name="column_spacing">10</property>
             <child>
@@ -54,10 +44,6 @@
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Convert</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
@@ -66,10 +52,6 @@
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Unwatched only</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
@@ -78,10 +60,6 @@
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Max items</property>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="_convert_button">
@@ -91,10 +69,6 @@
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Converted sync can take a long time</property>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton" id="_unwatched_button">
@@ -103,10 +77,6 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="_max_items_entry">
@@ -116,17 +86,8 @@
                 <property name="placeholder_text" translatable="yes">Number of items</property>
                 <property name="input_purpose">number</property>
               </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>

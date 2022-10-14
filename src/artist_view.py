@@ -16,37 +16,38 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 from .album_view import AlbumView
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/artist_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/artist_view.ui')
 class ArtistView(Gtk.Box):
     __gtype_name__ = 'artist_view'
 
-    _title_label = GtkTemplate.Child()
-    _subtitle_label = GtkTemplate.Child()
-    _album_box = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _subtitle_label = Gtk.Template.Child()
+    _album_box = Gtk.Template.Child()
 
-    _play_button = GtkTemplate.Child()
-    _shuffle_button = GtkTemplate.Child()
-    _show_more_button = GtkTemplate.Child()
+    _play_button = Gtk.Template.Child()
+    _shuffle_button = Gtk.Template.Child()
+    _show_more_button = Gtk.Template.Child()
 
     _timout = None
     _add_items_to_view = 0
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
-        self._plex = plex
-
-        self._plex.connect("artist-retrieved", self.__artist_retrieved)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
         self._show_more_button.connect("clicked", self.__show_more_clicked)
+
+
+    def set_plex(self, plex):
+        self._plex = plex
+
+        self._plex.connect("artist-retrieved", self.__artist_retrieved)
 
     def change_artist(self, key):
         self._title_label.set_text('')

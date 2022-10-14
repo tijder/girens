@@ -1,14 +1,14 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "41",
+    "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
         "--socket=pulseaudio",
-        "--socket=x11",
+        "--socket=wayland",
         "--device=all",
         "--filesystem=xdg-run/dconf",
         "--filesystem=~/.config/dconf:ro",
@@ -29,6 +29,17 @@
         "*.a"
     ],
     "modules" : [
+    	{
+	  "name": "blueprint-compiler",
+	  "buildsystem": "meson",
+	  "sources": [
+	    {
+	      "type": "git",
+	      "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
+	      "branch": "main"
+	    }
+	  ]
+	},
         {
             "name" : "libmpv",
             "cleanup" : [
@@ -45,12 +56,12 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "9ca9066d052acecb5b05369141a76993a753ee1e"
+                    "commit" : "349e437466163cb52f7d0aa227d4606edd9db501"
                 },
                 {
                     "type" : "file",
-                    "url" : "https://waf.io/waf-2.0.22",
-                    "sha256" : "0a09ad26a2cfc69fa26ab871cb558165b60374b5a653ff556a0c6aca63a00df1",
+                    "url" : "https://waf.io/waf-2.0.23",
+                    "sha256" : "28a2e4583314a162cfcbffefb8a9202c1d7869040d30b5852da479b76d9c0491",
                     "dest-filename" : "waf"
                 }
             ],
@@ -68,8 +79,8 @@
                     "sources" : [
                         {
                             "type" : "archive",
-                            "url" : "https://github.com/libass/libass/releases/download/0.15.0/libass-0.15.0.tar.xz",
-                            "sha256" : "9f09230c9a0aa68ef7aa6a9e2ab709ca957020f842e52c5b2e52b801a7d9e833"
+                            "url" : "https://github.com/libass/libass/releases/download/0.16.0/libass-0.16.0.tar.xz",
+                            "sha256" : "5dbde9e22339119cf8eed59eea6c623a0746ef5a90b689e68a090109078e3c08"
                         }
                     ],
                     "modules" : [
@@ -85,8 +96,8 @@
                             "sources" : [
                                 {
                                     "type" : "archive",
-                                    "url" : "https://github.com/fribidi/fribidi/releases/download/v1.0.10/fribidi-1.0.10.tar.xz",
-                                    "sha256" : "7f1c687c7831499bcacae5e8675945a39bacbad16ecaa945e9454a32df653c01"
+                                    "url" : "https://github.com/fribidi/fribidi/releases/download/v1.0.12/fribidi-1.0.12.tar.xz",
+                                    "sha256" : "0cd233f97fc8c67bb3ac27ce8440def5d3ffacf516765b91c2cc654498293495"
                                 }
                             ]
                         }
@@ -114,7 +125,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "7e0d640edf6c3eee1816b105c2f7498c4f948e74"
+                            "commit" : "eacfcbae690f914a4b1b4ad06999f138540cc3d8"
                         }
                     ]
                 }
@@ -130,9 +141,39 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/jaseg/python-mpv",
-                    "commit" : "b5f03dd2b7d55b9a632c8771be4ae1a05c2f7fb8"
+                    "commit" : "30d5ca1f0255184b500cbb43d9b3556a70038c53"
                 }
-            ]
+            ],
+            "modules" : [
+                {
+                    "name" : "PyOpenGL",
+                    "buildsystem" : "simple",
+                    "build-commands" : [
+                        "pip3 install --prefix=/app PyOpenGL-3.1.6-py3-none-any.whl"
+                    ],
+                    "sources" : [
+                        {
+                            "type" : "file",
+                            "url" : "https://files.pythonhosted.org/packages/80/07/003fe74d2af04be917035b42c53c7ea9e3abe1e353753cebccfe792b4e52/PyOpenGL-3.1.6-py3-none-any.whl",
+                            "sha256" : "a7139bc3e15d656feae1f7e3ef68c799941ed43fadc78177a23db7e946c20738"
+                        }
+                    ]
+                },
+                {
+                    "name" : "numpy",
+                    "buildsystem" : "simple",
+                    "build-commands" : [
+                        "pip3 install --prefix=/app numpy-1.23.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                    ],
+                    "sources" : [
+                        {
+                            "type" : "file",
+                            "url" : "https://files.pythonhosted.org/packages/0c/83/78ae18fffc185d0d57097610d5a97473ef11dbdca95f16739ee96b158087/numpy-1.23.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+                            "sha256" : "a8365b942f9c1a7d0f0dc974747d99dd0a0cdfc5949a33119caf05cb314682d3"
+                        }
+                    ]
+                }
+              ]
         },
         {
             "name" : "PlexAPI",
@@ -152,13 +193,13 @@
                     "name" : "idna",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app idna-2.8-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app idna-3.4-py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl",
-                            "sha256" : "ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"
+                            "url" : "https://files.pythonhosted.org/packages/fc/34/3030de6f1370931b9dbb4dad48f6ab1015ab1d32447850b9fc94e60097be/idna-3.4-py3-none-any.whl",
+                            "sha256" : "90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"
                         }
                     ]
                 },
@@ -166,13 +207,13 @@
                     "name" : "certifi",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app certifi-2020.12.5-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app certifi-2022.9.24-py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/5e/a0/5f06e1e1d463903cf0c0eebeb751791119ed7a4b3737fdc9a77f1cdfb51f/certifi-2020.12.5-py2.py3-none-any.whl",
-                            "sha256" : "719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"
+                            "url" : "https://files.pythonhosted.org/packages/1d/38/fa96a426e0c0e68aabc68e896584b83ad1eec779265a028e156ce509630e/certifi-2022.9.24-py3-none-any.whl",
+                            "sha256" : "90c1a32f1d68f940488354e36370f6cca89f0f106db09518524c88d6ed83f382"
                         }
                     ]
                 },
@@ -180,13 +221,13 @@
                     "name" : "chardet",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app chardet-4.0.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app chardet-5.0.0-py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/19/c7/fa589626997dd07bd87d9269342ccb74b1720384a4d739a1872bd84fbe68/chardet-4.0.0-py2.py3-none-any.whl",
-                            "sha256" : "f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"
+                            "url" : "https://files.pythonhosted.org/packages/4c/d1/1b96dd69fa42f20b70701b5cd42a75dd5f0c7a24dc0abfef35cc146210dc/chardet-5.0.0-py3-none-any.whl",
+                            "sha256" : "d3e64f022d254183001eccc5db4040520c0f23b1a3f33d6413e099eb7f126557"
                         }
                     ]
                 },
@@ -194,13 +235,13 @@
                     "name" : "urllib3",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app urllib3-1.26.4-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app urllib3-1.26.12-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/09/c6/d3e3abe5b4f4f16cf0dfc9240ab7ce10c2baa0e268989a4e3ec19e90c84e/urllib3-1.26.4-py2.py3-none-any.whl",
-                            "sha256" : "2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df"
+                            "url" : "https://files.pythonhosted.org/packages/6f/de/5be2e3eed8426f871b170663333a0f627fc2924cc386cd41be065e7ea870/urllib3-1.26.12-py2.py3-none-any.whl",
+                            "sha256" : "b930dd878d5a8afb066a637fbb35144fe7901e3b209d1cd4f524bd0e9deee997"
                         }
                     ]
                 },
@@ -208,13 +249,29 @@
                     "name" : "requests",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app requests-2.25.1-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app requests-2.28.1-py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/29/c1/24814557f1d22c56d50280771a17307e6bf87b70727d975fd6b2ce6b014a/requests-2.25.1-py2.py3-none-any.whl",
-                            "sha256" : "c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"
+                            "url" : "https://files.pythonhosted.org/packages/ca/91/6d9b8ccacd0412c08820f72cebaa4f0c0441b5cda699c90f618b6f8a1b42/requests-2.28.1-py3-none-any.whl",
+                            "sha256" : "8fefa2a1a1365bf5520aac41836fbee479da67864514bdb821f31ce07ce65349"
+                        }
+                    ],
+                    "modules" : [
+                    	{
+                            "name" : "charset-normalizer",
+                            "buildsystem" : "simple",
+                            "build-commands" : [
+		                "pip3 install --prefix=/app charset_normalizer-2.1.1-py3-none-any.whl"
+		            ],
+		            "sources" : [
+		                {
+		                    "type" : "file",
+		                    "url" : "https://files.pythonhosted.org/packages/db/51/a507c856293ab05cdc1db77ff4bc1268ddd39f29e7dc4919aa497f0adbec/charset_normalizer-2.1.1-py3-none-any.whl",
+		                    "sha256" : "83e9a75d1911279afd89352c68b45348559d1fc0506b054b346651b5e7fee29f"
+		                }
+	                	]
                         }
                     ]
                 },
@@ -222,13 +279,13 @@
                     "name" : "tqdm",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app tqdm-4.60.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app tqdm-4.64.1-py2.py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/72/8a/34efae5cf9924328a8f34eeb2fdaae14c011462d9f0e3fcded48e1266d1c/tqdm-4.60.0-py2.py3-none-any.whl",
-                            "sha256" : "daec693491c52e9498632dfbe9ccfc4882a557f5fa08982db1b4d3adbe0887c3"
+                            "url" : "https://files.pythonhosted.org/packages/47/bb/849011636c4da2e44f1253cd927cfb20ada4374d8b3a4e425416e84900cc/tqdm-4.64.1-py2.py3-none-any.whl",
+                            "sha256" : "6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1"
                         }
                     ]
                 },
@@ -250,30 +307,15 @@
                     "name" : "websocket-client",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app websocket_client-0.58.0-py2.py3-none-any.whl"
+                        "pip3 install --prefix=/app websocket_client-1.4.1-py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/08/33/80e0d4f60e84a1ddd9a03f340be1065a2a363c47ce65c4bd3bae65ce9631/websocket_client-0.58.0-py2.py3-none-any.whl",
-                            "sha256" : "44b5df8f08c74c3d82d28100fdc81f4536809ce98a17f0757557813275fbb663"
+                            "url" : "https://files.pythonhosted.org/packages/83/b8/95c2512818d6ddb9b97f4163e915b2afe2db42b620270aa59c5ee0b47245/websocket_client-1.4.1-py3-none-any.whl",
+                            "sha256" : "398909eb7e261f44b8f4bd474785b6ec5f5b499d4953342fe9755e01ef624090"
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "name" : "libhandy",
-            "buildsystem" : "meson",
-            "builddir" : true,
-            "config-opts" : [
-                "-Dglade_catalog=disabled"
-            ],
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "https://source.puri.sm/Librem5/libhandy",
-                    "commit" : "7a193d7692c9c76a1a94f17c4d30b585f77d177c"
                 }
             ]
         },

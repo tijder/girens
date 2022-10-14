@@ -16,23 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/album_item.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/album_item.ui')
 class AlbumItem(Gtk.Box):
     __gtype_name__ = 'album_item'
 
-    _title_label = GtkTemplate.Child()
-    _time_label = GtkTemplate.Child()
-    _index_label = GtkTemplate.Child()
-    _play_button = GtkTemplate.Child()
-    _music_clip_button = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _time_label = Gtk.Template.Child()
+    _index_label = Gtk.Template.Child()
+    _play_button = Gtk.Template.Child()
+    _music_clip_button = Gtk.Template.Child()
 
     def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
 

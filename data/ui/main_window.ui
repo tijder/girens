@@ -43,12 +43,6 @@
                         <property name="draw_value">False</property>
                         <signal name="value-changed" handler="_on_volume_value_changed" swapped="no"/>
                       </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkImage">
@@ -56,11 +50,6 @@
                         <property name="can_focus">False</property>
                         <property name="icon_name">audio-speakers-symbolic</property>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
@@ -268,9 +257,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="name">sidebar</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator" id="separator_header">
@@ -280,9 +266,6 @@
                   <class name="sidebar"/>
                 </style>
               </object>
-              <packing>
-                <property name="name">separator</property>
-              </packing>
             </child>
             <child>
               <object class="GtkHeaderBar" id="content_header">
@@ -310,11 +293,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkToggleButton" id="_search_toggle_button">
@@ -331,11 +309,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkBox">
@@ -355,11 +328,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkMenuButton" id="_download_button">
@@ -370,21 +338,11 @@
                               <placeholder/>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                         <style>
                           <class name="linked"/>
                         </style>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkMenuButton" id="_menu_button">
@@ -401,19 +359,10 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">4</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="name">content</property>
-              </packing>
             </child>
           </object>
         </child>
@@ -434,11 +383,6 @@
               <placeholder/>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="HdyLeaflet" id="_content_leaflet">
@@ -467,18 +411,12 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="name">sidebar</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator" id="separator">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </object>
-              <packing>
-                <property name="name">separator</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox" id="content">
@@ -500,11 +438,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="_main_scrolled_window">
@@ -530,11 +463,6 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkRevealer" id="_show_revealer">
@@ -546,11 +474,6 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkRevealer" id="_section_revealer">
@@ -562,11 +485,6 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkRevealer" id="_search_revealer">
@@ -578,11 +496,6 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkRevealer" id="_artist_revealer">
@@ -594,11 +507,6 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkRevealer" id="_album_revealer">
@@ -610,11 +518,6 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkRevealer" id="_player_revealer">
@@ -626,54 +529,18 @@
                                   <placeholder/>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="name">content</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
     </child>
   </template>
-  <object class="GtkSizeGroup">
-    <widgets>
-      <widget name="content_header"/>
-      <widget name="content"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup">
-    <widgets>
-      <widget name="sidebar_header"/>
-      <widget name="sidebar"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup">
-    <widgets>
-      <widget name="separator_header"/>
-      <widget name="separator"/>
-    </widgets>
-  </object>
 </interface>

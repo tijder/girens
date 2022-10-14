@@ -1,0 +1,151 @@
+using Gtk 4.0;
+
+template player_view : ScrolledWindow {Box {
+  visible: true;
+  vexpand: true;
+  orientation: vertical;
+
+  EventControllerKey {
+      key-pressed => on_keypress();
+    }
+
+  Gtk.Box _video_box {
+    height-request: 500;
+
+    EventControllerMotion {
+      motion => on_motion();
+    }
+
+    Overlay _overlay {
+      Stack _stack {
+        GestureClick {
+	        button: 1;
+	        pressed => on_button_press_event();
+	        exclusive: true;
+        }
+
+        GLArea _frame {
+          hexpand: true;
+        }
+      }
+
+      [overlay]
+      Gtk.WindowHandle {
+        valign: start;
+        Box _controlls_top {
+          valign: start;
+
+          styles [
+            "media_box",
+          ]
+        }
+      }
+
+      [overlay]
+      Box _controlls_bottom {
+        visible: true;
+        valign: end;
+
+        styles [
+          "media_box",
+        ]
+      }
+    }
+  }
+
+  Box _box {
+    visible: true;
+    can-focus: false;
+    orientation: vertical;
+
+    Grid {
+      visible: true;
+      margin-top: 10;
+      margin-bottom: 5;
+
+      Label _title_label {
+        visible: true;
+        halign: start;
+        label: "Title";
+        ellipsize: end;
+      }
+
+      Label _subtitle_label {
+        visible: true;
+        halign: start;
+        label: "2000";
+      }
+
+      Label _left_subtitle_label {
+        visible: true;
+        halign: start;
+        label: "2 hr 45 min";
+      }
+
+      Label _right_subtitle_label {
+        visible: true;
+        halign: end;
+        hexpand: true;
+        label: "Action, Comedy";
+        justify: right;
+        ellipsize: end;
+      }
+
+      Grid {
+        visible: true;
+
+        Label _audio_label {
+          visible: true;
+          halign: start;
+          label: _("Audio ");
+        }
+
+        Label _sub_label {
+          visible: true;
+          halign: start;
+          label: _("Subtitle ");
+        }
+
+        ComboBox _subtitle_box {
+          visible: true;
+          halign: start;
+        }
+
+        ComboBox _audio_box {
+          visible: true;
+          halign: start;
+        }
+      }
+
+      Separator {
+        visible: true;
+        margin-top: 5;
+        margin-bottom: 5;
+      }
+
+      Label _discription_label {
+        visible: true;
+        halign: start;
+        label: _("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. ");
+        wrap: true;
+      }
+    }
+
+    Label _label {
+      visible: true;
+      halign: start;
+      margin-top: 20;
+      margin-bottom: 5;
+      label: _("Ondeck");
+    }
+
+    FlowBox _deck_shows_box {
+      visible: true;
+      halign: start;
+      homogeneous: true;
+      max-children-per-line: 30;
+      selection-mode: none;
+    }
+  }
+}
+}

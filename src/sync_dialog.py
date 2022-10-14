@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 from .sync_item import SyncItem
 
 import cairo
@@ -24,19 +24,19 @@ import threading
 import sys
 import gc
 
-@GtkTemplate(ui='/nl/g4d/Girens/sync_dialog.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/sync_dialog.ui')
 class SyncDialog(Gtk.Dialog):
     __gtype_name__ = 'sync_dialog'
 
-    _item_box = GtkTemplate.Child()
-    _sync_button = GtkTemplate.Child()
-    _ok_button = GtkTemplate.Child()
+    _item_box = Gtk.Template.Child()
+    _sync_button = Gtk.Template.Child()
+    _ok_button = Gtk.Template.Child()
 
     _items = []
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        
 
         self._plex = plex
 

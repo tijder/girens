@@ -1,0 +1,33 @@
+using Gtk 4.0;
+
+template playqueue_item : Box {
+  width-request: 200;
+  height-request: 50;
+  visible: true;
+  can-focus: false;
+  margin-top: 5;
+  margin-bottom: 5;
+
+  Overlay {
+    visible: true;
+    can-focus: false;
+
+    Image _cover_image {
+      width-request: 50;
+      height-request: 50;
+      visible: true;
+      can-focus: false;
+
+      styles [
+        "cover_image",
+      ]
+    }
+  }
+
+  Label _title_label {
+    visible: true;
+    can-focus: false;
+    label: "label";
+    ellipsize: end;
+  }
+}

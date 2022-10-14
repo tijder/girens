@@ -15,14 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject, Handy, GdkPixbuf
-from .gi_composites import GtkTemplate
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Adw
+
 from .album_item import AlbumItem
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/album_view.ui')
-class AlbumView(Handy.Column):
+@Gtk.Template(resource_path='/nl/g4d/Girens/album_view.ui')
+class AlbumView(Gtk.Box):
     __gtype_name__ = 'album_view'
 
     __gsignals__ = {
@@ -30,22 +30,22 @@ class AlbumView(Handy.Column):
         'done-loading': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
-    _title_label = GtkTemplate.Child()
-    _subtitle_label = GtkTemplate.Child()
-    _item_box = GtkTemplate.Child()
-    _cover_image = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _subtitle_label = Gtk.Template.Child()
+    _item_box = Gtk.Template.Child()
+    _cover_image = Gtk.Template.Child()
 
-    _menu_button = GtkTemplate.Child()
-    _play_button = GtkTemplate.Child()
-    _artist_view_button = GtkTemplate.Child()
-    _download_button = GtkTemplate.Child()
-    _shuffle_button = GtkTemplate.Child()
+    _menu_button = Gtk.Template.Child()
+    _play_button = Gtk.Template.Child()
+    _artist_view_button = Gtk.Template.Child()
+    _download_button = Gtk.Template.Child()
+    _shuffle_button = Gtk.Template.Child()
 
-    _button_box = GtkTemplate.Child()
-    _button2_box = GtkTemplate.Child()
-    _cover_box = GtkTemplate.Child()
-    _cover2_box = GtkTemplate.Child()
-    _left_box = GtkTemplate.Child()
+    _button_box = Gtk.Template.Child()
+    _button2_box = Gtk.Template.Child()
+    _cover_box = Gtk.Template.Child()
+    _cover2_box = Gtk.Template.Child()
+    _left_box = Gtk.Template.Child()
 
     _discs = {}
 
@@ -54,21 +54,20 @@ class AlbumView(Handy.Column):
 
     _timout = None
 
-    def __init__(self, plex, artist_view=False, **kwargs):
+    def __init__(self, artist_view=False, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
-        self._plex = plex
 
         if artist_view == True:
             self._artist_view_button.set_visible(False)
-
-        self._plex.connect("download-cover", self.__on_cover_downloaded)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
         self._artist_view_button.connect("clicked", self.__on_go_to_artist_clicked)
         self._download_button.connect("clicked", self.__on_download_button)
+
+    def set_plex(self, plex):
+        self._plex = plex
+        self._plex.connect("download-cover", self.__on_cover_downloaded)
 
     def change_album(self, key):
         self._title_label.set_text('')
@@ -164,7 +163,7 @@ class AlbumView(Handy.Column):
         thread.start()
 
     def __on_download_button(self, button):
-        self._menu_button.set_active(False)
+        self._menu_button.popdown()
         if (self._item.TYPE == 'show'):
             self._sync_settings = SyncSettings(self._plex, self._item)
             self._sync_settings.show()
@@ -174,7 +173,7 @@ class AlbumView(Handy.Column):
             thread.start()
 
     def __on_shuffle_button_clicked(self, button):
-        self._menu_button.set_active(False)
+        self._menu_button.popdown()
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
         thread.daemon = True
         thread.start()

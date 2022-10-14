@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 from .cover_box import CoverBox
 from .playqueue_popover import PlayqueuePopover
 from .music_popover_menu import MusicPopoverMenu
@@ -287,9 +287,9 @@ class MediaBox(GObject.Object):
             self._progress = time
             GLib.idle_add(self.__update_buttons)
 
-    def __update_play_image_icon(self, string, number):
+    def __update_play_image_icon(self, string):
         if self._play_image != None:
-            self._play_image.set_from_icon_name(string, number)
+            self._play_image.set_from_icon_name(string)
 
     def __updat_time_left_label(self, string):
         if self._time_left_label != None:
@@ -316,9 +316,9 @@ class MediaBox(GObject.Object):
 
     def __update_buttons(self):
         if (self._paused == True):
-            self.__update_play_image_icon('media-playback-start-symbolic', 4)
+            self.__update_play_image_icon('media-playback-start-symbolic')
         else:
-            self.__update_play_image_icon('media-playback-pause-symbolic', 4)
+            self.__update_play_image_icon('media-playback-pause-symbolic')
 
         if (self._item != None):
             self._prev_button.set_sensitive(self._offset - 1 >= 0)

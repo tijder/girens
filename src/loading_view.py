@@ -16,12 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/loading_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/loading_view.ui')
 class LoadingView(Gtk.Box):
     __gtype_name__ = 'loading_view'
 
@@ -29,13 +29,10 @@ class LoadingView(Gtk.Box):
         'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
-    _loading_text_label = GtkTemplate.Child()
+    _loading_text_label = Gtk.Template.Child()
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
-        self._plex = plex
 
     def set_text(self, loading_text):
         self._loading_text_label.set_text(loading_text)

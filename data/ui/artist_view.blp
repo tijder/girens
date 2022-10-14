@@ -1,0 +1,82 @@
+using Gtk 4.0;
+
+template artist_view : Box {
+  visible: true;
+  can-focus: false;
+  orientation: vertical;
+
+  Box {
+    visible: true;
+    can-focus: false;
+    margin-top: 20;
+    margin-bottom: 10;
+
+    Grid {
+      visible: true;
+      can-focus: false;
+
+      Label _title_label {
+        visible: true;
+        can-focus: false;
+        halign: start;
+        label: "label";
+        ellipsize: end;
+      }
+
+      Label _subtitle_label {
+        visible: true;
+        can-focus: false;
+        halign: start;
+        label: "label";
+        ellipsize: end;
+      }
+    }
+
+    Box _section_controll_box {
+      visible: true;
+      can-focus: false;
+
+      Button _play_button {
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+
+        Image {
+          visible: true;
+          can-focus: false;
+          icon-name: "media-playback-start-symbolic";
+        }
+      }
+
+      Button _shuffle_button {
+        visible: true;
+        can-focus: true;
+        receives-default: true;
+
+        Image {
+          visible: true;
+          can-focus: false;
+          icon-name: "media-playlist-shuffle-symbolic";
+        }
+      }
+
+      styles [
+        "linked",
+      ]
+    }
+  }
+
+  Box _album_box {
+    visible: true;
+    can-focus: false;
+    orientation: vertical;
+  }
+
+  Button _show_more_button {
+    label: _("Show more");
+    height-request: 75;
+    visible: true;
+    can-focus: true;
+    receives-default: true;
+  }
+}

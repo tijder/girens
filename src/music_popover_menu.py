@@ -16,35 +16,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
 
-@GtkTemplate(ui='/nl/g4d/Girens/music_popover_menu.ui')
+
+@Gtk.Template(resource_path='/nl/g4d/Girens/music_popover_menu.ui')
 class MusicPopoverMenu(Gtk.PopoverMenu):
     __gtype_name__ = 'music_popover_menu'
 
     _current_item = None
 
-    _star_1_button = GtkTemplate.Child()
-    _star_1_img = GtkTemplate.Child()
+    _star_1_button = Gtk.Template.Child()
+    _star_1_img = Gtk.Template.Child()
 
-    _star_2_button = GtkTemplate.Child()
-    _star_2_img = GtkTemplate.Child()
+    _star_2_button = Gtk.Template.Child()
+    _star_2_img = Gtk.Template.Child()
 
-    _star_3_button = GtkTemplate.Child()
-    _star_3_img = GtkTemplate.Child()
+    _star_3_button = Gtk.Template.Child()
+    _star_3_img = Gtk.Template.Child()
 
-    _star_4_button = GtkTemplate.Child()
-    _star_4_img = GtkTemplate.Child()
+    _star_4_button = Gtk.Template.Child()
+    _star_4_img = Gtk.Template.Child()
 
-    _star_5_button = GtkTemplate.Child()
-    _star_5_img = GtkTemplate.Child()
+    _star_5_button = Gtk.Template.Child()
+    _star_5_img = Gtk.Template.Child()
 
-    _shuffle_button = GtkTemplate.Child()
-    _repeat_button = GtkTemplate.Child()
+    _shuffle_button = Gtk.Template.Child()
+    _repeat_button = Gtk.Template.Child()
 
     def __init__(self, player, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+
 
         self._player = player
         self._player.connect("media-playing", self.__on_media_playing)
@@ -103,28 +103,28 @@ class MusicPopoverMenu(Gtk.PopoverMenu):
 
     def __set_stars(self, stars):
         if (stars >= 1):
-            GLib.idle_add(self._star_1_img.set_from_icon_name, 'starred-symbolic', 4)
+            GLib.idle_add(self._star_1_img.set_from_icon_name, 'starred-symbolic')
         else:
-            GLib.idle_add(self._star_1_img.set_from_icon_name, 'non-starred-symbolic', 4)
+            GLib.idle_add(self._star_1_img.set_from_icon_name, 'non-starred-symbolic')
 
         if (stars >= 2):
-            GLib.idle_add(self._star_2_img.set_from_icon_name, 'starred-symbolic', 4)
+            GLib.idle_add(self._star_2_img.set_from_icon_name, 'starred-symbolic')
         else:
-            GLib.idle_add(self._star_2_img.set_from_icon_name, 'non-starred-symbolic', 4)
+            GLib.idle_add(self._star_2_img.set_from_icon_name, 'non-starred-symbolic')
 
         if (stars >= 3):
-            GLib.idle_add(self._star_3_img.set_from_icon_name, 'starred-symbolic', 4)
+            GLib.idle_add(self._star_3_img.set_from_icon_name, 'starred-symbolic')
         else:
-            GLib.idle_add(self._star_3_img.set_from_icon_name, 'non-starred-symbolic', 4)
+            GLib.idle_add(self._star_3_img.set_from_icon_name, 'non-starred-symbolic')
 
         if (stars >= 4):
-            GLib.idle_add(self._star_4_img.set_from_icon_name, 'starred-symbolic', 4)
+            GLib.idle_add(self._star_4_img.set_from_icon_name, 'starred-symbolic')
         else:
-            GLib.idle_add(self._star_4_img.set_from_icon_name, 'non-starred-symbolic', 4)
+            GLib.idle_add(self._star_4_img.set_from_icon_name, 'non-starred-symbolic')
 
         if (stars >= 5):
-            GLib.idle_add(self._star_5_img.set_from_icon_name, 'starred-symbolic', 4)
+            GLib.idle_add(self._star_5_img.set_from_icon_name, 'starred-symbolic')
         else:
-            GLib.idle_add(self._star_5_img.set_from_icon_name, 'non-starred-symbolic', 4)
+            GLib.idle_add(self._star_5_img.set_from_icon_name, 'non-starred-symbolic')
 
         
