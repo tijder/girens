@@ -75,19 +75,41 @@ class Plex(GObject.Object):
         return self._token is not None
 
     def get_server_token(self, uuid):
-        return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+        try:
+            return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+        except GLib.GError as e:
+            if 'tokens' in self._config:
+                return self._config['tokens'][uuid];
 
     def get_token(self, uuid):
-        return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+        try:
+            return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+        except GLib.GError as e:
+            if 'tokens' in self._config:
+                return self._config['tokens'][uuid];g
 
     def set_server_token(self, token, server_url, server_uuid, name):
         self._settings.set_string("server-url", self._server._baseurl)
         self._settings.set_string("server-uuid", self._server.machineIdentifier)
-        Secret.password_store(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'name': Secret.SchemaAttributeType.STRING, 'url': Secret.SchemaAttributeType.STRING, 'uuid': Secret.SchemaAttributeType.STRING}), {'name': name, 'url': server_url, 'uuid': server_uuid}, Secret.COLLECTION_DEFAULT, 'Girens server token', token, None, None)
+        try:
+            Secret.password_store(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'name': Secret.SchemaAttributeType.STRING, 'url': Secret.SchemaAttributeType.STRING, 'uuid': Secret.SchemaAttributeType.STRING}), {'name': name, 'url': server_url, 'uuid': server_uuid}, Secret.COLLECTION_DEFAULT, 'Girens server token', token, None, None)
+            Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': server_uuid}, None)
+        except GLib.GError as e:
+            if 'tokens' not in self._config:
+                self._config['tokens'] = {}
+            self._config['tokens'][server_uuid] = token
+            self.__save_config()
 
     def set_token(self, token, username, email, uuid):
         self._settings.set_string("user-uuid", uuid)
-        Secret.password_store(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'username': Secret.SchemaAttributeType.STRING, 'email': Secret.SchemaAttributeType.STRING, 'uuid': Secret.SchemaAttributeType.STRING}), {'username': username, 'email': email, 'uuid': uuid}, Secret.COLLECTION_DEFAULT, 'Girens token', token, None, None)
+        try:
+            Secret.password_store(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'username': Secret.SchemaAttributeType.STRING, 'email': Secret.SchemaAttributeType.STRING, 'uuid': Secret.SchemaAttributeType.STRING}), {'username': username, 'email': email, 'uuid': uuid}, Secret.COLLECTION_DEFAULT, 'Girens token', token, None, None)
+            Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
+        except GLib.GError as e:
+            if 'tokens' not in self._config:
+                self._config['tokens'] = {}
+            self._config['tokens'][uuid] = token
+            self.__save_config()
 
     def has_url(self):
         return self._server_url is not None
