@@ -1,14 +1,12 @@
-include: 'https://gitlab.droogers.eu/mirror/citemplates/-/raw/master/flatpak/flatpak_ci_initiative.yml'
+include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
 
 variables:
     BUNDLE: "nl.g4d.Girens.flatpak"
 
 flatpak:
-    image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:41'
-    stage: 'test'
     variables:
         MANIFEST_PATH: "nl.g4d.Girens.json"
         FLATPAK_MODULE: "girens"
-        RUNTIME_REPO: "https://flathub.org/repo/flathub.flatpakrepo"
+        RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
         APP_ID: "nl.g4d.Girens"
     extends: .flatpak
