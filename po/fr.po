@@ -1,0 +1,884 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the girens package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: girens\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-26 00:01+0200\n"
+"PO-Revision-Date: 2022-10-15 11:08+0200\n"
+"Last-Translator: Irénée Thirion <irenee.thirion@e.email>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: data/nl.g4d.Girens.desktop.in:3
+msgid "Girens"
+msgstr "Girens"
+
+#: data/nl.g4d.Girens.desktop.in:4
+msgid "Play your Plex movies, tv Shows and music"
+msgstr "Jouez vos films, vos émissions télévisées et votre musique Plex"
+
+#: data/nl.g4d.Girens.desktop.in:10
+msgid "girens;plex;media;player;"
+msgstr "girens;plex;média;lecteur;player;tv;films;musique;shows;spectacles;"
+
+#: data/nl.g4d.Girens.appdata.xml.in:5
+msgid "Girens for Plex"
+msgstr "Girens pour Plex"
+
+#: data/nl.g4d.Girens.appdata.xml.in:6
+msgid "Gerben Droogers"
+msgstr "Gerben Droogers"
+
+#: data/nl.g4d.Girens.appdata.xml.in:7
+msgid ""
+"Girens is a Plex GTK client for playing movies, TV shows and music from your "
+"Plex library."
+msgstr ""
+"Girens est un client GTK permettant de jouer les films, émissions télévisées "
+"et musiques de votre bibliothèque Plex."
+
+#: data/nl.g4d.Girens.appdata.xml.in:11
+msgid ""
+"Girens is a Plex media player client. You can watch and listen to your "
+"music, shows and movies with this GTK app."
+msgstr ""
+"Girens est un client pour le lecteur multimédia Plex. Vous pouvez regarder "
+"et écouter votre musique, vos émissions et vos films avec cette application "
+"GTK."
+
+#: data/nl.g4d.Girens.appdata.xml.in:20
+msgid "The ondeck view"
+msgstr "La vue de l’accueil"
+
+#: data/nl.g4d.Girens.appdata.xml.in:24
+msgid "The films view"
+msgstr "La vue des films"
+
+#: data/nl.g4d.Girens.appdata.xml.in:28
+msgid "The tvshows view"
+msgstr "La vue des émissions télévisées"
+
+#: data/nl.g4d.Girens.appdata.xml.in:35 data/nl.g4d.Girens.appdata.xml.in:44
+#: data/nl.g4d.Girens.appdata.xml.in:56 data/nl.g4d.Girens.appdata.xml.in:67
+#: data/nl.g4d.Girens.appdata.xml.in:78 data/nl.g4d.Girens.appdata.xml.in:86
+#: data/nl.g4d.Girens.appdata.xml.in:96 data/nl.g4d.Girens.appdata.xml.in:109
+#: data/nl.g4d.Girens.appdata.xml.in:122 data/nl.g4d.Girens.appdata.xml.in:131
+#: data/nl.g4d.Girens.appdata.xml.in:144 data/nl.g4d.Girens.appdata.xml.in:159
+#: data/nl.g4d.Girens.appdata.xml.in:169 data/nl.g4d.Girens.appdata.xml.in:179
+#: data/nl.g4d.Girens.appdata.xml.in:190 data/nl.g4d.Girens.appdata.xml.in:198
+#: data/nl.g4d.Girens.appdata.xml.in:208 data/nl.g4d.Girens.appdata.xml.in:219
+msgid "Changes:"
+msgstr "Changements :"
+
+#: data/nl.g4d.Girens.appdata.xml.in:37
+msgid "Load only needed items of sections"
+msgstr "Chargement des éléments nécessaires des sections uniquement"
+
+#: data/nl.g4d.Girens.appdata.xml.in:38
+msgid "Use readable name for sorting"
+msgstr "Utilisation de noms lisibles pour le tri"
+
+#: data/nl.g4d.Girens.appdata.xml.in:46
+msgid "Dutch translation added"
+msgstr "Ajout de la traduction néerlandaise"
+
+#: data/nl.g4d.Girens.appdata.xml.in:47
+msgid "Update layout of settings menu with libhandy widgets"
+msgstr ""
+"Mise à jour de la disposition du menu des paramètres avec les widgets "
+"libhandy"
+
+#: data/nl.g4d.Girens.appdata.xml.in:48
+msgid "Setting for changing transcoding video resolution"
+msgstr "Ajout d’un paramètre pour changer la résolution du transcodage vidéo"
+
+#: data/nl.g4d.Girens.appdata.xml.in:49
+msgid "Unselect sidebar item when changing section"
+msgstr ""
+"Dé-sélection de l’élément de la barre latérale lors d’un changement de "
+"section"
+
+#: data/nl.g4d.Girens.appdata.xml.in:50
+msgid "More music play options"
+msgstr "Plus d’options de lecture de musique"
+
+#: data/nl.g4d.Girens.appdata.xml.in:58
+msgid "New app icon"
+msgstr "Nouvelle icône d’application"
+
+#: data/nl.g4d.Girens.appdata.xml.in:59
+msgid "Double click to toggle fullscreen"
+msgstr "Double-clic pour basculer en plein écran"
+
+#: data/nl.g4d.Girens.appdata.xml.in:60
+msgid "Redesigned login view"
+msgstr "Nouvelle vue de connexion"
+
+#: data/nl.g4d.Girens.appdata.xml.in:61
+msgid "Press k to toggle play or pause media"
+msgstr ""
+"Ajout de la possibilité de presser k pour jouer ou mettre en pause un média"
+
+#: data/nl.g4d.Girens.appdata.xml.in:69
+msgid "Fix basic auth urls when downloading"
+msgstr "Correction des URLs d’authentification de base lors du téléchargement"
+
+#: data/nl.g4d.Girens.appdata.xml.in:70
+msgid "Fix crash when latest timeline update failed"
+msgstr ""
+"Correction d’un plantage quand la dernière mise à jour de la timeline échoue"
+
+#: data/nl.g4d.Girens.appdata.xml.in:71
+msgid "Exit fullscreen with escape"
+msgstr ""
+"Ajout de la possibilité de quitter le mode plein écran avec la touche Échap"
+
+#: data/nl.g4d.Girens.appdata.xml.in:72 data/nl.g4d.Girens.appdata.xml.in:89
+msgid "Update dependencies"
+msgstr "Mise à jour des dépendances"
+
+#: data/nl.g4d.Girens.appdata.xml.in:80
+msgid "Add feature changing subtitle and audio stream with plex remote"
+msgstr ""
+"Ajout d’une fonction permettant de modifier les sous-titres et le flux audio "
+"avec plex remote"
+
+#: data/nl.g4d.Girens.appdata.xml.in:88
+msgid "Fix music not correct seeking when transcoding"
+msgstr ""
+"Correction de la recherche incorrecte de la musique lors du transcodage"
+
+#: data/nl.g4d.Girens.appdata.xml.in:90
+msgid "Fix bug with showing section after playlist is showed"
+msgstr ""
+"Correction d’un bogue avec l’affichage d’une section après que la liste de "
+"lecture soit affichée"
+
+#: data/nl.g4d.Girens.appdata.xml.in:98
+msgid "Change subtitle and audio stream"
+msgstr "Changement du flux de l’audio et des sous-titres"
+
+#: data/nl.g4d.Girens.appdata.xml.in:99
+msgid "Remove white border in fullscreen"
+msgstr "Suppression de la bordure blanche en plein écran"
+
+#: data/nl.g4d.Girens.appdata.xml.in:100
+msgid "Option to change volume level"
+msgstr "Ajout d’une option pour changer le niveau de volume"
+
+#: data/nl.g4d.Girens.appdata.xml.in:101
+msgid "Option to set dark theme"
+msgstr "Ajout d’une option pour appliquer un thème sombre"
+
+#: data/nl.g4d.Girens.appdata.xml.in:102
+msgid "Change progress bar for seeking bar in video player"
+msgstr ""
+"Changement de la barre de progression pour une barre de recherche dans le "
+"lecteur vidéo"
+
+#: data/nl.g4d.Girens.appdata.xml.in:103
+msgid "Dont refresh allready loaded section"
+msgstr "Les sections déjà chargées ne seront pas rafraîchies"
+
+#: data/nl.g4d.Girens.appdata.xml.in:111
+msgid "Plex token saved with Secret Service"
+msgstr "Jeton Plex enregistrer avec Secret Service"
+
+#: data/nl.g4d.Girens.appdata.xml.in:112
+msgid "Advertise as Client on the local network"
+msgstr "Annoncer en tant que Client sur le réseau local"
+
+#: data/nl.g4d.Girens.appdata.xml.in:113
+msgid "Add option to play media without transcoding"
+msgstr "Ajout d’une option pour lire les médias sans transcodage"
+
+#: data/nl.g4d.Girens.appdata.xml.in:114
+msgid "About dialog added"
+msgstr "Ajout d’une fenêtre À propos"
+
+#: data/nl.g4d.Girens.appdata.xml.in:115
+msgid "Shortcut dialog added"
+msgstr "Ajout d’une fenêtre de Raccourcis"
+
+#: data/nl.g4d.Girens.appdata.xml.in:116
+msgid "Fix crash when playing media"
+msgstr "Correction d’un plantage lors de la lecture des médias"
+
+#: data/nl.g4d.Girens.appdata.xml.in:124
+msgid "Enhanced smallscreen support"
+msgstr "Amélioration de la prise en charge des petits écrans"
+
+#: data/nl.g4d.Girens.appdata.xml.in:125
+msgid "Play music clips from music track"
+msgstr "Lecture des clips musicaux depuis une piste musicale"
+
+#: data/nl.g4d.Girens.appdata.xml.in:133
+msgid "Allow connecting to url instead of Plex user"
+msgstr "Permet la connexion à une URL à la place d’un utilisateur Plex"
+
+#: data/nl.g4d.Girens.appdata.xml.in:134
+msgid "Improve multi server support"
+msgstr "Amélioration de la prise en charge de multiples serveurs"
+
+#: data/nl.g4d.Girens.appdata.xml.in:135
+msgid "Change sorting asc or desc"
+msgstr "Changement de tri croissant / décroissant"
+
+#: data/nl.g4d.Girens.appdata.xml.in:136
+msgid "Hide media controlls after two seconds if new media started playing"
+msgstr ""
+"Masquage des contrôles des médias après deux secondes si un nouveau média "
+"commence à être joué"
+
+#: data/nl.g4d.Girens.appdata.xml.in:137
+msgid "Seek to certain time when playing music"
+msgstr ""
+"Ajout de la possibilité d’aller à un moment précis lors de la lecture de la "
+"musique"
+
+#: data/nl.g4d.Girens.appdata.xml.in:138
+msgid "Default width 640px"
+msgstr "Largeur par défaut à 640px"
+
+#: data/nl.g4d.Girens.appdata.xml.in:146
+msgid "Redesigned media controlbox for video player"
+msgstr ""
+"Nouvelle conception de la boîte de contrôle des médias pour le lecteur vidéo"
+
+#: data/nl.g4d.Girens.appdata.xml.in:147
+msgid "Use [ and ] for seeking media"
+msgstr "Utilisation de [ et ] pour parcourir un média"
+
+#: data/nl.g4d.Girens.appdata.xml.in:148
+msgid "Use media keys to select resume action"
+msgstr "Utilisation des touches média pour sélectionner l’action de reprise"
+
+#: data/nl.g4d.Girens.appdata.xml.in:149
+msgid "Hide cursor on video fullscreen"
+msgstr "Masquage du curseur pour la vidéo en plein écran"
+
+#: data/nl.g4d.Girens.appdata.xml.in:150
+msgid "Dont hide media controlls when playqueue is active"
+msgstr ""
+"Contrôles des médias non masqués lorsque la liste d’attente de lecture est "
+"activée"
+
+#: data/nl.g4d.Girens.appdata.xml.in:151
+msgid "Fix starting wrong offset when new media is started"
+msgstr ""
+"Correction de l’erreur de décalage lors du démarrage d'un nouveau média"
+
+#: data/nl.g4d.Girens.appdata.xml.in:152
+msgid "Show media title in resume dialog"
+msgstr "Affichage du titre du média dans la fenêtre de reprise de la lecture"
+
+#: data/nl.g4d.Girens.appdata.xml.in:153
+msgid "Default mpv video output driver changed to xv"
+msgstr "Le pilote de sortie vidéo mpv par défaut a été remplacé par xv"
+
+#: data/nl.g4d.Girens.appdata.xml.in:161
+msgid "Commandline options"
+msgstr "Ajout d’options de ligne de commande"
+
+#: data/nl.g4d.Girens.appdata.xml.in:162
+msgid "Gnome search provider"
+msgstr "Fournisseur de recherche de GNOME"
+
+#: data/nl.g4d.Girens.appdata.xml.in:163
+msgid "Onscreen controller"
+msgstr "Contrôleur sur l’écran"
+
+#: data/nl.g4d.Girens.appdata.xml.in:171
+msgid "Added media notification (mpris)"
+msgstr "Ajout d’une notification de médias (mpris)"
+
+#: data/nl.g4d.Girens.appdata.xml.in:172
+msgid "Added play and shuffle button to artist view"
+msgstr ""
+"Ajout de boutons de lecture et de lecture aléatoire dans la vue des artistes"
+
+#: data/nl.g4d.Girens.appdata.xml.in:173
+msgid "Enable mpv default OSC"
+msgstr "Activation de l’OSC par défaut mpv"
+
+#: data/nl.g4d.Girens.appdata.xml.in:181
+msgid "Support for mediakeys"
+msgstr "Prise en charge de mediakeys"
+
+#: data/nl.g4d.Girens.appdata.xml.in:182
+msgid "Resume dialog when media has an offset"
+msgstr "Fenêtre de reprise lorsque le média a un décalage"
+
+#: data/nl.g4d.Girens.appdata.xml.in:183
+msgid "Play and shuffle button added to show view"
+msgstr ""
+"Ajout de boutons de lecture et de lecture aléatoire dans la vue des émissions"
+
+#: data/nl.g4d.Girens.appdata.xml.in:184
+msgid "Load views after main view is loaded"
+msgstr "Chargement des vues après que la vue principale ait été chargée"
+
+#: data/nl.g4d.Girens.appdata.xml.in:192
+msgid "Fix progres not been updated correctly"
+msgstr "Correction de la progression qui n’était pas mise à jour correctement"
+
+#: data/nl.g4d.Girens.appdata.xml.in:200
+msgid "Play and shuffle button added in section view"
+msgstr ""
+"Ajout de boutons de lecture et de lecture aléatoire dans la vue des sections"
+
+#: data/nl.g4d.Girens.appdata.xml.in:201
+msgid "Playqueue will be refreshed when playing next/prev item"
+msgstr ""
+"La file d’attente de lecture sera actualisée lors de la lecture de l’élément "
+"suivant / précédent"
+
+#: data/nl.g4d.Girens.appdata.xml.in:202
+msgid "Keep fullscreen status"
+msgstr "Garde le statut plein écran"
+
+#: data/nl.g4d.Girens.appdata.xml.in:210
+msgid "List with playqueue items"
+msgstr "Liste avec les éléments de la file d’attente de lecture"
+
+#: data/nl.g4d.Girens.appdata.xml.in:211
+msgid "Play ondeck items continuous"
+msgstr "Lecture continue des éléments de l’accueil"
+
+#: data/nl.g4d.Girens.appdata.xml.in:212
+msgid "Added an album view"
+msgstr "Ajout d’une vue de l’album"
+
+#: data/nl.g4d.Girens.appdata.xml.in:213
+msgid "Added an artist view"
+msgstr "Ajout d’une vue de l’artiste"
+
+#: data/nl.g4d.Girens.appdata.xml.in:221
+msgid "Buttons now with more constrast"
+msgstr "Les boutons ont désormais plus de contraste"
+
+#: data/nl.g4d.Girens.appdata.xml.in:222
+msgid "Sync tv show with options like only unwatched"
+msgstr ""
+"Ajout de la synchronisation des émissions télévisées avec des options comme "
+"« non vus uniquement »"
+
+#: data/nl.g4d.Girens.appdata.xml.in:223
+msgid "Sync and download dialog with thumbnails"
+msgstr "Fenêtres de synchronisation et de téléchargement avec des vignettes"
+
+#: data/nl.g4d.Girens.appdata.xml.in:229
+msgid "Media controll buttons/images with more contrast."
+msgstr "Boutons / images de contrôle des médias avec plus de contraste."
+
+#: data/nl.g4d.Girens.appdata.xml.in:234
+msgid "First release."
+msgstr "Première version."
+
+#: data/nl.g4d.Girens.gschema.xml:6 data/nl.g4d.Girens.gschema.xml:11
+msgid "Window size width"
+msgstr "Largeur de la fenêtre"
+
+#: data/nl.g4d.Girens.gschema.xml:7
+msgid "Window size (width)."
+msgstr "Taille de la fenêtre (largeur)."
+
+#: data/nl.g4d.Girens.gschema.xml:12
+msgid "Window size (height)."
+msgstr "Taille de la fenêtre (hauteur)."
+
+#: data/nl.g4d.Girens.gschema.xml:16
+msgid "The volume level of the audio"
+msgstr "Niveau de volume de l’audio"
+
+#: data/nl.g4d.Girens.gschema.xml:21
+msgid ""
+"Allow other devices on this network to find Girens and control this client"
+msgstr ""
+"Autoriser d’autres appareils sur ce réseau à trouver Girens et à contrôler "
+"ce client"
+
+#: data/nl.g4d.Girens.gschema.xml:26
+msgid "Use dark GTK theme"
+msgstr "Utiliser le thème GTK sombre"
+
+#: data/nl.g4d.Girens.gschema.xml:31
+msgid "Play media direct from server instead of transcoding it"
+msgstr "Lire le média directement depuis le serveur au lieu de le transcoder"
+
+#: data/nl.g4d.Girens.gschema.xml:36
+msgid "Resolution to transcode media to"
+msgstr "Résolution de transcodage des médias"
+
+#: data/nl.g4d.Girens.gschema.xml:41
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio"
+msgstr ""
+"Lorsque vous jouez une musique et que la piste comporte un clip musical, "
+"celui-ci est lu à la place de l’audio"
+
+#: data/nl.g4d.Girens.gschema.xml:46
+msgid "The plex user uuid"
+msgstr "L’UUID de l’utilisateur Plex"
+
+#: data/nl.g4d.Girens.gschema.xml:51
+msgid "The plex server uuid"
+msgstr "L’UUID du serveur Plex"
+
+#: data/nl.g4d.Girens.gschema.xml:56
+msgid "The plex server url"
+msgstr "L’URL du serveur Plex"
+
+#: data/ui/profile_dialog.ui:8
+msgid "Plex - Account info"
+msgstr "Informations sur le compte Plex"
+
+#: data/ui/profile_dialog.ui:27
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: data/ui/profile_dialog.ui:40 data/ui/sync_dialog.ui:40
+msgid "Ok"
+msgstr "OK"
+
+#: data/ui/profile_dialog.ui:83 data/ui/login_view.ui:94
+msgid "Username"
+msgstr "Nom d’utilisateur"
+
+#: data/ui/profile_dialog.ui:113
+msgid "Email"
+msgstr "Courriel"
+
+#: data/ui/profile_dialog.ui:126
+msgid "Subscription plan"
+msgstr "Programme d’abonnement"
+
+#: data/ui/profile_dialog.ui:139
+msgid "Secure"
+msgstr "Sécurisé"
+
+#: data/ui/resume_dialog.ui:25
+msgid "Beginning"
+msgstr "Début"
+
+#: data/ui/resume_dialog.ui:38
+msgid "Resume"
+msgstr "Reprendre"
+
+#: data/ui/resume_dialog.ui:64
+msgid "Do you want resume watching or start from the beginning?"
+msgstr "Voulez-vous reprendre le visionnage ou commencer depuis le début ?"
+
+#: data/ui/sync_item.ui:51 data/ui/cover_box.ui:177 data/ui/cover_box.ui:191
+msgid "label"
+msgstr "étiquette"
+
+#: data/ui/cover_box.ui:15 data/ui/album_view.ui:16
+msgid "Go to artist view"
+msgstr "Aller à la vue des artistes"
+
+#: data/ui/cover_box.ui:28
+msgid "Go to album view"
+msgstr "Aller à la vue des albums"
+
+#: data/ui/cover_box.ui:41
+msgid "Go to show view"
+msgstr "Aller à la vue des émissions"
+
+#: data/ui/cover_box.ui:54
+msgid "Mark as Played"
+msgstr "Marquer comme joué"
+
+#: data/ui/cover_box.ui:67
+msgid "Mark as Unplayed"
+msgstr "Marquer comme non joué"
+
+#: data/ui/cover_box.ui:80 data/ui/album_view.ui:29 data/ui/sync_dialog.ui:27
+#: data/ui/sync_settings.ui:24
+msgid "Sync"
+msgstr "Synchroniser"
+
+#: data/ui/cover_box.ui:93 data/ui/album_view.ui:42
+#: data/ui/music_popover_menu.ui:147
+msgid "Shuffle"
+msgstr "Mélanger"
+
+#: data/ui/cover_box.ui:106
+msgid "Play from beginning"
+msgstr "Jouer depuis le début"
+
+#: data/ui/about_dialog.ui.in:12
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+"Un client GTK pour Plex permettant de jouer les films, émissions télévisées "
+"et musiques de votre bibliothèque Plex."
+
+#: data/ui/about_dialog.ui.in:14
+msgid "Learn more about Girens"
+msgstr "En savoir plus sur Girens"
+
+#. Add your name to the translator credits list
+#: data/ui/about_dialog.ui.in:16
+msgid "translator-credits"
+msgstr "Irénée THIRION"
+
+#: data/ui/media_box_music.ui:255 data/ui/media_box_video_bottom.ui:223
+msgid "00:00"
+msgstr "00:00"
+
+#: data/ui/media_box_music.ui:271 data/ui/media_box_video_bottom.ui:239
+msgid "99:00"
+msgstr "99:00"
+
+#: data/ui/sync_dialog.ui:7
+msgid "Sync items"
+msgstr "Synchroniser les éléments"
+
+#: data/ui/player_view.ui:46
+msgid "page0"
+msgstr "page0"
+
+#: data/ui/player_view.ui:194
+msgid "Audio "
+msgstr "Audio "
+
+#: data/ui/player_view.ui:206
+msgid "Subtitle "
+msgstr "Sous-titre "
+
+#: data/ui/player_view.ui:260
+msgid ""
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, "
+"mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex "
+"felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec "
+"porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius "
+"natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. "
+"Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel "
+"tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis "
+"non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor "
+"quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus "
+"vulputate ac. Sed ut leo justo. "
+msgstr ""
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, "
+"mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex "
+"felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec "
+"porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius "
+"natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. "
+"Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel "
+"tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis "
+"non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor "
+"quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus "
+"vulputate ac. Sed ut leo justo. "
+
+#: data/ui/player_view.ui:283 data/ui/discover_view.ui:17
+msgid "Ondeck"
+msgstr "Accueil"
+
+#: data/ui/artist_view.ui:136 data/ui/section_view.ui:145
+msgid "Show more"
+msgstr "Afficher plus"
+
+#: data/ui/shortcuts.ui:13
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Lecture"
+
+#: data/ui/shortcuts.ui:17
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Lecture / Pause"
+
+#: data/ui/shortcuts.ui:24
+msgctxt "shortcut window"
+msgid "Previous"
+msgstr "Précédent"
+
+#: data/ui/shortcuts.ui:31
+msgctxt "shortcut window"
+msgid "Next"
+msgstr "Suivant"
+
+#: data/ui/shortcuts.ui:38
+msgctxt "shortcut window"
+msgid "Seek forwards"
+msgstr "Avancer"
+
+#: data/ui/shortcuts.ui:45
+msgctxt "shortcut window"
+msgid "Seek backwards"
+msgstr "Aller en arrière"
+
+#: data/ui/shortcuts.ui:52
+msgctxt "shortcut window"
+msgid "Stop playing"
+msgstr "Arrêter la lecture"
+
+#: data/ui/shortcuts.ui:59
+msgctxt "shortcut window"
+msgid "Fullscreen"
+msgstr "Plein écran"
+
+#: data/ui/shortcuts.ui:66
+msgctxt "shortcut window"
+msgid "Play musicclips instead of audio track"
+msgstr "Jouer les clips musicaux à la place des pistes audio"
+
+#: data/ui/login_view.ui:81
+msgid "Password"
+msgstr "Mot de passe"
+
+#: data/ui/login_view.ui:108
+msgid "Login to Plex with an user acount"
+msgstr "Connectez-vous à Plex avec un compte utilisateur"
+
+#: data/ui/login_view.ui:125
+msgid "Login"
+msgstr "Connexion"
+
+#: data/ui/login_view.ui:152
+msgid "User"
+msgstr "Utilisateur"
+
+#: data/ui/login_view.ui:165
+msgid "The url to the Plex server with the port number"
+msgstr "L’URL du serveur Plex avec le numéro du port"
+
+#: data/ui/login_view.ui:166
+msgid "http://127.0.0.1:32400"
+msgstr "http://127.0.0.1:32400"
+
+#: data/ui/login_view.ui:177 data/ui/login_view.ui:258
+msgid "Url"
+msgstr "URL"
+
+#: data/ui/login_view.ui:191
+msgid "Go to Plex server based on an url"
+msgstr "Aller au serveur Plex à partir d’une URL"
+
+#: data/ui/login_view.ui:208
+msgid "Connect"
+msgstr "Se connecter"
+
+#: data/ui/login_view.ui:236
+msgid "The token from the server can be empty"
+msgstr "Le jeton du serveur peut être vide"
+
+#: data/ui/login_view.ui:247
+msgid "Token"
+msgstr "Jeton"
+
+#: data/ui/discover_view.ui:65
+msgid "Recently added TV"
+msgstr "TV ajoutées récemment"
+
+#: data/ui/discover_view.ui:113
+msgid "Recently added Movies"
+msgstr "Films ajoutés récemment"
+
+#: data/ui/discover_view.ui:161
+msgid "Recently added Music"
+msgstr "Musiques ajoutées récemment"
+
+#: data/ui/section_view.ui:92
+msgid "Order"
+msgstr "Ordre"
+
+#: data/ui/music_popover_menu.ui:161
+msgid "Repeat"
+msgstr "Répéter"
+
+#: data/ui/sync_settings.ui:7
+msgid "Sync - settings"
+msgstr "Paramètres de synchronisation"
+
+#: data/ui/sync_settings.ui:55 data/ui/sync_settings.ui:88
+msgid "Convert"
+msgstr "Convertir"
+
+#: data/ui/sync_settings.ui:67 data/ui/sync_settings.ui:101
+msgid "Unwatched only"
+msgstr "Non vus seulement"
+
+#: data/ui/sync_settings.ui:79
+msgid "Max items"
+msgstr "Maximum d’éléments"
+
+#: data/ui/sync_settings.ui:92
+msgid "Converted sync can take a long time"
+msgstr "La synchronisation convertie peut prendre beaucoup de temps"
+
+#: data/ui/sync_settings.ui:116
+msgid "Number of items"
+msgstr "Nombre d’éléments"
+
+#: data/ui/main_window.ui:25
+msgid "Settings"
+msgstr "Paramètres"
+
+#: data/ui/main_window.ui:72
+msgid "Advertise as client"
+msgstr "Annoncer en tant que clien"
+
+#: data/ui/main_window.ui:73
+msgid ""
+"Allow other devices on this network to find Girens and control this client."
+msgstr ""
+"Autoriser d’autres appareils sur ce réseau à trouver Girens et contrôler ce "
+"client."
+
+#: data/ui/main_window.ui:87
+msgid "Prefer music clips"
+msgstr "Préférer les clips musicaux"
+
+#: data/ui/main_window.ui:88
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio."
+msgstr ""
+"Lorsqu’une musique est jouée et que la piste comporte un clip musical, celui-"
+"ci est lu à la place de l’audio."
+
+#: data/ui/main_window.ui:102
+msgid "Dark Theme"
+msgstr "Thème sombre"
+
+#: data/ui/main_window.ui:103
+msgid "Use dark GTK theme."
+msgstr "Utiliser le thème GTK sombre."
+
+#: data/ui/main_window.ui:116
+msgid "Transcode media"
+msgstr "Transcoder les médias"
+
+#: data/ui/main_window.ui:117
+msgid "Transcode media instead of playing directly."
+msgstr "Transcoder les médias au lieu de les lire directement."
+
+#: data/ui/main_window.ui:129
+msgid "1080p"
+msgstr "1080p"
+
+#: data/ui/main_window.ui:143
+msgid "720p"
+msgstr "720p"
+
+#: data/ui/main_window.ui:158
+msgid "480p"
+msgstr "480p"
+
+#: data/ui/main_window.ui:173
+msgid "240p"
+msgstr "240p"
+
+#: data/ui/main_window.ui:193
+msgid "Info"
+msgstr "Informations"
+
+#: data/ui/main_window.ui:205
+msgid "Shortcuts"
+msgstr "Raccourcis"
+
+#: data/ui/main_window.ui:221
+msgid "About Girens"
+msgstr "À propos de Girens"
+
+#: src/section_view.py:36
+msgid "Added at"
+msgstr "Ajouté le"
+
+#: src/section_view.py:37
+msgid "Last viewed at"
+msgstr "Dernière vue le"
+
+#: src/section_view.py:38
+msgid "Originally available at"
+msgstr "Disponible à l’origine le"
+
+#: src/section_view.py:39
+msgid "Title"
+msgstr "Titre"
+
+#: src/section_view.py:40
+msgid "Rating"
+msgstr "Évaluation"
+
+#: src/section_view.py:41
+msgid "Unwatched"
+msgstr "Non vu"
+
+#: src/section_view.py:42
+msgid "View count"
+msgstr "Voir le compte"
+
+#: src/section_view.py:43
+msgid "User rating"
+msgstr "Évaluation utilisateur"
+
+#: src/section_view.py:44
+msgid "Media height"
+msgstr "Hauteur des médias"
+
+#: src/section_view.py:45
+msgid "Duration"
+msgstr "Durée"
+
+#: src/section_view.py:147 src/sidebar_box.py:104
+msgid "Playlists"
+msgstr "Listes de lecture"
+
+#: src/player_view.py:265
+msgid "None"
+msgstr "Aucun"
+
+#: src/sidebar_box.py:95
+msgid "Player"
+msgstr "Lecteur"
+
+#: src/sidebar_box.py:100
+msgid "Home"
+msgstr "Accueil"
+
+#: src/window.py:276
+msgid "Starting Girens"
+msgstr "Démarrage de Girens"
+
+#: src/album_view.py:126
+msgid "Disc "
+msgstr "Disque "
+
+#: src/plex.py:113 src/plex.py:125 src/plex.py:435 src/plex.py:443
+#: src/plex.py:458 src/plex.py:466
+msgid "Connecting to "
+msgstr "Connexion à "
+
+#: src/plex.py:125 src/plex.py:443 src/plex.py:466
+msgid " failed."
+msgstr " échoué."
+
+#: src/plex.py:454
+msgid "No servers found for this account."
+msgstr "Aucun serveur trouvé pour ce compte."
+
+#: src/plex.py:458
+msgid "There are "
+msgstr "Il y a "
+
+#: src/plex.py:458
+msgid " connection urls."
+msgstr " URLs de connexion."
+
+#: src/plex.py:458
+msgid "This may take a while"
+msgstr "Cela peut prendre du temps"
