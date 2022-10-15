@@ -98,7 +98,7 @@ class SidebarBox(Gtk.Box):
         self._section_player.set_title('Player')
         self._section_player.set_custom_title(_('Player'))
         self._section_list.append(self._section_player)
-        self._section_player.hide()
+        self._section_player.set_visible(False)
         section_grid = SectionGrid()
         section_grid.set_title('Home')
         section_grid.set_custom_title(_('Home'))
@@ -149,6 +149,6 @@ class SidebarBox(Gtk.Box):
 
     def __on_media_playing(self, player, playing, playqueue_item, playqueue, offset, item):
         if item != None and item.listType == 'video':
-            GLib.idle_add(self._section_player.show)
+            GLib.idle_add(self._section_player.set_visible, True)
         else:
-            GLib.idle_add(self._section_player.hide)
+            GLib.idle_add(self._section_player.set_visible, False)

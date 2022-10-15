@@ -7,54 +7,99 @@ Adjustment _scale_adjustment {
 }
 
 template media_box_music : Revealer {
-  can-focus: false;
   reveal-child: true;
-
   Grid {
-    visible: true;
-    can-focus: false;
+    Box {
+      margin-top: 5;
+
+      Label _time_left_label {
+        halign: start;
+        valign: center;
+        label: "00:00";
+        margin-start: 10;
+        width-chars: 7;
+      }
+
+      Scale _scale_bar {
+        hexpand: true;
+        adjustment: _scale_adjustment;
+        restrict-to-fill-level: false;
+        fill-level: 0.5;
+        digits: 2;
+        draw-value: false;
+        value-pos: left;
+      }
+
+      Label _time_right_label {
+        halign: end;
+        valign: center;
+        label: "99:00";
+        margin-end: 10;
+        width-chars: 7;
+      }
+
+      layout {
+        row: 0;
+        column: 0;
+      }
+    }
+
+    Grid _label2_box {
+      halign: center;
+      hexpand: true;
+      layout {
+        row: 1;
+        column: 0;
+      }
+    }
 
     Grid {
       height-request: 50;
-      visible: true;
-      can-focus: false;
       margin-top: 5;
       hexpand: true;
 
       Overlay {
-        visible: true;
-        can-focus: false;
-
         Image _cover_image {
           width-request: 50;
           height-request: 50;
-          visible: true;
-          can-focus: false;
         }
 
         [overlay]
         Image _watched_image {
-          can-focus: false;
           halign: end;
           valign: start;
           icon-name: "dialog-information";
         }
       }
 
-      Box {
-        visible: true;
-        can-focus: false;
+      MenuButton _playqueue_button {
+        width-request: 50;
+        height-request: 50;
+        direction: up;
+      }
 
+      Grid _label_box {
+        halign: center;
+        hexpand: true;
+        orientation: vertical;
+
+        Label _title_label {
+          label: "Title";
+          ellipsize: end;
+        }
+
+        Label _subtitle_label {
+          label: "subtitle";
+          ellipsize: end;
+        }
+      }
+
+      Box {
         Button _prev_button {
           width-request: 50;
           height-request: 50;
-          visible: true;
-          can-focus: true;
-          receives-default: true;
 
           Image {
-            visible: true;
-            can-focus: false;
             icon-name: "media-seek-backward-symbolic";
           }
         }
@@ -62,13 +107,7 @@ template media_box_music : Revealer {
         Button _play_button {
           width-request: 50;
           height-request: 50;
-          visible: true;
-          can-focus: true;
-          receives-default: true;
-
           Image _play_image {
-            visible: true;
-            can-focus: false;
             icon-name: "media-playback-start-symbolic";
           }
         }
@@ -76,13 +115,7 @@ template media_box_music : Revealer {
         Button _next_button {
           width-request: 50;
           height-request: 50;
-          visible: true;
-          can-focus: true;
-          receives-default: true;
-
           Image {
-            visible: true;
-            can-focus: false;
             icon-name: "media-seek-forward-symbolic";
           }
         }
@@ -90,13 +123,9 @@ template media_box_music : Revealer {
         Button _close_button {
           width-request: 50;
           height-request: 50;
-          visible: true;
-          can-focus: true;
           receives-default: true;
 
           Image {
-            visible: true;
-            can-focus: false;
             icon-name: "media-playback-stop-symbolic";
           }
         }
@@ -104,9 +133,6 @@ template media_box_music : Revealer {
         MenuButton _media_settings {
           width-request: 50;
           height-request: 50;
-          visible: true;
-          can-focus: true;
-          receives-default: true;
           direction: up;
         }
 
@@ -115,78 +141,10 @@ template media_box_music : Revealer {
         ]
       }
 
-      MenuButton _playqueue_button {
-        width-request: 50;
-        height-request: 50;
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-        direction: up;
+      layout {
+        row: 2;
+        column: 0;
       }
-
-      Grid _label_box {
-        visible: true;
-        can-focus: false;
-        halign: center;
-        hexpand: true;
-        orientation: vertical;
-
-        Label _title_label {
-          visible: true;
-          can-focus: false;
-          label: "Title";
-          ellipsize: end;
-        }
-
-        Label _subtitle_label {
-          visible: true;
-          can-focus: false;
-          label: "subtitle";
-          ellipsize: end;
-        }
-      }
-    }
-
-    Grid {
-      visible: true;
-      can-focus: false;
-      margin-top: 5;
-
-      Label _time_left_label {
-        visible: true;
-        can-focus: false;
-        halign: start;
-        valign: center;
-        label: _("00:00");
-      }
-
-      Label _time_right_label {
-        visible: true;
-        can-focus: false;
-        halign: end;
-        valign: center;
-        label: _("99:00");
-      }
-
-      Scale _scale_bar {
-        visible: true;
-        can-focus: true;
-        hexpand: true;
-        adjustment: _scale_adjustment;
-        restrict-to-fill-level: false;
-        fill-level: 0.5;
-        round-digits: 1;
-        digits: 2;
-        draw-value: false;
-        value-pos: left;
-      }
-    }
-
-    Grid _label2_box {
-      visible: true;
-      can-focus: false;
-      halign: center;
-      hexpand: true;
     }
 
     styles [

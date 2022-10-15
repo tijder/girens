@@ -27,8 +27,6 @@ template PlexWindow : Adw.ApplicationWindow {
             [start]
             Button _profile_button {
               Image _avatar_image {
-                visible: true;
-                can-focus: false;
                 icon-name: "preferences-desktop-personal-symbolic";
               }
             }
@@ -39,10 +37,7 @@ template PlexWindow : Adw.ApplicationWindow {
         ScrolledWindow sidebar {
           hscrollbar-policy: never;
           vexpand: true;
-          child: Viewport _sidebar_viewport {
-            visible: true;
-            can-focus: false;
-          };
+          child: Viewport _sidebar_viewport {};
         }
       }
 
@@ -68,32 +63,17 @@ template PlexWindow : Adw.ApplicationWindow {
 
           ToggleButton _search_toggle_button {
               visible: true;
-              can-focus: true;
-              receives-default: true;
               icon-name: "edit-find-symbolic";
             }
 
             Box {
-              visible: true;
-              can-focus: false;
-
               Button _sync_button {
-                visible: true;
-                can-focus: false;
-                receives-default: false;
-
                 Image _sync_image {
-                  visible: true;
-                  can-focus: false;
                   icon-name: "network-transmit-symbolic";
                 }
               }
 
-              MenuButton _download_button {
-                visible: true;
-                can-focus: true;
-                receives-default: true;
-              }
+              MenuButton _download_button {}
 
               styles [
                 "linked",
@@ -102,14 +82,8 @@ template PlexWindow : Adw.ApplicationWindow {
 
           [end]
           MenuButton _menu_button {
-              visible: true;
-              can-focus: true;
-              receives-default: true;
               popover: _menu_popover;
-
               Image _shortcuts_image1 {
-                visible: true;
-                can-focus: false;
                 icon-name: "open-menu-symbolic";
               }
             }
@@ -118,60 +92,44 @@ template PlexWindow : Adw.ApplicationWindow {
         // Right content
         Box _content_box_wrapper {
           orientation: vertical;
-
-
           Box content {
-            visible: true;
-            //can-focus: false;
             hexpand: true;
             orientation: vertical;
 
             SearchBar _search_bar {
-              visible: true;
-              can-focus: false;
+              SearchEntry _search_entry {}
+            }
+            Adw.ViewStack _viewStack_pages {
+              vhomogeneous: false;
 
-              SearchEntry _search_entry {
-                visible: true;
-                can-focus: true;
+              Adw.ViewStackPage _discover_revealer {
+                child: .discover_view _discover_view {};
+              }
+
+              Adw.ViewStackPage _show_revealer {
+                child: .show_view _show_view {};
+              }
+
+              Adw.ViewStackPage _section_revealer {
+                child: .section_view _section_view {};
+              }
+
+              Adw.ViewStackPage _search_revealer {
+                child: .search_view _search_view {};
+              }
+
+              Adw.ViewStackPage _artist_revealer {
+                child: .artist_view _artist_view {};
+              }
+
+              Adw.ViewStackPage _album_revealer {
+                child: .album_view _album_view {};
+              }
+
+              Adw.ViewStackPage _player_revealer {
+                child: .player_view _player_view {};
               }
             }
-
-            //ScrolledWindow _main_scrolled_window {
-            //  visible: true;
-            //  can-focus: true;
-
-              Adw.ViewStack _viewStack_pages {
-                vhomogeneous: false;
-
-                Adw.ViewStackPage _discover_revealer {
-                  child: .discover_view _discover_view {};
-                }
-
-                Adw.ViewStackPage _show_revealer {
-                  child: .show_view _show_view {};
-                }
-
-                Adw.ViewStackPage _section_revealer {
-                  child: .section_view _section_view {};
-                }
-
-                Adw.ViewStackPage _search_revealer {
-                  child: .search_view _search_view {};
-                }
-
-                Adw.ViewStackPage _artist_revealer {
-                  child: .artist_view _artist_view {};
-                }
-
-                Adw.ViewStackPage _album_revealer {
-                  child: .album_view _album_view {};
-                }
-
-                Adw.ViewStackPage _player_revealer {
-                  child: .player_view _player_view {};
-                }
-              }
-            //}
           }
 
           .media_box_music _media_box_music {}

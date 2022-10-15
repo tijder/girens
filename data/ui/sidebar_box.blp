@@ -1,17 +1,11 @@
 using Gtk 4.0;
 
 template sidebar_box : Box {
-  visible: true;
-  can-focus: false;
   orientation: vertical;
 
-  ComboBox _server_box {
-    visible: true;
-    can-focus: false;
-  }
+  ComboBox _server_box {}
 
   ListBox _section_list {
-    visible: true;
-    can-focus: false;
+    styles ["navigation-sidebar"]
   }
 }

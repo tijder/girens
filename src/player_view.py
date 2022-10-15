@@ -164,24 +164,21 @@ class PlayerView(Gtk.ScrolledWindow):
 
     @Gtk.Template.Callback()
     def on_keypress(self, widget, keyval, keycode, state):
-        print(keyval)
-        print(keycode)
-        print(state)
         if keyval in [102, 65480]: # f and f11 key
             self.__fullscreen()
-        elif key.string == 't':
+        elif keyval == 116: # t
             self.__toggle_windowed()
-        elif key.keyval in [32, 112, 107]: # spacebar, p and k
+        elif keyval in [32, 112, 107]: # spacebar, p and    k
             self._player.play_pause()
-        elif key.string == 'o':
+        elif keyval == 111: # o
             self.__show_controlls()
-        elif key.string == 'q':
+        elif keyval == 113: # q
             self._player.stop()
-        elif key.string == ',':
+        elif keyval == 44: # ,
             self._player.prev()
-        elif key.string == '.':
+        elif keyval == 46: # .
             self._player.next()
-        elif key.string == 'm':
+        elif keyval == 109: # m
             self._player.toggle_play_music_clip_instead_of_track()
         elif keyval in [91, 65361]: # [ and left key
             self._player.seek_backward()

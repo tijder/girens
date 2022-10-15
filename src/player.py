@@ -107,6 +107,11 @@ class Player(GObject.Object):
             if self._direct and self._item_loading is not None and self._item_loading.listType == 'video':
                 self.__set_selected_stream()
 
+        @self._player.property_observer('eof-reached')
+        def __on_end_reached(_name, value):
+            if value:
+                self._player.command('stop')
+
 
     def __set_selected_stream(self):
         plex_audio = self._item.getSelectedAudioStream()
