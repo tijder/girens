@@ -1,68 +1,42 @@
 using Gtk 4.0;
 
 template section_view : Box {
-  visible: true;
-  can-focus: false;
-  margin-top: 20;
   orientation: vertical;
 
   Box {
-    visible: true;
-    can-focus: false;
-
+    margin-top: 10;
+    margin-bottom: 10;
     Label _title_label {
-      visible: true;
-      can-focus: false;
       halign: start;
       margin-start: 10;
       margin-bottom: 5;
       label: "label";
       ellipsize: end;
+      hexpand: true;
     }
 
     Box _section_controll_box {
-      visible: true;
-      can-focus: false;
       margin-end: 10;
 
       Button _play_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-
         Image {
-          visible: true;
-          can-focus: false;
           icon-name: "media-playback-start-symbolic";
         }
       }
 
       Button _shuffle_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-
         Image {
-          visible: true;
-          can-focus: false;
           icon-name: "media-playlist-shuffle-symbolic";
         }
       }
 
       ComboBox _filter_box {
-        visible: true;
-        can-focus: false;
       }
 
       Button _order_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
         tooltip-text: _("Order");
 
         Image _order_image {
-          visible: true;
-          can-focus: false;
           icon-name: "go-up-symbolic";
         }
       }
@@ -73,36 +47,13 @@ template section_view : Box {
     }
   }
 
-  //FlowBox _section_flow {
-  //  visible: true;
-  //  can-focus: false;
-  //  halign: start;
-  //  valign: start;
-  //  homogeneous: true;
-  //  max-children-per-line: 30;
-  //  selection-mode: none;
-  //}
-
   ScrolledWindow {
-    //height-request: 300;
-    //vscrollbar-policy: automatic;
     hscrollbar-policy: never;
-    //overlay-scrolling: true;
+    edge-reached => on_scroller_edge_reached();
     .list _section_flow{}
-  }
-
-
-  Button _show_more_button {
-    label: _("Show more");
-    height-request: 75;
-    visible: true;
-    can-focus: true;
-    receives-default: true;
   }
 
   Spinner _load_spinner {
     height-request: 50;
-    visible: true;
-    can-focus: false;
   }
 }

@@ -398,7 +398,8 @@ class PlayerView(Gtk.ScrolledWindow):
         else:
             self._cover_width = 200
 
-        self.__set_correct_event_size(width)
+        if not self._windowed:
+            self.__set_correct_event_size(width)
 
     def __set_correct_event_size(self, width):
         if width < 850:

@@ -27,7 +27,7 @@ from .discover_view import DiscoverView
 from .show_view import ShowView
 from .section_view import SectionView
 from .search_view import SearchView
-#from .profile_dialog import ProfileDialog
+from .profile_dialog import ProfileDialog
 from .loading_view import LoadingView
 from .sync_dialog import SyncDialog
 from .artist_view import ArtistView
@@ -40,6 +40,8 @@ from plex_remote.plex_remote_client import PlexRemoteClient
 
 from .plex import Plex
 from .player import Player
+
+from .constants import build_type
 
 import os
 import threading
@@ -120,6 +122,10 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __init__(self, show_id=None, video_output_driver=None, deinterlace=None, **kwargs):
         super().__init__(**kwargs)
+
+        if build_type == "debug":
+            self.get_style_context().add_class("devel")
+
         self.__custom_css()
 
         self._video_output_driver = "xv,"
@@ -134,6 +140,20 @@ class PlexWindow(Adw.ApplicationWindow):
 
         self.connect("map", self.__screen_mapped)
         self.connect("unrealize", self.__on_destroy)
+
+        print(GLib.VariantType.new('x'))
+        action = Gio.SimpleAction(name="show-album-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_show_album_by_id)
+        self.add_action(action)
+        action = Gio.SimpleAction(name="show-artist-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_show_artist_by_id)
+        self.add_action(action)
+
+    def on_show_album_by_id(self, action, parameter):
+        self.__on_go_to_album(parameter.get_int64())
+
+    def on_show_artist_by_id(self, action, parameter):
+        self.__on_go_to_artist(parameter.get_int64())
 
 
     def __on_destroy(self, widget):
@@ -287,12 +307,14 @@ class PlexWindow(Adw.ApplicationWindow):
 
         width = self._settings.get_int("window-size-width")
         height = self._settings.get_int("window-size-height")
-        #self.set_size_request(width, height)
+        self.set_default_size(width, height)
 
         MediaPlayer2Service(self)
 
         #self.connect("configure-event", self.__on_configure_event)
         #self.connect("window-state-event", self.__on_window_state_event)
+        self.connect("notify::default-width", self.__on_width_changed)
+        self.connect("notify::default-height", self.__on_height_changed)
         self.connect("notify::fullscreened", self.fullscreened)
 
         self.__show_loading_view(True, _('Starting Girens'))
@@ -473,7 +495,7 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_go_to_artist(self, key):
         self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._artist_view.change_artist(key)
-        #self.__show_view('artist')
+        self._viewStack_pages.set_visible_child(self._artist_view)
         self._sidebar_box.unselect_all()
 
     def __on_go_to_album_clicked(self, view, key):
@@ -482,7 +504,7 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_go_to_album(self, key):
         self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._album_view.change_album(key)
-        #self.__show_view('album')
+        self._viewStack_pages.set_visible_child(self._album_view)
         self._sidebar_box.unselect_all()
 
     def __on_video_starting(self, widget):
@@ -510,10 +532,9 @@ class PlexWindow(Adw.ApplicationWindow):
             #self.__show_view('search')
 
     def __on_profile_clicked(self, button):
-        #self._profile_dialog = ProfileDialog(self._plex)
-        #self._profile_dialog.set_transient_for(self)
-        #self._profile_dialog.show()
-        print("Commented out")
+        self._profile_dialog = ProfileDialog(self._plex)
+        self._profile_dialog.set_transient_for(self)
+        self._profile_dialog.show()
 
     def __on_prefer_music_clips_check_button_clicked(self, button, state):
         self._player.set_play_music_clip_instead_of_track(state)
@@ -618,8 +639,18 @@ class PlexWindow(Adw.ApplicationWindow):
             self._window_placement_update_timeout = GLib.timeout_add(
                 500, self.__update_screen_size_change, widget)
 
+    def __on_height_changed(self, widget, event):
+        if self._window_placement_update_timeout is None:
+            self._window_placement_update_timeout = GLib.timeout_add(
+                500, self.__update_screen_size_change, widget)
+
+    def __on_width_changed(self, widget, event):
+        if self._window_placement_update_timeout is None:
+            self._window_placement_update_timeout = GLib.timeout_add(
+                500, self.__update_screen_size_change, widget)
+
     def __update_screen_size_change(self, widget):
-        size = widget.get_size()
+        size = widget.get_default_size()
         if not self._player_view._fullscreen:
             self._settings.set_int("window-size-width", size[0])
             self._settings.set_int("window-size-height", size[1])
@@ -629,7 +660,7 @@ class PlexWindow(Adw.ApplicationWindow):
         self._discover_view.width_changed(size[0])
         self._album_view.width_changed(size[0])
         self._artist_view.width_changed(size[0])
-        self._ShowView.width_changed(size[0])
+        #self._ShowView.width_changed(size[0])
         GLib.source_remove(self._window_placement_update_timeout)
         self._window_placement_update_timeout = None
         return False

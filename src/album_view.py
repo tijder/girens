@@ -22,7 +22,7 @@ from .album_item import AlbumItem
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/album_view.ui')
-class AlbumView(Gtk.Box):
+class AlbumView(Gtk.ScrolledWindow):
     __gtype_name__ = 'album_view'
 
     __gsignals__ = {
@@ -59,6 +59,7 @@ class AlbumView(Gtk.Box):
 
         if artist_view == True:
             self._artist_view_button.set_visible(False)
+            self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
@@ -73,8 +74,8 @@ class AlbumView(Gtk.Box):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
         self._key = key
-        for item in self._item_box.get_children():
-            self._item_box.remove(item)
+        while self._item_box.get_first_child() != None:
+            self._item_box.remove(self._item_box.get_first_child())
 
         self._discs = {}
 
@@ -105,7 +106,7 @@ class AlbumView(Gtk.Box):
         self.__start_add_items_timout()
 
     def __add_track(self, track, itemBox):
-        itemBox.add(AlbumItem(self._plex, track))
+        itemBox.append(AlbumItem(self._plex, track))
         self._tracks.remove(track)
 
     def __show_more_items(self):
@@ -123,11 +124,11 @@ class AlbumView(Gtk.Box):
                     listBox.set_visible(True)
                     listBox.set_selection_mode(Gtk.SelectionMode(0))
 
-                    label = Gtk.Label(_('Disc ') + str(parentindex))
+                    label = Gtk.Label(label=_('Disc ') + str(parentindex))
                     label.set_margin_bottom(10)
                     label.set_visible(True)
-                    self._item_box.add(label)
-                    self._item_box.add(listBox)
+                    self._item_box.append(label)
+                    self._item_box.append(listBox)
                 self.__add_track(self._tracks[0], self._discs[parentindex])
                 i -= 1
                 if (i == 0):
@@ -188,9 +189,13 @@ class AlbumView(Gtk.Box):
             left_vissible = False
 
         if self._play_button.get_parent() != button_box:
-            self._play_button.reparent(button_box)
-            button_box.child_set_property(self._play_button, 'expand', GObject.Value(value_type=GObject.TYPE_BOOLEAN, py_value=True))
-            self._menu_button.reparent(button_box)
+            self._play_button.unparent()
+            self._play_button.set_parent(button_box)
+            #button_box.child_set_property(self._play_button, 'expand', GObject.Value(value_type=GObject.TYPE_BOOLEAN, py_value=True))
+            self._menu_button.unparent()
+            self._menu_button.set_parent(button_box)
             self._left_box.set_visible(left_vissible)
         if self._cover_image.get_parent() != cover_box:
-            self._cover_image.reparent(cover_box)
+            self._cover_image.unparent()
+            self._cover_image.set_parent(cover_box)
+            

@@ -24,7 +24,7 @@ import threading
 class ProfileDialog(Adw.PreferencesWindow):
     __gtype_name__ = 'profile_dialog'
 
-    _avatar_image = Gtk.Template.Child()
+    #_avatar_image = Gtk.Template.Child()
 
     _logout_button = Gtk.Template.Child()
 
@@ -43,6 +43,8 @@ class ProfileDialog(Adw.PreferencesWindow):
         email = ''
         subscriptionPlan = ''
         secure = ''
+
+        self._plex = plex;
 
         if (hasattr(self._plex._account, 'username')):
             username = self._plex._account.username

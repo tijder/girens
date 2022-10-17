@@ -1,5 +1,5 @@
 .cover_image {
-  background-color: @theme_base_color;
+  background-color: @shade_color;
 }
 
 .media_box {

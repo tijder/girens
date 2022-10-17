@@ -30,17 +30,17 @@
         "*.a"
     ],
     "modules" : [
-    	{
-	  "name": "blueprint-compiler",
-	  "buildsystem": "meson",
-	  "sources": [
-	    {
-	      "type": "git",
-	      "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
-	      "branch": "main"
-	    }
-	  ]
-	},
+        {
+            "name" : "blueprint-compiler",
+            "buildsystem" : "meson",
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/jwestman/blueprint-compiler",
+                    "branch" : "main"
+                }
+            ]
+        },
         {
             "name" : "libmpv",
             "cleanup" : [
@@ -174,7 +174,7 @@
                         }
                     ]
                 }
-              ]
+            ]
         },
         {
             "name" : "PlexAPI",
@@ -260,19 +260,19 @@
                         }
                     ],
                     "modules" : [
-                    	{
+                        {
                             "name" : "charset-normalizer",
                             "buildsystem" : "simple",
                             "build-commands" : [
-		                "pip3 install --prefix=/app charset_normalizer-2.1.1-py3-none-any.whl"
-		            ],
-		            "sources" : [
-		                {
-		                    "type" : "file",
-		                    "url" : "https://files.pythonhosted.org/packages/db/51/a507c856293ab05cdc1db77ff4bc1268ddd39f29e7dc4919aa497f0adbec/charset_normalizer-2.1.1-py3-none-any.whl",
-		                    "sha256" : "83e9a75d1911279afd89352c68b45348559d1fc0506b054b346651b5e7fee29f"
-		                }
-	                	]
+                                "pip3 install --prefix=/app charset_normalizer-2.1.1-py3-none-any.whl"
+                            ],
+                            "sources" : [
+                                {
+                                    "type" : "file",
+                                    "url" : "https://files.pythonhosted.org/packages/db/51/a507c856293ab05cdc1db77ff4bc1268ddd39f29e7dc4919aa497f0adbec/charset_normalizer-2.1.1-py3-none-any.whl",
+                                    "sha256" : "83e9a75d1911279afd89352c68b45348559d1fc0506b054b346651b5e7fee29f"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -338,7 +338,8 @@
             "name" : "girens",
             "buildsystem" : "meson",
             "config-opts" : [
-                "--libdir=lib"
+                "--libdir=lib",
+                "-Dbuildtype=debug"
             ],
             "builddir" : true,
             "sources" : [

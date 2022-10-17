@@ -22,7 +22,7 @@ from .album_view import AlbumView
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/artist_view.ui')
-class ArtistView(Gtk.Box):
+class ArtistView(Gtk.ScrolledWindow):
     __gtype_name__ = 'artist_view'
 
     _title_label = Gtk.Template.Child()
@@ -35,6 +35,8 @@ class ArtistView(Gtk.Box):
 
     _timout = None
     _add_items_to_view = 0
+
+    _screen_width = 800
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -52,8 +54,8 @@ class ArtistView(Gtk.Box):
     def change_artist(self, key):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
-        for item in self._album_box.get_children():
-            self._album_box.remove(item)
+        while self._album_box.get_first_child() != None:
+            self._album_box.remove(self._album_box.get_first_child())
 
         thread = threading.Thread(target=self._plex.get_artist, args=(key,))
         thread.daemon = True
@@ -78,10 +80,11 @@ class ArtistView(Gtk.Box):
     def __show_more_items(self):
         self.__stop_add_items_timout()
         if len(self._albums) > 0:
-            album_view = AlbumView(self._plex, artist_view=True)
+            album_view = AlbumView(artist_view=True)
+            album_view.set_plex(self._plex)
             album_view.width_changed(self._screen_width)
             album_view.change_album(self._albums[0].ratingKey)
-            self._album_box.add(album_view)
+            self._album_box.append(album_view)
             self._albums.remove(self._albums[0])
 
             self._add_items_to_view -= 1
@@ -118,5 +121,5 @@ class ArtistView(Gtk.Box):
 
     def width_changed(self, width):
         self._screen_width = width
-        for item in self._album_box.get_children():
-            item.width_changed(width)
+        #for item in self._album_box.get_children():
+        #    item.width_changed(width)

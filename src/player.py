@@ -47,6 +47,7 @@ class Player(GObject.Object):
         self._fullscreen = False
         self._offset_param = None
         self._from_beginning = None
+        self._direct = None
         self._playqueue_refreshed = False
         self._video_output_driver = "x11,"
         self._deinterlace = "no"
@@ -104,7 +105,7 @@ class Player(GObject.Object):
         def __on_track_list(_name, value):
             self._tracklist = value
 
-            if self._direct and self._item_loading is not None and self._item_loading.listType == 'video':
+            if self._direct is not None and self._direct and self._item_loading is not None and self._item_loading.listType == 'video':
                 self.__set_selected_stream()
 
         @self._player.property_observer('eof-reached')

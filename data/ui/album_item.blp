@@ -1,54 +1,35 @@
 using Gtk 4.0;
 
 template album_item : Box {
-  visible: true;
-  can-focus: false;
-
   Label _index_label {
-    visible: true;
-    can-focus: false;
     width-chars: 4;
   }
 
   Label _title_label {
-    visible: true;
-    can-focus: false;
+    margin-end: 10;
     halign: start;
-    label: "label";
+    label: "title";
     ellipsize: end;
   }
 
   Label _time_label {
-    visible: true;
-    can-focus: false;
+    styles["caption"]
     halign: start;
-    label: "label";
+    label: "00:00";
     ellipsize: end;
   }
 
   Box {
-    visible: true;
-    can-focus: false;
-
+    halign: end;
+    hexpand: true;
     Button _music_clip_button {
-      can-focus: true;
-      receives-default: true;
-
       Image {
-        visible: true;
-        can-focus: false;
         icon-name: "video-display-symbolic";
       }
     }
 
     Button _play_button {
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-
       Image {
-        visible: true;
-        can-focus: false;
         icon-name: "media-playback-start-symbolic";
       }
     }

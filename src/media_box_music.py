@@ -58,6 +58,8 @@ class MediaBoxMusic(Gtk.Revealer):
             box = self._label2_box
 
         if self._title_label.get_parent() != box:
-            self._title_label.reparent(box)
-            self._subtitle_label.reparent(box)
+            self._title_label.unparent()
+            self._subtitle_label.unparent()
+            self._title_label.set_parent(box)
+            self._subtitle_label.set_parent(box)
 

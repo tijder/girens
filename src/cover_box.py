@@ -38,10 +38,12 @@ class CoverBox(Gtk.Box):
     _progress_bar = Gtk.Template.Child()
     _watched_image = Gtk.Template.Child()
     _cover_image = Gtk.Template.Child()
-    _play_button = Gtk.Template.Child()
+    #_play_button = Gtk.Template.Child()
     _shuffle_button = Gtk.Template.Child()
 
-    _menu_button = Gtk.Template.Child()
+    popover1 = Gtk.Template.Child()
+
+    #_menu_button = Gtk.Template.Child()
     _show_view_button = Gtk.Template.Child()
     _album_view_button = Gtk.Template.Child()
     _artist_view_button = Gtk.Template.Child()
@@ -62,16 +64,17 @@ class CoverBox(Gtk.Box):
         self._plex_connect_id = self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex_retrieved_id = self._plex.connect("item-retrieved", self.__on_item_retrieved)
         self._plex.connect("item-downloading", self.__on_item_downloading)
-        self._play_button.connect("clicked", self.__on_play_button_clicked)
+        #self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
 
         self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
-        self._album_view_button.connect("clicked", self.__on_go_to_album_clicked)
-        self._artist_view_button.connect("clicked", self.__on_go_to_artist_clicked)
+        #self._album_view_button.connect("clicked", self.__on_go_to_album_clicked)
+        #self._artist_view_button.connect("clicked", self.__on_go_to_artist_clicked)
         self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
         self._mark_unplayed_button.connect("clicked", self.__on_mark_unplayed_clicked)
         self._play_from_beginning_button.connect("clicked", self.__on_play_from_beginning_clicked)
         self._download_button.connect("clicked", self.__on_download_button)
+
 
     def set_item(self, item):
         self._item = item
@@ -87,6 +90,17 @@ class CoverBox(Gtk.Box):
         else:
             self._download_key = item.grandparentRatingKey
             self._download_thumb = item.grandparentThumb
+
+        if (self._item.TYPE == 'artist' or self._item.TYPE == 'album'):
+            self._album_view_button.set_action_target_value(GLib.Variant.new_int64(self._item.ratingKey))
+            self._album_view_button.set_action_name("win.show-album-by-id")
+
+        if self._item.TYPE == 'artist':
+            self._artist_view_button.set_action_target_value(GLib.Variant.new_int64(self._item.ratingKey))
+            self._artist_view_button.set_action_name("win.show-artist-by-id")
+        elif self._item.TYPE == 'album':
+            self._artist_view_button.set_action_target_value(GLib.Variant.new_int64(int(self._item.parentRatingKey)))
+            self._artist_view_button.set_action_name("win.show-artist-by-id")
 
         thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
         thread.daemon = True
@@ -223,19 +237,29 @@ class CoverBox(Gtk.Box):
         elif self._item.TYPE == 'album':
             self.emit('view-artist-wanted', self._item.parentRatingKey)
 
-    def __on_play_button_clicked(self, button):
+    @Gtk.Template.Callback()
+    def on_left_click(self, widget, n_press, x, y):
+        widget.set_state(Gtk.EventSequenceState.CLAIMED);
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
         thread.daemon = True
         thread.start()
 
+    @Gtk.Template.Callback()
+    def on_right_click(self, widget, n_press, x, y):
+        widget.set_state(Gtk.EventSequenceState.CLAIMED);
+        print(str(x) + " " + str(y))
+        #self.popover1.set_pointing_to(Gdk.Rectangle(x, y, 50, 50));
+        #self.popover1.set_offset(x, y);
+        self.popover1.popup();
+
     def __on_play_from_beginning_clicked(self, button):
-        self._menu_button.popdown()
+        self.popover1.popdown()
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'from_beginning':True})
         thread.daemon = True
         thread.start()
 
     def __on_download_button(self, button):
-        self._menu_button.popdown()
+        self.popover1.popdown()
         if (self._item.TYPE == 'show'):
             self._sync_settings = SyncSettings(self._plex, self._item)
             self._sync_settings.show()
@@ -245,19 +269,19 @@ class CoverBox(Gtk.Box):
             thread.start()
 
     def __on_shuffle_button_clicked(self, button):
-        self._menu_button.popdown()
+        self.popover1.popdown()
         thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
         thread.daemon = True
         thread.start()
 
     def __on_mark_played_clicked(self, button):
-        self._menu_button.popdown()
+        self.popover1.popdown()
         thread = threading.Thread(target=self._plex.mark_as_played, args=(self._item,))
         thread.daemon = True
         thread.start()
 
     def __on_mark_unplayed_clicked(self, button):
-        self._menu_button.popdown()
+        self.popover1.popdown()
         thread = threading.Thread(target=self._plex.mark_as_unplayed, args=(self._item,))
         thread.daemon = True
         thread.start()

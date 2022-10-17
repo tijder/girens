@@ -1,79 +1,23 @@
 using Gtk 4.0;
 
-Popover popover1 {
-  can-focus: false;
-
-  Box {
-    visible: true;
-    can-focus: false;
-    orientation: vertical;
-
-    Button _artist_view_button {
-      label: _("Go to artist view");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _album_view_button {
-      label: _("Go to album view");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _show_view_button {
-      label: _("Go to show view");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _mark_played_button {
-      label: _("Mark as Played");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _mark_unplayed_button {
-      label: _("Mark as Unplayed");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _download_button {
-      label: _("Sync");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _shuffle_button {
-      label: _("Shuffle");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-
-    Button _play_from_beginning_button {
-      label: _("Play from beginning");
-      visible: true;
-      can-focus: true;
-      receives-default: true;
-    }
-  }
-}
-
 template cover_box : Box {
-  visible: true;
-  can-focus: false;
   orientation: vertical;
+  margin-top: 5;
+  margin-bottom: 5;
+
+  GestureClick {
+    button: 1;
+    pressed => on_left_click();
+    exclusive: true;
+  }
+
+  Gtk.GestureClick {
+    button: 3;
+    released => on_right_click();
+    exclusive: true;
+  }
 
   Overlay {
-    visible: true;
-    can-focus: false;
     halign: center;
 
     Image _cover_image {
@@ -87,7 +31,6 @@ template cover_box : Box {
 
     [overlay]
     Image _watched_image {
-      can-focus: false;
       halign: end;
       valign: start;
       icon-name: "dialog-information";
@@ -95,19 +38,14 @@ template cover_box : Box {
 
     [overlay]
     ProgressBar _progress_bar {
-      can-focus: false;
       valign: end;
     }
   }
 
   Box grid1 {
-    visible: true;
-    can-focus: false;
     orientation: vertical;
 
     Label _title_label {
-      visible: true;
-      can-focus: false;
       margin-top: 5;
       label: _("label");
       ellipsize: end;
@@ -117,43 +55,47 @@ template cover_box : Box {
 
     Label _subtitle_label {
       styles ["caption"]
-      visible: true;
-      can-focus: false;
       label: _("label");
       ellipsize: end;
       max-width-chars: 1;
     }
+  }
 
+  Popover popover1 {
     Box {
-      visible: true;
-      can-focus: false;
-      hexpand: true;
+      orientation: vertical;
 
-      Button _play_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-        margin-top: 5;
-        hexpand: true;
-
-        Image {
-          visible: true;
-          can-focus: false;
-          icon-name: "media-playback-start-symbolic";
-        }
+      Button _artist_view_button {
+        label: _("Go to artist view");
       }
 
-      MenuButton _menu_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-        margin-top: 5;
-        popover: popover1;
+      Button _album_view_button {
+        label: _("Go to album view");
       }
 
-      styles [
-        "linked",
-      ]
+      Button _show_view_button {
+        label: _("Go to show view");
+      }
+
+      Button _mark_played_button {
+        label: _("Mark as Played");
+      }
+
+      Button _mark_unplayed_button {
+        label: _("Mark as Unplayed");
+      }
+
+      Button _download_button {
+        label: _("Sync");
+      }
+
+      Button _shuffle_button {
+        label: _("Shuffle");
+      }
+
+      Button _play_from_beginning_button {
+        label: _("Play from beginning");
+      }
     }
   }
 }

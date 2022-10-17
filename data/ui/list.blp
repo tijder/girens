@@ -6,6 +6,7 @@ template list : Gtk.GridView {
   vexpand: true;
   max-columns: 1;
 	orientation: horizontal;
+
 	factory: Gtk.SignalListItemFactory factory {
     bind => on_bind();
     setup => on_setup();

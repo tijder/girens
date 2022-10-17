@@ -1,82 +1,55 @@
 using Gtk 4.0;
 
-template artist_view : Box {
-  visible: true;
-  can-focus: false;
-  orientation: vertical;
-
+template artist_view : ScrolledWindow {
   Box {
-    visible: true;
-    can-focus: false;
-    margin-top: 20;
-    margin-bottom: 10;
-
-    Grid {
-      visible: true;
-      can-focus: false;
-
-      Label _title_label {
-        visible: true;
-        can-focus: false;
-        halign: start;
-        label: "label";
-        ellipsize: end;
-      }
-
-      Label _subtitle_label {
-        visible: true;
-        can-focus: false;
-        halign: start;
-        label: "label";
-        ellipsize: end;
-      }
-    }
-
-    Box _section_controll_box {
-      visible: true;
-      can-focus: false;
-
-      Button _play_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-
-        Image {
-          visible: true;
-          can-focus: false;
-          icon-name: "media-playback-start-symbolic";
-        }
-      }
-
-      Button _shuffle_button {
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-
-        Image {
-          visible: true;
-          can-focus: false;
-          icon-name: "media-playlist-shuffle-symbolic";
-        }
-      }
-
-      styles [
-        "linked",
-      ]
-    }
-  }
-
-  Box _album_box {
-    visible: true;
-    can-focus: false;
     orientation: vertical;
-  }
+    Box {
+      margin-top: 20;
+      margin-bottom: 10;
 
-  Button _show_more_button {
-    label: _("Show more");
-    height-request: 75;
-    visible: true;
-    can-focus: true;
-    receives-default: true;
+      Grid {
+        visible: true;
+        can-focus: false;
+
+        Label _title_label {
+          halign: start;
+          label: "label";
+          ellipsize: end;
+        }
+
+        Label _subtitle_label {
+          halign: start;
+          label: "label";
+          ellipsize: end;
+        }
+      }
+
+      Box _section_controll_box {
+        Button _play_button {
+          Image {
+            icon-name: "media-playback-start-symbolic";
+          }
+        }
+
+        Button _shuffle_button {
+          Image {
+            icon-name: "media-playlist-shuffle-symbolic";
+          }
+        }
+
+        styles [
+          "linked",
+        ]
+      }
+    }
+
+    Box _album_box {
+      orientation: vertical;
+    }
+
+    Button _show_more_button {
+      label: _("Show more");
+      height-request: 75;
+    }
   }
 }

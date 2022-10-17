@@ -50,7 +50,6 @@ class SectionView(Gtk.Box):
     _title_label = Gtk.Template.Child()
     _section_flow = Gtk.Template.Child()
 
-    _show_more_button = Gtk.Template.Child()
     _filter_box = Gtk.Template.Child()
     _section_controll_box = Gtk.Template.Child()
     _play_button = Gtk.Template.Child()
@@ -73,7 +72,6 @@ class SectionView(Gtk.Box):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self._show_more_button.connect("clicked", self.__show_more_clicked)
         self._filter_box.connect("changed", self.__filter_changed)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
@@ -117,9 +115,6 @@ class SectionView(Gtk.Box):
 
         self._section_flow.empty_list()
 
-        self._show_more_button.set_visible(False)
-
-
         self._filter_box.clear()
         self._sort_store = Gtk.ListStore(object, str)
         sort_lable_active = sort
@@ -156,7 +151,6 @@ class SectionView(Gtk.Box):
         self.__stop_add_items_timout()
         self._section_flow.empty_list()
 
-        self._show_more_button.set_visible(False)
         self._section_controll_box.set_visible(False)
 
         self._load_spinner.set_visible(True)
@@ -221,19 +215,14 @@ class SectionView(Gtk.Box):
             self._items.remove(item)
 
         if (len(self._items) != 0):
-            self._show_more_button.set_visible(False)
             self.__start_add_items_timout()
-        elif (self._section == None or self._section.totalSize <= self._container_start):
-            self._show_more_button.set_visible(False)
-        else:
-            self._show_more_button.set_visible(True)
-            self._show_more_button.set_sensitive(True)
 
-    def __show_more_clicked(self, button):
-        self.__start_adding_items()
+    @Gtk.Template.Callback()
+    def on_scroller_edge_reached(self, widget, position):
+        if position == Gtk.PositionType.BOTTOM:
+            self.__start_adding_items()
 
     def __start_adding_items(self):
-        self._show_more_button.set_sensitive(False)
         thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':self._sort_active, 'sort_value': self._sort_value_active, 'container_start':self._container_start, 'container_size':self._container_size})
         thread.daemon = True
         thread.start()

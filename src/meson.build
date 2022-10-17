@@ -9,6 +9,14 @@ configure_file(
   install_dir: get_option('bindir')
 )
 
+configure_file(
+  input: 'constants.py.in',
+  output: 'constants.py',
+  configuration: conf_service,
+  install: true,
+  install_dir: moduledir,
+)
+
 girens_sources = [
   '__init__.py',
   'album_item.py',
@@ -35,7 +43,7 @@ girens_sources = [
   'playqueue_item.py',
   'playqueue_popover.py',
   'plex.py',
-#  'profile_dialog.py',
+  'profile_dialog.py',
   'remote_player.py',
   'resume_dialog.py',
   'search_view.py',
