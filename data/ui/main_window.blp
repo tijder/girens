@@ -155,16 +155,12 @@ Adjustment _volume_adjustment {
 
 Popover _menu_popover {
   width-request: 250;
-  can-focus: false;
-
   Box {
-    visible: true;
-    can-focus: false;
     orientation: vertical;
-    margin-top: 10;
-    margin-start: 10;
-    margin-end: 10;
-    margin-bottom: 10;
+    margin-top: 5;
+    margin-start: 5;
+    margin-end: 5;
+    margin-bottom: 5;
 
     Adw.PreferencesGroup {
       title: _("Settings");
@@ -173,24 +169,17 @@ Popover _menu_popover {
         use-underline: true;
 
         Box {
-          visible: true;
-          can-focus: false;
           margin-start: 10;
           margin-end: 10;
 
           Image {
-            visible: true;
-            can-focus: false;
             icon-name: "audio-speakers-symbolic";
           }
 
           Scale volume {
-            visible: true;
-            can-focus: true;
             adjustment: _volume_adjustment;
             round-digits: 1;
             draw-value: false;
-            value-changed => _on_volume_value_changed();
             hexpand: true;
           }
         }
@@ -203,7 +192,6 @@ Popover _menu_popover {
         activatable-widget: _advertise_as_client_check_button;
         Switch _advertise_as_client_check_button {
           valign: center;
-          visible: true;
         }
       }
 
@@ -214,7 +202,6 @@ Popover _menu_popover {
         activatable-widget: _prefer_music_clips_check_button;
         Switch _prefer_music_clips_check_button {
           valign: center;
-          visible: true;
         }
       }
 
@@ -225,7 +212,6 @@ Popover _menu_popover {
         activatable-widget: _dark_theme_check_button;
         Switch _dark_theme_check_button {
           valign: center;
-          visible: true;
         }
       }
 
@@ -281,22 +267,16 @@ Popover _menu_popover {
       title: _("Info");
       margin-top: 20;
 
-      Adw.PreferencesRow {
+      Adw.ActionRow _shortcuts_button {
         use-underline: true;
-
-        Gtk.Button _shortcuts_button {
-          label: _("Shortcuts");
-          height-request: 50;
-        }
+        activatable: true;
+        title: _("Shortcuts");
       }
 
-      Adw.PreferencesRow {
+      Adw.ActionRow _about_button {
         use-underline: true;
-
-        Gtk.Button _about_button {
-          label: _("About Girens");
-          height-request: 50;
-        }
+        activatable: true;
+        title: _("About Girens");
       }
     }
   }

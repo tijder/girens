@@ -14,15 +14,8 @@ template search_view : Box {
     label: "label";
   }
 
-  FlowBox _section_flow {
-    visible: true;
-    can-focus: false;
-    halign: start;
-    valign: start;
-    hexpand: true;
-    vexpand: true;
-    homogeneous: true;
-    max-children-per-line: 30;
-    selection-mode: none;
+  ScrolledWindow {
+    hscrollbar-policy: never;
+    .list _section_flow{}
   }
 }

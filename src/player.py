@@ -29,6 +29,7 @@ class Player(GObject.Object):
     def __init__(self, player_view, **kwargs):
         super().__init__(**kwargs)
         self._settings = Gio.Settings("nl.g4d.Girens")
+        self._settings.connect('changed', self.__on_settings_changed)
 
 
         self._player_view = player_view
@@ -55,6 +56,10 @@ class Player(GObject.Object):
 
         self._tracklist = None
         self._player_view._frame.connect('realize', self.__on_realize)
+
+    def __on_settings_changed(self, widget, key):
+        if key == 'volume-level':
+            self.__set_volume(self._settings.get_int("volume-level"))
 
     def set_video_output_driver(self, video_output_driver):
         self._video_output_driver = video_output_driver
@@ -305,6 +310,9 @@ class Player(GObject.Object):
 
     def set_volume(self, percent):
         self._settings.set_int("volume-level", percent)
+        self.__set_volume(percent)
+
+    def __set_volume(self, percent):
         if self._player and not self._player.playback_abort:
             self._player.volume = percent
 

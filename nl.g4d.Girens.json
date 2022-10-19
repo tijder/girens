@@ -1,7 +1,7 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
+    "runtime-version" : "43",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
@@ -157,20 +157,6 @@
                             "type" : "file",
                             "url" : "https://files.pythonhosted.org/packages/80/07/003fe74d2af04be917035b42c53c7ea9e3abe1e353753cebccfe792b4e52/PyOpenGL-3.1.6-py3-none-any.whl",
                             "sha256" : "a7139bc3e15d656feae1f7e3ef68c799941ed43fadc78177a23db7e946c20738"
-                        }
-                    ]
-                },
-                {
-                    "name" : "numpy",
-                    "buildsystem" : "simple",
-                    "build-commands" : [
-                        "pip3 install --prefix=/app numpy-1.23.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-                    ],
-                    "sources" : [
-                        {
-                            "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/0c/83/78ae18fffc185d0d57097610d5a97473ef11dbdca95f16739ee96b158087/numpy-1.23.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
-                            "sha256" : "a8365b942f9c1a7d0f0dc974747d99dd0a0cdfc5949a33119caf05cb314682d3"
                         }
                     ]
                 }

@@ -131,11 +131,11 @@ template player_view : ScrolledWindow {
         label: _("Ondeck");
       }
 
-      FlowBox _deck_shows_box {
-        halign: start;
-        homogeneous: true;
-        max-children-per-line: 30;
-        selection-mode: none;
+      ScrolledWindow {
+        vscrollbar-policy: never;
+        .list _deck_shows_box {
+          vexpand: false;
+        }
       }
     }
   }

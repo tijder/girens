@@ -23,7 +23,7 @@ from .cover_box import CoverBox
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/show_view.ui')
-class ShowView(Gtk.Box):
+class ShowView(Gtk.ScrolledWindow):
     __gtype_name__ = 'show_view'
 
     _title_label = Gtk.Template.Child()
@@ -51,8 +51,9 @@ class ShowView(Gtk.Box):
     def change_show(self, key):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
-        for item in self._season_stack.get_children():
-            self._season_stack.remove(item)
+
+        while self._season_stack.get_first_child() != None:
+            self._season_stack.remove(self._season_stack.get_first_child())
 
         thread = threading.Thread(target=self._plex.get_show, args=(key,))
         thread.daemon = True
@@ -86,8 +87,9 @@ class ShowView(Gtk.Box):
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
     def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, item, show_view=True, cover_width=self._cover_width)
-        hub.add(cover)
+        cover = CoverBox(self._plex, show_view=True, cover_width=self._cover_width)
+        cover.set_item(item)
+        hub.append(cover)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._show,))

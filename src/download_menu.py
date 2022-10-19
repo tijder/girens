@@ -44,4 +44,4 @@ class DownloadMenu(Gtk.Popover):
     def __on_item_downloading(self, plex, item, status):
         if (status != False):
             self.emit('show-button')
-            self._item_box.add(DownloadRow(self._plex, item))
+            self._item_box.append(DownloadRow(self._plex, item))

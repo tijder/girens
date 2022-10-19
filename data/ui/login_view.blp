@@ -7,186 +7,93 @@ template login_view : Box {
 
   Adw.HeaderBar {}
 
-  Box {
-    margin-top: 30;
-    orientation: vertical;
-    hexpand: true;
-    vexpand: true;
 
-    StackSwitcher {
-      halign: center;
-      stack: stack;
-    }
+  Adw.Clamp {
+    maximum-size: 500;
+    Box {
+      margin-top: 30;
+      orientation: vertical;
+      hexpand: true;
+      vexpand: true;
 
-    Stack stack {
-      visible: true;
-      transition-type: crossfade;
-
-      StackPage {
-      name: 'password';
-      title: 'Username and password';
-      child: Grid {
-          halign: center;
-          margin-top: 10;
-
-          Entry _password_entry {
-            margin-top: 10;
-            visibility: false;
-            input-purpose: password;
-            layout {
-              column: 1;
-              row: 2;
-            }
-          }
-
-          Entry _username_entry {
-            layout {
-              column: 1;
-              row: 1;
-            }
-          }
-
-          Label {
-            label: _("Password");
-            ellipsize: end;
-            margin-end: 10;
-            layout {
-              column: 0;
-              row: 2;
-            }
-          }
-
-          Label {
-            label: _("Username");
-            ellipsize: end;
-            margin-end: 10;
-            layout {
-              column: 0;
-              row: 1;
-            }
-          }
-
-          Label {
-            margin-top: 10;
-            margin-bottom: 10;
-            label: _("Login to Plex with an user acount");
-            ellipsize: end;
-            halign: start;
-            layout {
-              column: 0;
-              row: 0;
-              column-span: 2;
-            }
-          }
-
-          Box {
-            halign: end;
-            margin-top: 10;
-
-            Button _connect_user_button {
-              label: _("Login");
-              receives-default: true;
-
-              styles [
-                "suggested-action",
-              ]
-            }
-
-            styles [
-              "linked",
-            ]
-            layout {
-              column: 0;
-              row: 3;
-              column-span: 2;
-            }
-          }
-        };
+      StackSwitcher {
+        halign: center;
+        stack: stack;
       }
 
-      StackPage {
-      name: 'token';
-      title: 'Url and token';
-      child: Grid {
-          halign: center;
-          margin-top: 10;
+      Stack stack {
+        transition-type: crossfade;
 
-          Entry _server_url_entry {
-            tooltip-text: _("The url to the Plex server with the port number");
-            placeholder-text: _("http://127.0.0.1:32400");
-            layout {
-              column: 1;
-              row: 1;
-            }
-          }
-
-          Label {
-            label: _("Url");
-            ellipsize: end;
-            halign: start;
-            margin-end: 10;
-            layout {
-              column: 0;
-              row: 1;
-            }
-          }
-
-          Label {
+        StackPage {
+        name: 'password';
+        title: 'Username and password';
+        child: Adw.PreferencesGroup {
             margin-top: 10;
-            margin-bottom: 10;
-            label: _("Go to Plex server based on an url");
-            halign: start;
-            ellipsize: end;
-            layout {
-              column: 0;
-              row: 0;
-              column-span: 2;
+            Adw.ActionRow {
+              title: _("Login to Plex with an user acount");
+              use-underline: true;
             }
-          }
 
-          Box {
-            halign: end;
+            Adw.EntryRow _username_entry {
+              title: _("Username");
+              input-purpose: name;
+              use-underline: true;
+            }
+
+            Adw.EntryRow _password_entry {
+              title: _("Password");
+              input-purpose: password;
+              use-underline: true;
+            }
+
+            Adw.ActionRow {
+              use-underline: true;
+              activatable-widget: _connect_user_button;
+              Button _connect_user_button {
+                label: _("Login");
+                styles [
+                  "suggested-action",
+                ]
+              }
+            }
+          };
+        }
+
+        StackPage {
+        name: 'token';
+        title: 'Url and token';
+        child: Adw.PreferencesGroup {
             margin-top: 10;
 
-            Button _connect_url_button {
-              label: _("Connect");
-              receives-default: true;
-
-              styles [
-                "suggested-action",
-              ]
+            Adw.ActionRow {
+              title: _("Go to Plex server based on an url");
+              use-underline: true;
             }
 
-            styles [
-              "linked",
-            ]
-            layout {
-              column: 0;
-              row: 3;
-              column-span: 2;
+            Adw.EntryRow _server_url_entry {
+              title: _("The url to the Plex server with the port number");
+              input-purpose: url;
+              use-underline: true;
             }
-          }
 
-          Entry _server_token_entry {
-            tooltip-text: _("The token from the server can be empty");
-            margin-top: 10;
-            layout {
-              column: 1;
-              row: 2;
+            Adw.EntryRow _server_token_entry {
+              title: _("Token");
+              input-purpose: name;
+              use-underline: true;
             }
-          }
 
-          Label {
-            label: _("Token");
-            ellipsize: end;
-            halign: start;
-            margin-end: 10;
-            layout {
-              column: 0;
-              row: 2;
+            Adw.ActionRow {
+              use-underline: true;
+              activatable-widget: _connect_user_button;
+              Button _connect_url_button {
+                label: _("Connect");
+                styles [
+                  "suggested-action",
+                ]
+              }
             }
-          }
-        };
+          };
+        }
       }
     }
   }

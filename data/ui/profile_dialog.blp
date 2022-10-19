@@ -7,8 +7,7 @@ template profile_dialog : Adw.PreferencesWindow {
   Adw.PreferencesPage {
     title: "Page";
     Adw.PreferencesGroup {
-      title: "Group";
-      description: "Description";
+      title: _("Account info");
       Adw.ActionRow _username_value_label {
         subtitle: _("Username");
       }
@@ -23,9 +22,9 @@ template profile_dialog : Adw.PreferencesWindow {
       }
 
       Gtk.Button _logout_button {
-          label: _("Logout");
-          margin-top: 20;
-        }
+        label: _("Logout");
+        margin-top: 20;
+      }
     }
   }
 }

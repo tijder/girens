@@ -3,23 +3,15 @@ using Gtk 4.0;
 template download_row : Box {
   width-request: 200;
   height-request: 50;
-  visible: true;
-  can-focus: false;
-  margin-left: "5";
-  margin-right: "5";
+  margin-start: 5;
+  margin-end: 5;
   margin-top: 5;
   margin-bottom: 5;
 
   Overlay {
-    visible: true;
-    can-focus: false;
-
     Image _cover_image {
       width-request: 50;
       height-request: 50;
-      visible: true;
-      can-focus: false;
-
       styles [
         "cover_image",
       ]
@@ -27,7 +19,6 @@ template download_row : Box {
 
     [overlay]
     Image _watched_image {
-      can-focus: false;
       halign: end;
       valign: start;
       icon-name: "dialog-information";
@@ -35,15 +26,12 @@ template download_row : Box {
   }
 
   Label _title_label {
-    visible: true;
-    can-focus: false;
     label: "label";
     ellipsize: end;
   }
 
   Spinner _download_spinner {
+    spinning: true;
     width-request: 25;
-    visible: true;
-    can-focus: false;
   }
 }

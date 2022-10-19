@@ -36,6 +36,7 @@ from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .mpris import MediaPlayer2Service
 from .remote_player import RemotePlayer
+from .sync_settings import SyncSettings
 from plex_remote.plex_remote_client import PlexRemoteClient
 
 from .plex import Plex
@@ -90,9 +91,7 @@ class PlexWindow(Adw.ApplicationWindow):
 
     header = Gtk.Template.Child()
     sidebar = Gtk.Template.Child()
-    #separator = Gtk.Template.Child()
     _sidebar_viewport = Gtk.Template.Child()
-    #_main_scrolled_window = Gtk.Template.Child()
 
     _search_bar = Gtk.Template.Child()
     _search_entry = Gtk.Template.Child()
@@ -111,6 +110,8 @@ class PlexWindow(Adw.ApplicationWindow):
     _advertise_as_client_check_button = Gtk.Template.Child()
     _about_button = Gtk.Template.Child()
     _volume_adjustment = Gtk.Template.Child()
+
+    _menu_popover = Gtk.Template.Child()
 
     _transcode_media_switch = Gtk.Template.Child()
     _res_set_1080 = Gtk.Template.Child()
@@ -141,12 +142,30 @@ class PlexWindow(Adw.ApplicationWindow):
         self.connect("map", self.__screen_mapped)
         self.connect("unrealize", self.__on_destroy)
 
-        print(GLib.VariantType.new('x'))
         action = Gio.SimpleAction(name="show-album-by-id", parameter_type=GLib.VariantType.new('x'))
         action.connect("activate", self.on_show_album_by_id)
         self.add_action(action)
         action = Gio.SimpleAction(name="show-artist-by-id", parameter_type=GLib.VariantType.new('x'))
         action.connect("activate", self.on_show_artist_by_id)
+        self.add_action(action)
+        action = Gio.SimpleAction(name="show-show-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_show_show_by_id)
+        self.add_action(action)
+        action = Gio.SimpleAction(name="play-item-from-beginning", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_play_item_from_beginning)
+        self.add_action(action)
+
+        action = Gio.SimpleAction(name="mark-as-played-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_mark_as_played_by_id)
+        self.add_action(action)
+        action = Gio.SimpleAction(name="mark-as-unplayed-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_mark_as_unplayed_by_id)
+        self.add_action(action)
+        action = Gio.SimpleAction(name="sync-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_sync_by_id)
+        self.add_action(action)
+        action = Gio.SimpleAction(name="shuffle-by-id", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_shuffle_by_id)
         self.add_action(action)
 
     def on_show_album_by_id(self, action, parameter):
@@ -155,16 +174,46 @@ class PlexWindow(Adw.ApplicationWindow):
     def on_show_artist_by_id(self, action, parameter):
         self.__on_go_to_artist(parameter.get_int64())
 
+    def on_show_show_by_id(self, action, parameter):
+        self.__on_go_to_show(parameter.get_int64())
+
+    def on_play_item_from_beginning(self, action, parameter):
+        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),),kwargs={'from_beginning':True})
+        thread.daemon = True
+        thread.start()
+
+    def on_mark_as_played_by_id(self, action, parameter):
+        thread = threading.Thread(target=self._plex.mark_as_played, args=(parameter.get_int64(),))
+        thread.daemon = True
+        thread.start()
+
+    def on_mark_as_unplayed_by_id(self, action, parameter):
+        thread = threading.Thread(target=self._plex.mark_as_unplayed, args=(parameter.get_int64(),))
+        thread.daemon = True
+        thread.start()
+
+    def on_sync_by_id(self, action, parameter):
+        item = self._plex.get_item(parameter.get_int64())
+        if (item.TYPE == 'show'):
+            self._sync_settings = SyncSettings(self._plex, item)
+            self._sync_settings.set_transient_for(self)
+            self._sync_settings.show()
+        else:
+            thread = threading.Thread(target=self._plex.add_to_sync, args=(item,))
+            thread.daemon = True
+            thread.start()
+
+    def on_shuffle_by_id(self, action, parameter):
+        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),),kwargs={'shuffle':1})
+        thread.daemon = True
+        thread.start()
+
 
     def __on_destroy(self, widget):
         if self._remote_client_active is True:
             thread = threading.Thread(target=self.plexRemoteClient.stop)
             thread.daemon = True
             thread.start()
-
-
-    def __on_motion(self, widget, motion):
-        print(motion)
 
     def show_by_id(self, show_id):
         item = self._plex.get_item(show_id[1])
@@ -189,9 +238,6 @@ class PlexWindow(Adw.ApplicationWindow):
         #self._player_view = PlayerView(self)
         self._player_view.connect("fullscreen", self.__fullscreen)
         self._player_view.connect("windowed", self.__windowed)
-        self._player_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
-        self._player_view.connect("view-album-wanted", self.__on_go_to_album_clicked)
-        self._player_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
         #self._player_revealer.set_child(self._player_view)
 
         self._player = Player(self._player_view)
@@ -212,7 +258,7 @@ class PlexWindow(Adw.ApplicationWindow):
 
         self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
-        self._about_button.connect("clicked", self.__on_about_clicked)
+        self._about_button.connect("activated", self.__on_about_clicked)
 
         self._download_menu = DownloadMenu(self._plex)
         self._download_menu.connect("show-button", self.__on_show_download_button)
@@ -220,17 +266,12 @@ class PlexWindow(Adw.ApplicationWindow):
         self._download_button.set_visible(False)
 
         self._sync_button.connect("clicked", self.__on_sync_clicked)
-        self._shortcuts_button.connect("clicked", self.__on_shortcuts_activate)
+        self._shortcuts_button.connect("activated", self.__on_shortcuts_activate)
 
-        #self._loading_view = LoadingView(self._plex)
-        #self._content_box_wrapper.append(self._loading_view)
-        #self._loading_view.set_visible(False)
-        #self._loading_view.set_vexpand(True)
+        self._loading_view.set_plex(self._plex)
 
         self._media_box = MediaBox(self._plex, self._player, show_only_type="audio")
-        #self._media_box_music = MediaBoxMusic()
         self._media_box.set_music_ui(self._media_box_music)
-        #self._content_box_wrapper.append(self._media_box_music)
 
         self._search_toggle_button.connect("toggled", self.__on_search_toggled)
         self._search_entry.connect("search-changed", self.__on_search_changed)
@@ -245,36 +286,21 @@ class PlexWindow(Adw.ApplicationWindow):
         self._sidebar_viewport.set_child(self._sidebar_box)
 
         self._section_view.set_plex(self._plex)
-        self._section_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
-        self._section_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-        #self._section_revealer.set_child(self._section_view)
 
         self._search_view.set_plex(self._plex)
-        self._search_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
-        #self._search_revealer.set_child(self._search_view)
 
         self._discover_view.set_plex(self._plex)
-        self._discover_view.connect("view-show-wanted", self.__on_go_to_show_clicked)
-        self._discover_view.connect("view-album-wanted", self.__on_go_to_album_clicked)
-        self._discover_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-        #self._discover_revealer.set_child(self._discover_view)
 
         self._show_view.set_plex(self._plex)
-        #self._show_revealer.set_child(self._show_view)
 
         self._artist_view.set_plex(self._plex)
-        #self._artist_revealer.set_child(self._artist_view)
 
         self._album_view.set_plex(self._plex)
-        self._album_view.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-        #self._album_revealer.set_child(self._album_view)
 
-        #self._login_view = LoginView(self._plex)
         self._login_view.set_plex(self._plex)
         self._login_view.connect("login-success", self.__on_login_success)
         self._login_view.connect("login-failed", self.__on_login_failed)
         self._login_view.connect("login-not-found", self.__on_login_not_found)
-        #self._login_revealer.set_child(self._login_view)
 
         remote_player = RemotePlayer(self._player, self)
 
@@ -336,52 +362,6 @@ class PlexWindow(Adw.ApplicationWindow):
         if(res_button.get_active()):
             self._settings.set_string("transcode-media-to-resolution", "427x240")
 
-    def __show_view(self, view_name):
-        self._login_revealer.set_visible(False)
-        self._discover_revealer.set_visible(False)
-        self._show_revealer.set_visible(False)
-        self._section_revealer.set_visible(False)
-        self._search_revealer.set_visible(False)
-        self._artist_revealer.set_visible(False)
-        self._album_revealer.set_visible(False)
-        self._player_revealer.set_visible(False)
-
-        if view_name == 'login':
-            self._login_revealer.set_visible(True)
-            self.__set_vissible_headbar_buttons(False)
-        elif view_name == 'discover':
-            self._discover_revealer.set_visible(True)
-        elif view_name == 'show':
-            self._show_revealer.set_visible(True)
-        elif view_name == 'section':
-            self._section_revealer.set_visible(True)
-        elif view_name == 'search':
-            self._search_revealer.set_visible(True)
-        elif view_name == 'artist':
-            self._artist_revealer.set_visible(True)
-        elif view_name == 'album':
-            self._album_revealer.set_visible(True)
-        elif view_name == 'player':
-            self._player_revealer.set_visible(True)
-
-        if (view_name != 'login'):
-            self.__set_vissible_headbar_buttons(True)
-
-        if (view_name != 'search'):
-            self._search_toggle_button.set_active(False)
-
-        self._active_view = view_name
-
-        if view_name == 'player':
-            self._sidebar_box.select_player()
-
-    def __set_vissible_headbar_buttons(self, status):
-        self._profile_button.set_visible(status)
-        self._search_toggle_button.set_visible(status)
-        self._sync_button.set_visible(status)
-        self._menu_button.set_visible(status)
-        self._content_leaflet.set_visible(status)
-
     def __show_login_view(self):
         self._viewStack_frame.set_visible_child(self._login_view)
         #self.__show_view('login')
@@ -414,8 +394,8 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __on_connection_to_server(self, plex):
         self._sidebar_box.refresh()
-        #self._sync_dialog = SyncDialog(self._plex)
-        #self._sync_dialog.set_transient_for(self)
+        self._sync_dialog = SyncDialog(self._plex)
+        self._sync_dialog.set_transient_for(self)
         if (self._show_id is not None):
             self.show_by_id(self._show_id)
         thread = threading.Thread(target=self._plex.reload_search_provider_data)
@@ -432,8 +412,7 @@ class PlexWindow(Adw.ApplicationWindow):
             GLib.idle_add(self.__set_image, pix)
 
     def __on_sync_clicked(self, button):
-        #self._sync_dialog.show()
-        print("Todo sync_dialog")
+        self._sync_dialog.show()
 
     def __on_sync(self, plex, status):
         GLib.idle_add(self.__set_sync, status)
@@ -485,8 +464,8 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __on_go_to_show(self, key):
         self.sidebar_leaflet.set_visible_child(self._content_leaflet)
-        self._ShowView.change_show(key)
-        #self.__show_view('show')
+        self._show_view.change_show(key)
+        self._viewStack_pages.set_visible_child(self._show_view)
         self._sidebar_box.unselect_all()
 
     def __on_go_to_artist_clicked(self, view, key):
@@ -510,10 +489,6 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_video_starting(self, widget):
         GLib.idle_add(self.__go_to_player)
 
-    def _on_volume_value_changed(self, scale):
-        value = scale.get_value()
-        self._player.set_volume(value)
-
     def __go_to_player(self):
         self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._viewStack_pages.set_visible_child(self._player_view)
@@ -527,9 +502,8 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __on_search_changed(self, entry):
         if (entry.get_text() != "" and len(entry.get_text()) >= 3):
-            self.header.set_visible_child_name("content")
             self._search_view.refresh(entry.get_text())
-            #self.__show_view('search')
+            self._viewStack_pages.set_visible_child(self._search_view)
 
     def __on_profile_clicked(self, button):
         self._profile_dialog = ProfileDialog(self._plex)
@@ -561,11 +535,8 @@ class PlexWindow(Adw.ApplicationWindow):
         about_dialog.set_modal(True)
         if self is not NotImplemented:
             about_dialog.set_transient_for(self)
-        about_dialog.connect("response", self.__on_about_activate_response)
         about_dialog.present()
-
-    def __on_about_activate_response(self, dialog, response_id):
-        dialog.destroy()
+        self._menu_popover.popdown()
 
     def __on_plex_load(self, plex, load_text, status):
         self.__show_loading_view(status, load_text)
@@ -632,6 +603,7 @@ class PlexWindow(Adw.ApplicationWindow):
         builder.add_from_resource("/nl/g4d/Girens/shortcuts.ui")
         builder.get_object("shortcuts").set_transient_for(self)
         builder.get_object("shortcuts").show()
+        self._menu_popover.popdown()
 
 
     def __on_configure_event(self, widget, event):
@@ -660,7 +632,7 @@ class PlexWindow(Adw.ApplicationWindow):
         self._discover_view.width_changed(size[0])
         self._album_view.width_changed(size[0])
         self._artist_view.width_changed(size[0])
-        #self._ShowView.width_changed(size[0])
+        self._show_view.width_changed(size[0])
         GLib.source_remove(self._window_placement_update_timeout)
         self._window_placement_update_timeout = None
         return False

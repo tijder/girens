@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk, Gio
 
 
 from .sync_settings import SyncSettings
@@ -27,30 +27,13 @@ import threading
 class CoverBox(Gtk.Box):
     __gtype_name__ = 'cover_box'
 
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
-    }
-
     _title_label = Gtk.Template.Child()
     _subtitle_label = Gtk.Template.Child()
     _progress_bar = Gtk.Template.Child()
     _watched_image = Gtk.Template.Child()
     _cover_image = Gtk.Template.Child()
-    #_play_button = Gtk.Template.Child()
-    _shuffle_button = Gtk.Template.Child()
 
-    popover1 = Gtk.Template.Child()
-
-    #_menu_button = Gtk.Template.Child()
-    _show_view_button = Gtk.Template.Child()
-    _album_view_button = Gtk.Template.Child()
-    _artist_view_button = Gtk.Template.Child()
-    _mark_played_button = Gtk.Template.Child()
-    _mark_unplayed_button = Gtk.Template.Child()
-    _play_from_beginning_button = Gtk.Template.Child()
-    _download_button = Gtk.Template.Child()
+    popover_menu = Gtk.Template.Child()
 
     _download_key = None
     _download_thumb = None
@@ -63,18 +46,6 @@ class CoverBox(Gtk.Box):
         self._show_view = show_view
         self._plex_connect_id = self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex_retrieved_id = self._plex.connect("item-retrieved", self.__on_item_retrieved)
-        self._plex.connect("item-downloading", self.__on_item_downloading)
-        #self._play_button.connect("clicked", self.__on_play_button_clicked)
-        self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
-
-        self._show_view_button.connect("clicked", self.__on_go_to_show_clicked)
-        #self._album_view_button.connect("clicked", self.__on_go_to_album_clicked)
-        #self._artist_view_button.connect("clicked", self.__on_go_to_artist_clicked)
-        self._mark_played_button.connect("clicked", self.__on_mark_played_clicked)
-        self._mark_unplayed_button.connect("clicked", self.__on_mark_unplayed_clicked)
-        self._play_from_beginning_button.connect("clicked", self.__on_play_from_beginning_clicked)
-        self._download_button.connect("clicked", self.__on_download_button)
-
 
     def set_item(self, item):
         self._item = item
@@ -91,22 +62,64 @@ class CoverBox(Gtk.Box):
             self._download_key = item.grandparentRatingKey
             self._download_thumb = item.grandparentThumb
 
-        if (self._item.TYPE == 'artist' or self._item.TYPE == 'album'):
-            self._album_view_button.set_action_target_value(GLib.Variant.new_int64(self._item.ratingKey))
-            self._album_view_button.set_action_name("win.show-album-by-id")
-
-        if self._item.TYPE == 'artist':
-            self._artist_view_button.set_action_target_value(GLib.Variant.new_int64(self._item.ratingKey))
-            self._artist_view_button.set_action_name("win.show-artist-by-id")
-        elif self._item.TYPE == 'album':
-            self._artist_view_button.set_action_target_value(GLib.Variant.new_int64(int(self._item.parentRatingKey)))
-            self._artist_view_button.set_action_name("win.show-artist-by-id")
-
         thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
         thread.daemon = True
         thread.start()
 
     def __set_item(self, item):
+        menu = Gio.Menu()
+
+        if (self._item.TYPE == 'artist' or self._item.TYPE == 'album'):
+            menu_item = Gio.MenuItem.new(_("Go to album view"), "win.show-album-by-id")
+            menu_item.set_action_and_target_value("win.show-album-by-id", GLib.Variant.new_int64(self._item.ratingKey))
+            menu.append_item(menu_item)
+
+        if self._item.TYPE in ['artist', 'album']:
+            if self._item.TYPE == 'artist':
+                param_key = GLib.Variant.new_int64(self._item.ratingKey)
+            if self._item.TYPE == 'album':
+                param_key = GLib.Variant.new_int64(int(self._item.parentRatingKey))
+            menu_item = Gio.MenuItem.new(_("Go to artist view"), "win.show-artist-by-id")
+            menu_item.set_action_and_target_value("win.show-artist-by-id", param_key)
+            menu.append_item(menu_item)
+
+        if (item.TYPE in ['episode', 'season', 'show']):
+            if (not self._show_view):
+                if self._item.TYPE == 'episode':
+                    param_key = GLib.Variant.new_int64(self._item.grandparentRatingKey)
+                elif self._item.TYPE == 'season':
+                    param_key = GLib.Variant.new_int64(self._item.parentRatingKey)
+                elif self._item.TYPE == 'show':
+                    param_key = GLib.Variant.new_int64(self._item.ratingKey)
+                menu_item = Gio.MenuItem.new(_("Go to show view"), "win.show-show-by-id")
+                menu_item.set_action_and_target_value("win.show-show-by-id", param_key)
+                menu.append_item(menu_item)
+
+        if item.TYPE in ['episode', 'season', 'show', 'movie'] and (not item.isWatched or item.isWatched and hasattr(item, 'viewOffset') and item.viewOffset != 0):
+            menu_item = Gio.MenuItem.new(_("Mark as Played"), "win.mark-as-played-by-id")
+            menu_item.set_action_and_target_value("win.mark-as-played-by-id", GLib.Variant.new_int64(self._item.ratingKey))
+            menu.append_item(menu_item)
+
+        if item.TYPE in ['episode', 'season', 'show', 'movie'] and (item.isWatched or not item.isWatched and hasattr(item, 'viewOffset') and item.viewOffset != 0):
+            menu_item = Gio.MenuItem.new(_("Mark as Unplayed"), "win.mark-as-unplayed-by-id")
+            menu_item.set_action_and_target_value("win.mark-as-unplayed-by-id", GLib.Variant.new_int64(self._item.ratingKey))
+            menu.append_item(menu_item)
+
+        if self._plex.get_item_download_path(self._item) == None:
+            menu_item = Gio.MenuItem.new(_("Sync"), "win.sync-by-id")
+            menu_item.set_action_and_target_value("win.sync-by-id", GLib.Variant.new_int64(self._item.ratingKey))
+            menu.append_item(menu_item)
+
+        if item.TYPE in ['album', 'artist', 'show', 'playlist']:
+            menu_item = Gio.MenuItem.new(_("Shuffle"), "win.shuffle-by-id")
+            menu_item.set_action_and_target_value("win.shuffle-by-id", GLib.Variant.new_int64(self._item.ratingKey))
+            menu.append_item(menu_item)
+
+        if item.TYPE in ['episode', 'movie'] and hasattr(item, 'viewOffset') and item.viewOffset != 0:
+            menu_item = Gio.MenuItem.new(_("Start from beginning"), "win.play-item-from-beginning")
+            menu_item.set_action_and_target_value("win.play-item-from-beginning", GLib.Variant.new_int64(self._item.ratingKey))
+            menu.append_item(menu_item)
+
         if ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0):
             self._progress_bar.set_fraction(item.viewOffset / item.duration)
             self._progress_bar.set_visible(True)
@@ -116,85 +129,43 @@ class CoverBox(Gtk.Box):
         self._image_height = 300
         self._image_width = self._cover_width
 
-        self._album_view_button.set_visible(False)
-        self._artist_view_button.set_visible(False)
-
         if (item.TYPE == 'episode'):
             title = item.grandparentTitle
             subtitle = item.seasonEpisode + ' - ' + item.title
-            self._shuffle_button.set_visible(False)
             if (self._show_view):
-                self._show_view_button.set_visible(False)
                 self._image_height = 110
-            else:
-                self._show_view_button.set_visible(True)
         elif (item.TYPE == 'movie'):
             title = item.title
             subtitle = str(item.year)
-            self._shuffle_button.set_visible(False)
-            self._show_view_button.set_visible(False)
         elif (item.TYPE == 'show'):
             title = item.title
             subtitle = str(item.year)
-            self._shuffle_button.set_visible(True)
-            self._show_view_button.set_visible(True)
         elif (item.TYPE == 'season'):
             title = item.parentTitle
             subtitle = item.title
-            self._shuffle_button.set_visible(False)
-            self._show_view_button.set_visible(True)
         elif (item.TYPE == 'album'):
             title = item.parentTitle
             subtitle = item.title
-            self._shuffle_button.set_visible(True)
-            self._show_view_button.set_visible(False)
-            self._album_view_button.set_visible(True)
-            self._artist_view_button.set_visible(True)
             self._image_height = 200
         elif (item.TYPE == 'artist'):
             title = item.title
             subtitle = None
-            self._shuffle_button.set_visible(True)
-            self._show_view_button.set_visible(False)
-            self._artist_view_button.set_visible(True)
             self._image_height = 200
         elif (item.TYPE == 'playlist'):
             title = item.title
             subtitle = None
-            self._shuffle_button.set_visible(True)
-            self._show_view_button.set_visible(False)
             self._image_height = 200
 
-        self._play_from_beginning_button.set_visible(False)
         if (item.TYPE == 'playlist' or item.TYPE == 'album' or item.TYPE == 'artist'):
             self._watched_image.set_visible(False)
-            self._mark_unplayed_button.set_visible(False)
-            self._mark_played_button.set_visible(False)
         elif (not item.isWatched and ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0)):
             self._watched_image.set_visible(True)
-            self._mark_unplayed_button.set_visible(True)
-            self._mark_played_button.set_visible(True)
-            self._play_from_beginning_button.set_visible(True)
         elif (item.isWatched and ((item.TYPE == 'movie' or item.TYPE == 'episode') and item.viewOffset != 0)):
             self._watched_image.set_visible(False)
-            self._mark_unplayed_button.set_visible(True)
-            self._mark_played_button.set_visible(True)
-            self._play_from_beginning_button.set_visible(True)
         elif (not item.isWatched):
             self._watched_image.set_visible(True)
-            self._mark_unplayed_button.set_visible(False)
-            self._mark_played_button.set_visible(True)
         else:
             self._watched_image.set_visible(False)
-            self._mark_played_button.set_visible(False)
-            self._mark_unplayed_button.set_visible(True)
-
-        if (item.TYPE != 'movie' and item.TYPE != 'episode' and item.TYPE != 'album' and item.TYPE != 'playlist' and item.TYPE != 'artist' and item.TYPE != 'show'):
-            self._download_button.set_visible(False)
-        elif (self._plex.get_item_download_path(self._item) != None):
-            self._download_button.set_visible(False)
-        else:
-            self._download_button.set_visible(True)
 
         self._title_label.set_text(title)
         self._title_label.set_tooltip_text(title)
@@ -208,6 +179,8 @@ class CoverBox(Gtk.Box):
         #self._cover_image.set_size_request(self._image_width, -1)
         self._cover_image.set_pixel_size(self._image_width)
 
+        self.popover_menu.set_menu_model(menu)
+
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
             #self._plex.disconnect(self._plex_connect_id)
@@ -219,24 +192,6 @@ class CoverBox(Gtk.Box):
         #print(pix)
         self._cover_image.set_from_file(pix)
 
-    def __on_go_to_show_clicked(self, button):
-        if self._item.TYPE == 'episode':
-            self.emit('view-show-wanted', self._item.grandparentRatingKey)
-        elif self._item.TYPE == 'season':
-            self.emit('view-show-wanted', self._item.parentRatingKey)
-        elif self._item.TYPE == 'show':
-            self.emit('view-show-wanted', self._item.ratingKey)
-
-    def __on_go_to_album_clicked(self, button):
-        if self._item.TYPE == 'album':
-            self.emit('view-album-wanted', self._item.ratingKey)
-
-    def __on_go_to_artist_clicked(self, button):
-        if self._item.TYPE == 'artist':
-            self.emit('view-artist-wanted', self._item.ratingKey)
-        elif self._item.TYPE == 'album':
-            self.emit('view-artist-wanted', self._item.parentRatingKey)
-
     @Gtk.Template.Callback()
     def on_left_click(self, widget, n_press, x, y):
         widget.set_state(Gtk.EventSequenceState.CLAIMED);
@@ -246,45 +201,11 @@ class CoverBox(Gtk.Box):
 
     @Gtk.Template.Callback()
     def on_right_click(self, widget, n_press, x, y):
-        widget.set_state(Gtk.EventSequenceState.CLAIMED);
-        print(str(x) + " " + str(y))
-        #self.popover1.set_pointing_to(Gdk.Rectangle(x, y, 50, 50));
-        #self.popover1.set_offset(x, y);
-        self.popover1.popup();
-
-    def __on_play_from_beginning_clicked(self, button):
-        self.popover1.popdown()
-        thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'from_beginning':True})
-        thread.daemon = True
-        thread.start()
-
-    def __on_download_button(self, button):
-        self.popover1.popdown()
-        if (self._item.TYPE == 'show'):
-            self._sync_settings = SyncSettings(self._plex, self._item)
-            self._sync_settings.show()
-        else:
-            thread = threading.Thread(target=self._plex.add_to_sync, args=(self._item,))
-            thread.daemon = True
-            thread.start()
-
-    def __on_shuffle_button_clicked(self, button):
-        self.popover1.popdown()
-        thread = threading.Thread(target=self._plex.play_item, args=(self._item,),kwargs={'shuffle':1})
-        thread.daemon = True
-        thread.start()
-
-    def __on_mark_played_clicked(self, button):
-        self.popover1.popdown()
-        thread = threading.Thread(target=self._plex.mark_as_played, args=(self._item,))
-        thread.daemon = True
-        thread.start()
-
-    def __on_mark_unplayed_clicked(self, button):
-        self.popover1.popdown()
-        thread = threading.Thread(target=self._plex.mark_as_unplayed, args=(self._item,))
-        thread.daemon = True
-        thread.start()
+        widget.set_state(Gtk.EventSequenceState.CLAIMED)
+        r = Gdk.Rectangle()
+        r.x, r.y, r.width, r.height = (x, y, 10, 10)
+        self.popover_menu.set_pointing_to(r)
+        self.popover_menu.popup()
 
     def __on_item_retrieved(self, plex, item):
         if (self._item.ratingKey == item.ratingKey):
@@ -292,6 +213,3 @@ class CoverBox(Gtk.Box):
             self._item = item
             self.__set_item(self._item)
             
-    def __on_item_downloading(self, plex, item, status):
-        if (self._item.ratingKey == item.ratingKey):
-            self._download_button.set_visible(False)

@@ -27,12 +27,6 @@ import threading
 class DiscoverView(Gtk.ScrolledWindow):
     __gtype_name__ = 'discover_view'
 
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
-    }
-
     _deck_shows_box = Gtk.Template.Child()
     _movies_shows_box = Gtk.Template.Child()
     _seasons_shows_box = Gtk.Template.Child()
@@ -85,23 +79,6 @@ class DiscoverView(Gtk.ScrolledWindow):
         item_bin = ItemBin()
         item_bin.set_item(item)
         hub.add_item(item_bin)
-
-    def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, cover_width=self._cover_width)
-        cover.set_item(item)
-        cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
-        cover.connect("view-album-wanted", self.__on_go_to_album_clicked)
-        cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-        hub.append(cover)
-
-    def __on_go_to_show_clicked(self, cover, key):
-        self.emit('view-show-wanted', key)
-
-    def __on_go_to_album_clicked(self, cover, key):
-        self.emit('view-album-wanted', key)
-
-    def __on_go_to_artist_clicked(self, cover, key):
-        self.emit('view-artist-wanted', key)
 
     def width_changed(self, width):
         if width < 450:

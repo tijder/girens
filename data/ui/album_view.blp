@@ -20,7 +20,8 @@ Popover popover1 {
 }
 
 template album_view : ScrolledWindow {
-  Adw.Leaflet {
+  Adw.Clamp {
+    maximum-size: 800;
     Box {
       margin-top: 10;
       margin-bottom: 10;
@@ -70,7 +71,8 @@ template album_view : ScrolledWindow {
         margin-top: 20;
         orientation: vertical;
 
-        Grid {
+        Box {
+          orientation: vertical;
           Label _subtitle_label {
             halign: start;
             hexpand: true;

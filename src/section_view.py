@@ -29,11 +29,6 @@ import threading
 class SectionView(Gtk.Box):
     __gtype_name__ = 'section_view'
 
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-    }
-
     _sort_lables = {
         'addedAt': _('Added at'),
         'lastViewedAt': _('Last viewed at'),
@@ -208,14 +203,13 @@ class SectionView(Gtk.Box):
 
     def __show_more_items(self):
         self.__stop_add_items_timout()
+        items = []
         for item in self._items:
             item_bin = ItemBin()
             item_bin.set_item(item)
-            self._section_flow.add_item(item_bin)
-            self._items.remove(item)
-
-        if (len(self._items) != 0):
-            self.__start_add_items_timout()
+            items.append(item_bin)
+        self._items = []
+        self._section_flow.add_items(items)
 
     @Gtk.Template.Callback()
     def on_scroller_edge_reached(self, widget, position):
@@ -227,12 +221,6 @@ class SectionView(Gtk.Box):
         thread.daemon = True
         thread.start()
         self._container_start = self._container_start + self._container_size
-
-    def __on_go_to_show_clicked(self, cover, key):
-        self.emit('view-show-wanted', key)
-
-    def __on_go_to_artist_clicked(self, cover, key):
-        self.emit('view-artist-wanted', key)
 
     def __on_play_button_clicked(self, button):
         sort = None

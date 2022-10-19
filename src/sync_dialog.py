@@ -50,12 +50,12 @@ class SyncDialog(Gtk.Dialog):
         GLib.idle_add(self.__on_sync_items_retrieved_process, plex, items)
 
     def __on_sync_items_retrieved_process(self, plex, items):
-        for item in self._item_box.get_children():
-            item.destroy()
+        while self._item_box.get_first_child() != None:
+            self._item_box.remove(self._item_box.get_first_child())
 
         for item_keys in items:
             sync_item = SyncItem(self._plex, items[item_keys])
-            self._item_box.add(sync_item)
+            self._item_box.append(sync_item)
 
     def __on_ok_clicked(self, button):
         self.hide()

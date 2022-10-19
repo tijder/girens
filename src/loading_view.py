@@ -25,14 +25,19 @@ import threading
 class LoadingView(Gtk.Box):
     __gtype_name__ = 'loading_view'
 
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
-    }
-
     _loading_text_label = Gtk.Template.Child()
+    _logout_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self._logout_button.connect("clicked", self.__on_logout_clicked)
+
+    def set_plex(self, plex):
+        self._plex = plex
 
     def set_text(self, loading_text):
         self._loading_text_label.set_text(loading_text)
+
+    def __on_logout_clicked(self, button):
+        self._plex.logout()
+        self.destroy()

@@ -61,41 +61,5 @@ template cover_box : Box {
     }
   }
 
-  Popover popover1 {
-    Box {
-      orientation: vertical;
-
-      Button _artist_view_button {
-        label: _("Go to artist view");
-      }
-
-      Button _album_view_button {
-        label: _("Go to album view");
-      }
-
-      Button _show_view_button {
-        label: _("Go to show view");
-      }
-
-      Button _mark_played_button {
-        label: _("Mark as Played");
-      }
-
-      Button _mark_unplayed_button {
-        label: _("Mark as Unplayed");
-      }
-
-      Button _download_button {
-        label: _("Sync");
-      }
-
-      Button _shuffle_button {
-        label: _("Shuffle");
-      }
-
-      Button _play_from_beginning_button {
-        label: _("Play from beginning");
-      }
-    }
-  }
+  PopoverMenu popover_menu {}
 }

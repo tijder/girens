@@ -19,7 +19,7 @@ from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
 
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/music_popover_menu.ui')
-class MusicPopoverMenu(Gtk.PopoverMenu):
+class MusicPopoverMenu(Gtk.Popover):
     __gtype_name__ = 'music_popover_menu'
 
     _current_item = None

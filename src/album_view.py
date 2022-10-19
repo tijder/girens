@@ -26,7 +26,6 @@ class AlbumView(Gtk.ScrolledWindow):
     __gtype_name__ = 'album_view'
 
     __gsignals__ = {
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'done-loading': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
@@ -93,7 +92,10 @@ class AlbumView(Gtk.ScrolledWindow):
     def __album_process(self, album, tracks):
         self._item = album
         self._title_label.set_text(album.title)
-        self._subtitle_label.set_text(str(album.year))
+        if hasattr(album, "year"):
+            self._subtitle_label.set_text(str(album.year))
+        else:
+            self._subtitle_label.set_text("")
 
         self._download_key = album.ratingKey
         self._download_thumb = album.thumb

@@ -290,7 +290,7 @@ class Plex(GObject.Object):
             self.emit('download-from-url', name_image, path)
 
     def play_item(self, item, shuffle=0, from_beginning=None, sort=None):
-        if type(item) is str:
+        if type(item) in [str, int]:
             item = self._server.fetchItem(item)
         parent_item = None
         if item.TYPE == "track":
@@ -406,11 +406,15 @@ class Plex(GObject.Object):
         return path
 
     def mark_as_played(self, item):
+        if type(item) in [str, int]:
+            item = self._server.fetchItem(item)
         item.markWatched()
         item.reload()
         self.emit('item-retrieved', item)
 
     def mark_as_unplayed(self, item):
+        if type(item) in [str, int]:
+            item = self._server.fetchItem(item)
         item.markUnwatched()
         item.reload()
         self.emit('item-retrieved', item)

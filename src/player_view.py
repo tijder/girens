@@ -5,6 +5,7 @@ from .cover_box import CoverBox
 from .media_box import MediaBox
 from .media_box_video_top import MediaBoxVideoTop
 from .media_box_video_bottom import MediaBoxVideoBottom
+from .item_bin import ItemBin
 
 import time
 
@@ -17,9 +18,6 @@ class PlayerView(Gtk.ScrolledWindow):
     __gsignals__ = {
         'fullscreen': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         'windowed': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-album-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
     _frame = Gtk.Template.Child()
@@ -57,6 +55,7 @@ class PlayerView(Gtk.ScrolledWindow):
 
     _cover_width = 200
     _old_screensize = 640
+    _width = 640
 
     _last_button_click = 0
 
@@ -82,6 +81,7 @@ class PlayerView(Gtk.ScrolledWindow):
         self._plex = plex
         self._plex.connect("download-cover", self.__on_cover_downloaded)
         self._plex.connect("section-shows-deck", self.__on_show_deck_update)
+        self._deck_shows_box.set_plex(plex)
 
         if (self._player != None):
             self._media_box = MediaBox(self._plex, self._player, show_only_type="video")
@@ -146,10 +146,9 @@ class PlayerView(Gtk.ScrolledWindow):
         self.__add_extra_widgets()
 
     def __add_extra_widgets(self):
-        self.__set_correct_event_size(self._old_screensize)
+        self.__set_correct_event_size(self._width)
         self._box.show()
         self._video_box.set_vexpand(False)
-        #self._video_box.set_size_request(-1, 500)
         self.__show_cursor()
         self._controlls_top.get_style_context().remove_class("black_background")
 
@@ -220,7 +219,7 @@ class PlayerView(Gtk.ScrolledWindow):
     @Gtk.Template.Callback()
     def on_button_press_event(self, widget, n_press, x, y):
         widget.set_state(Gtk.EventSequenceState.CLAIMED);
-        if ((time.time() - self._last_button_click) < 0.2):
+        if ((time.time() - self._last_button_click) < 0.4):
             self._last_button_click = 0
             self.__fullscreen()
         else:
@@ -367,32 +366,20 @@ class PlayerView(Gtk.ScrolledWindow):
     #    self._cover_image.set_from_pixbuf(pix)
 
     def __empty_flowbox(self):
-        #for item in self._deck_shows_box.get_children():
-        #    self._deck_shows_box.remove(item)
-        print("Todo empty flowbox")
+        while self._deck_shows_box.get_first_child() != None:
+            self._deck_shows_box.remove(self._deck_shows_box.get_first_child())
 
     def __on_show_deck_update(self, plex, items):
         for item in items:
-            #GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
-            pass
+            GLib.idle_add(self.__add_to_list, self._deck_shows_box, item)
 
-    def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, item, cover_width=self._cover_width)
-        cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
-        cover.connect("view-album-wanted", self.__on_go_to_album_clicked)
-        cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-        hub.add(cover)
-
-    def __on_go_to_show_clicked(self, cover, key):
-        self.emit('view-show-wanted', key)
-
-    def __on_go_to_album_clicked(self, cover, key):
-        self.emit('view-album-wanted', key)
-
-    def __on_go_to_artist_clicked(self, cover, key):
-        self.emit('view-artist-wanted', key)
+    def __add_to_list(self, hub, item):
+        item_bin = ItemBin()
+        item_bin.set_item(item)
+        hub.add_item(item_bin)
 
     def width_changed(self, width):
+        self._width = width
         if width < 450:
             self._cover_width = width / 2 - 10
         else:

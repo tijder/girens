@@ -35,7 +35,7 @@ class ListPlayqueue(Gtk.GridView):
         self.liststore.append(item)
 
     def add_items(self, items):
-        self.liststore.splice(0, 0, items, len(items))
+        self.liststore.splice(0, 0, items)
 
     def empty_list(self):
         self.liststore.remove_all()

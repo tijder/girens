@@ -36,6 +36,9 @@ class List(Gtk.GridView):
     def add_item(self, item):
         self.liststore.append(item)
 
+    def add_items(self, items):
+        self.liststore.splice(self.liststore.get_n_items(), 0, items)
+
     def empty_list(self):
         self.liststore.remove_all()
 

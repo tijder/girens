@@ -1,80 +1,44 @@
 using Gtk 4.0;
+using Adw 1;
 
 template sync_settings : Dialog {
-  can-focus: false;
   title: _("Sync - settings");
   modal: true;
-  type-hint: "dialog";
 
-  [internal-child vbox]
   Box {
-    can-focus: false;
     orientation: vertical;
     spacing: 2;
 
-    [internal-child action_area]
-    .GtkButtonBox {
-      can-focus: "False";
-      layout-style: "end";
-
+    Adw.PreferencesGroup {
+      Adw.ActionRow {
+        title: _("Convert");
+        tooltip-text: _("Converted sync can take a long time");
+        use-underline: true;
+        activatable-widget: _convert_button;
+        Switch _convert_button {
+          valign: center;
+        }
+      }
+      Adw.ActionRow {
+        title: _("Unwatched only");
+        use-underline: true;
+        activatable-widget: _unwatched_button;
+        Switch _unwatched_button {
+          valign: center;
+        }
+      }
+      Adw.ActionRow {
+        title: _("Max items");
+        use-underline: true;
+        activatable-widget: _max_items_entry;
+        Entry _max_items_entry {
+          max-length: 3;
+          placeholder-text: _("Number of items");
+          input-purpose: number;
+        }
+      }
       Button _sync_button {
         label: _("Sync");
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-      }
-    }
-
-    Grid {
-      visible: true;
-      can-focus: false;
-      margin-start: 5;
-      margin-end: 5;
-      row-spacing: 5;
-      column-spacing: 10;
-
-      Label {
-        visible: true;
-        can-focus: false;
-        halign: end;
-        label: _("Convert");
-      }
-
-      Label {
-        visible: true;
-        can-focus: false;
-        halign: end;
-        label: _("Unwatched only");
-      }
-
-      Label {
-        visible: true;
-        can-focus: false;
-        halign: end;
-        label: _("Max items");
-      }
-
-      ToggleButton _convert_button {
-        label: _("Convert");
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-        tooltip-text: _("Converted sync can take a long time");
-      }
-
-      ToggleButton _unwatched_button {
-        label: _("Unwatched only");
-        visible: true;
-        can-focus: true;
-        receives-default: true;
-      }
-
-      Entry _max_items_entry {
-        visible: true;
-        can-focus: true;
-        max-length: 3;
-        placeholder-text: _("Number of items");
-        input-purpose: number;
       }
     }
   }

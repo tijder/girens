@@ -18,17 +18,13 @@
 from gi.repository import Gtk, GLib, GObject
 
 
-from .cover_box import CoverBox
+from .item_bin import ItemBin
 
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/search_view.ui')
 class SearchView(Gtk.Box):
     __gtype_name__ = 'search_view'
-
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
-    }
 
     _title_label = Gtk.Template.Child()
     _section_flow = Gtk.Template.Child()
@@ -38,6 +34,8 @@ class SearchView(Gtk.Box):
 
     def set_plex(self, plex):
         self._plex = plex
+        self._section_flow.set_plex(plex)
+        self._section_flow.set_grid_mode()
         self._plex.connect("search-item-retrieved", self.__on_search_items_retrieved)
 
 
@@ -46,8 +44,7 @@ class SearchView(Gtk.Box):
 
         self._title_label.set_label(self._search)
 
-        for item in self._section_flow.get_children():
-            self._section_flow.remove(item)
+        self._section_flow.empty_list()
 
         thread = threading.Thread(target=self._plex.search_library, args=(self._search,),kwargs={'libtype':'movie'})
         thread.daemon = True
@@ -61,16 +58,25 @@ class SearchView(Gtk.Box):
         thread.daemon = True
         thread.start()
 
+        thread = threading.Thread(target=self._plex.search_library, args=(self._search,),kwargs={'libtype':'season'})
+        thread.daemon = True
+        thread.start()
+
+        thread = threading.Thread(target=self._plex.search_library, args=(self._search,),kwargs={'libtype':'artist'})
+        thread.daemon = True
+        thread.start()
+
+        thread = threading.Thread(target=self._plex.search_library, args=(self._search,),kwargs={'libtype':'album'})
+        thread.daemon = True
+        thread.start()
+
     def __on_search_items_retrieved(self, plex, search, items):
         if (self._search == search):
             GLib.idle_add(self.__process_search_items, items)
 
     def __process_search_items(self, items):
         for item in items:
-            if (item.TYPE == 'episode' or item.TYPE == 'season' or item.TYPE == 'show' or item.TYPE == 'movie'):
-                cover = CoverBox(self._plex, item)
-                cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
-                self._section_flow.add(cover)
-
-    def __on_go_to_show_clicked(self, cover, key):
-        self.emit('view-show-wanted', key)
+            if (item.TYPE in ['episode', 'season', 'show', 'movie', 'artist', 'album']):
+                item_bin = ItemBin()
+                item_bin.set_item(item)
+                self._section_flow.add_item(item_bin)
