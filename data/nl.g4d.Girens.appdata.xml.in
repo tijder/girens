@@ -17,16 +17,8 @@
   </content_rating>
   <screenshots>
     <screenshot type="default">
-      <caption>The ondeck view</caption>
-      <image type="source" height="767" width="1280">https://g4d.nl/girens/screenshot_deck_blurred.png</image>
-    </screenshot>
-    <screenshot>
-      <caption>The films view</caption>
-      <image type="source" height="767" width="1280">https://g4d.nl/girens/screenshot_films_blurred.png</image>
-    </screenshot>
-    <screenshot>
-      <caption>The tvshows view</caption>
-      <image type="source" height="767" width="1280">https://g4d.nl/girens/screenshot_tvshows_blurred.png</image>
+      <caption>The homescreen</caption>
+      <image type="source" height="1181" width="789">https://gitlab.gnome.org/tijder/girens/-/raw/gtk4/docs/homescreen.png</image>
     </screenshot>
   </screenshots>
   <releases>
