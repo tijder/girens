@@ -167,6 +167,11 @@ Popover _menu_popover {
 
       Adw.PreferencesRow {
         use-underline: true;
+        .theme_switcher {}
+      }
+
+      Adw.PreferencesRow {
+        use-underline: true;
 
         Box {
           margin-start: 10;
@@ -201,16 +206,6 @@ Popover _menu_popover {
         use-underline: true;
         activatable-widget: _prefer_music_clips_check_button;
         Switch _prefer_music_clips_check_button {
-          valign: center;
-        }
-      }
-
-      Adw.ActionRow {
-        title: _("Dark Theme");
-        tooltip-text: _("Use dark GTK theme.");
-        use-underline: true;
-        activatable-widget: _dark_theme_check_button;
-        Switch _dark_theme_check_button {
           valign: center;
         }
       }

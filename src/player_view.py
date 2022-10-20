@@ -366,8 +366,7 @@ class PlayerView(Gtk.ScrolledWindow):
     #    self._cover_image.set_from_pixbuf(pix)
 
     def __empty_flowbox(self):
-        while self._deck_shows_box.get_first_child() != None:
-            self._deck_shows_box.remove(self._deck_shows_box.get_first_child())
+        self._deck_shows_box.empty_list()
 
     def __on_show_deck_update(self, plex, items):
         for item in items:

@@ -33,5 +33,7 @@
     <file>shortcuts.ui</file>
     <file>about_dialog.ui</file>
     <file>music_popover_menu.ui</file>
+    <file>theme_switcher.css</file>
+    <file>theme_switcher.ui</file>
   </gresource>
 </gresources>

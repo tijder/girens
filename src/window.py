@@ -38,6 +38,7 @@ from .mpris import MediaPlayer2Service
 from .remote_player import RemotePlayer
 from .sync_settings import SyncSettings
 from plex_remote.plex_remote_client import PlexRemoteClient
+from .theme_switcher import ThemeSwitcher
 
 from .plex import Plex
 from .player import Player
@@ -105,7 +106,6 @@ class PlexWindow(Adw.ApplicationWindow):
     _download_button = Gtk.Template.Child()
     _back_button = Gtk.Template.Child()
     _search_toggle_button = Gtk.Template.Child()
-    _dark_theme_check_button = Gtk.Template.Child()
     _prefer_music_clips_check_button = Gtk.Template.Child()
     _advertise_as_client_check_button = Gtk.Template.Child()
     _about_button = Gtk.Template.Child()
@@ -312,8 +312,6 @@ class PlexWindow(Adw.ApplicationWindow):
         self._advertise_as_client_check_button.connect("state-set", self.__advertise_as_client_check_button_clicked)
         self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
-        self._dark_theme_check_button.connect("state-set", self.__dark_theme_check_button_clicked)
-        self._settings.bind ("gtk-dark-theme", self._dark_theme_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
 
         sr = self._settings.get_string("transcode-media-to-resolution")
         if (sr == "1920x1080"):
@@ -636,15 +634,6 @@ class PlexWindow(Adw.ApplicationWindow):
         GLib.source_remove(self._window_placement_update_timeout)
         self._window_placement_update_timeout = None
         return False
-
-    def __dark_theme_check_button_clicked(self, button, state):
-        GLib.idle_add(self.__set_gtk_theme, state)
-
-    def __set_gtk_theme(self, booleon):
-        if booleon:
-            self._style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
-        else:
-            self._style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
 
     def __custom_css(self):
         css_provider = Gtk.CssProvider()

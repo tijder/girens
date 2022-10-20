@@ -54,6 +54,7 @@ girens_sources = [
   'sync_dialog.py',
   'sync_item.py',
   'sync_settings.py',
+  'theme_switcher.py',
   'window.py',
 ]
 

@@ -69,7 +69,7 @@ class CoverBox(Gtk.Box):
     def __set_item(self, item):
         menu = Gio.Menu()
 
-        if (self._item.TYPE == 'artist' or self._item.TYPE == 'album'):
+        if self._item.TYPE == 'album':
             menu_item = Gio.MenuItem.new(_("Go to album view"), "win.show-album-by-id")
             menu_item.set_action_and_target_value("win.show-album-by-id", GLib.Variant.new_int64(self._item.ratingKey))
             menu.append_item(menu_item)
