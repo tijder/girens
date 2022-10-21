@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using Adw 1;
 
 template player_view : ScrolledWindow {
   EventControllerKey {
@@ -56,71 +57,49 @@ template player_view : ScrolledWindow {
       orientation: vertical;
       margin-start: 10;
       margin-end: 10;
-      Box {
+      Box _card_box {
         margin-top: 10;
         margin-bottom: 5;
-        orientation: vertical;
+        orientation: horizontal;
+        spacing: 12;
 
-        Label _title_label {
-          halign: start;
-          label: "Title";
-          ellipsize: end;
-        }
-
-        Label _subtitle_label {
-          halign: start;
-          label: "2000";
-        }
-
-        Label _left_subtitle_label {
-          halign: start;
-          label: "2 hr 45 min";
-        }
-
-        Label _right_subtitle_label {
-          halign: end;
+        ListBox {
+          styles["boxed-list"]
+          selection-mode: none;
           hexpand: true;
-          label: "Action, Comedy";
-          justify: right;
-          ellipsize: end;
-        }
+          valign: start;
 
-        Box {
-          orientation: vertical;
-          Box {
-            Label _audio_label {
-              halign: start;
-              label: _("Audio ");
-              width-request: 80;
-            }
-
-            ComboBox _audio_box {
-              halign: start;
-            }
+          Adw.ActionRow _title_label {
+            subtitle: _("Title");
           }
-
-         Box {
-            Label _sub_label {
-              halign: start;
-              label: _("Subtitle ");
-              width-request: 80;
-            }
-
-            ComboBox _subtitle_box {
-              halign: start;
-            }
+          Adw.ActionRow _release_datum_label {
+            subtitle: _("Release datum");
+          }
+          Adw.ActionRow _genre_label {
+            subtitle: _("Genre");
+          }
+          Adw.ActionRow _duration_label {
+            subtitle: _("Duration");
+          }
+          Adw.ActionRow _discription_label {
+            title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. ";
+            subtitle: _("Description");
+            title-lines: 100;
           }
         }
 
-        Separator {
-          margin-top: 5;
-          margin-bottom: 5;
-        }
+        ListBox _options_list {
+          styles["boxed-list"]
+          selection-mode: none;
+          width-request: 300;
+          valign: start;
 
-        Label _discription_label {
-          halign: start;
-          label: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. ";
-          wrap: true;
+          Adw.ComboRow _audio_box {
+            subtitle: _("Audio ");
+          }
+          Adw.ComboRow _subtitle_box {
+            subtitle: _("Subtitle ");
+          }
         }
       }
 

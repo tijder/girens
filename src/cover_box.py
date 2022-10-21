@@ -24,7 +24,7 @@ import cairo
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/cover_box.ui')
-class CoverBox(Gtk.Box):
+class CoverBox(Gtk.Button):
     __gtype_name__ = 'cover_box'
 
     _title_label = Gtk.Template.Child()
@@ -49,8 +49,10 @@ class CoverBox(Gtk.Box):
 
     def set_item(self, item):
         self._item = item
-
         self.__set_item(self._item)
+
+        self.set_action_target_value(GLib.Variant.new_int64(self._item.ratingKey))
+        self.set_action_name("win.play-item")
 
         if (not item.TYPE == 'playlist' and (not item.TYPE == 'episode' or self._show_view)):
             self._download_key = item.ratingKey
@@ -193,11 +195,12 @@ class CoverBox(Gtk.Box):
         self._cover_image.set_from_file(pix)
 
     @Gtk.Template.Callback()
-    def on_left_click(self, widget, n_press, x, y):
+    def on_long_press(self, widget, x, y):
         widget.set_state(Gtk.EventSequenceState.CLAIMED);
-        thread = threading.Thread(target=self._plex.play_item, args=(self._item,))
-        thread.daemon = True
-        thread.start()
+        r = Gdk.Rectangle()
+        r.x, r.y, r.width, r.height = (x, y, 10, 10)
+        self.popover_menu.set_pointing_to(r)
+        self.popover_menu.popup()
 
     @Gtk.Template.Callback()
     def on_right_click(self, widget, n_press, x, y):

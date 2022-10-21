@@ -1,65 +1,65 @@
 using Gtk 4.0;
 
-template cover_box : Box {
-  orientation: vertical;
-  margin-top: 5;
-  margin-bottom: 5;
-
-  GestureClick {
-    button: 1;
-    pressed => on_left_click();
-    exclusive: true;
-  }
-
-  Gtk.GestureClick {
-    button: 3;
-    released => on_right_click();
-    exclusive: true;
-  }
-
-  Overlay {
-    halign: center;
-
-    Image _cover_image {
-      width-request: 200;
-      vexpand: true;
-
-      styles [
-        "cover_image",
-      ]
-    }
-
-    [overlay]
-    Image _watched_image {
-      halign: end;
-      valign: start;
-      icon-name: "dialog-information";
-    }
-
-    [overlay]
-    ProgressBar _progress_bar {
-      valign: end;
-    }
-  }
-
-  Box grid1 {
+template cover_box : Button {
+  styles ["card"]
+  Box{
     orientation: vertical;
+    margin-bottom: 5;
 
-    Label _title_label {
-      margin-top: 5;
-      label: _("label");
-      ellipsize: end;
-      max-width-chars: 1;
-
+    GestureLongPress {
+      pressed => on_long_press();
+      exclusive: true;
     }
 
-    Label _subtitle_label {
-      styles ["caption"]
-      label: _("label");
-      ellipsize: end;
-      max-width-chars: 1;
+    GestureClick {
+      button: 3;
+      released => on_right_click();
+      exclusive: true;
     }
+
+    Overlay {
+      halign: center;
+
+      Image _cover_image {
+        width-request: 200;
+        vexpand: true;
+      }
+
+      [overlay]
+      Image _watched_image {
+        halign: end;
+        valign: start;
+        icon-name: "dialog-information";
+      }
+
+      [overlay]
+      ProgressBar _progress_bar {
+        valign: end;
+      }
+    }
+
+    Box grid1 {
+      orientation: vertical;
+
+      Label _title_label {
+        margin-top: 5;
+        label: _("label");
+        ellipsize: end;
+        max-width-chars: 1;
+        margin-start: 5;
+        margin-end: 5;
+      }
+
+      Label _subtitle_label {
+        styles ["caption"]
+        label: _("label");
+        ellipsize: end;
+        max-width-chars: 1;
+        margin-start: 5;
+        margin-end: 5;
+      }
+    }
+
+    PopoverMenu popover_menu {}
   }
-
-  PopoverMenu popover_menu {}
 }

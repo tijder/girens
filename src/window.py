@@ -151,6 +151,9 @@ class PlexWindow(Adw.ApplicationWindow):
         action = Gio.SimpleAction(name="show-show-by-id", parameter_type=GLib.VariantType.new('x'))
         action.connect("activate", self.on_show_show_by_id)
         self.add_action(action)
+        action = Gio.SimpleAction(name="play-item", parameter_type=GLib.VariantType.new('x'))
+        action.connect("activate", self.on_play_item)
+        self.add_action(action)
         action = Gio.SimpleAction(name="play-item-from-beginning", parameter_type=GLib.VariantType.new('x'))
         action.connect("activate", self.on_play_item_from_beginning)
         self.add_action(action)
@@ -176,6 +179,11 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def on_show_show_by_id(self, action, parameter):
         self.__on_go_to_show(parameter.get_int64())
+
+    def on_play_item(self, action, parameter):
+        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),))
+        thread.daemon = True
+        thread.start()
 
     def on_play_item_from_beginning(self, action, parameter):
         thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),),kwargs={'from_beginning':True})
@@ -362,7 +370,6 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __show_login_view(self):
         self._viewStack_frame.set_visible_child(self._login_view)
-        #self.__show_view('login')
 
     def __on_login_not_found(self, view):
         self.__show_loading_view(False, '')

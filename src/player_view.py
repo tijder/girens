@@ -31,14 +31,15 @@ class PlayerView(Gtk.ScrolledWindow):
     #_cover_image = Gtk.Template.Child()
 
     _title_label = Gtk.Template.Child()
-    _subtitle_label = Gtk.Template.Child()
-    _left_subtitle_label = Gtk.Template.Child()
-    _right_subtitle_label = Gtk.Template.Child()
+    _release_datum_label = Gtk.Template.Child()
+    _genre_label = Gtk.Template.Child()
+    _duration_label = Gtk.Template.Child()
     _discription_label = Gtk.Template.Child()
     _subtitle_box = Gtk.Template.Child()
-    _sub_label = Gtk.Template.Child()
     _audio_box = Gtk.Template.Child()
-    _audio_label = Gtk.Template.Child()
+
+    _card_box = Gtk.Template.Child()
+    _options_list = Gtk.Template.Child()
 
     _deck_shows_box = Gtk.Template.Child()
 
@@ -65,9 +66,8 @@ class PlayerView(Gtk.ScrolledWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self._subtitle_box.connect("changed", self.__on_subtitle_selected)
-        self._audio_box.connect("changed", self.__on_audio_selected)
-        #window.connect("key-press-event", self.__on_keypress)
+        #self._subtitle_box.connect("changed", self.__on_subtitle_selected)
+        #self._audio_box.connect("changed", self.__on_audio_selected)
 
     def set_window(self, window):
         self._window = window
@@ -275,11 +275,11 @@ class PlayerView(Gtk.ScrolledWindow):
                 leftsubtitle = str(self.__convertMillis(self._item.duration))
                 sumary = self._item.summary
 
-            self._title_label.set_text(title)
-            self._subtitle_label.set_text(subtitle)
-            self._left_subtitle_label.set_text(leftsubtitle)
-            self._right_subtitle_label.set_text(rightsubtitle)
-            self._discription_label.set_text(sumary)
+            self._title_label.set_title(title)
+            self._release_datum_label.set_title(rightsubtitle)
+            self._genre_label.set_title(subtitle)
+            self._duration_label.set_title(leftsubtitle)
+            self._discription_label.set_title(sumary)
 
             GLib.idle_add(self.__set_stream_widgets)
 
@@ -289,26 +289,32 @@ class PlayerView(Gtk.ScrolledWindow):
 
     def __set_stream_widgets(self):
         self._selected_subtitle_stream = None
-        self._sub_store = Gtk.ListStore(object, str)
+        self._sub_store = Gtk.StringList()
         sub_selected = 0
         self._selected_audio_stream = None
-        self._audio_store = Gtk.ListStore(object, str)
+        self._audio_store = Gtk.StringList()
         audio_selected = -1
 
-        self._sub_store.append([None, _('None')])
+        itemBin = ItemBin()
+        itemBin.set_item([None, _('None')])
+        self._sub_store.append(_('None'))
 
         i = 0
         y = 0
         for parts in self._item.iterParts():
             for stream in parts.subtitleStreams():
                 i = i + 1
-                self._sub_store.append([stream, stream.displayTitle])
+                itemBin = ItemBin()
+                itemBin.set_item([stream, stream.displayTitle])
+                self._sub_store.append(stream.displayTitle)
                 if stream.selected is True:
                     self._selected_subtitle_stream = stream
                     sub_selected = i
 
             for stream in parts.audioStreams():
-                self._audio_store.append([stream, stream.displayTitle])
+                itemBin = ItemBin()
+                itemBin.set_item([stream, stream.displayTitle])
+                self._audio_store.append(stream.displayTitle)
                 if stream.selected is True:
                     self._selected_audio_stream = stream
                     audio_selected = y
@@ -317,17 +323,18 @@ class PlayerView(Gtk.ScrolledWindow):
         self.__set_combobox(self._subtitle_box, self._sub_store, sub_selected)
         self.__set_combobox(self._audio_box, self._audio_store, audio_selected)
 
-        self._sub_label.set_visible(len(self._sub_store) > 1)
-        self._audio_label.set_visible(len(self._audio_store) > 1)
+        self._subtitle_box.set_visible(len(self._sub_store) > 1)
+        self._audio_box.set_visible(len(self._audio_store) > 1)
+        self._options_list.set_visible(len(self._audio_store) > 1 or len(self._sub_store) > 1)
 
     def __set_combobox(self, box, store, selected):
-        box.clear()
+        #box.clear()
         box.set_model(store)
-        box.set_id_column(1)
+        box.set_selected(selected)
         renderer_text = Gtk.CellRendererText()
-        box.pack_start(renderer_text, True)
-        box.add_attribute(renderer_text, "text", 1)
-        box.set_active(selected)
+        #box.pack_start(renderer_text, True)
+        #box.add_attribute(renderer_text, "text", 1)
+        #box.set_active(selected)
         box.set_visible(len(store) > 1)
 
     def __on_subtitle_selected(self, combo):
@@ -383,6 +390,12 @@ class PlayerView(Gtk.ScrolledWindow):
             self._cover_width = width / 2 - 10
         else:
             self._cover_width = 200
+
+        if width < 850:
+            self._card_box.set_orientation(Gtk.Orientation.VERTICAL)
+        else:
+            self._card_box.set_orientation(Gtk.Orientation.HORIZONTAL)
+
 
         if not self._windowed:
             self.__set_correct_event_size(width)

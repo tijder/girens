@@ -18,7 +18,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>The homescreen</caption>
-      <image type="source" height="1181" width="789">https://gitlab.gnome.org/tijder/girens/-/raw/gtk4/docs/homescreen.png</image>
+      <image type="source" height="789" width="1181">https://gitlab.gnome.org/tijder/girens/-/raw/gtk4/docs/homescreen.png</image>
     </screenshot>
   </screenshots>
   <releases>
