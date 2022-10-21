@@ -110,7 +110,8 @@ class Player(GObject.Object):
         def __on_track_list(_name, value):
             self._tracklist = value
 
-            if self._direct is not None and self._direct and self._item_loading is not None and self._item_loading.listType == 'video':
+            if len(value) != 0 and self._direct is not None and self._direct and self._item_loading is not None and self._item_loading.listType == 'video' and self._track_isset is False:
+                self._track_isset = True
                 self.__set_selected_stream()
 
         @self._player.property_observer('eof-reached')
@@ -153,6 +154,7 @@ class Player(GObject.Object):
             self.aid = pindex
 
         if stream_id == False and extern_stream_title != False:
+            self._track_isset = False
             self._player.command('sub-add', plex_stream.getDownloadUrl(), 'auto', extern_stream_title)
 
     def set_subtitle(self, plex_stream):
@@ -189,6 +191,7 @@ class Player(GObject.Object):
         self._from_beginning = None
         self._restart = None
         self._restart_offset = 0
+        self._track_isset = False
         new_item = self._playqueue.items[self._offset]
         if (self._playing != False):
             self._play_wait = True

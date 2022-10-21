@@ -66,8 +66,8 @@ class PlayerView(Gtk.ScrolledWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        #self._subtitle_box.connect("changed", self.__on_subtitle_selected)
-        #self._audio_box.connect("changed", self.__on_audio_selected)
+        self._subtitle_box.connect("notify::selected", self.__on_subtitle_selected)
+        self._audio_box.connect("notify::selected", self.__on_audio_selected)
 
     def set_window(self, window):
         self._window = window
@@ -337,29 +337,38 @@ class PlayerView(Gtk.ScrolledWindow):
         #box.set_active(selected)
         box.set_visible(len(store) > 1)
 
-    def __on_subtitle_selected(self, combo):
-        self.__on_process_slected(combo, 'subtitle')
+    def __on_subtitle_selected(self, widget, param):
+        i = 0
+        if self._subtitle_box.get_selected() == 0:
+            self.__on_process_slected(None, 'subtitle')
+        else:
+            for parts in self._item.iterParts():
+                for stream in parts.subtitleStreams():
+                    i = i + 1
+                    if i is self._subtitle_box.get_selected():
+                        self.__on_process_slected(stream, 'subtitle')
 
-    def __on_audio_selected(self, combo):
-        self.__on_process_slected(combo, 'audio')
+    def __on_audio_selected(self, widget, param):
+        i = 0
+        for parts in self._item.iterParts():
+            for stream in parts.audioStreams():
+                if (i is self._audio_box.get_selected()):
+                    self.__on_process_slected(stream, 'audio')
+                i = i + 1
 
-    def __on_process_slected(self, combo, what):
+    def __on_process_slected(self, stream, what):
         if what == 'audio':
             current_stream = self._selected_audio_stream
         elif what == 'subtitle':
             current_stream = self._selected_subtitle_stream
 
-        tree_iter = combo.get_active_iter()
-        if tree_iter is not None:
-            model = combo.get_model()
-            stream, stream_name = model[tree_iter][:2]
-            if (stream is not current_stream):
-                if what == 'audio':
-                    self._selected_audio_stream = stream
-                    self._player.set_audio(stream)
-                elif what == 'subtitle':
-                    self._selected_subtitle_stream = stream
-                    self._player.set_subtitle(stream)
+        if (stream is not current_stream):
+            if what == 'audio':
+                self._selected_audio_stream = stream
+                self._player.set_audio(stream)
+            elif what == 'subtitle':
+                self._selected_subtitle_stream = stream
+                self._player.set_subtitle(stream)
 
     def __set_box_visible(self, booleon):
         self._label.set_visible(booleon)
