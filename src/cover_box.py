@@ -51,8 +51,28 @@ class CoverBox(Gtk.Button):
         self._item = item
         self.__set_item(self._item)
 
-        self.set_action_target_value(GLib.Variant.new_int64(self._item.ratingKey))
-        self.set_action_name("win.play-item")
+        target = ""
+        target_value = None
+
+        if item.TYPE in ['episode', 'movie', 'playlist']:
+            target = "win.play-item"
+            target_value = GLib.Variant.new_int64(self._item.ratingKey)
+        elif item.TYPE in ['season', 'show']:
+            if self._item.TYPE == 'season':
+                target_value = GLib.Variant.new_int64(self._item.parentRatingKey)
+            elif self._item.TYPE == 'show':
+                target_value = GLib.Variant.new_int64(self._item.ratingKey)
+            target = "win.show-show-by-id"
+        elif self._item.TYPE == 'artist':
+            target_value = GLib.Variant.new_int64(self._item.ratingKey)
+            target = "win.show-artist-by-id"
+        elif self._item.TYPE == 'album':
+            target_value = GLib.Variant.new_int64(int(self._item.ratingKey))
+            target = "win.show-album-by-id"
+
+
+        self.set_action_target_value(target_value)
+        self.set_action_name(target)
 
         if (not item.TYPE == 'playlist' and (not item.TYPE == 'episode' or self._show_view)):
             self._download_key = item.ratingKey
@@ -178,20 +198,15 @@ class CoverBox(Gtk.Button):
         else:
             self._subtitle_label.set_visible(False)
 
-        #self._cover_image.set_size_request(self._image_width, -1)
         self._cover_image.set_pixel_size(self._image_width)
 
         self.popover_menu.set_menu_model(menu)
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
-            #self._plex.disconnect(self._plex_connect_id)
-            #pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, self._image_width, self._image_height)
             GLib.idle_add(self.__set_image, path)
 
     def __set_image(self, pix):
-        #self._cover_image.set_from_pixbuf(pix)
-        #print(pix)
         self._cover_image.set_from_file(pix)
 
     @Gtk.Template.Callback()

@@ -243,10 +243,8 @@ class PlexWindow(Adw.ApplicationWindow):
     def __screen_mapped(self, map):
         self._settings = Gio.Settings ("nl.g4d.Girens")
 
-        #self._player_view = PlayerView(self)
         self._player_view.connect("fullscreen", self.__fullscreen)
         self._player_view.connect("windowed", self.__windowed)
-        #self._player_revealer.set_child(self._player_view)
 
         self._player = Player(self._player_view)
         self._player.set_video_output_driver(self._video_output_driver)
@@ -495,8 +493,7 @@ class PlexWindow(Adw.ApplicationWindow):
         GLib.idle_add(self.__go_to_player)
 
     def __go_to_player(self):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
-        self._viewStack_pages.set_visible_child(self._player_view)
+        self._sidebar_box.select_player()
         self._player.view_shown()
 
     def __stop_search(self, search):

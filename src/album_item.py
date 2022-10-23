@@ -43,6 +43,8 @@ class AlbumItem(Gtk.Box):
         if item.primaryExtraKey != None:
             self._music_clip_button.set_visible(True)
             self._music_clip_button.connect("clicked", self.__on_music_clip_button_clicked)
+        else:
+            self._music_clip_button.set_visible(False)
 
         self._title_label.set_text(self._item.title)
         if self._item.index is not None:

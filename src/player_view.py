@@ -256,36 +256,34 @@ class PlayerView(Gtk.ScrolledWindow):
                 self._download_key = self._item.grandparentRatingKey
                 self._download_thumb = self._item.grandparentThumb
 
-            title = ''
-            subtitle = ''
-            leftsubtitle = ''
-            rightsubtitle = ''
-            sumary = ''
-
-            if (self._item.TYPE == 'episode'):
-                title = self._item.grandparentTitle
-                subtitle = self._item.seasonEpisode + ' - ' + self._item.title
-                rightsubtitle = str(self._item.originallyAvailableAt.strftime('%d %b %Y'))
-            elif (self._item.TYPE == 'movie'):
-                title = self._item.title
-                subtitle = str(self._item.year)
+            genre_title = ''
+            if hasattr(self._item, 'genres'):
                 for genre in self._item.genres:
-                    rightsubtitle = rightsubtitle + genre.tag + " "
-            if self._item.TYPE in ['movie', 'episode']:
-                leftsubtitle = str(self.__convertMillis(self._item.duration))
-                sumary = self._item.summary
+                    genre_title = genre_title + genre.tag + " "
 
-            self._title_label.set_title(title)
-            self._release_datum_label.set_title(rightsubtitle)
-            self._genre_label.set_title(subtitle)
-            self._duration_label.set_title(leftsubtitle)
-            self._discription_label.set_title(sumary)
+            release_datum = ''
+            if hasattr(self._item, 'originallyAvailableAt') and self._item.originallyAvailableAt != None:
+                release_datum = str(self._item.originallyAvailableAt.strftime('%d %b %Y'))
+
+            self.__set_list_box_item(self._title_label, self._item.title)
+            self.__set_list_box_item(self._release_datum_label, release_datum)
+            self.__set_list_box_item(self._genre_label, genre_title)
+            self.__set_list_box_item(self._duration_label, str(self.__convertMillis(self._item.duration)))
+            self.__set_list_box_item(self._discription_label, self._item.summary)
 
             GLib.idle_add(self.__set_stream_widgets)
 
             thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
             thread.daemon = True
             thread.start()
+
+    def __set_list_box_item(self, box, title):
+        if title is not None and title != '':
+            box.set_title(title)
+            box.set_visible(True)
+        else:
+            box.set_visible(False)
+
 
     def __set_stream_widgets(self):
         self._selected_subtitle_stream = None
@@ -328,13 +326,9 @@ class PlayerView(Gtk.ScrolledWindow):
         self._options_list.set_visible(len(self._audio_store) > 1 or len(self._sub_store) > 1)
 
     def __set_combobox(self, box, store, selected):
-        #box.clear()
         box.set_model(store)
         box.set_selected(selected)
         renderer_text = Gtk.CellRendererText()
-        #box.pack_start(renderer_text, True)
-        #box.add_attribute(renderer_text, "text", 1)
-        #box.set_active(selected)
         box.set_visible(len(store) > 1)
 
     def __on_subtitle_selected(self, widget, param):
