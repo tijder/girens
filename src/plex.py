@@ -448,10 +448,13 @@ class Plex(GObject.Object):
             if parse.port != None:
                 port = ":" + str(parse.port)
             url_img_combined = parse.scheme + "://" + parse.hostname + port + parse.path + "?" + parse.query
-            img_raw = opener.open(url_img_combined)
-            with open(path, 'w+b') as file:
-                file.write(img_raw.read())
-            return path
+            try:
+                img_raw = opener.open(url_img_combined)
+                with open(path, 'w+b') as file:
+                    file.write(img_raw.read())
+                return path
+            except:
+                print("Failed downloading: " + url_img_combined)
         else:
             return path
 

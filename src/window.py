@@ -349,6 +349,7 @@ class PlexWindow(Adw.ApplicationWindow):
         self.connect("notify::fullscreened", self.fullscreened)
 
         self.__show_loading_view(True, _('Starting Girens'))
+        self.__update_screen_size_change(self.get_default_size())
         self._login_view.try_login()
 
     def __res_changed_1080(self, res_button):
@@ -412,8 +413,7 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __on_downloaded(self, plex, name_image, path):
         if(self._plex._account.username == name_image):
-            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 25, 25)
-            GLib.idle_add(self.__set_image, pix)
+            GLib.idle_add(self.__set_image, path)
 
     def __on_sync_clicked(self, button):
         self._sync_dialog.show()
@@ -430,7 +430,7 @@ class PlexWindow(Adw.ApplicationWindow):
             self._sync_image.set_from_icon_name('network-transmit-symbolic')
 
     def __set_image(self, pix):
-        self._avatar_image.set_from_pixbuf(pix)
+        self._avatar_image.set_from_file(pix)
 
     def __on_refresh_clicked(self, button):
         self.__refresh_data()
@@ -589,9 +589,6 @@ class PlexWindow(Adw.ApplicationWindow):
                 self.get_application().uninhibit(self._inhibitCookie)
                 self._inhibitCookie = None
 
-
-
-
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)
 
@@ -606,20 +603,19 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_configure_event(self, widget, event):
         if self._window_placement_update_timeout is None:
             self._window_placement_update_timeout = GLib.timeout_add(
-                500, self.__update_screen_size_change, widget)
+                500, self.__update_screen_size_change, widget.get_default_size())
 
     def __on_height_changed(self, widget, event):
         if self._window_placement_update_timeout is None:
             self._window_placement_update_timeout = GLib.timeout_add(
-                500, self.__update_screen_size_change, widget)
+                500, self.__update_screen_size_change, widget.get_default_size())
 
     def __on_width_changed(self, widget, event):
         if self._window_placement_update_timeout is None:
             self._window_placement_update_timeout = GLib.timeout_add(
-                500, self.__update_screen_size_change, widget)
+                500, self.__update_screen_size_change, widget.get_default_size())
 
-    def __update_screen_size_change(self, widget):
-        size = widget.get_default_size()
+    def __update_screen_size_change(self, size):
         if not self._player_view._fullscreen:
             self._settings.set_int("window-size-width", size[0])
             self._settings.set_int("window-size-height", size[1])
@@ -630,7 +626,8 @@ class PlexWindow(Adw.ApplicationWindow):
         self._album_view.width_changed(size[0])
         self._artist_view.width_changed(size[0])
         self._show_view.width_changed(size[0])
-        GLib.source_remove(self._window_placement_update_timeout)
+        if self._window_placement_update_timeout != None:
+            GLib.source_remove(self._window_placement_update_timeout)
         self._window_placement_update_timeout = None
         return False
 

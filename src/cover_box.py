@@ -138,7 +138,7 @@ class CoverBox(Gtk.Button):
             menu.append_item(menu_item)
 
         if item.TYPE in ['episode', 'movie'] and hasattr(item, 'viewOffset') and item.viewOffset != 0:
-            menu_item = Gio.MenuItem.new(_("Start from beginning"), "win.play-item-from-beginning")
+            menu_item = Gio.MenuItem.new(_("Start from the beginning"), "win.play-item-from-beginning")
             menu_item.set_action_and_target_value("win.play-item-from-beginning", GLib.Variant.new_int64(self._item.ratingKey))
             menu.append_item(menu_item)
 

@@ -2,12 +2,12 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="resume_dialog" parent="AdwMessageDialog">
-    <property name="body" translatable="yes">Resume playing item?</property>
+    <property name="body" translatable="yes">Do you want resume watching or start from the beginning?</property>
     <property name="default-response">save</property>
     <property name="close-response">cancel</property>
     <signal name="response" handler="response_cb"/>
     <responses>
-      <response id="_beginning_button" translatable="yes">Start from beginning</response>
+      <response id="_beginning_button" translatable="yes">Start from the beginning</response>
       <response id="_resume_button" translatable="yes" appearance="suggested">Resume</response>
     </responses>
   </template>
