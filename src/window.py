@@ -56,6 +56,7 @@ class PlexWindow(Adw.ApplicationWindow):
     _active_view = None
     _show_id = None
     _remote_client_active = None
+    _inhibitCookie = None
 
     _style_manager = Adw.StyleManager.get_default()
 
@@ -570,30 +571,24 @@ class PlexWindow(Adw.ApplicationWindow):
         self.separator_header.set_visible(False)
         self.header.set_visible(False)
 
-        #self._media_box.set_visible(False)
-        #self.sidebar.hide()
-        #self.separator.hide()
-        #self.get_style_context().add_class("black_background")
-        #self._main_scrolled_window.get_style_context().add_class("black_background")
-
     def __add_extra_widgets(self):
         self.content_header.set_visible(True)
         self.separator_header.set_visible(True)
         self.header.set_visible(True)
 
-        #self._media_box.set_visible(True)
-        #self.sidebar.show()
-        #self.separator.show()
-        #self.get_style_context().remove_class("black_background")
-        #self._main_scrolled_window.get_style_context().remove_class("black_background")
-
     def fullscreened(self, widget, state):
         if (widget.is_fullscreen()): # Is fullscreen
             self._player_view.set_fullscreen_state()
             self.__remove_extra_widgets()
+            if (self._inhibitCookie == None):
+                self._inhibitCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.IDLE, "Girens is playing in fullscreen")
         else: # Is not fullscreen
             self._player_view.set_unfullscreen_state()
             self.__add_extra_widgets()
+            if (self._inhibitCookie != None):
+                self.get_application().uninhibit(self._inhibitCookie)
+                self._inhibitCookie = None
+
 
 
 
