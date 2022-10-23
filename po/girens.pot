@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 1.1.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-23 15:26+0200\n"
+"POT-Creation-Date: 2022-10-23 15:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -552,11 +552,7 @@ msgid "Secure"
 msgstr ""
 
 #: ../data/ui/resume_dialog.ui:5
-msgid "Resume playing item?"
-msgstr ""
-
-#: ../data/ui/resume_dialog.ui:10
-msgid "Start from beginning"
+msgid "Do you want resume watching or start from the beginning?"
 msgstr ""
 
 #: ../data/ui/resume_dialog.ui:11
