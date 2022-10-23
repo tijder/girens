@@ -27,15 +27,10 @@ template sync_settings : Dialog {
           valign: center;
         }
       }
-      Adw.ActionRow {
+      Adw.EntryRow _max_items_entry {
         title: _("Max items");
+        input-purpose: number;
         use-underline: true;
-        activatable-widget: _max_items_entry;
-        Entry _max_items_entry {
-          max-length: 3;
-          placeholder-text: _("Number of items");
-          input-purpose: number;
-        }
       }
       Button _sync_button {
         label: _("Sync");
