@@ -393,6 +393,7 @@ class PlayerView(Gtk.ScrolledWindow):
             self._cover_width = width / 2 - 10
         else:
             self._cover_width = 200
+        self._deck_shows_box.set_cover_width(self._cover_width)
 
         if width < 850:
             self._card_box.set_orientation(Gtk.Orientation.VERTICAL)

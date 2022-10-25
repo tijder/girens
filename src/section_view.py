@@ -243,3 +243,4 @@ class SectionView(Gtk.Box):
             self._cover_width = width / 2 - 10
         else:
             self._cover_width = 200
+        self._section_flow.set_cover_width(self._cover_width)

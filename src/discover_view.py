@@ -85,4 +85,8 @@ class DiscoverView(Gtk.ScrolledWindow):
             self._cover_width = width / 2 - 10
         else:
             self._cover_width = 200
+        self._deck_shows_box.set_cover_width(self._cover_width)
+        self._movies_shows_box.set_cover_width(self._cover_width)
+        self._seasons_shows_box.set_cover_width(self._cover_width)
+        self._music_shows_box.set_cover_width(self._cover_width)
             

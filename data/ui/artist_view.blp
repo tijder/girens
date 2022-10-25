@@ -4,17 +4,21 @@ template artist_view : ScrolledWindow {
   Box {
     orientation: vertical;
     Box {
+      orientation: horizontal;
       margin-top: 20;
       margin-bottom: 10;
+      margin-start: 10;
+      margin-end: 10;
 
-      Grid {
-        visible: true;
-        can-focus: false;
-
+      Box {
+        orientation: vertical;
         Label _title_label {
           halign: start;
           label: "label";
           ellipsize: end;
+          styles [
+            "title-1"
+          ]
         }
 
         Label _subtitle_label {
@@ -25,6 +29,8 @@ template artist_view : ScrolledWindow {
       }
 
       Box _section_controll_box {
+        hexpand: true;
+        halign: end;
         Button _play_button {
           Image {
             icon-name: "media-playback-start-symbolic";

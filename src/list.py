@@ -25,6 +25,8 @@ class List(Gtk.GridView):
     liststore = Gtk.Template.Child()
     factory = Gtk.Template.Child()
 
+    _cover_width = 200
+
     _type_child = CoverBox
 
     def __init__(self, **kwargs):
@@ -46,10 +48,13 @@ class List(Gtk.GridView):
         self.set_orientation(Gtk.Orientation.VERTICAL)
         self.set_max_columns(10)
 
+    def set_cover_width(self, cover_width):
+        self._cover_width = cover_width
+
 
     @Gtk.Template.Callback()
     def on_setup(self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem) -> None:
-        list_item.set_child(CoverBox(self._plex));
+        list_item.set_child(CoverBox(self._plex, cover_width=self._cover_width));
 
     @Gtk.Template.Callback()
     def on_bind(self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem) -> None:

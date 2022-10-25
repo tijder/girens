@@ -107,7 +107,8 @@ class ArtistView(Gtk.ScrolledWindow):
         self.__start_add_items_timout()
 
     def __album_loaded(self, album):
-        self.__show_more_items()
+        if len(self._albums) > 0:
+            self.__show_more_items()
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._artist,))

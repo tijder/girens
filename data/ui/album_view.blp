@@ -1,30 +1,13 @@
 using Gtk 4.0;
 using Adw 1;
 
-Popover popover1 {
-  Box {
-    orientation: vertical;
-
-    Button _artist_view_button {
-      label: _("Go to artist view");
-    }
-
-    Button _download_button {
-      label: _("Sync");
-    }
-
-    Button _shuffle_button {
-      label: _("Shuffle");
-    }
-  }
-}
-
 template album_view : ScrolledWindow {
   Adw.Clamp {
     maximum-size: 800;
     Box {
       margin-top: 10;
       margin-bottom: 10;
+      spacing: 30;
 
       Box _left_box {
         halign: start;
@@ -47,10 +30,11 @@ template album_view : ScrolledWindow {
         Box _button_box {
           width-request: 150;
           halign: end;
+          hexpand-set: true;
 
           Button _play_button {
             margin-top: 5;
-
+            hexpand: true;
             Image {
               icon-name: "media-playback-start-symbolic";
             }
@@ -58,7 +42,6 @@ template album_view : ScrolledWindow {
 
           MenuButton _menu_button {
             margin-top: 5;
-            popover: popover1;
           }
 
           styles [
@@ -73,6 +56,15 @@ template album_view : ScrolledWindow {
 
         Box {
           orientation: vertical;
+          Label _title_label {
+            styles [
+              "title-1"
+            ]
+            halign: start;
+            hexpand: true;
+            label: "label";
+            ellipsize: end;
+          }
           Label _subtitle_label {
             halign: start;
             hexpand: true;
@@ -80,21 +72,14 @@ template album_view : ScrolledWindow {
             ellipsize: end;
           }
 
-          Label _title_label {
-            halign: start;
-            hexpand: true;
-            label: "label";
-            ellipsize: end;
+          Box _cover2_box {
+            orientation: vertical;
           }
 
           Box _button2_box {
             styles [
               "linked",
             ]
-          }
-
-          Box _cover2_box {
-            orientation: vertical;
           }
         }
 

@@ -1,6 +1,7 @@
 using Gtk 4.0;
 
 template album_item : Box {
+  height-request: 50;
   Label _index_label {
     width-chars: 4;
   }
@@ -12,30 +13,19 @@ template album_item : Box {
     ellipsize: end;
   }
 
-  Label _time_label {
-    styles["caption"]
-    halign: start;
-    label: "00:00";
-    ellipsize: end;
-  }
-
   Box {
     halign: end;
     hexpand: true;
+    Label _time_label {
+      styles["caption"]
+      label: "00:00";
+      ellipsize: end;
+      margin-end: 10;
+    }
     Button _music_clip_button {
       Image {
         icon-name: "video-display-symbolic";
       }
     }
-
-    Button _play_button {
-      Image {
-        icon-name: "media-playback-start-symbolic";
-      }
-    }
-
-    styles [
-      "linked",
-    ]
   }
 }

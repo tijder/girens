@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 1.1.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-23 15:43+0200\n"
+"POT-Creation-Date: 2022-10-25 17:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -392,23 +392,23 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 
-#: ../data/ui/artist_view.blp:51
+#: ../data/ui/artist_view.blp:57
 msgid "Show more"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:14 ../data/ui/player_view.blp:110
+#: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:115
 msgid "Ondeck"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:29
+#: ../data/ui/discover_view.blp:35
 msgid "Recently added TV"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:44
+#: ../data/ui/discover_view.blp:53
 msgid "Recently added Movies"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:59
+#: ../data/ui/discover_view.blp:71
 msgid "Recently added Music"
 msgstr ""
 
@@ -452,62 +452,62 @@ msgstr ""
 msgid "Girens"
 msgstr ""
 
-#: ../data/ui/main_window.blp:166
+#: ../data/ui/main_window.blp:164
 msgid "Settings"
 msgstr ""
 
-#: ../data/ui/main_window.blp:194
+#: ../data/ui/main_window.blp:192
 msgid "Advertise as client"
 msgstr ""
 
-#: ../data/ui/main_window.blp:195
+#: ../data/ui/main_window.blp:193
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
 
-#: ../data/ui/main_window.blp:204
+#: ../data/ui/main_window.blp:202
 msgid "Prefer music clips"
 msgstr ""
 
-#: ../data/ui/main_window.blp:205
+#: ../data/ui/main_window.blp:203
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
 msgstr ""
 
-#: ../data/ui/main_window.blp:214
+#: ../data/ui/main_window.blp:212
 msgid "Transcode media"
 msgstr ""
 
-#: ../data/ui/main_window.blp:215
+#: ../data/ui/main_window.blp:213
 msgid "Transcode media instead of playing directly."
 msgstr ""
 
-#: ../data/ui/main_window.blp:224
+#: ../data/ui/main_window.blp:222
 msgid "1080p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:231
+#: ../data/ui/main_window.blp:229
 msgid "720p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:240
+#: ../data/ui/main_window.blp:238
 msgid "480p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:249
+#: ../data/ui/main_window.blp:247
 msgid "240p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:262
+#: ../data/ui/main_window.blp:260
 msgid "Info"
 msgstr ""
 
-#: ../data/ui/main_window.blp:268
+#: ../data/ui/main_window.blp:266
 msgid "Shortcuts"
 msgstr ""
 
-#: ../data/ui/main_window.blp:274
+#: ../data/ui/main_window.blp:272
 msgid "About Girens"
 msgstr ""
 
@@ -515,23 +515,23 @@ msgstr ""
 msgid "Repeat"
 msgstr ""
 
-#: ../data/ui/player_view.blp:76
+#: ../data/ui/player_view.blp:77
 msgid "Release date"
 msgstr ""
 
-#: ../data/ui/player_view.blp:79
+#: ../data/ui/player_view.blp:81
 msgid "Genre"
 msgstr ""
 
-#: ../data/ui/player_view.blp:86
+#: ../data/ui/player_view.blp:90
 msgid "Description"
 msgstr ""
 
-#: ../data/ui/player_view.blp:98
+#: ../data/ui/player_view.blp:103
 msgid "Audio "
 msgstr ""
 
-#: ../data/ui/player_view.blp:101
+#: ../data/ui/player_view.blp:106
 msgid "Subtitle "
 msgstr ""
 
@@ -559,7 +559,7 @@ msgstr ""
 msgid "Resume"
 msgstr ""
 
-#: ../data/ui/section_view.blp:37
+#: ../data/ui/section_view.blp:40
 msgid "Order"
 msgstr ""
 
@@ -648,16 +648,24 @@ msgstr ""
 msgid "Dark style"
 msgstr ""
 
-#: ../src/album_view.py:129
+#: ../src/album_view.py:91 ../src/cover_box.py:104
+msgid "Go to artist view"
+msgstr ""
+
+#: ../src/album_view.py:94 ../src/cover_box.py:131
+msgid "Sync"
+msgstr ""
+
+#: ../src/album_view.py:97 ../src/cover_box.py:136
+msgid "Shuffle"
+msgstr ""
+
+#: ../src/album_view.py:136
 msgid "Disc "
 msgstr ""
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr ""
-
-#: ../src/cover_box.py:104
-msgid "Go to artist view"
 msgstr ""
 
 #: ../src/cover_box.py:116
@@ -672,14 +680,6 @@ msgstr ""
 msgid "Mark as Unplayed"
 msgstr ""
 
-#: ../src/cover_box.py:131
-msgid "Sync"
-msgstr ""
-
-#: ../src/cover_box.py:136
-msgid "Shuffle"
-msgstr ""
-
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
 msgstr ""
@@ -688,28 +688,28 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:461 ../src/plex.py:469
-#: ../src/plex.py:484 ../src/plex.py:492
+#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
+#: ../src/plex.py:487 ../src/plex.py:495
 msgid "Connecting to "
 msgstr ""
 
-#: ../src/plex.py:147 ../src/plex.py:469 ../src/plex.py:492
+#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
 msgid " failed."
 msgstr ""
 
-#: ../src/plex.py:480
+#: ../src/plex.py:483
 msgid "No servers found for this account."
 msgstr ""
 
-#: ../src/plex.py:484
+#: ../src/plex.py:487
 msgid " connection urls."
 msgstr ""
 
-#: ../src/plex.py:484
+#: ../src/plex.py:487
 msgid "There are "
 msgstr ""
 
-#: ../src/plex.py:484
+#: ../src/plex.py:487
 msgid "This may take a while"
 msgstr ""
 
@@ -765,6 +765,6 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: ../src/window.py:351
+#: ../src/window.py:353
 msgid "Starting Girens"
 msgstr ""

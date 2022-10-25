@@ -345,8 +345,9 @@ class PlexWindow(Adw.ApplicationWindow):
 
         #self.connect("configure-event", self.__on_configure_event)
         #self.connect("window-state-event", self.__on_window_state_event)
-        self.connect("notify::default-width", self.__on_width_changed)
-        self.connect("notify::default-height", self.__on_height_changed)
+        self.connect("notify::default-width", self.__on_size_changed)
+        self.connect("notify::default-height", self.__on_size_changed)
+        self.connect("notify::css-classes", self.__on_size_changed)
         self.connect("notify::fullscreened", self.fullscreened)
 
         self.__show_loading_view(True, _('Starting Girens'))
@@ -605,36 +606,30 @@ class PlexWindow(Adw.ApplicationWindow):
         builder.get_object("shortcuts").show()
         self._menu_popover.popdown()
 
-
-    def __on_configure_event(self, widget, event):
-        if self._window_placement_update_timeout is None:
-            self._window_placement_update_timeout = GLib.timeout_add(
-                500, self.__update_screen_size_change, widget.get_default_size())
-
-    def __on_height_changed(self, widget, event):
-        if self._window_placement_update_timeout is None:
-            self._window_placement_update_timeout = GLib.timeout_add(
-                500, self.__update_screen_size_change, widget.get_default_size())
-
-    def __on_width_changed(self, widget, event):
-        if self._window_placement_update_timeout is None:
-            self._window_placement_update_timeout = GLib.timeout_add(
-                500, self.__update_screen_size_change, widget.get_default_size())
-
-    def __update_screen_size_change(self, size):
-        if not self._player_view._fullscreen:
-            self._settings.set_int("window-size-width", size[0])
-            self._settings.set_int("window-size-height", size[1])
-        self._media_box_music.width_changed(size[0])
-        self._section_view.width_changed(size[0])
-        self._player_view.width_changed(size[0])
-        self._discover_view.width_changed(size[0])
-        self._album_view.width_changed(size[0])
-        self._artist_view.width_changed(size[0])
-        self._show_view.width_changed(size[0])
+    def __on_size_changed(self, widget, event):
         if self._window_placement_update_timeout != None:
             GLib.source_remove(self._window_placement_update_timeout)
-        self._window_placement_update_timeout = None
+        self._window_placement_update_timeout = GLib.timeout_add(500, self.__update_screen_size_change, [self.get_width(), self.get_height()])
+
+    def __update_screen_size_change(self, size):
+        width = self.get_width()
+        height = self.get_height()
+        if width == 0 or height == 0:
+            self.__on_size_changed(None, None)
+        else:
+            if not self._player_view._fullscreen:
+                self._settings.set_int("window-size-width", self.get_default_size()[0])
+                self._settings.set_int("window-size-height", self.get_default_size()[1])
+            self._media_box_music.width_changed(width)
+            self._section_view.width_changed(width)
+            self._player_view.width_changed(width)
+            self._discover_view.width_changed(width)
+            self._album_view.width_changed(width)
+            self._artist_view.width_changed(width)
+            self._show_view.width_changed(width)
+            if self._window_placement_update_timeout != None:
+                GLib.source_remove(self._window_placement_update_timeout)
+            self._window_placement_update_timeout = None
         return False
 
     def __custom_css(self):
