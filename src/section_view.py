@@ -240,7 +240,7 @@ class SectionView(Gtk.Box):
         
     def width_changed(self, width):
         if width < 450:
-            self._cover_width = width / 2 - 10
+            self._cover_width = width / 2 - 30
         else:
             self._cover_width = 200
         self._section_flow.set_cover_width(self._cover_width)

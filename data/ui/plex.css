@@ -1,9 +1,14 @@
 .cover_image {
-  background-color: @shade_color;
+  background-color: black;
 }
 
 .media_box {
   background-color: @theme_base_color;
+}
+
+.watched_tip {
+  background-color: @theme_selected_bg_color;
+  color: @theme_base_color;
 }
 
 .unplayed {

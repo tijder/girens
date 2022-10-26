@@ -18,35 +18,30 @@ template album_view : ScrolledWindow {
           orientation: vertical;
 
           Image _cover_image {
-            height-request: 150;
-            valign: center;
-
             styles [
               "cover_image",
             ]
+            height-request: 150;
+            valign: center;
           }
         }
 
         Box _button_box {
+          styles [
+            "linked",
+          ]
           width-request: 150;
           halign: end;
           hexpand-set: true;
 
           Button _play_button {
-            margin-top: 5;
             hexpand: true;
             Image {
               icon-name: "media-playback-start-symbolic";
             }
           }
 
-          MenuButton _menu_button {
-            margin-top: 5;
-          }
-
-          styles [
-            "linked",
-          ]
+          MenuButton _menu_button {}
         }
       }
 

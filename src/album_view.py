@@ -69,6 +69,8 @@ class AlbumView(Gtk.ScrolledWindow):
 
         self._discs = {}
 
+        self._cover_image.set_from_icon_name("emblem-synchronizing-symbolic")
+
         self._connection_album_retrieved = self._plex.connect("album-retrieved", self.__album_retrieved)
 
         thread = threading.Thread(target=self._plex.get_album, args=(key,))
@@ -145,11 +147,10 @@ class AlbumView(Gtk.ScrolledWindow):
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
-            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 150, 150)
-            GLib.idle_add(self.__set_image, pix)
+            GLib.idle_add(self.__set_image, path)
 
     def __set_image(self, pix):
-        self._cover_image.set_from_pixbuf(pix)
+        self._cover_image.set_from_file(pix)
 
     def __on_row_actived(self, widget, row):
         row.get_child().play_item()

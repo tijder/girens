@@ -13,6 +13,7 @@
     <file>list_playqueue.ui</file>
     <file>login_view.ui</file>
     <file>show_view.ui</file>
+    <file>show_view_item.ui</file>
     <file>section_view.ui</file>
     <file>search_view.ui</file>
     <file>cover_box.ui</file>

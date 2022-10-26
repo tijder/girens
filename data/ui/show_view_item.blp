@@ -1,0 +1,60 @@
+using Gtk 4.0;
+
+template show_view_item : Box {
+  spacing: 10;
+  Overlay {
+    halign: center;
+
+    Picture _cover_image {
+      styles [
+        "cover_image",
+      ]
+      height-request: 90;
+      width-request: 160;
+      valign: center;
+      halign: center;
+      content-fit: cover;
+    }
+
+    [overlay]
+    Image _watched_image {
+      halign: end;
+      valign: start;
+      icon-name: "dialog-information";
+    }
+
+    [overlay]
+    ProgressBar _progress_bar {
+      valign: end;
+    }
+  }
+  Box {
+    orientation: vertical;
+    hexpand: true;
+    margin-top: 10;
+    Label _title_label {
+      styles [
+        "title-4"
+      ]
+      label: "title label";
+      halign: start;
+      ellipsize: end;
+    }
+    Label _release_label {
+      label: "release label";
+      halign: start;
+      ellipsize: end;
+    }
+    Label _description_label {
+      styles [
+        "dim-label"
+      ]
+      label: "description label";
+      halign: start;
+      lines: 2;
+      ellipsize: end;
+      single-line-mode: true;
+      wrap: true;
+    }
+  }
+}

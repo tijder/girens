@@ -50,6 +50,7 @@ girens_sources = [
   'section_grid.py',
   'section_view.py',
   'show_view.py',
+  'show_view_item.py',
   'sidebar_box.py',
   'sync_dialog.py',
   'sync_item.py',

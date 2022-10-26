@@ -198,7 +198,8 @@ class CoverBox(Gtk.Button):
         else:
             self._subtitle_label.set_visible(False)
 
-        self._cover_image.set_pixel_size(self._image_width)
+        #self._cover_image.set_pixel_size(self._image_width)
+        self._cover_image.set_size_request(self._image_width, self._image_height)
 
         self.popover_menu.set_menu_model(menu)
 
@@ -207,7 +208,7 @@ class CoverBox(Gtk.Button):
             GLib.idle_add(self.__set_image, path)
 
     def __set_image(self, pix):
-        self._cover_image.set_from_file(pix)
+        self._cover_image.set_filename(pix)
 
     @Gtk.Template.Callback()
     def on_long_press(self, widget, x, y):

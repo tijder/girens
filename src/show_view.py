@@ -19,6 +19,7 @@ from gi.repository import Gtk, GLib, GObject
 
 
 from .cover_box import CoverBox
+from .show_view_item import ShowViewItem
 
 import threading
 
@@ -28,13 +29,19 @@ class ShowView(Gtk.ScrolledWindow):
 
     _title_label = Gtk.Template.Child()
     _subtitle_label = Gtk.Template.Child()
+    _description_label = Gtk.Template.Child()
+
+    _cover_image = Gtk.Template.Child()
 
     _play_button = Gtk.Template.Child()
     _shuffle_button = Gtk.Template.Child()
 
     _season_stack = Gtk.Template.Child()
+    _season_scrolled_window = Gtk.Template.Child()
 
     _cover_width = 200
+
+    _download_key = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -47,10 +54,13 @@ class ShowView(Gtk.ScrolledWindow):
         self._plex = plex
 
         self._plex.connect("shows-retrieved", self.__show_retrieved)
+        self._plex.connect("download-cover", self.__on_cover_downloaded)
 
     def change_show(self, key):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
+        self._description_label.set_text('')
+        self._cover_image.set_filename(None)
 
         while self._season_stack.get_first_child() != None:
             self._season_stack.remove(self._season_stack.get_first_child())
@@ -66,30 +76,41 @@ class ShowView(Gtk.ScrolledWindow):
     def __show_process(self, show, episodes):
         self._title_label.set_text(show.title)
         self._subtitle_label.set_text(str(show.year))
+        self._description_label.set_text(show.summary)
+
+        self._download_key = show.ratingKey
+        self._download_thumb = show.thumb
+
+        thread = threading.Thread(target=self._plex.download_cover, args=(self._download_key, self._download_thumb))
+        thread.daemon = True
+        thread.start()
 
         seasons = {}
 
         for episode in episodes:
             if not episode.parentIndex in seasons:
-                flow = Gtk.FlowBox()
-                flow.set_valign(Gtk.Align.START)
-                flow.set_halign(Gtk.Align.START)
-                flow.set_max_children_per_line(30)
-                flow.set_selection_mode(Gtk.SelectionMode.NONE)
-                flow.set_homogeneous(True)
-                seasons.update({episode.parentIndex : flow})
-                self._season_stack.add_titled(flow, episode.parentIndex, episode.parentTitle)
-                flow.show()
+                listBox = Gtk.ListBox()
+                listBox.set_selection_mode(Gtk.SelectionMode.NONE)
+                listBox.set_css_classes(["boxed-list"])
+                listBox.connect("row-activated", self.__on_row_actived)
+                seasons.update({episode.parentIndex : listBox})
+                self._season_stack.add_titled(listBox, episode.parentIndex, episode.parentTitle)
             self.__add_to_hub(seasons[episode.parentIndex], episode)
+
+        if len(seasons) == 1:
+            self._season_scrolled_window.set_visible(False)
+        else:
+            self._season_scrolled_window.set_visible(True)
 
     def __on_show_deck_update(self, plex, items):
         for item in items:
             GLib.idle_add(self.__add_to_hub, self._deck_shows_box, item)
 
     def __add_to_hub(self, hub, item):
-        cover = CoverBox(self._plex, show_view=True, cover_width=self._cover_width)
-        cover.set_item(item)
-        hub.append(cover)
+        show_item = ShowViewItem()
+        show_item.set_plex(self._plex)
+        show_item.set_item(item)
+        hub.append(show_item)
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._show,))
@@ -101,8 +122,18 @@ class ShowView(Gtk.ScrolledWindow):
         thread.daemon = True
         thread.start()
 
+    def __on_row_actived(self, widget, row):
+        row.get_child().play_item()
+
     def width_changed(self, width):
         if width < 450:
             self._cover_width = width / 2 - 10
         else:
             self._cover_width = 200
+
+    def __on_cover_downloaded(self, plex, rating_key, path):
+        if(self._download_key == rating_key):
+            GLib.idle_add(self.__set_image, path)
+
+    def __set_image(self, pix):
+        self._cover_image.set_filename(pix)

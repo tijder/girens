@@ -18,17 +18,12 @@ template PlexWindow : Adw.ApplicationWindow {
 
         Adw.HeaderBar sidebar_header {
           show-end-title-buttons: bind sidebar_leaflet.folded;
-          title-widget: Gtk.Box {
-            hexpand: true;
-            halign: start;
-
-            [start]
-            Button _profile_button {
-              Image _avatar_image {
-                icon-name: "preferences-desktop-personal-symbolic";
-              }
+          [start]
+          Button _profile_button {
+            Image _avatar_image {
+              icon-name: "preferences-desktop-personal-symbolic";
             }
-          };
+          }
         }
 
         // left content
