@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 12:54+0200\n"
+"POT-Creation-Date: 2022-10-27 18:40+0200\n"
 "PO-Revision-Date: 2020-05-29 20:00+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The homescreen"
-msgstr ""
+msgstr "Het beginscherm"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:27
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
@@ -68,7 +68,7 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:232
 #: ../data/nl.g4d.Girens.appdata.xml.in:243
 msgid "Changes:"
-msgstr ""
+msgstr "Veranderingen:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:29
 msgid "Support to login without libsecret"
@@ -392,8 +392,8 @@ msgid "First release."
 msgstr "Eerste uitgave"
 
 #: ../data/nl.g4d.Girens.desktop.in:4
-msgid "Play your Plex movies, tv Shows and music"
-msgstr "Speel jouw Plex films, tv series en muziek"
+msgid "Play your Plex movies, shows and music"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
@@ -422,8 +422,8 @@ msgid "Ondeck"
 msgstr "Verder kijken"
 
 #: ../data/ui/discover_view.blp:35
-msgid "Recently added TV"
-msgstr "Onlangs toegevoegde TV"
+msgid "Recently added Shows"
+msgstr "Onlangs toegevoegde series"
 
 #: ../data/ui/discover_view.blp:53
 msgid "Recently added Movies"
@@ -560,7 +560,7 @@ msgstr "Ondertitel "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr ""
+msgstr "Gerbuikers info"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
@@ -792,6 +792,12 @@ msgstr "Thuis"
 #: ../src/window.py:353
 msgid "Starting Girens"
 msgstr "Girens opstarten"
+
+#~ msgid "Play your Plex movies, tv Shows and music"
+#~ msgstr "Speel jouw Plex films, tv series en muziek"
+
+#~ msgid "Recently added TV"
+#~ msgstr "Onlangs toegevoegde TV"
 
 #~ msgid "label"
 #~ msgstr "label"

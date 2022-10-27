@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 12:54+0200\n"
+"POT-Creation-Date: 2022-10-27 18:40+0200\n"
 "PO-Revision-Date: 2022-10-27 09:06+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
@@ -417,8 +417,8 @@ msgid "First release."
 msgstr "Første utgave."
 
 #: ../data/nl.g4d.Girens.desktop.in:4
-msgid "Play your Plex movies, tv Shows and music"
-msgstr "Spill dine Plex-filmer, TV-programmer, og musikk"
+msgid "Play your Plex movies, shows and music"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
@@ -446,9 +446,8 @@ msgid "Ondeck"
 msgstr "Dekksvisning"
 
 #: ../data/ui/discover_view.blp:35
-#, fuzzy
-msgid "Recently added TV"
-msgstr "Nylig tillagte programmer"
+msgid "Recently added Shows"
+msgstr ""
 
 #: ../data/ui/discover_view.blp:53
 #, fuzzy
@@ -836,6 +835,13 @@ msgstr "Hjem"
 #, fuzzy
 msgid "Starting Girens"
 msgstr "Starter Girens …"
+
+#~ msgid "Play your Plex movies, tv Shows and music"
+#~ msgstr "Spill dine Plex-filmer, TV-programmer, og musikk"
+
+#, fuzzy
+#~ msgid "Recently added TV"
+#~ msgstr "Nylig tillagte programmer"
 
 #~ msgid "The ondeck view"
 #~ msgstr "Dekksvisningen"

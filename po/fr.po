@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 12:54+0200\n"
+"POT-Creation-Date: 2022-10-27 18:40+0200\n"
 "PO-Revision-Date: 2022-10-15 11:08+0200\n"
 "Last-Translator: Irénée Thirion <irenee.thirion@e.email>\n"
 "Language-Team: \n"
@@ -422,8 +422,8 @@ msgid "First release."
 msgstr "Première version."
 
 #: ../data/nl.g4d.Girens.desktop.in:4
-msgid "Play your Plex movies, tv Shows and music"
-msgstr "Jouez vos films, vos émissions télévisées et votre musique Plex"
+msgid "Play your Plex movies, shows and music"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
@@ -451,8 +451,8 @@ msgid "Ondeck"
 msgstr "Accueil"
 
 #: ../data/ui/discover_view.blp:35
-msgid "Recently added TV"
-msgstr "TV ajoutées récemment"
+msgid "Recently added Shows"
+msgstr ""
 
 #: ../data/ui/discover_view.blp:53
 msgid "Recently added Movies"
@@ -822,6 +822,12 @@ msgstr "Accueil"
 #: ../src/window.py:353
 msgid "Starting Girens"
 msgstr "Démarrage de Girens"
+
+#~ msgid "Play your Plex movies, tv Shows and music"
+#~ msgstr "Jouez vos films, vos émissions télévisées et votre musique Plex"
+
+#~ msgid "Recently added TV"
+#~ msgstr "TV ajoutées récemment"
 
 #~ msgid "label"
 #~ msgstr "étiquette"

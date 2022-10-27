@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Girens
-Comment=Play your Plex movies, tv Shows and music
+Comment=Play your Plex movies, shows and music
 Exec=girens
 Icon=nl.g4d.Girens
 Terminal=false

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 1.1.10\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 12:54+0200\n"
+"POT-Creation-Date: 2022-10-27 18:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -387,7 +387,7 @@ msgid "First release."
 msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:4
-msgid "Play your Plex movies, tv Shows and music"
+msgid "Play your Plex movies, shows and music"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:10
@@ -414,7 +414,7 @@ msgid "Ondeck"
 msgstr ""
 
 #: ../data/ui/discover_view.blp:35
-msgid "Recently added TV"
+msgid "Recently added Shows"
 msgstr ""
 
 #: ../data/ui/discover_view.blp:53
