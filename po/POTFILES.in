@@ -1,0 +1,26 @@
+data/nl.g4d.Girens.appdata.xml.in
+data/nl.g4d.Girens.desktop.in
+data/ui/about_dialog.ui.in
+data/ui/artist_view.blp
+data/ui/discover_view.blp
+data/ui/loading_view.blp
+data/ui/login_view.blp
+data/ui/main_window.blp
+data/ui/music_popover_menu.blp
+data/ui/player_view.blp
+data/ui/profile_dialog.blp
+data/ui/resume_dialog.ui
+data/ui/section_view.blp
+data/ui/shortcuts.blp
+data/ui/sync_dialog.blp
+data/ui/sync_settings.blp
+data/ui/theme_switcher.blp
+src/album_view.py
+src/cover_box.py
+src/player_view.py
+src/plex.py
+src/plex.py src/plex.py
+src/plex.py src/plex.py src/plex.py
+src/section_view.py
+src/sidebar_box.py
+src/window.py

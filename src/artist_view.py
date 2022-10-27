@@ -16,43 +16,46 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 from .album_view import AlbumView
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/artist_view.ui')
-class ArtistView(Gtk.Box):
+@Gtk.Template(resource_path='/nl/g4d/Girens/artist_view.ui')
+class ArtistView(Gtk.ScrolledWindow):
     __gtype_name__ = 'artist_view'
 
-    _title_label = GtkTemplate.Child()
-    _subtitle_label = GtkTemplate.Child()
-    _album_box = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _subtitle_label = Gtk.Template.Child()
+    _album_box = Gtk.Template.Child()
 
-    _play_button = GtkTemplate.Child()
-    _shuffle_button = GtkTemplate.Child()
-    _show_more_button = GtkTemplate.Child()
+    _play_button = Gtk.Template.Child()
+    _shuffle_button = Gtk.Template.Child()
+    _show_more_button = Gtk.Template.Child()
 
     _timout = None
     _add_items_to_view = 0
 
-    def __init__(self, plex, **kwargs):
+    _screen_width = 800
+
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
-        self._plex = plex
-
-        self._plex.connect("artist-retrieved", self.__artist_retrieved)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
         self._show_more_button.connect("clicked", self.__show_more_clicked)
 
+
+    def set_plex(self, plex):
+        self._plex = plex
+
+        self._plex.connect("artist-retrieved", self.__artist_retrieved)
+
     def change_artist(self, key):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
-        for item in self._album_box.get_children():
-            self._album_box.remove(item)
+        while self._album_box.get_first_child() != None:
+            self._album_box.remove(self._album_box.get_first_child())
 
         thread = threading.Thread(target=self._plex.get_artist, args=(key,))
         thread.daemon = True
@@ -77,10 +80,11 @@ class ArtistView(Gtk.Box):
     def __show_more_items(self):
         self.__stop_add_items_timout()
         if len(self._albums) > 0:
-            album_view = AlbumView(self._plex, artist_view=True)
+            album_view = AlbumView(artist_view=True)
+            album_view.set_plex(self._plex)
             album_view.width_changed(self._screen_width)
             album_view.change_album(self._albums[0].ratingKey)
-            self._album_box.add(album_view)
+            self._album_box.append(album_view)
             self._albums.remove(self._albums[0])
 
             self._add_items_to_view -= 1
@@ -103,7 +107,8 @@ class ArtistView(Gtk.Box):
         self.__start_add_items_timout()
 
     def __album_loaded(self, album):
-        self.__show_more_items()
+        if len(self._albums) > 0:
+            self.__show_more_items()
 
     def __on_play_button_clicked(self, button):
         thread = threading.Thread(target=self._plex.play_item, args=(self._artist,))
@@ -117,5 +122,5 @@ class ArtistView(Gtk.Box):
 
     def width_changed(self, width):
         self._screen_width = width
-        for item in self._album_box.get_children():
-            item.width_changed(width)
+        #for item in self._album_box.get_children():
+        #    item.width_changed(width)

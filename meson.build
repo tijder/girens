@@ -1,7 +1,7 @@
 project(
   'girens',
   version: '1.1.10',
-  meson_version: '>= 0.40.0',
+  meson_version: '>= 0.59.0',
 )
 python3 = import('python3')
 gnome = import('gnome')
@@ -20,6 +20,7 @@ conf_service.set('libexecdir', libexecdir)
 conf_service.set('PYTHON', python3.find_python().path())
 conf_service.set('VERSION', meson.project_version())
 conf_service.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
+conf_service.set('BUILD_TYPE', get_option('buildtype'))
 conf_service.set('pkgdatadir', pkgdatadir)
 conf_service.set('PRETTYNAME', 'Girens')
 conf_service.set('PACKAGE_URL', 'https://gitlab.gnome.org/tijder/girens')

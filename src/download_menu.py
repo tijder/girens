@@ -16,14 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 from .download_row import DownloadRow
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/download_menu.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/download_menu.ui')
 class DownloadMenu(Gtk.Popover):
     __gtype_name__ = 'download_menu'
 
@@ -31,11 +31,11 @@ class DownloadMenu(Gtk.Popover):
         'show-button': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    _item_box = GtkTemplate.Child()
+    _item_box = Gtk.Template.Child()
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        
 
         self._plex = plex
 
@@ -44,4 +44,4 @@ class DownloadMenu(Gtk.Popover):
     def __on_item_downloading(self, plex, item, status):
         if (status != False):
             self.emit('show-button')
-            self._item_box.add(DownloadRow(self._plex, item))
+            self._item_box.append(DownloadRow(self._plex, item))

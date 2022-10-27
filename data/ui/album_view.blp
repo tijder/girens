@@ -1,0 +1,94 @@
+using Gtk 4.0;
+using Adw 1;
+
+template album_view : ScrolledWindow {
+  Adw.Clamp {
+    maximum-size: 800;
+    Box {
+      margin-top: 10;
+      margin-bottom: 10;
+      margin-start: 10;
+      margin-end: 10;
+      spacing: 30;
+
+      Box _left_box {
+        halign: start;
+        valign: start;
+        orientation: vertical;
+
+        Box _cover_box {
+          orientation: vertical;
+
+          Image _cover_image {
+            styles [
+              "cover_image",
+            ]
+            height-request: 150;
+            valign: center;
+          }
+        }
+
+        Box _button_box {
+          styles [
+            "linked",
+          ]
+          width-request: 150;
+          halign: end;
+          hexpand-set: true;
+
+          Button _play_button {
+            hexpand: true;
+            Image {
+              icon-name: "media-playback-start-symbolic";
+            }
+          }
+
+          MenuButton _menu_button {}
+        }
+      }
+
+      Box {
+        margin-top: 20;
+        orientation: vertical;
+
+        Box {
+          orientation: vertical;
+          Label _title_label {
+            styles [
+              "title-1"
+            ]
+            halign: start;
+            hexpand: true;
+            label: "label";
+            ellipsize: end;
+          }
+          Label _subtitle_label {
+            halign: start;
+            hexpand: true;
+            label: "label";
+            ellipsize: end;
+          }
+
+          Box _cover2_box {
+            orientation: vertical;
+          }
+
+          Box _button2_box {
+            styles [
+              "linked",
+            ]
+          }
+        }
+
+        Box {
+          orientation: vertical;
+        }
+
+        Box _item_box {
+          margin-top: 20;
+          orientation: vertical;
+        }
+      }
+    }
+  }
+}

@@ -16,19 +16,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
 
-@GtkTemplate(ui='/nl/g4d/Girens/media_box_video_top.ui')
+
+@Gtk.Template(resource_path='/nl/g4d/Girens/media_box_video_top.ui')
 class MediaBoxVideoTop(Gtk.Revealer):
     __gtype_name__ = 'media_box_video_top'
 
-    _close_button = GtkTemplate.Child()
-    _fullscreen_button = GtkTemplate.Child()
-    _fullscreen_windowed_button = GtkTemplate.Child()
+    _close_button = Gtk.Template.Child()
+    _fullscreen_button = Gtk.Template.Child()
+    _fullscreen_windowed_button = Gtk.Template.Child()
 
-    _title_label = GtkTemplate.Child()
-    _subtitle_label = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _subtitle_label = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        

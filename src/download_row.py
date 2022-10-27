@@ -16,26 +16,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/download_row.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/download_row.ui')
 class DownloadRow(Gtk.Box):
     __gtype_name__ = 'download_row'
 
-    _title_label = GtkTemplate.Child()
-    _download_spinner = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _download_spinner = Gtk.Template.Child()
 
-    _cover_image = GtkTemplate.Child()
+    _cover_image = Gtk.Template.Child()
 
     _download_key = None
     _download_thumb = None
 
     def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        
 
         self._plex = plex
         self._item = item

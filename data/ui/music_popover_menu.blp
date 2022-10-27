@@ -1,0 +1,75 @@
+using Gtk 4.0;
+using Adw 1;
+
+template music_popover_menu : Popover {
+  width-request: 300;
+
+  Box {
+    margin-top: 10;
+    margin-bottom: 10;
+    orientation: vertical;
+
+    Adw.PreferencesGroup {
+      Adw.PreferencesRow {
+        use-underline: true;
+
+        Box {
+          height-request: 50;
+          homogeneous: true;
+
+          Button _star_1_button {
+            Image _star_1_img {
+              icon-name: "starred-symbolic";
+            }
+          }
+
+          Button _star_2_button {
+            receives-default: true;
+
+            Image _star_2_img {
+              icon-name: "non-starred-symbolic";
+            }
+          }
+
+          Button _star_3_button {
+            receives-default: true;
+
+            Image _star_3_img {
+              icon-name: "non-starred-symbolic";
+            }
+          }
+
+          Button _star_4_button {
+            Image _star_4_img {
+              icon-name: "non-starred-symbolic";
+            }
+          }
+
+          Button _star_5_button {
+            Image _star_5_img {
+              icon-name: "non-starred-symbolic";
+            }
+          }
+        }
+      }
+
+      Adw.ActionRow {
+        activatable-widget: _shuffle_button;
+        title: _("Shuffle");
+        use-underline: true;
+        Switch _shuffle_button {
+          valign: center;
+        }
+      }
+
+      Adw.ActionRow {
+        activatable-widget: _repeat_button;
+        title: _("Repeat");
+        use-underline: true;
+        Switch _repeat_button {
+          valign: center;
+        }
+      }
+    }
+  }
+}

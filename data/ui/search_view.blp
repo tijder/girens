@@ -1,0 +1,21 @@
+using Gtk 4.0;
+
+template search_view : Box {
+  visible: true;
+  can-focus: false;
+  margin-top: 20;
+  orientation: vertical;
+
+  Label _title_label {
+    visible: true;
+    can-focus: false;
+    halign: start;
+    margin-bottom: 5;
+    label: "label";
+  }
+
+  ScrolledWindow {
+    hscrollbar-policy: never;
+    .list _section_flow{}
+  }
+}

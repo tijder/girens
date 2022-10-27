@@ -9,8 +9,11 @@
     <file>media_box_video_top.ui</file>
     <file>media_box_video_bottom.ui</file>
     <file>discover_view.ui</file>
+    <file>list.ui</file>
+    <file>list_playqueue.ui</file>
     <file>login_view.ui</file>
     <file>show_view.ui</file>
+    <file>show_view_item.ui</file>
     <file>section_view.ui</file>
     <file>search_view.ui</file>
     <file>cover_box.ui</file>
@@ -31,5 +34,7 @@
     <file>shortcuts.ui</file>
     <file>about_dialog.ui</file>
     <file>music_popover_menu.ui</file>
+    <file>theme_switcher.css</file>
+    <file>theme_switcher.ui</file>
   </gresource>
 </gresources>

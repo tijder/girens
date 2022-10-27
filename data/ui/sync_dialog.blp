@@ -1,0 +1,37 @@
+using Gtk 4.0;
+
+template sync_dialog : Dialog {
+  title: _("Sync items");
+  modal: true;
+  default-width: 300;
+  default-height: 300;
+  deletable: false;
+
+  Box {
+    orientation: vertical;
+    spacing: 2;
+
+    ScrolledWindow {
+      vexpand: true;
+      Viewport {
+        ListBox _item_box {
+          selection-mode: none;
+          activate-on-single-click: false;
+        }
+      }
+    }
+
+    Box {
+      styles["linked"]
+      Button _sync_button {
+        hexpand: true;
+        label: _("Sync");
+      }
+
+      Button _ok_button {
+        hexpand: true;
+        label: _("Ok");
+      }
+    }
+  }
+}

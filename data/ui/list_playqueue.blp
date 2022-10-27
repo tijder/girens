@@ -1,0 +1,17 @@
+using Gtk 4.0;
+using Adw 1;
+using Gio 2.0;
+
+template list_playqueue : Gtk.GridView {
+  vexpand: true;
+  max-columns: 1;
+	orientation: vertical;
+	single-click-activate: true;
+	factory: Gtk.SignalListItemFactory factory {
+    bind => on_bind();
+    setup => on_setup();
+	};
+	model: Gtk.SingleSelection {
+		model: Gio.ListStore liststore {};
+	};
+}

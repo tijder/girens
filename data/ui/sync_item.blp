@@ -1,0 +1,36 @@
+using Gtk 4.0;
+
+template sync_item : Box {
+  height-request: 50;
+  Overlay {
+    Image _cover_image {
+      width-request: 100;
+      height-request: 100;
+      styles [
+        "cover_image",
+      ]
+    }
+
+    [overlay]
+    Image _watched_image {
+      halign: end;
+      valign: start;
+      icon-name: "dialog-information";
+    }
+  }
+
+  Label _title_label {
+    margin-start: 5;
+    margin-end: 5;
+    label: "label";
+    ellipsize: end;
+    hexpand: true;
+  }
+
+  Button _remove_button {
+    width-request: 50;
+    Image {
+      icon-name: "edit-delete-symbolic";
+    }
+  }
+}

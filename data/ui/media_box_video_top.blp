@@ -1,0 +1,52 @@
+using Gtk 4.0;
+
+template media_box_video_top : Revealer {
+  Box {
+    height-request: 50;
+
+    Box {
+      Button _fullscreen_button {
+        width-request: 50;
+        height-request: 50;
+        Image {
+          icon-name: "view-fullscreen-symbolic";
+        }
+      }
+      Button _fullscreen_windowed_button {
+        width-request: 50;
+        height-request: 50;
+        Image {
+          icon-name: "video-display-symbolic";
+        }
+      }
+      styles [
+        "linked",
+      ]
+    }
+
+    Box {
+      orientation: vertical;
+      Label _title_label {
+        margin-top: 5;
+        hexpand: true;
+        label: "Title";
+        ellipsize: end;
+      }
+      Label _subtitle_label {
+        margin-bottom: 5;
+        label: "subtitle";
+        ellipsize: end;
+      }
+    }
+    Button _close_button {
+      width-request: 50;
+      height-request: 50;
+      Image {
+        icon-name: "media-playback-stop-symbolic";
+      }
+    }
+    styles [
+      "media_box",
+    ]
+  }
+}
