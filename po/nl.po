@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-25 17:36+0200\n"
+"POT-Creation-Date: 2022-10-27 10:40+0200\n"
 "PO-Revision-Date: 2020-05-29 20:00+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -404,7 +404,7 @@ msgstr "Gerben Droogers"
 msgid "Show more"
 msgstr "Meer zien"
 
-#: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:115
+#: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:118
 msgid "Ondeck"
 msgstr "Verder kijken"
 
@@ -460,24 +460,24 @@ msgstr "Verbind"
 msgid "Girens"
 msgstr ""
 
-#: ../data/ui/main_window.blp:164
+#: ../data/ui/main_window.blp:159
 msgid "Settings"
 msgstr "Instellingen"
 
-#: ../data/ui/main_window.blp:192
+#: ../data/ui/main_window.blp:187
 msgid "Advertise as client"
 msgstr "Adverteer als client"
 
-#: ../data/ui/main_window.blp:193
+#: ../data/ui/main_window.blp:188
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr "Laat andere apparaten op dit netwerk Girens vinden en bedienen."
 
-#: ../data/ui/main_window.blp:202
+#: ../data/ui/main_window.blp:197
 msgid "Prefer music clips"
 msgstr "Voorkeur aan muziekclips"
 
-#: ../data/ui/main_window.blp:203
+#: ../data/ui/main_window.blp:198
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
@@ -485,39 +485,39 @@ msgstr ""
 "Als er muziek wordt afgespeeld en het nummer heeft een muziekclip, speel die "
 "dan af in plaats van de audio."
 
-#: ../data/ui/main_window.blp:212
+#: ../data/ui/main_window.blp:207
 msgid "Transcode media"
 msgstr "Transcodeer media"
 
-#: ../data/ui/main_window.blp:213
+#: ../data/ui/main_window.blp:208
 msgid "Transcode media instead of playing directly."
 msgstr "Transcodeer media in plaats van direct af te spelen."
 
-#: ../data/ui/main_window.blp:222
+#: ../data/ui/main_window.blp:217
 msgid "1080p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:229
+#: ../data/ui/main_window.blp:224
 msgid "720p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:238
+#: ../data/ui/main_window.blp:233
 msgid "480p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:247
+#: ../data/ui/main_window.blp:242
 msgid "240p"
 msgstr ""
 
-#: ../data/ui/main_window.blp:260
+#: ../data/ui/main_window.blp:255
 msgid "Info"
 msgstr "Info"
 
-#: ../data/ui/main_window.blp:266
+#: ../data/ui/main_window.blp:261
 msgid "Shortcuts"
 msgstr "Sneltoetsen"
 
-#: ../data/ui/main_window.blp:272
+#: ../data/ui/main_window.blp:267
 msgid "About Girens"
 msgstr "Over Girens"
 
@@ -659,19 +659,19 @@ msgstr "Lichte style"
 msgid "Dark style"
 msgstr "Donkere style"
 
-#: ../src/album_view.py:91 ../src/cover_box.py:104
+#: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
 msgstr "Ga naar artiest scherm"
 
-#: ../src/album_view.py:94 ../src/cover_box.py:131
+#: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
 msgstr "Synchroniseer"
 
-#: ../src/album_view.py:97 ../src/cover_box.py:136
+#: ../src/album_view.py:99 ../src/cover_box.py:136
 msgid "Shuffle"
 msgstr "Shuffle"
 
-#: ../src/album_view.py:136
+#: ../src/album_view.py:138
 msgid "Disc "
 msgstr "Schijf "
 
