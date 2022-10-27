@@ -34,3 +34,10 @@ The easiest way to build this App from source is with [Gnome-builder](https://wi
 ## Screenshot
 
 ![Screenshot of Girens with covers blurred](https://g4d.nl/girens/screenshot_films_blurred.png)
+
+## Translations
+<a href="https://hosted.weblate.org/engage/girens/">
+<img src="https://hosted.weblate.org/widgets/girens/-/girens/multi-auto.svg" alt="Translation status" />
+</a>
+
+Help with translations is always welcome! The simplest way is via [__Weblate__](https://hosted.weblate.org/projects/girens/), which provides a very intuitive website.
