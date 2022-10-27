@@ -1,0 +1,24 @@
+using Gtk 4.0;
+
+template playqueue_item : Box {
+  width-request: 200;
+  height-request: 50;
+  margin-top: 5;
+  margin-bottom: 5;
+
+  Overlay {
+    Image _cover_image {
+      width-request: 50;
+      height-request: 50;
+      styles [
+        "cover_image",
+      ]
+    }
+  }
+
+  Label _title_label {
+    margin-start: 5;
+    label: "label";
+    ellipsize: end;
+  }
+}

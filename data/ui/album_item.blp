@@ -1,0 +1,31 @@
+using Gtk 4.0;
+
+template album_item : Box {
+  height-request: 50;
+  Label _index_label {
+    width-chars: 4;
+  }
+
+  Label _title_label {
+    margin-end: 10;
+    halign: start;
+    label: "title";
+    ellipsize: end;
+  }
+
+  Box {
+    halign: end;
+    hexpand: true;
+    Label _time_label {
+      styles["caption"]
+      label: "00:00";
+      ellipsize: end;
+      margin-end: 10;
+    }
+    Button _music_clip_button {
+      Image {
+        icon-name: "video-display-symbolic";
+      }
+    }
+  }
+}

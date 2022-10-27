@@ -16,31 +16,30 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/playqueue_item.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/playqueue_item.ui')
 class PlayqueueItem(Gtk.Box):
     __gtype_name__ = 'playqueue_item'
 
-    _title_label = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
 
-    _cover_image = GtkTemplate.Child()
+    _cover_image = Gtk.Template.Child()
 
     _download_key = None
     _download_thumb = None
 
-    def __init__(self, plex, item, index, **kwargs):
+    def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
         self._plex = plex
-        self._item = item
-        self._index = index
-
         self._connect_id = self._plex.connect("download-cover", self.__on_cover_downloaded)
+
+    def set_item(self, item):
+        self._item = item
+        #self._index = index
 
         self._title_label.set_text(self._item.title)
 

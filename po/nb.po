@@ -1,0 +1,968 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the girens package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: girens\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-27 12:54+0200\n"
+"PO-Revision-Date: 2022-10-27 09:06+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
+"girens/nb/>\n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:5
+msgid "Girens for Plex"
+msgstr "Girens for Plex"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:6
+msgid "Gerben Droogers"
+msgstr "Gerben Droogers"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:7
+msgid ""
+"Girens is a Plex GTK client for playing movies, TV shows and music from your "
+"Plex library."
+msgstr ""
+"Girens er en Plex-klient skrevet i GTK for å spille filmer, TV-programmer, "
+"og musikk fra ditt Plex-bibliotek."
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:11
+msgid ""
+"Girens is a Plex media player client. You can watch and listen to your "
+"music, shows and movies with this GTK app."
+msgstr ""
+"Girens er en mediaspillerklient for Plex. Du kan se og lytte til musikk, "
+"programmer, og filmer med dette GTK-programmer."
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:20
+msgid "The homescreen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:27
+#: ../data/nl.g4d.Girens.appdata.xml.in:37
+#: ../data/nl.g4d.Girens.appdata.xml.in:48
+#: ../data/nl.g4d.Girens.appdata.xml.in:59
+#: ../data/nl.g4d.Girens.appdata.xml.in:68
+#: ../data/nl.g4d.Girens.appdata.xml.in:80
+#: ../data/nl.g4d.Girens.appdata.xml.in:91
+#: ../data/nl.g4d.Girens.appdata.xml.in:102
+#: ../data/nl.g4d.Girens.appdata.xml.in:110
+#: ../data/nl.g4d.Girens.appdata.xml.in:120
+#: ../data/nl.g4d.Girens.appdata.xml.in:133
+#: ../data/nl.g4d.Girens.appdata.xml.in:146
+#: ../data/nl.g4d.Girens.appdata.xml.in:155
+#: ../data/nl.g4d.Girens.appdata.xml.in:168
+#: ../data/nl.g4d.Girens.appdata.xml.in:183
+#: ../data/nl.g4d.Girens.appdata.xml.in:193
+#: ../data/nl.g4d.Girens.appdata.xml.in:203
+#: ../data/nl.g4d.Girens.appdata.xml.in:214
+#: ../data/nl.g4d.Girens.appdata.xml.in:222
+#: ../data/nl.g4d.Girens.appdata.xml.in:232
+#: ../data/nl.g4d.Girens.appdata.xml.in:243
+msgid "Changes:"
+msgstr "Endringer:"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:29
+msgid "Support to login without libsecret"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:30
+msgid "Added French translation"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:31
+msgid "Added Norwegian translation"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:39
+msgid "Use gnome SDK 40"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:40
+msgid "Fix build warnings"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:41
+msgid "Update mpv to 33"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:42
+msgid "Fix play buttons not updating for musicclips"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:50
+msgid "Add option to play video fullscreen within the Window"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:51
+msgid "Show track and disc number in album view"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:52
+msgid "Select name None if no subtitle is selected"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:53
+msgid "Show hours of audio item"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:61
+#, fuzzy
+msgid "Load only needed items of sections"
+msgstr "Kun last inn nødvendige elementer av seksjoner"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:62
+msgid "Use readable name for sorting"
+msgstr "Bruk lesbart navn i sortering"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:70
+msgid "Dutch translation added"
+msgstr "Nederlandsk oversettelse"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:71
+msgid "Update layout of settings menu with libhandy widgets"
+msgstr "Oppdatert oppsett for innstillingsmeny med libhandy-miniprogrammer"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:72
+msgid "Setting for changing transcoding video resolution"
+msgstr "Innstilling for endring av videooppløsning transkoding utføres i"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:73
+msgid "Unselect sidebar item when changing section"
+msgstr "Fravalgt sidefeltselement ved endring av seksjon"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:74
+msgid "More music play options"
+msgstr "Flere musikkavspillingsalternativer"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:82
+msgid "New app icon"
+msgstr "Nytt programikon"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:83
+msgid "Double click to toggle fullscreen"
+msgstr "Dobbeltklikk for å veksle fullskjermsvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:84
+msgid "Redesigned login view"
+msgstr "Redesignet innloggingsvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:85
+#, fuzzy
+msgid "Press k to toggle play or pause media"
+msgstr "Trykk «k» for å veksle avspilling og pausing av media"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:93
+msgid "Fix basic auth urls when downloading"
+msgstr "Fikset nettadresser med enkel identitetsbekreftelse ved nedlasting"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:94
+msgid "Fix crash when latest timeline update failed"
+msgstr "Fikset krasj når siste tidslinjeoppdatering mislyktes"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:95
+#, fuzzy
+msgid "Exit fullscreen with escape"
+msgstr "Avslutt fullskjerm med Esc"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:96
+#: ../data/nl.g4d.Girens.appdata.xml.in:113
+msgid "Update dependencies"
+msgstr "Oppdaterte avhengigheter"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:104
+#, fuzzy
+msgid "Add feature changing subtitle and audio stream with plex remote"
+msgstr ""
+"Legg til funksjon for endring av undertekst og lydstrøm med Plex-"
+"fjernkontroll"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:112
+msgid "Fix music not correct seeking when transcoding"
+msgstr "Fikset blafring av musikk under transkoding"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:114
+msgid "Fix bug with showing section after playlist is showed"
+msgstr "Fikset feil med visning av seksjon etter at spillelisten vises"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:122
+msgid "Change subtitle and audio stream"
+msgstr "Endre undertekst og lydstrøm"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:123
+msgid "Remove white border in fullscreen"
+msgstr "Fjern hvitt omriss i fullskjermsvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:124
+msgid "Option to change volume level"
+msgstr "Alternativ for endring av lydstyrkenivå"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:125
+msgid "Option to set dark theme"
+msgstr "Alternativ for ikledelse av mørk drakt"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:126
+msgid "Change progress bar for seeking bar in video player"
+msgstr "Endret framdriftsindikator for blafringsfelt i videospiller"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:127
+msgid "Dont refresh allready loaded section"
+msgstr "Ingen gjenoppfrisking av allerede innlastet seksjon"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:135
+#, fuzzy
+msgid "Plex token saved with Secret Service"
+msgstr "Plex-symbol lagret med hemmelighetstjeneste"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:136
+#, fuzzy
+msgid "Advertise as Client on the local network"
+msgstr "Kunngjør som klient på lokalnettverket"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:137
+msgid "Add option to play media without transcoding"
+msgstr "Alternativ for avspilling av media uten transkoding"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:138
+msgid "About dialog added"
+msgstr "«Om»-dialog lagt til"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:139
+msgid "Shortcut dialog added"
+msgstr "Snarveisdialog lagt til"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:140
+msgid "Fix crash when playing media"
+msgstr "Fikset krasj ved avspilling av media"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:148
+msgid "Enhanced smallscreen support"
+msgstr "Forbedret støtte for små skjermer"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:149
+msgid "Play music clips from music track"
+msgstr "Spill musikk-klipp fra musikksporet"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:157
+#, fuzzy
+msgid "Allow connecting to url instead of Plex user"
+msgstr "Tillat tilkobling til nettadresse istedenfor Plex-bruker"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:158
+#, fuzzy
+msgid "Improve multi server support"
+msgstr "Forbedret multitjener-støtte"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:159
+msgid "Change sorting asc or desc"
+msgstr "Endre sortering stigende eller synkende"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:160
+msgid "Hide media controlls after two seconds if new media started playing"
+msgstr ""
+"Skjul mediakontroller etter to sekunder hvis avspilling av ny media startes"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:161
+msgid "Seek to certain time when playing music"
+msgstr "Blafre til gitt tid ved avspilling av musikk"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:162
+msgid "Default width 640px"
+msgstr "Forvagt bredde 640 piksler"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:170
+msgid "Redesigned media controlbox for video player"
+msgstr "Redesignet media-kontrollboks for videoavspiller"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:171
+msgid "Use [ and ] for seeking media"
+msgstr "Bruk [ og } for blafring av media"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:172
+msgid "Use media keys to select resume action"
+msgstr "Bruk av mediataster for å velge gjenopptakelse av handling"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:173
+msgid "Hide cursor on video fullscreen"
+msgstr "Skjul peker ved videofullskjermsvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:174
+#, fuzzy
+msgid "Dont hide media controlls when playqueue is active"
+msgstr "Ikke skjul mediakontroller når avspillerkø er aktiv"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:175
+msgid "Fix starting wrong offset when new media is started"
+msgstr "Fiks start fra feil forskyvning når ny media startes"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:176
+msgid "Show media title in resume dialog"
+msgstr "Vis medianavn i fortsettelsesdialog"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:177
+msgid "Default mpv video output driver changed to xv"
+msgstr "Forvalgt mpv-videoutdatadriver endret til xv"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:185
+#, fuzzy
+msgid "Commandline options"
+msgstr "Kommandolinjevalg"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:186
+#, fuzzy
+msgid "Gnome search provider"
+msgstr "GNOME-søketilbyder"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:187
+#, fuzzy
+msgid "Onscreen controller"
+msgstr "Kontroller i bildeflaten"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:195
+#, fuzzy
+msgid "Added media notification (mpris)"
+msgstr "Mediamerknader (MPRIS) lagt til"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:196
+#, fuzzy
+msgid "Added play and shuffle button to artist view"
+msgstr "Tillagt avspilling og omstokkingsknapp i artistvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:197
+#, fuzzy
+msgid "Enable mpv default OSC"
+msgstr "Skru på forvalgt bildeflatekontroller for mpv"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:205
+msgid "Support for mediakeys"
+msgstr "Støtte for mediataster"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:206
+msgid "Resume dialog when media has an offset"
+msgstr "Fortsettelsesdialog når media har forskyvning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:207
+#, fuzzy
+msgid "Play and shuffle button added to show view"
+msgstr "Spill og omstokkingsknapp lagt til i programvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:208
+#, fuzzy
+msgid "Load views after main view is loaded"
+msgstr "Last inn visninger etter at hovedvisningen er innlastet"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:216
+msgid "Fix progres not been updated correctly"
+msgstr "Fiks framdrift som ikke oppdateres rett"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:224
+msgid "Play and shuffle button added in section view"
+msgstr "Spill- og omstokkingsknapper lagt til i seksjonsvisning"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:225
+#, fuzzy
+msgid "Playqueue will be refreshed when playing next/prev item"
+msgstr "Spillerkø omstokket ved avspilling av neste/forrige element"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:226
+#, fuzzy
+msgid "Keep fullscreen status"
+msgstr "Behold fullskjermsstatus"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:234
+#, fuzzy
+msgid "List with playqueue items"
+msgstr "Liste med avspillerkøelementer"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:235
+msgid "Play ondeck items continuous"
+msgstr "Spill dekksvisningselementer sammenhengende"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:236
+msgid "Added an album view"
+msgstr "Albumsvsining lagt til"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:237
+msgid "Added an artist view"
+msgstr "Artistvisning lagt til"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:245
+msgid "Buttons now with more constrast"
+msgstr "Knapper med økt kontrast"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:246
+msgid "Sync tv show with options like only unwatched"
+msgstr "Synkroniser TV-programmer med alternativer, som f.eks. kun usette"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:247
+msgid "Sync and download dialog with thumbnails"
+msgstr "Synkroniserings- og nedlastingsdialog med miniatyrbilder"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:253
+#, fuzzy
+msgid "Media controll buttons/images with more contrast."
+msgstr "Mediakontrollknapper/bilder med økt kontrast"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:258
+msgid "First release."
+msgstr "Første utgave."
+
+#: ../data/nl.g4d.Girens.desktop.in:4
+msgid "Play your Plex movies, tv Shows and music"
+msgstr "Spill dine Plex-filmer, TV-programmer, og musikk"
+
+#: ../data/nl.g4d.Girens.desktop.in:10
+msgid "girens;plex;media;player;"
+msgstr "girens;plex;media;avspiller;"
+
+#: ../data/ui/about_dialog.ui.in:8
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+"En Plex-klient skrevet i GTK for avpilling av filmer, TV-programmer og "
+"musikk fra ditt Plex-bibliotek."
+
+#. Add your name to the translator credits list
+#: ../data/ui/about_dialog.ui.in:11
+msgid "translator-credits"
+msgstr "Allan Nordhøy <epost@anotheragency.no>"
+
+#: ../data/ui/artist_view.blp:57
+msgid "Show more"
+msgstr "Vis mer"
+
+#: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:118
+msgid "Ondeck"
+msgstr "Dekksvisning"
+
+#: ../data/ui/discover_view.blp:35
+#, fuzzy
+msgid "Recently added TV"
+msgstr "Nylig tillagte programmer"
+
+#: ../data/ui/discover_view.blp:53
+#, fuzzy
+msgid "Recently added Movies"
+msgstr "Nylig tillagte filmer"
+
+#: ../data/ui/discover_view.blp:71
+#, fuzzy
+msgid "Recently added Music"
+msgstr "Nylig tillagt musikk"
+
+#: ../data/ui/loading_view.blp:29 ../data/ui/profile_dialog.blp:25
+#, fuzzy
+msgid "Logout"
+msgstr "Logg ut"
+
+#: ../data/ui/login_view.blp:33
+#, fuzzy
+msgid "Login to Plex with an user acount"
+msgstr "Logg inn på Plex med en brukerkonto"
+
+#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
+msgid "Username"
+msgstr "Brukernavn"
+
+#: ../data/ui/login_view.blp:44
+msgid "Password"
+msgstr "Passord"
+
+#: ../data/ui/login_view.blp:53
+#, fuzzy
+msgid "Login"
+msgstr "Logg inn"
+
+#: ../data/ui/login_view.blp:69
+#, fuzzy
+msgid "Go to Plex server based on an url"
+msgstr "Gå til tilhørende Plex-tjener for angitt nettadresse"
+
+#: ../data/ui/login_view.blp:74
+#, fuzzy
+msgid "The url to the Plex server with the port number"
+msgstr "Nettadresse til Plex-tjener med portnummeret"
+
+#: ../data/ui/login_view.blp:80
+msgid "Token"
+msgstr "Symbol"
+
+#: ../data/ui/login_view.blp:89
+msgid "Connect"
+msgstr "Koble til"
+
+#: ../data/ui/main_window.blp:5
+msgid "Girens"
+msgstr "Girens"
+
+#: ../data/ui/main_window.blp:159
+msgid "Settings"
+msgstr "Innstillinger"
+
+#: ../data/ui/main_window.blp:187
+msgid "Advertise as client"
+msgstr "Kunngjør som klient"
+
+#: ../data/ui/main_window.blp:188
+msgid ""
+"Allow other devices on this network to find Girens and control this client."
+msgstr ""
+"Tillat andre enheter på dette nettverket å finne Girens og kontrollere denne "
+"klienten."
+
+#: ../data/ui/main_window.blp:197
+msgid "Prefer music clips"
+msgstr "Foretrekk musikk-klipp"
+
+#: ../data/ui/main_window.blp:198
+#, fuzzy
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio."
+msgstr ""
+"Spill spor som har musikk-klipp ved avspilling av musikk istedenfor lyden."
+
+#: ../data/ui/main_window.blp:207
+msgid "Transcode media"
+msgstr "Transkod media"
+
+#: ../data/ui/main_window.blp:208
+msgid "Transcode media instead of playing directly."
+msgstr "Transkod media istedenfor direkte avspilling."
+
+#: ../data/ui/main_window.blp:217
+msgid "1080p"
+msgstr "1080p"
+
+#: ../data/ui/main_window.blp:224
+msgid "720p"
+msgstr "720p"
+
+#: ../data/ui/main_window.blp:233
+msgid "480p"
+msgstr "480p"
+
+#: ../data/ui/main_window.blp:242
+msgid "240p"
+msgstr "240p"
+
+#: ../data/ui/main_window.blp:255
+msgid "Info"
+msgstr "Info"
+
+#: ../data/ui/main_window.blp:261
+msgid "Shortcuts"
+msgstr "Snarveier"
+
+#: ../data/ui/main_window.blp:267
+msgid "About Girens"
+msgstr "Om Girens"
+
+#: ../data/ui/music_popover_menu.blp:67
+msgid "Repeat"
+msgstr "Gjentagelse"
+
+#: ../data/ui/player_view.blp:77
+msgid "Release date"
+msgstr ""
+
+#: ../data/ui/player_view.blp:81
+msgid "Genre"
+msgstr ""
+
+#: ../data/ui/player_view.blp:90
+msgid "Description"
+msgstr ""
+
+#: ../data/ui/player_view.blp:103
+msgid "Audio "
+msgstr "Lyd "
+
+#: ../data/ui/player_view.blp:106
+msgid "Subtitle "
+msgstr "Undertekst "
+
+#: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
+msgid "Account info"
+msgstr ""
+
+#: ../data/ui/profile_dialog.blp:15
+msgid "Email"
+msgstr "E-post"
+
+#: ../data/ui/profile_dialog.blp:18
+msgid "Subscription plan"
+msgstr "Abonnementsplan"
+
+#: ../data/ui/profile_dialog.blp:21
+#, fuzzy
+msgid "Secure"
+msgstr "Sikker"
+
+#: ../data/ui/resume_dialog.ui:5
+#, fuzzy
+msgid "Do you want resume watching or start from the beginning?"
+msgstr "Fortsett å se der du slapp, eller fra begynnelsen?"
+
+#: ../data/ui/resume_dialog.ui:11
+msgid "Resume"
+msgstr "Fortsett"
+
+#: ../data/ui/section_view.blp:40
+msgid "Order"
+msgstr "Rekkefølge"
+
+#: ../data/ui/shortcuts.blp:13
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Avspilling"
+
+#: ../data/ui/shortcuts.blp:17
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr "Spill av/pause"
+
+#: ../data/ui/shortcuts.blp:23
+msgctxt "shortcut window"
+msgid "Previous"
+msgstr "Forrige"
+
+#: ../data/ui/shortcuts.blp:29
+msgctxt "shortcut window"
+msgid "Next"
+msgstr "Neste"
+
+#: ../data/ui/shortcuts.blp:35
+msgctxt "shortcut window"
+msgid "Seek forwards"
+msgstr "Blafre forover"
+
+#: ../data/ui/shortcuts.blp:41
+msgctxt "shortcut window"
+msgid "Seek backwards"
+msgstr "Blafre bakover"
+
+#: ../data/ui/shortcuts.blp:47
+msgctxt "shortcut window"
+msgid "Stop playing"
+msgstr "Stopp avspilling"
+
+#: ../data/ui/shortcuts.blp:53
+msgctxt "shortcut window"
+msgid "Fullscreen"
+msgstr "Fullskjermsvisning"
+
+#: ../data/ui/shortcuts.blp:59
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Play musicclips instead of audio track"
+msgstr "Spill musikk-klipp istedenfor lydspor"
+
+#: ../data/ui/sync_dialog.blp:4
+msgid "Sync items"
+msgstr "Synkroniser elementer"
+
+#: ../data/ui/sync_dialog.blp:33
+#, fuzzy
+msgid "Ok"
+msgstr "OK"
+
+#: ../data/ui/sync_settings.blp:5
+#, fuzzy
+msgid "Sync - settings"
+msgstr "Synkronisering — innstilinger"
+
+#: ../data/ui/sync_settings.blp:14
+msgid "Convert"
+msgstr "Konverter"
+
+#: ../data/ui/sync_settings.blp:15
+msgid "Converted sync can take a long time"
+msgstr "Konvertert synkronisering kan ta lang tid"
+
+#: ../data/ui/sync_settings.blp:23
+msgid "Unwatched only"
+msgstr "Kun usette"
+
+#: ../data/ui/sync_settings.blp:31
+msgid "Max items"
+msgstr "Maks. elementer"
+
+#: ../data/ui/theme_switcher.blp:25
+msgid "Follow system style"
+msgstr ""
+
+#: ../data/ui/theme_switcher.blp:39
+msgid "Light style"
+msgstr ""
+
+#: ../data/ui/theme_switcher.blp:53
+msgid "Dark style"
+msgstr ""
+
+#: ../src/album_view.py:93 ../src/cover_box.py:104
+msgid "Go to artist view"
+msgstr "Gå til artistvisning"
+
+#: ../src/album_view.py:96 ../src/cover_box.py:131
+#, fuzzy
+msgid "Sync"
+msgstr "Synkroniser"
+
+#: ../src/album_view.py:99 ../src/cover_box.py:136
+msgid "Shuffle"
+msgstr "Omstokking"
+
+#: ../src/album_view.py:138
+#, fuzzy
+msgid "Disc "
+msgstr "Disk "
+
+#: ../src/cover_box.py:95
+msgid "Go to album view"
+msgstr "Gå til albumsvisning"
+
+#: ../src/cover_box.py:116
+#, fuzzy
+msgid "Go to show view"
+msgstr "Gå til programsvisning"
+
+#: ../src/cover_box.py:121
+msgid "Mark as Played"
+msgstr "Marker som avspilt"
+
+#: ../src/cover_box.py:126
+msgid "Mark as Unplayed"
+msgstr "Marker som uspilt"
+
+#: ../src/cover_box.py:141
+msgid "Start from the beginning"
+msgstr ""
+
+#: ../src/player_view.py:297 ../src/player_view.py:298
+msgid "None"
+msgstr "Ingen"
+
+#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
+#: ../src/plex.py:487 ../src/plex.py:495
+msgid "Connecting to "
+msgstr "Tilkobling til "
+
+#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
+msgid " failed."
+msgstr " mislyktes."
+
+#: ../src/plex.py:483
+msgid "No servers found for this account."
+msgstr "Fant ingen tjenere for denne kontoen:"
+
+#: ../src/plex.py:487
+#, fuzzy
+msgid " connection urls."
+msgstr " tilkoblingsnettadresser."
+
+#: ../src/plex.py:487
+#, fuzzy
+msgid "There are "
+msgstr "Det er "
+
+#: ../src/plex.py:487
+msgid "This may take a while"
+msgstr "Dette kan ta sin tid"
+
+#: ../src/section_view.py:33
+msgid "Added at"
+msgstr "Lagt til"
+
+#: ../src/section_view.py:34
+msgid "Last viewed at"
+msgstr "Sist sett"
+
+#: ../src/section_view.py:35
+msgid "Originally available at"
+msgstr "Opprinnelig tilgjengelig på"
+
+#: ../src/section_view.py:36
+msgid "Title"
+msgstr "Navn"
+
+#: ../src/section_view.py:37
+msgid "Rating"
+msgstr "Vurdering"
+
+#: ../src/section_view.py:38
+msgid "Unwatched"
+msgstr "Usett"
+
+#: ../src/section_view.py:39
+msgid "View count"
+msgstr "Visninger"
+
+#: ../src/section_view.py:40
+msgid "User rating"
+msgstr "Brukervurdering"
+
+#: ../src/section_view.py:41
+msgid "Media height"
+msgstr "Mediahøyde"
+
+#: ../src/section_view.py:42
+msgid "Duration"
+msgstr "Varighet"
+
+#: ../src/section_view.py:144 ../src/sidebar_box.py:103
+msgid "Playlists"
+msgstr "Spillelister"
+
+#: ../src/sidebar_box.py:94
+msgid "Player"
+msgstr "Avspiller"
+
+#: ../src/sidebar_box.py:99
+msgid "Home"
+msgstr "Hjem"
+
+#: ../src/window.py:353
+#, fuzzy
+msgid "Starting Girens"
+msgstr "Starter Girens …"
+
+#~ msgid "The ondeck view"
+#~ msgstr "Dekksvisningen"
+
+#~ msgid "The films view"
+#~ msgstr "Filmvisningen"
+
+#, fuzzy
+#~ msgid "The tvshows view"
+#~ msgstr "TV-programsvisningen"
+
+#~ msgid "Window size width"
+#~ msgstr "Vindusstørrelsesbredde"
+
+#~ msgid "Window size (width)."
+#~ msgstr "Vindusstørrelse (bredde)."
+
+#~ msgid "Window size (height)."
+#~ msgstr "Vindusstørrelse (høyde)."
+
+#~ msgid "The volume level of the audio"
+#~ msgstr "Lydstyrkenivå for lyden"
+
+#~ msgid ""
+#~ "Allow other devices on this network to find Girens and control this client"
+#~ msgstr ""
+#~ "Tillat andre enheter på dette nettverket å finne Girens og kontrollere "
+#~ "denne klienten"
+
+#~ msgid "Use dark GTK theme"
+#~ msgstr "Bruk mørk GTK-drakt"
+
+#~ msgid "Play media direct from server instead of transcoding it"
+#~ msgstr "Spill media direkte fra tjener istedenfor å transkode"
+
+#~ msgid "Resolution to transcode media to"
+#~ msgstr "Oppløsning å transkode media til"
+
+#, fuzzy
+#~ msgid ""
+#~ "When playing music and the track has a music clip, play that instead of "
+#~ "the audio"
+#~ msgstr ""
+#~ "Spill spor som har musikk-klipp ved avspilling av musikk istedenfor lyden"
+
+#, fuzzy
+#~ msgid "The plex user uuid"
+#~ msgstr "Bruker-UUID for Plex-bruker"
+
+#, fuzzy
+#~ msgid "The plex server uuid"
+#~ msgstr "UUID for Plex-tjener"
+
+#, fuzzy
+#~ msgid "The plex server url"
+#~ msgstr "Tjenernettadresse for Plex-tjener"
+
+#~ msgid "Plex - Account info"
+#~ msgstr "Plex — kontoinfo"
+
+#~ msgid "Beginning"
+#~ msgstr "Begynnelsen"
+
+#~ msgid "label"
+#~ msgstr "etikett"
+
+#~ msgid "Play from beginning"
+#~ msgstr "Spill fra begynnelsen"
+
+#~ msgid "Learn more about Girens"
+#~ msgstr "Lær mer om Girens"
+
+#~ msgid "00:00"
+#~ msgstr "00:00"
+
+#~ msgid "99:00"
+#~ msgstr "99:00"
+
+#~ msgid "page0"
+#~ msgstr "side0"
+
+#, fuzzy
+#~ msgid ""
+#~ "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo "
+#~ "nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. "
+#~ "Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. "
+#~ "Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci "
+#~ "varius natoque penatibus et magnis dis parturient montes, nascetur "
+#~ "ridiculus mus. Donec elementum molestie turpis, sed blandit nunc "
+#~ "consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, "
+#~ "non consectetur lorem convallis non. Integer tempus nulla non libero "
+#~ "hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer "
+#~ "vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo "
+#~ "justo. "
+#~ msgstr ""
+#~ "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo "
+#~ "nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. "
+#~ "Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. "
+#~ "Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci "
+#~ "varius natoque penatibus et magnis dis parturient montes, nascetur "
+#~ "ridiculus mus. Donec elementum molestie turpis, sed blandit nunc "
+#~ "consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, "
+#~ "non consectetur lorem convallis non. Integer tempus nulla non libero "
+#~ "hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer "
+#~ "vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo "
+#~ "justo. "
+
+#~ msgid "User"
+#~ msgstr "Bruker"
+
+#, fuzzy
+#~ msgid "http://127.0.0.1:32400"
+#~ msgstr "http://127.0.0.1:32400"
+
+#, fuzzy
+#~ msgid "Url"
+#~ msgstr "Nettadresse"
+
+#, fuzzy
+#~ msgid "The token from the server can be empty"
+#~ msgstr "Symbolet fra tjeneren kan være tomt"
+
+#~ msgid "Number of items"
+#~ msgstr "Antall elementer"
+
+#~ msgid "Dark Theme"
+#~ msgstr "Mørk drakt"
+
+#~ msgid "Use dark GTK theme."
+#~ msgstr "Bruk mørk GTK-drakt."

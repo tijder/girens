@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk, Adw
+
 from .sync_item import SyncItem
 
 import cairo
@@ -24,8 +24,8 @@ import threading
 import sys
 import gc
 
-@GtkTemplate(ui='/nl/g4d/Girens/resume_dialog.ui')
-class ResumeDialog(Gtk.Dialog):
+@Gtk.Template(resource_path='/nl/g4d/Girens/resume_dialog.ui')
+class ResumeDialog(Adw.MessageDialog):
     __gtype_name__ = 'resume_dialog'
 
     __gsignals__ = {
@@ -33,23 +33,15 @@ class ResumeDialog(Gtk.Dialog):
         'resume-selected': (GObject.SignalFlags.RUN_FIRST, None, (bool,))
     }
 
-    _resume_button = GtkTemplate.Child()
-    _beginning_button = GtkTemplate.Child()
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
-
-        self._resume_button.connect("clicked", self.__on_resume_clicked)
-        self._beginning_button.connect("clicked", self.__on_beginning_clicked)
 
     def set_item(self, item):
-        self.set_title("Girens ~ '" + item.title + "'")
+        self.set_heading(item.title)
 
-    def __on_beginning_clicked(self, button):
-        self.emit('beginning-selected',True)
-        self.hide()
-
-    def __on_resume_clicked(self, button):
-        self.emit('resume-selected',True)
-        self.hide()
+    @Gtk.Template.Callback()
+    def response_cb(self, widget, response):
+        if(response == '_resume_button'):
+            self.emit('resume-selected',True)
+        elif (response == '_beginning_button'):
+            self.emit('beginning-selected',True)

@@ -1,0 +1,271 @@
+using Gtk 4.0;
+using Adw 1;
+
+template PlexWindow : Adw.ApplicationWindow {
+  title: _("Girens");
+  default-width: 640;
+  default-height: 800;
+
+  content:
+  Adw.ViewStack _viewStack_frame {
+    Adw.ViewStackPage _main_content {
+    child: Adw.Leaflet sidebar_leaflet {
+      can-navigate-back: true;
+
+      Box header {
+        orientation: vertical;
+        width-request: 180;
+
+        Adw.HeaderBar sidebar_header {
+          show-end-title-buttons: bind sidebar_leaflet.folded;
+          [start]
+          Button _profile_button {
+            Image _avatar_image {
+              icon-name: "preferences-desktop-personal-symbolic";
+            }
+          }
+        }
+
+        // left content
+        ScrolledWindow sidebar {
+          hscrollbar-policy: never;
+          vexpand: true;
+          child: Viewport _sidebar_viewport {};
+        }
+      }
+
+      Adw.LeafletPage {
+        navigatable: false;
+        child: Separator separator_header {};
+      }
+
+      Box _content_leaflet {
+        orientation: vertical;
+        hexpand: true;
+        width-request: 360;
+
+        Adw.HeaderBar content_header {
+          show-start-title-buttons: bind sidebar_leaflet.folded inverted;
+
+          [start]
+          Button _back_button {
+            visible: bind sidebar_leaflet.folded;
+            icon-name: "go-previous-symbolic";
+            clicked => sidebar_back_cb() swapped;
+          }
+
+          ToggleButton _search_toggle_button {
+              visible: true;
+              icon-name: "edit-find-symbolic";
+            }
+
+            Box {
+              Button _sync_button {
+                Image _sync_image {
+                  icon-name: "network-transmit-symbolic";
+                }
+              }
+
+              MenuButton _download_button {}
+
+              styles [
+                "linked",
+              ]
+            }
+
+          [end]
+          MenuButton _menu_button {
+              popover: _menu_popover;
+              Image _shortcuts_image1 {
+                icon-name: "open-menu-symbolic";
+              }
+            }
+        }
+
+        // Right content
+        Box _content_box_wrapper {
+          orientation: vertical;
+          Box content {
+            hexpand: true;
+            orientation: vertical;
+
+            SearchBar _search_bar {
+              SearchEntry _search_entry {}
+            }
+            Adw.ViewStack _viewStack_pages {
+              vhomogeneous: false;
+
+              Adw.ViewStackPage _discover_revealer {
+                child: .discover_view _discover_view {};
+              }
+
+              Adw.ViewStackPage _show_revealer {
+                child: .show_view _show_view {};
+              }
+
+              Adw.ViewStackPage _section_revealer {
+                child: .section_view _section_view {};
+              }
+
+              Adw.ViewStackPage _search_revealer {
+                child: .search_view _search_view {};
+              }
+
+              Adw.ViewStackPage _artist_revealer {
+                child: .artist_view _artist_view {};
+              }
+
+              Adw.ViewStackPage _album_revealer {
+                child: .album_view _album_view {};
+              }
+
+              Adw.ViewStackPage _player_revealer {
+                child: .player_view _player_view {};
+              }
+            }
+          }
+
+          .media_box_music _media_box_music {}
+
+        }
+      }
+    };
+    }
+    Adw.ViewStackPage _login_revealer {
+      child: .login_view _login_view {};
+    }
+    Adw.ViewStackPage _loading_revealer {
+      child: .loading_view _loading_view {};
+    }
+  };
+}
+
+Adjustment _volume_adjustment {
+  upper: 100;
+  step-increment: 1.00000000000000001;
+  page-increment: 1.00000000000000001;
+}
+
+Popover _menu_popover {
+  width-request: 250;
+  Box {
+    orientation: vertical;
+    margin-top: 5;
+    margin-start: 5;
+    margin-end: 5;
+    margin-bottom: 5;
+
+    Adw.PreferencesGroup {
+      title: _("Settings");
+
+      Adw.PreferencesRow {
+        use-underline: true;
+        .theme_switcher {}
+      }
+
+      Adw.PreferencesRow {
+        use-underline: true;
+
+        Box {
+          margin-start: 10;
+          margin-end: 10;
+
+          Image {
+            icon-name: "audio-speakers-symbolic";
+          }
+
+          Scale volume {
+            adjustment: _volume_adjustment;
+            round-digits: 1;
+            draw-value: false;
+            hexpand: true;
+          }
+        }
+      }
+
+      Adw.ActionRow {
+        title: _("Advertise as client");
+        tooltip-text: _("Allow other devices on this network to find Girens and control this client.");
+        use-underline: true;
+        activatable-widget: _advertise_as_client_check_button;
+        Switch _advertise_as_client_check_button {
+          valign: center;
+        }
+      }
+
+      Adw.ActionRow {
+        title: _("Prefer music clips");
+        tooltip-text: _("When playing music and the track has a music clip, play that instead of the audio.");
+        use-underline: true;
+        activatable-widget: _prefer_music_clips_check_button;
+        Switch _prefer_music_clips_check_button {
+          valign: center;
+        }
+      }
+
+      Adw.ExpanderRow _transcode_media_switch {
+        title: _("Transcode media");
+        tooltip-text: _("Transcode media instead of playing directly.");
+        use-underline: true;
+        show-enable-switch: true;
+
+        Adw.PreferencesGroup {
+          margin-start: 10;
+          margin-end: 10;
+
+          Adw.ActionRow {
+            title: _("1080p");
+            use-underline: true;
+            activatable-widget: _res_set_1080;
+            Gtk.CheckButton _res_set_1080 {}
+          }
+
+          Adw.ActionRow {
+            title: _("720p");
+            use-underline: true;
+            activatable-widget: _res_set_720;
+            Gtk.CheckButton _res_set_720 {
+              group: _res_set_1080;
+            }
+          }
+
+          Adw.ActionRow {
+            title: _("480p");
+            use-underline: true;
+            activatable-widget: _res_set_480;
+            Gtk.CheckButton _res_set_480 {
+              group: _res_set_1080;
+            }
+          }
+
+          Adw.ActionRow {
+            title: _("240p");
+            use-underline: true;
+
+            activatable-widget: _res_set_240;
+            Gtk.CheckButton _res_set_240 {
+              group: _res_set_1080;
+            }
+          }
+        }
+      }
+    }
+
+    Adw.PreferencesGroup {
+      title: _("Info");
+      margin-top: 20;
+
+      Adw.ActionRow _shortcuts_button {
+        use-underline: true;
+        activatable: true;
+        title: _("Shortcuts");
+      }
+
+      Adw.ActionRow _about_button {
+        use-underline: true;
+        activatable: true;
+        title: _("About Girens");
+      }
+    }
+  }
+}

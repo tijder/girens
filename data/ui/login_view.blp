@@ -1,0 +1,100 @@
+using Gtk 4.0;
+using Adw 1;
+
+template login_view : Box {
+  margin-top: 0;
+  orientation: vertical;
+
+  Adw.HeaderBar {}
+
+
+  Adw.Clamp {
+    maximum-size: 500;
+    Box {
+      margin-top: 30;
+      orientation: vertical;
+      hexpand: true;
+      vexpand: true;
+
+      StackSwitcher {
+        halign: center;
+        stack: stack;
+      }
+
+      Stack stack {
+        transition-type: crossfade;
+
+        StackPage {
+        name: 'password';
+        title: 'Username and password';
+        child: Adw.PreferencesGroup {
+            margin-top: 10;
+            Adw.ActionRow {
+              title: _("Login to Plex with an user acount");
+              use-underline: true;
+            }
+
+            Adw.EntryRow _username_entry {
+              title: _("Username");
+              input-purpose: name;
+              use-underline: true;
+            }
+
+            Adw.PasswordEntryRow _password_entry {
+              title: _("Password");
+              input-purpose: password;
+              use-underline: true;
+            }
+
+            Adw.ActionRow {
+              use-underline: true;
+              activatable-widget: _connect_user_button;
+              Button _connect_user_button {
+                label: _("Login");
+                styles [
+                  "suggested-action",
+                ]
+              }
+            }
+          };
+        }
+
+        StackPage {
+        name: 'token';
+        title: 'Url and token';
+        child: Adw.PreferencesGroup {
+            margin-top: 10;
+
+            Adw.ActionRow {
+              title: _("Go to Plex server based on an url");
+              use-underline: true;
+            }
+
+            Adw.EntryRow _server_url_entry {
+              title: _("The url to the Plex server with the port number");
+              input-purpose: url;
+              use-underline: true;
+            }
+
+            Adw.EntryRow _server_token_entry {
+              title: _("Token");
+              input-purpose: name;
+              use-underline: true;
+            }
+
+            Adw.ActionRow {
+              use-underline: true;
+              activatable-widget: _connect_user_button;
+              Button _connect_url_button {
+                label: _("Connect");
+                styles [
+                  "suggested-action",
+                ]
+              }
+            }
+          };
+        }
+      }
+    }
+  }
+}

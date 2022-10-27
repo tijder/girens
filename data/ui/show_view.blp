@@ -1,0 +1,104 @@
+using Gtk 4.0;
+using Adw 1;
+
+template show_view : ScrolledWindow {
+Adw.Clamp {
+    maximum-size: 800;
+    Box {
+      orientation: vertical;
+
+      Box {
+        orientation: horizontal;
+        margin-top: 20;
+        margin-bottom: 10;
+        margin-start: 10;
+        margin-end: 10;
+        spacing: 30;
+
+        Box _left_box {
+          halign: start;
+          valign: start;
+          orientation: vertical;
+          Picture _cover_image {
+            styles [
+              "cover_image",
+            ]
+            height-request: 200;
+            width-request: 136;
+            valign: center;
+          }
+
+          Box _section_controll_box {
+            halign: fill;
+            hexpand-set: true;
+            Button _play_button {
+              hexpand: true;
+              Image {
+                icon-name: "media-playback-start-symbolic";
+              }
+            }
+
+            Button _shuffle_button {
+              Image {
+                icon-name: "media-playlist-shuffle-symbolic";
+              }
+            }
+
+            styles [
+              "linked",
+            ]
+          }
+        }
+
+        Box {
+          orientation: vertical;
+          hexpand: true;
+          Label _title_label {
+            styles [
+              "title-1"
+            ]
+            halign: start;
+            label: "label";
+            ellipsize: end;
+          }
+
+          Label _subtitle_label {
+            halign: start;
+            label: "label";
+            ellipsize: end;
+          }
+
+          Label _description_label {
+            styles [
+              "dim-label"
+            ]
+            halign: start;
+            label: "label";
+            lines: 9;
+            ellipsize: end;
+            single-line-mode: true;
+            wrap: true;
+          }
+        }
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 10;
+        margin-bottom: 10;
+        ScrolledWindow _season_scrolled_window {
+          Viewport {
+            StackSwitcher _season_switcher {
+              stack: _season_stack;
+            }
+          }
+        }
+
+        Stack _season_stack {
+          hhomogeneous: false;
+          vhomogeneous: false;
+        }
+      }
+    }
+  }
+}

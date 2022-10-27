@@ -16,24 +16,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/sync_settings.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/sync_settings.ui')
 class SyncSettings(Gtk.Dialog):
     __gtype_name__ = 'sync_settings'
 
-    _convert_button = GtkTemplate.Child()
-    _unwatched_button = GtkTemplate.Child()
-    _max_items_entry = GtkTemplate.Child()
+    _convert_button = Gtk.Template.Child()
+    _unwatched_button = Gtk.Template.Child()
+    _max_items_entry = Gtk.Template.Child()
 
-    _sync_button = GtkTemplate.Child()
+    _sync_button = Gtk.Template.Child()
 
     def __init__(self, plex, item, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
         self._plex = plex
         self._item = item

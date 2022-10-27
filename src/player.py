@@ -2,9 +2,13 @@ import gi
 import mpv
 import threading
 import time
+import ctypes
 
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, GLib, GdkPixbuf, GObject, Gio
+from OpenGL import GL
+
+from .resume_dialog import ResumeDialog
 
 # import gi
 # gi.require_version('Gtk', '3.0')
@@ -22,16 +26,13 @@ class Player(GObject.Object):
         'play-music-clip-instead-of-track': (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
     }
 
-    def __init__(self, resume_dialog, player_view, **kwargs):
+    def __init__(self, player_view, **kwargs):
         super().__init__(**kwargs)
         self._settings = Gio.Settings("nl.g4d.Girens")
+        self._settings.connect('changed', self.__on_settings_changed)
 
 
         self._player_view = player_view
-
-        self._resume_dialog = resume_dialog
-        self._resume_dialog.connect("beginning-selected", self.__on_beginning_selected)
-        self._resume_dialog.connect("resume-selected", self.__on_resume_selected)
 
         self._player = None
         self._playqueue = None
@@ -47,12 +48,18 @@ class Player(GObject.Object):
         self._fullscreen = False
         self._offset_param = None
         self._from_beginning = None
+        self._direct = None
         self._playqueue_refreshed = False
         self._video_output_driver = "x11,"
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
 
         self._tracklist = None
+        self._player_view._frame.connect('realize', self.__on_realize)
+
+    def __on_settings_changed(self, widget, key):
+        if key == 'volume-level':
+            self.__set_volume(self._settings.get_int("volume-level"))
 
     def set_video_output_driver(self, video_output_driver):
         self._video_output_driver = video_output_driver
@@ -63,13 +70,21 @@ class Player(GObject.Object):
     def set_plex(self, plex):
         self._plex = plex
 
+    def __on_realize(self, widget):
+        self._ctx = None
+        self._ctx_opengl_params = {'get_proc_address': mpv.MpvGlGetProcAddressFn(GetProcAddressGetter().wrap)}
+        self._player = mpv.MPV(vo="libmpv", keep_open="yes", start=0, cache='yes')
+        self._player_view._frame.set_auto_render(False)
+        self.on_realize()
+
     def __createPlayer(self, offset=0):
-        import locale
-        locale.setlocale(locale.LC_NUMERIC, 'C')
-        if self._item_loading.listType == 'video':
-            self._player = mpv.MPV(wid=str(self._player_view._frame.get_property("window").get_xid()), deinterlace=self._deinterlace, vo=self._video_output_driver, input_cursor="no", cursor_autohide="no", input_default_bindings="no", sid="no", start=offset)
-        else:
-            self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
+        #import locale
+        #locale.setlocale(locale.LC_NUMERIC, 'C')
+        self._player.start = offset
+        #if self._item_loading.listType == 'video':
+        #    self._player.start = offset
+        #else:
+        #    self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
@@ -95,8 +110,14 @@ class Player(GObject.Object):
         def __on_track_list(_name, value):
             self._tracklist = value
 
-            if self._direct and self._item_loading.listType == 'video':
+            if len(value) != 0 and self._direct is not None and self._direct and self._item_loading is not None and self._item_loading.listType == 'video' and self._track_isset is False:
+                self._track_isset = True
                 self.__set_selected_stream()
+
+        @self._player.property_observer('eof-reached')
+        def __on_end_reached(_name, value):
+            if value:
+                self._player.command('stop')
 
 
     def __set_selected_stream(self):
@@ -133,6 +154,7 @@ class Player(GObject.Object):
             self.aid = pindex
 
         if stream_id == False and extern_stream_title != False:
+            self._track_isset = False
             self._player.command('sub-add', plex_stream.getDownloadUrl(), 'auto', extern_stream_title)
 
     def set_subtitle(self, plex_stream):
@@ -158,7 +180,7 @@ class Player(GObject.Object):
             self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
         except:
             print("Error by updating timeline")
-        self._player.terminate()
+        #self._player.terminate()
 
     def set_playqueue(self, playqueue):
         self._playqueue = playqueue
@@ -169,6 +191,7 @@ class Player(GObject.Object):
         self._from_beginning = None
         self._restart = None
         self._restart_offset = 0
+        self._track_isset = False
         new_item = self._playqueue.items[self._offset]
         if (self._playing != False):
             self._play_wait = True
@@ -256,7 +279,7 @@ class Player(GObject.Object):
             self.emit('playqueue-ended')
 
     def prev(self):
-        if (self._resume_dialog.is_visible()):
+        if (hasattr(self, "_resume_dialog") and self._resume_dialog.is_visible()):
             self._resume_dialog.hide()
             self.__on_beginning_selected(None, True)
         elif (self._playing != False):
@@ -265,7 +288,7 @@ class Player(GObject.Object):
             self._player.command('stop')
 
     def next(self):
-        if (self._resume_dialog.is_visible()):
+        if (hasattr(self, "_resume_dialog") and self._resume_dialog.is_visible()):
             self._resume_dialog.hide()
             self.__on_resume_selected(None, False)
         elif (self._playing != False):
@@ -290,6 +313,9 @@ class Player(GObject.Object):
 
     def set_volume(self, percent):
         self._settings.set_int("volume-level", percent)
+        self.__set_volume(percent)
+
+    def __set_volume(self, percent):
         if self._player and not self._player.playback_abort:
             self._player.volume = percent
 
@@ -416,6 +442,10 @@ class Player(GObject.Object):
         self.emit("playqueue-refreshed", playQueueSelectedItem, self._playqueue)
 
     def __ask_resume_or_beginning(self, item):
+        self._resume_dialog = ResumeDialog()
+        self._resume_dialog.set_transient_for(self._player_view.get_ancestor(Gtk.Window))
+        self._resume_dialog.connect("beginning-selected", self.__on_beginning_selected)
+        self._resume_dialog.connect("resume-selected", self.__on_resume_selected)
         self._resume_dialog.set_item(item)
         self._resume_dialog.show()
 
@@ -434,4 +464,70 @@ class Player(GObject.Object):
             thread = threading.Thread(target=self.__playqueue_refresh)
             thread.daemon = True
             thread.start()
-        
+
+    def on_realize(self, *_):
+        print(self._player_view._frame.get_realized())
+        if self._player_view._frame.get_realized():
+            self._player_view._frame.make_current()
+            self._ctx = mpv.MpvRenderContext(self._player, 'opengl', opengl_init_params=self._ctx_opengl_params)
+            self._player_view._frame.connect("render", self.do_render)
+            self._ctx.update_cb = self.on_mpv_callback
+
+    def on_mpv_callback(self):
+        GLib.idle_add(self.call_frame_ready, None, GLib.PRIORITY_HIGH)
+
+    def call_frame_ready(self, *_):
+        if self._ctx.update():
+            self._player_view._frame.queue_render()
+
+    def do_render(self, *_):
+        if not self._ctx:
+            return False
+
+        factor = self._player_view._frame.get_scale_factor()
+        width = self._player_view._frame.get_allocated_width() * factor
+        height = self._player_view._frame.get_allocated_height() * factor
+        fbo = GL.glGetIntegerv(GL.GL_DRAW_FRAMEBUFFER_BINDING)
+        self._ctx.render(
+            flip_y=True,
+            opengl_fbo={'w': width, 'h': height, 'fbo': fbo},
+            block_for_target_time=False
+        )
+
+
+
+class GetProcAddressGetter:
+
+    def __init__(self):
+        self._func = self._find_platform_wrapper()
+
+    def _find_platform_wrapper(self):
+        return self._init_linux()
+
+    def _init_linux(self):
+        try:
+            from OpenGL import GLX
+            return self._glx_impl
+        except AttributeError:
+            pass
+        try:
+            from OpenGL import EGL
+            return self._egl_impl
+        except AttributeError:
+            pass
+        raise 'Cannot initialize OpenGL'
+
+    def wrap(self, _, name: bytes):
+        address = self._func(name)
+        return ctypes.cast(address, ctypes.c_void_p).value
+
+    @staticmethod
+    def _glx_impl(name: bytes):
+        from OpenGL import GLX
+        return GLX.glXGetProcAddress(name.decode("utf-8"))
+
+    @staticmethod
+    def _egl_impl(name: bytes):
+        from OpenGL import EGL
+        return EGL.eglGetProcAddress(name.decode("utf-8"))
+

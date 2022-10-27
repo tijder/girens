@@ -1,0 +1,40 @@
+using Gtk 4.0;
+using Adw 1;
+
+template sync_settings : Dialog {
+  title: _("Sync - settings");
+  modal: true;
+
+  Box {
+    orientation: vertical;
+    spacing: 2;
+
+    Adw.PreferencesGroup {
+      Adw.ActionRow {
+        title: _("Convert");
+        tooltip-text: _("Converted sync can take a long time");
+        use-underline: true;
+        activatable-widget: _convert_button;
+        Switch _convert_button {
+          valign: center;
+        }
+      }
+      Adw.ActionRow {
+        title: _("Unwatched only");
+        use-underline: true;
+        activatable-widget: _unwatched_button;
+        Switch _unwatched_button {
+          valign: center;
+        }
+      }
+      Adw.EntryRow _max_items_entry {
+        title: _("Max items");
+        input-purpose: number;
+        use-underline: true;
+      }
+      Button _sync_button {
+        label: _("Sync");
+      }
+    }
+  }
+}

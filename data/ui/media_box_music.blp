@@ -1,0 +1,155 @@
+using Gtk 4.0;
+
+Adjustment _scale_adjustment {
+  upper: 1;
+  step-increment: 0.01;
+  page-increment: 0.01;
+}
+
+template media_box_music : Revealer {
+  reveal-child: true;
+  Grid {
+    Box {
+      margin-top: 5;
+
+      Label _time_left_label {
+        halign: start;
+        valign: center;
+        label: "00:00";
+        margin-start: 10;
+        width-chars: 7;
+      }
+
+      Scale _scale_bar {
+        hexpand: true;
+        adjustment: _scale_adjustment;
+        restrict-to-fill-level: false;
+        fill-level: 0.5;
+        digits: 2;
+        draw-value: false;
+        value-pos: left;
+      }
+
+      Label _time_right_label {
+        halign: end;
+        valign: center;
+        label: "99:00";
+        margin-end: 10;
+        width-chars: 7;
+      }
+
+      layout {
+        row: 0;
+        column: 0;
+      }
+    }
+
+    Box _label2_box {
+      halign: center;
+      hexpand: true;
+      orientation: vertical;
+      layout {
+        row: 1;
+        column: 0;
+      }
+    }
+
+    Grid {
+      height-request: 50;
+      margin-top: 5;
+      hexpand: true;
+
+      Overlay {
+        Image _cover_image {
+          width-request: 50;
+          height-request: 50;
+        }
+
+        [overlay]
+        Image _watched_image {
+          halign: end;
+          valign: start;
+          icon-name: "dialog-information";
+        }
+      }
+
+      MenuButton _playqueue_button {
+        width-request: 50;
+        height-request: 50;
+        direction: up;
+      }
+
+      Box _label_box {
+        halign: center;
+        hexpand: true;
+        orientation: vertical;
+
+        Label _title_label {
+          label: "Title";
+          ellipsize: end;
+        }
+
+        Label _subtitle_label {
+          label: "subtitle";
+          ellipsize: end;
+        }
+      }
+
+      Box {
+        Button _prev_button {
+          width-request: 50;
+          height-request: 50;
+
+          Image {
+            icon-name: "media-seek-backward-symbolic";
+          }
+        }
+
+        Button _play_button {
+          width-request: 50;
+          height-request: 50;
+          Image _play_image {
+            icon-name: "media-playback-start-symbolic";
+          }
+        }
+
+        Button _next_button {
+          width-request: 50;
+          height-request: 50;
+          Image {
+            icon-name: "media-seek-forward-symbolic";
+          }
+        }
+
+        Button _close_button {
+          width-request: 50;
+          height-request: 50;
+          receives-default: true;
+
+          Image {
+            icon-name: "media-playback-stop-symbolic";
+          }
+        }
+
+        MenuButton _media_settings {
+          width-request: 50;
+          height-request: 50;
+          direction: up;
+        }
+
+        styles [
+          "linked",
+        ]
+      }
+
+      layout {
+        row: 2;
+        column: 0;
+      }
+    }
+
+    styles [
+      "media_box",
+    ]
+  }
+}

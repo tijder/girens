@@ -17,20 +17,17 @@
 
 from gettext import gettext as _
 from gi.repository import Gtk, GLib, GObject
-from .gi_composites import GtkTemplate
+
 
 from .cover_box import CoverBox
+from .list import List
+from .item_bin import ItemBin
 
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/section_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/section_view.ui')
 class SectionView(Gtk.Box):
     __gtype_name__ = 'section_view'
-
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'view-artist-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-    }
 
     _sort_lables = {
         'addedAt': _('Added at'),
@@ -45,42 +42,45 @@ class SectionView(Gtk.Box):
         'duration': _('Duration'),
     }
 
-    _title_label = GtkTemplate.Child()
-    _section_flow = GtkTemplate.Child()
+    _title_label = Gtk.Template.Child()
+    _section_flow = Gtk.Template.Child()
 
-    _show_more_button = GtkTemplate.Child()
-    _filter_box = GtkTemplate.Child()
-    _section_controll_box = GtkTemplate.Child()
-    _play_button = GtkTemplate.Child()
-    _shuffle_button = GtkTemplate.Child()
-    _order_button = GtkTemplate.Child()
-    _order_image = GtkTemplate.Child()
+    _filter_box = Gtk.Template.Child()
+    _section_controll_box = Gtk.Template.Child()
+    _play_button = Gtk.Template.Child()
+    _shuffle_button = Gtk.Template.Child()
+    _order_button = Gtk.Template.Child()
+    _order_image = Gtk.Template.Child()
 
     _sort_active = None
     _sort_value_active = None
-    _load_spinner = GtkTemplate.Child()
+    _load_spinner = Gtk.Template.Child()
 
     _timout = None
     _add_items_first = False
     _cover_width = 200
     _container_start = 0
-    _container_size = 50
+    _container_size = 100
 
     _section_key = None
 
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
 
-        self._plex = plex
-        self._plex.connect("section-item-retrieved", self.__on_section_items_retrieved)
-        self._plex.connect("playlists-retrieved", self.__on_playlists_retrieved)
-        self._show_more_button.connect("clicked", self.__show_more_clicked)
         self._filter_box.connect("changed", self.__filter_changed)
 
         self._play_button.connect("clicked", self.__on_play_button_clicked)
         self._shuffle_button.connect("clicked", self.__on_shuffle_button_clicked)
         self._order_button.connect("clicked", self.__on_order_button_clicked)
+
+
+    def set_plex(self, plex):
+        self._plex = plex
+        self._plex.connect("section-item-retrieved", self.__on_section_items_retrieved)
+        self._plex.connect("playlists-retrieved", self.__on_playlists_retrieved)
+
+        self._section_flow.set_plex(plex)
+        self._section_flow.set_grid_mode()
 
 
     def refresh(self, section, sort=None, sort_value=None):
@@ -107,11 +107,8 @@ class SectionView(Gtk.Box):
         self._title_label.set_label(self._section.title)
 
         self.__stop_add_items_timout()
-        for item in self._section_flow.get_children():
-            self._section_flow.remove(item)
 
-        self._show_more_button.set_visible(False)
-
+        self._section_flow.empty_list()
 
         self._filter_box.clear()
         self._sort_store = Gtk.ListStore(object, str)
@@ -147,10 +144,8 @@ class SectionView(Gtk.Box):
         self._title_label.set_label(_("Playlists"))
 
         self.__stop_add_items_timout()
-        for item in self._section_flow.get_children():
-            self._section_flow.remove(item)
+        self._section_flow.empty_list()
 
-        self._show_more_button.set_visible(False)
         self._section_controll_box.set_visible(False)
 
         self._load_spinner.set_visible(True)
@@ -176,9 +171,9 @@ class SectionView(Gtk.Box):
 
     def __set_correct_order_image(self):
         if self._sort_value_active == 'desc':
-            self._order_image.set_from_icon_name('go-down-symbolic', 4)
+            self._order_image.set_from_icon_name('go-down-symbolic')
         else:
-            self._order_image.set_from_icon_name('go-up-symbolic', 4)
+            self._order_image.set_from_icon_name('go-up-symbolic')
 
     def __on_playlists_retrieved(self, plex, playlists):
         GLib.idle_add(self.__process_playlists, playlists)
@@ -208,44 +203,24 @@ class SectionView(Gtk.Box):
 
     def __show_more_items(self):
         self.__stop_add_items_timout()
-        count = 0
-        if self._add_items_first == True:
-            items_to_add = 15
-            self._add_items_first = False
-        else:
-            items_to_add = 2
-        while count < items_to_add and len(self._items) != 0:
-            cover = CoverBox(self._plex, self._items[0], cover_width=self._cover_width)
-            cover.connect("view-show-wanted", self.__on_go_to_show_clicked)
-            cover.connect("view-artist-wanted", self.__on_go_to_artist_clicked)
-            self._section_flow.add(cover)
-            self._items.remove(self._items[0])
-            count = count + 1
+        items = []
+        for item in self._items:
+            item_bin = ItemBin()
+            item_bin.set_item(item)
+            items.append(item_bin)
+        self._items = []
+        self._section_flow.add_items(items)
 
-        if (len(self._items) != 0):
-            self._show_more_button.set_visible(False)
-            self.__start_add_items_timout()
-        elif (self._section == None or self._section.totalSize <= self._container_start):
-            self._show_more_button.set_visible(False)
-        else:
-            self._show_more_button.set_visible(True)
-            self._show_more_button.set_sensitive(True)
-
-    def __show_more_clicked(self, button):
-        self.__start_adding_items()
+    @Gtk.Template.Callback()
+    def on_scroller_edge_reached(self, widget, position):
+        if position == Gtk.PositionType.BOTTOM:
+            self.__start_adding_items()
 
     def __start_adding_items(self):
-        self._show_more_button.set_sensitive(False)
         thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':self._sort_active, 'sort_value': self._sort_value_active, 'container_start':self._container_start, 'container_size':self._container_size})
         thread.daemon = True
         thread.start()
         self._container_start = self._container_start + self._container_size
-
-    def __on_go_to_show_clicked(self, cover, key):
-        self.emit('view-show-wanted', key)
-
-    def __on_go_to_artist_clicked(self, cover, key):
-        self.emit('view-artist-wanted', key)
 
     def __on_play_button_clicked(self, button):
         sort = None
@@ -265,6 +240,7 @@ class SectionView(Gtk.Box):
         
     def width_changed(self, width):
         if width < 450:
-            self._cover_width = width / 2 - 10
+            self._cover_width = width / 2 - 30
         else:
             self._cover_width = 200
+        self._section_flow.set_cover_width(self._cover_width)

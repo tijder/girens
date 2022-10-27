@@ -1,0 +1,23 @@
+using Gtk 4.0;
+
+template download_menu : Popover {
+  width-request: 300;
+  height-request: 300;
+  can-focus: false;
+
+  ScrolledWindow {
+    visible: true;
+    can-focus: true;
+
+    Viewport {
+      visible: true;
+      can-focus: false;
+
+      Box _item_box {
+        visible: true;
+        can-focus: false;
+        orientation: vertical;
+      }
+    }
+  }
+}

@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 from .sync_item import SyncItem
 
 import cairo
@@ -24,19 +24,19 @@ import threading
 import sys
 import gc
 
-@GtkTemplate(ui='/nl/g4d/Girens/sync_dialog.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/sync_dialog.ui')
 class SyncDialog(Gtk.Dialog):
     __gtype_name__ = 'sync_dialog'
 
-    _item_box = GtkTemplate.Child()
-    _sync_button = GtkTemplate.Child()
-    _ok_button = GtkTemplate.Child()
+    _item_box = Gtk.Template.Child()
+    _sync_button = Gtk.Template.Child()
+    _ok_button = Gtk.Template.Child()
 
     _items = []
 
     def __init__(self, plex, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        
 
         self._plex = plex
 
@@ -50,12 +50,12 @@ class SyncDialog(Gtk.Dialog):
         GLib.idle_add(self.__on_sync_items_retrieved_process, plex, items)
 
     def __on_sync_items_retrieved_process(self, plex, items):
-        for item in self._item_box.get_children():
-            item.destroy()
+        while self._item_box.get_first_child() != None:
+            self._item_box.remove(self._item_box.get_first_child())
 
         for item_keys in items:
             sync_item = SyncItem(self._plex, items[item_keys])
-            self._item_box.add(sync_item)
+            self._item_box.append(sync_item)
 
     def __on_ok_clicked(self, button):
         self.hide()

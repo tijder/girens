@@ -16,26 +16,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
-from .gi_composites import GtkTemplate
+
 
 import cairo
 import threading
 
-@GtkTemplate(ui='/nl/g4d/Girens/loading_view.ui')
+@Gtk.Template(resource_path='/nl/g4d/Girens/loading_view.ui')
 class LoadingView(Gtk.Box):
     __gtype_name__ = 'loading_view'
 
-    __gsignals__ = {
-        'view-show-wanted': (GObject.SignalFlags.RUN_FIRST, None, (str,))
-    }
+    _loading_text_label = Gtk.Template.Child()
+    _logout_button = Gtk.Template.Child()
 
-    _loading_text_label = GtkTemplate.Child()
-
-    def __init__(self, plex, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.init_template()
+        self._logout_button.connect("clicked", self.__on_logout_clicked)
 
+    def set_plex(self, plex):
         self._plex = plex
 
     def set_text(self, loading_text):
         self._loading_text_label.set_text(loading_text)
+
+    def __on_logout_clicked(self, button):
+        self._plex.logout()
+        self.destroy()

@@ -1,0 +1,37 @@
+using Gtk 4.0;
+
+template download_row : Box {
+  width-request: 200;
+  height-request: 50;
+  margin-start: 5;
+  margin-end: 5;
+  margin-top: 5;
+  margin-bottom: 5;
+
+  Overlay {
+    Image _cover_image {
+      width-request: 50;
+      height-request: 50;
+      styles [
+        "cover_image",
+      ]
+    }
+
+    [overlay]
+    Image _watched_image {
+      halign: end;
+      valign: start;
+      icon-name: "dialog-information";
+    }
+  }
+
+  Label _title_label {
+    label: "label";
+    ellipsize: end;
+  }
+
+  Spinner _download_spinner {
+    spinning: true;
+    width-request: 25;
+  }
+}
