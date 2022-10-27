@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-27 18:40+0200\n"
-"PO-Revision-Date: 2022-10-15 11:08+0200\n"
-"Last-Translator: Irénée Thirion <irenee.thirion@e.email>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2022-10-28 11:30+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -45,7 +46,7 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The homescreen"
-msgstr ""
+msgstr "L'écran d'accueil"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:27
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
@@ -77,11 +78,11 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:30
 msgid "Added French translation"
-msgstr ""
+msgstr "Ajout de la traduction française"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:31
 msgid "Added Norwegian translation"
-msgstr ""
+msgstr "Ajout d'une traduction en norvégien"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Use gnome SDK 40"
@@ -508,7 +509,7 @@ msgstr "Paramètres"
 
 #: ../data/ui/main_window.blp:187
 msgid "Advertise as client"
-msgstr "Annoncer en tant que clien"
+msgstr "Annoncer en tant que client"
 
 #: ../data/ui/main_window.blp:188
 msgid ""
@@ -571,15 +572,15 @@ msgstr "Répéter"
 
 #: ../data/ui/player_view.blp:77
 msgid "Release date"
-msgstr ""
+msgstr "Date de sortie"
 
 #: ../data/ui/player_view.blp:81
 msgid "Genre"
-msgstr ""
+msgstr "Genre"
 
 #: ../data/ui/player_view.blp:90
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: ../data/ui/player_view.blp:103
 msgid "Audio "
@@ -591,7 +592,7 @@ msgstr "Sous-titre "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr ""
+msgstr "Infos sur le compte"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
