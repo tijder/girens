@@ -30,6 +30,16 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2022-10-27" version="1.1.10">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Support to login without libsecret</li>
+          <li>Added French translation</li>
+          <li>Added Norwegian translation</li>
+        </ul>
+      </description>
+    </release>
     <release date="2021-03-26" version="1.1.9">
       <description>
         <p>Changes:</p>
