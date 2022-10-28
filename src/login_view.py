@@ -44,8 +44,8 @@ class LoginView(Gtk.Box):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        #self._password_entry.connect("changed", self.__entry_changed)
-        #self._username_entry.connect("changed", self.__entry_changed)
+        self._password_entry.connect("changed", self.__entry_changed)
+        self._username_entry.connect("changed", self.__entry_changed)
         self._connect_url_button.connect("clicked", self.__on_connect_url_clicked)
         self._connect_user_button.connect("clicked", self.__on_login_clicked)
 
@@ -81,8 +81,10 @@ class LoginView(Gtk.Box):
             self.__show_incorrect_login()
 
     def __entry_changed(self, entry):
-        #self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), None)
-        pass
+        self._password_entry.remove_css_class("error")
+        self._username_entry.remove_css_class("error")
+        self._server_url_entry.remove_css_class("error")
+        self._server_token_entry.remove_css_class("error")
 
     def __login_with_token(self):
         self._try_token = True
@@ -117,17 +119,20 @@ class LoginView(Gtk.Box):
 
     def __show_loading(self):
         #self._password_entry.set_progress_fraction(0.10)
-        self._connect_user_button.set_sensitive(not self._loading)
-        self._connect_url_button.set_sensitive(not self._loading)
+        self._connect_user_button.set_sensitive(False)
+        self._connect_url_button.set_sensitive(False)
         self._server_url_entry.set_can_focus(False)
         self._username_entry.set_can_focus(False)
         self._password_entry.set_can_focus(False)
 
     def __show_correct_login(self):
-        #self._password_entry.set_progress_fraction(1.00)
         pass
 
     def __show_incorrect_login(self):
+        self._password_entry.add_css_class("error")
+        self._username_entry.add_css_class("error")
+        self._server_url_entry.add_css_class("error")
+        self._server_token_entry.add_css_class("error")
         #self._password_entry.set_progress_fraction(0.00)
         #self._password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
         #self._server_url_entry.set_icon_from_icon_name(Gtk.EntryIconPosition(1), 'dialog-error')
