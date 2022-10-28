@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-28 14:46+0200\n"
-"PO-Revision-Date: 2022-10-28 11:30+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
-">\n"
+"PO-Revision-Date: 2022-10-29 06:48+0000\n"
+"Last-Translator: rene-coty <irenee.thirion@e.email>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,15 +46,15 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "L’écran d’accueil"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr ""
+msgstr "La vue des émissions"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr ""
+msgstr "La vue album"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:35
 #: ../data/nl.g4d.Girens.appdata.xml.in:50
@@ -83,39 +83,41 @@ msgstr "Changements :"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Migrated from GTK 3 to GTK 4"
-msgstr ""
+msgstr "Migration de GTK 3 à GTK 4"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Migrated from Libhandy to Libadwaita"
-msgstr ""
+msgstr "Migration de Libhandy vers Libadwaita"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Migrated to Blueprint for ui files"
-msgstr ""
+msgstr "Migration vers Blueprint pour les fichiers d’interface"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
 msgstr ""
+"Amélioration des listes pour les grandes bibliothèques (grâce aux nouvelles "
+"listes GTK 4)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Redesigned the album/artist view"
-msgstr ""
+msgstr "Refonte de la vue album / artiste"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:42
 msgid "Redesigned the show view"
-msgstr ""
+msgstr "Refonte de la vue des émissions"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:43
 msgid "Improved the borderless view"
-msgstr ""
+msgstr "Amélioration de la vue sans bordures"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:44
 msgid "A lot of bug fixes"
-msgstr ""
+msgstr "Beaucoup de corrections de bogues"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:52
 msgid "Support to login without libsecret"
-msgstr ""
+msgstr "Prise en charge de la connexion sans libsecret"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:53
 msgid "Added French translation"
@@ -127,35 +129,37 @@ msgstr "Ajout d'une traduction en norvégien"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:62
 msgid "Use gnome SDK 40"
-msgstr ""
+msgstr "Utilisation de Gnome SDK 40"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:63
 msgid "Fix build warnings"
-msgstr ""
+msgstr "Correction des avertissements de build"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:64
 msgid "Update mpv to 33"
-msgstr ""
+msgstr "Mise à jour de mpv vers la version 33"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:65
 msgid "Fix play buttons not updating for musicclips"
 msgstr ""
+"Correction des boutons de lecture ne se mettant pas à jour pour les clips "
+"musicaux"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:73
 msgid "Add option to play video fullscreen within the Window"
-msgstr ""
+msgstr "Ajout d’une option pour lire la vidéo en plein écran dans la fenêtre"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:74
 msgid "Show track and disc number in album view"
-msgstr ""
+msgstr "Affichage du numéro de la piste et du disque dans la vue de l’album"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:75
 msgid "Select name None if no subtitle is selected"
-msgstr ""
+msgstr "Sélection du nom Aucun si aucun sous-titre n’est sélectionné"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:76
 msgid "Show hours of audio item"
-msgstr ""
+msgstr "Affichage des heures des éléments audio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:84
 msgid "Load only needed items of sections"
@@ -465,11 +469,11 @@ msgstr "Première version."
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr ""
+msgstr "Jouez vos films, émissions et musiques Plex"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
-msgstr "girens;plex;média;lecteur;player;tv;films;musique;shows;spectacles;"
+msgstr "girens;plex;média;lecteur;player;tv;films;musique;shows;émissions;"
 
 #: ../data/ui/about_dialog.ui.in:8
 msgid ""
@@ -494,7 +498,7 @@ msgstr "Accueil"
 
 #: ../data/ui/discover_view.blp:35
 msgid "Recently added Shows"
-msgstr ""
+msgstr "Émissions récemment ajoutées"
 
 #: ../data/ui/discover_view.blp:53
 msgid "Recently added Movies"
@@ -734,15 +738,15 @@ msgstr "Maximum d’éléments"
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr ""
+msgstr "Suivre le thème système"
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr ""
+msgstr "Style clair"
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr ""
+msgstr "Style sombre"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
@@ -778,7 +782,7 @@ msgstr "Marquer comme non joué"
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr ""
+msgstr "Commencer depuis le début"
 
 #: ../src/player_view.py:297 ../src/player_view.py:298
 msgid "None"
