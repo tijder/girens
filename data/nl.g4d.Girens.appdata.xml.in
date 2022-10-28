@@ -22,6 +22,21 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2022-10-28" version="2.0.0">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Migrated from GTK 3 to GTK 4</li>
+          <li>Migrated from Libhandy to Libadwaita</li>
+          <li>Migrated to Blueprint for ui files</li>
+          <li>Improved lists for large libraries (thanks to the new Gtk4 lists).</li>
+          <li>Redesigned the album/artist view</li>
+          <li>Redesigned the show view</li>
+          <li>Improved the borderless view</li>
+          <li>A lot of bug fixes</li>
+        </ul>
+      </description>
+    </release>
     <release date="2022-10-27" version="1.1.10">
       <description>
         <p>Changes:</p>
