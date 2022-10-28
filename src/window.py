@@ -57,7 +57,6 @@ class PlexWindow(Adw.ApplicationWindow):
     _show_id = None
     _remote_client_active = None
     _inhibitCookie = None
-    _suspendCookie = None
 
     _style_manager = Adw.StyleManager.get_default()
 
@@ -584,17 +583,12 @@ class PlexWindow(Adw.ApplicationWindow):
             self.__remove_extra_widgets()
             if (self._inhibitCookie == None):
                 self._inhibitCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.IDLE, "Girens is playing in fullscreen")
-            if (self._suspendCookie == None):
-                self._suspendCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.SUSPEND, "Girens is playing in fullscreen")
         else: # Is not fullscreen
             self._player_view.set_unfullscreen_state()
             self.__add_extra_widgets()
             if (self._inhibitCookie != None):
                 self.get_application().uninhibit(self._inhibitCookie)
                 self._inhibitCookie = None
-            if (self._suspendCookie != None):
-                self.get_application().uninhibit(self._suspendCookie)
-                self._suspendCookie = None
 
     def __on_show_download_button(self, menu):
         self._download_button.set_visible(True)
