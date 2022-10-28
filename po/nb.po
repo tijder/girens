@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-28 14:46+0200\n"
-"PO-Revision-Date: 2022-10-27 09:06+0000\n"
+"PO-Revision-Date: 2022-10-29 06:48+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
-"girens/nb/>\n"
+"girens/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,15 +45,17 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "Hjemmeskjermen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
+#, fuzzy
 msgid "The show screen"
-msgstr ""
+msgstr "Programsskjermen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
+#, fuzzy
 msgid "The album screen"
-msgstr ""
+msgstr "Albumsskjermen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:35
 #: ../data/nl.g4d.Girens.appdata.xml.in:50
@@ -82,79 +84,91 @@ msgstr "Endringer:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Migrated from GTK 3 to GTK 4"
-msgstr ""
+msgstr "Migrering fra GTK 3 til GTK 4"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
+#, fuzzy
 msgid "Migrated from Libhandy to Libadwaita"
-msgstr ""
+msgstr "Migrering fra libhandy til libadwaita"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
+#, fuzzy
 msgid "Migrated to Blueprint for ui files"
-msgstr ""
+msgstr "Migrering fra til Blueprint for grensesnittsfiler"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
+#, fuzzy
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-msgstr ""
+msgstr "Forbedrede lister for store bibliotek (Takkket være nye GTK4-lister)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Redesigned the album/artist view"
-msgstr ""
+msgstr "Redesignet album/artistvisning"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:42
+#, fuzzy
 msgid "Redesigned the show view"
-msgstr ""
+msgstr "Redisignet programsvisning"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:43
 msgid "Improved the borderless view"
-msgstr ""
+msgstr "Forbedret kantløs visning"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:44
 msgid "A lot of bug fixes"
-msgstr ""
+msgstr "Mange feilfikser"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:52
+#, fuzzy
 msgid "Support to login without libsecret"
-msgstr ""
+msgstr "Støtte for innlogging uten libsecret"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:53
 msgid "Added French translation"
-msgstr ""
+msgstr "Ny Fransk oversettelse"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:54
+#, fuzzy
 msgid "Added Norwegian translation"
-msgstr ""
+msgstr "Ny Bokmålsoversettelse"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:62
+#, fuzzy
 msgid "Use gnome SDK 40"
-msgstr ""
+msgstr "Bruk av GNOME-SDK 40"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:63
+#, fuzzy
 msgid "Fix build warnings"
-msgstr ""
+msgstr "Byggadvarsler fikset"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:64
+#, fuzzy
 msgid "Update mpv to 33"
-msgstr ""
+msgstr "Mpv oppdatert til versjon 33"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:65
+#, fuzzy
 msgid "Fix play buttons not updating for musicclips"
-msgstr ""
+msgstr "Fikset avspillingsknapper som ikke oppdaterer seg for musikk-klipp"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:73
+#, fuzzy
 msgid "Add option to play video fullscreen within the Window"
-msgstr ""
+msgstr "Alternativ for å spille fullskjermsvideo inne i vinduet"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:74
 msgid "Show track and disc number in album view"
-msgstr ""
+msgstr "Visning av spor og disknummer i albumsvisning"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:75
 msgid "Select name None if no subtitle is selected"
-msgstr ""
+msgstr "Valg navnet «Ingen» hvis ingen undertekst er valgt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:76
+#, fuzzy
 msgid "Show hours of audio item"
-msgstr ""
+msgstr "Vis antall timer lyd i element"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:84
 #, fuzzy
@@ -459,7 +473,7 @@ msgstr "Første utgave."
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr ""
+msgstr "Spill dine Plex-filmer, programmer og musikk"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
@@ -487,8 +501,9 @@ msgid "Ondeck"
 msgstr "Dekksvisning"
 
 #: ../data/ui/discover_view.blp:35
+#, fuzzy
 msgid "Recently added Shows"
-msgstr ""
+msgstr "Nylig tillagte programmer"
 
 #: ../data/ui/discover_view.blp:53
 #, fuzzy
@@ -614,15 +629,15 @@ msgstr "Gjentagelse"
 
 #: ../data/ui/player_view.blp:77
 msgid "Release date"
-msgstr ""
+msgstr "Utgivelsesdato"
 
 #: ../data/ui/player_view.blp:81
 msgid "Genre"
-msgstr ""
+msgstr "Sjanger"
 
 #: ../data/ui/player_view.blp:90
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: ../data/ui/player_view.blp:103
 msgid "Audio "
@@ -634,7 +649,7 @@ msgstr "Undertekst "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr ""
+msgstr "Kontoinfo"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
@@ -739,16 +754,19 @@ msgid "Max items"
 msgstr "Maks. elementer"
 
 #: ../data/ui/theme_switcher.blp:25
+#, fuzzy
 msgid "Follow system style"
-msgstr ""
+msgstr "Systemstil"
 
 #: ../data/ui/theme_switcher.blp:39
+#, fuzzy
 msgid "Light style"
-msgstr ""
+msgstr "Lys"
 
 #: ../data/ui/theme_switcher.blp:53
+#, fuzzy
 msgid "Dark style"
-msgstr ""
+msgstr "Mørk"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
@@ -787,7 +805,7 @@ msgstr "Marker som uspilt"
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr ""
+msgstr "Start fra begynnelsen"
 
 #: ../src/player_view.py:297 ../src/player_view.py:298
 msgid "None"
