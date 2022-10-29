@@ -538,19 +538,19 @@ msgstr ""
 
 #: ../data/ui/main_window.blp:217
 msgid "1080p"
-msgstr ""
+msgstr "1080p"
 
 #: ../data/ui/main_window.blp:224
 msgid "720p"
-msgstr ""
+msgstr "720p"
 
 #: ../data/ui/main_window.blp:233
 msgid "480p"
-msgstr ""
+msgstr "480p"
 
 #: ../data/ui/main_window.blp:242
 msgid "240p"
-msgstr ""
+msgstr "240p"
 
 #: ../data/ui/main_window.blp:255
 msgid "Info"
@@ -574,15 +574,15 @@ msgstr ""
 
 #: ../data/ui/player_view.blp:81
 msgid "Genre"
-msgstr ""
+msgstr "Genre"
 
 #: ../data/ui/player_view.blp:90
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: ../data/ui/player_view.blp:103
 msgid "Audio "
-msgstr ""
+msgstr "Audio "
 
 #: ../data/ui/player_view.blp:106
 msgid "Subtitle "
@@ -812,7 +812,7 @@ msgstr ""
 
 #: ../src/sidebar_box.py:94
 msgid "Player"
-msgstr ""
+msgstr "Spieler"
 
 #: ../src/sidebar_box.py:99
 msgid "Home"
