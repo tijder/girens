@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-28 14:46+0200\n"
-"PO-Revision-Date: 2022-10-29 09:43+0000\n"
+"PO-Revision-Date: 2022-10-30 10:32+0000\n"
 "Last-Translator: Sebin Nyshkim <sebin.nyshkim@icloud.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/girens/girens/de/>"
 "\n"
@@ -25,7 +25,7 @@ msgstr "Girens für Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:6
 msgid "Gerben Droogers"
-msgstr ""
+msgstr "Gerben Droogers"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid ""
@@ -139,7 +139,7 @@ msgstr "Aktualisierung von mpv auf Version 0.33"
 #: ../data/nl.g4d.Girens.appdata.xml.in:65
 msgid "Fix play buttons not updating for musicclips"
 msgstr ""
-"Problem behoben, dass Wiedergabeschaltflächen für Musikclips nicht "
+"Problem behoben, bei dem Wiedergabeschaltflächen für Musikclips nicht "
 "aktualisiert werden"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:73
@@ -206,7 +206,7 @@ msgstr "Drücken Sie k, um die Wiedergabe zu starten oder zu unterbrechen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:116
 msgid "Fix basic auth urls when downloading"
-msgstr "Probleme mit Basic-Auth-Urls beim Herunterladen behoben"
+msgstr "Probleme mit Basic-Auth-URLs beim Herunterladen behoben"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:117
 msgid "Fix crash when latest timeline update failed"
@@ -235,320 +235,338 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:137
 msgid "Fix bug with showing section after playlist is showed"
 msgstr ""
+"Problem behoben, bei dem der Abschnitt angezeigt wird, nachdem die "
+"Wiedergabeliste angezeigt wurde"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:145
 msgid "Change subtitle and audio stream"
-msgstr ""
+msgstr "Untertitel und Audiospur ändern"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:146
 msgid "Remove white border in fullscreen"
-msgstr ""
+msgstr "Weißen Rand im Vollbildmodus entfernen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:147
 msgid "Option to change volume level"
-msgstr ""
+msgstr "Option zum Ändern der Lautstärke"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:148
 msgid "Option to set dark theme"
-msgstr ""
+msgstr "Option zur Einstellung eines dunklen Stils"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:149
 msgid "Change progress bar for seeking bar in video player"
-msgstr ""
+msgstr "Fortschrittsbalken für Suchleiste im Videoplayer geändert"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:150
 msgid "Dont refresh allready loaded section"
-msgstr ""
+msgstr "Bereits geladenen Abschnitt nicht aktualisieren"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:158
 msgid "Plex token saved with Secret Service"
-msgstr ""
+msgstr "Plex-Token im Geheimnis-Speicher hinterlegt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:159
 msgid "Advertise as Client on the local network"
-msgstr ""
+msgstr "Als Client im lokalen Netzwerk bekanntgeben"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:160
 msgid "Add option to play media without transcoding"
-msgstr ""
+msgstr "Option zur Wiedergabe von Medien ohne Transcodierung hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:161
 msgid "About dialog added"
-msgstr ""
+msgstr "Dialogfeld \"Über\" hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:162
 msgid "Shortcut dialog added"
-msgstr ""
+msgstr "Dialogfeld \"Tastenkombinationen\" hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:163
 msgid "Fix crash when playing media"
-msgstr ""
+msgstr "Absturz beim Abspielen von Medien behoben"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:171
 msgid "Enhanced smallscreen support"
-msgstr ""
+msgstr "Verbesserte Unterstützung für kleine Bildschirme"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:172
 msgid "Play music clips from music track"
-msgstr ""
+msgstr "Abspielen von Musikclips aus einem Musiktitel"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:180
 msgid "Allow connecting to url instead of Plex user"
-msgstr ""
+msgstr "Verbindung mit URL statt mit Plex-Benutzer zulassen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:181
 msgid "Improve multi server support"
-msgstr ""
+msgstr "Verbesserte Unterstützung mehrerer Server"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:182
 msgid "Change sorting asc or desc"
-msgstr ""
+msgstr "Auf- oder absteigende Sortierung einstellen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:183
 msgid "Hide media controlls after two seconds if new media started playing"
 msgstr ""
+"Mediensteuerung nach zwei Sekunden ausblenden, wenn neue Medien abgespielt "
+"werden"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:184
 msgid "Seek to certain time when playing music"
-msgstr ""
+msgstr "Zu einer bestimmten Zeit beim Abspielen von Musik springen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:185
 msgid "Default width 640px"
-msgstr ""
+msgstr "Standardbreite 640px"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:193
 msgid "Redesigned media controlbox for video player"
-msgstr ""
+msgstr "Neu gestaltete Medienkontrollbox für den Videoplayer"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:194
 msgid "Use [ and ] for seeking media"
-msgstr ""
+msgstr "[ und ] zum Suchlauf in Medien verwenden"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:195
 msgid "Use media keys to select resume action"
-msgstr ""
+msgstr "Medientasten verwenden, um die Aktion zum Fortsetzen auszuwählen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:196
 msgid "Hide cursor on video fullscreen"
-msgstr ""
+msgstr "Zeiger im Vollbildmodus ausblenden"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:197
 msgid "Dont hide media controlls when playqueue is active"
-msgstr ""
+msgstr "Medienkontrollen nicht ausblenden, wenn die Wiedergabeliste aktiv ist"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:198
 msgid "Fix starting wrong offset when new media is started"
-msgstr ""
+msgstr "Problem mit falschem Versatz beim Start neuer Medien behoben"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:199
 msgid "Show media title in resume dialog"
-msgstr ""
+msgstr "Medientitel im Fortsetzungsdialog anzeigen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:200
 msgid "Default mpv video output driver changed to xv"
-msgstr ""
+msgstr "Standard-mpv-Videoausgabetreiber auf xv geändert"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:208
 msgid "Commandline options"
-msgstr ""
+msgstr "Kommandozeilenoptionen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:209
 msgid "Gnome search provider"
-msgstr ""
+msgstr "Gnome-Suchanbieter"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:210
 msgid "Onscreen controller"
-msgstr ""
+msgstr "Bildschirmsteuerung"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:218
 msgid "Added media notification (mpris)"
-msgstr ""
+msgstr "Medienbenachrichtigung hinzugefügt (mpris)"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:219
 msgid "Added play and shuffle button to artist view"
 msgstr ""
+"Schaltflächen \"Abspielen\" und \"Zufallswiedergabe\" zur Interpretenansicht "
+"hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:220
 msgid "Enable mpv default OSC"
-msgstr ""
+msgstr "Standard-Bedienelemente von mpv aktivieren"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:228
 msgid "Support for mediakeys"
-msgstr ""
+msgstr "Unterstützung für Medientasten"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:229
 msgid "Resume dialog when media has an offset"
-msgstr ""
+msgstr "Fortsetzen-Dialog wenn Medien einen Versatz haben"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:230
 msgid "Play and shuffle button added to show view"
 msgstr ""
+"Schaltflächen \"Abspielen\" und \"Zufallswiedergabe\" zur Serienansicht "
+"hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:231
 msgid "Load views after main view is loaded"
-msgstr ""
+msgstr "Ansichten laden, nachdem die Hauptansicht geladen wurde"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:239
 msgid "Fix progres not been updated correctly"
 msgstr ""
+"Problem behoben, bei dem der Fortschritt nicht korrekt aktualisiert wurde"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:247
 msgid "Play and shuffle button added in section view"
 msgstr ""
+"Schaltflächen \"Abspielen\" und \"Zufallswiedergabe\" in der "
+"Abschnittsansicht hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:248
 msgid "Playqueue will be refreshed when playing next/prev item"
 msgstr ""
+"Die Wiedergabeliste wird beim Abspielen des nächsten/vorherigen Elements "
+"aktualisiert"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:249
 msgid "Keep fullscreen status"
-msgstr ""
+msgstr "Vollbildstatus beibehalten"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:257
 msgid "List with playqueue items"
-msgstr ""
+msgstr "Liste mit Wiedergabelistenelementen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:258
 msgid "Play ondeck items continuous"
-msgstr ""
+msgstr "Elemente auf dem Deck fortlaufend wiedergeben"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:259
 msgid "Added an album view"
-msgstr ""
+msgstr "Albumansicht hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:260
 msgid "Added an artist view"
-msgstr ""
+msgstr "Künstleransicht hinzugefügt"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:268
 msgid "Buttons now with more constrast"
-msgstr ""
+msgstr "Schaltflächen haben jetzt mehr Kontrast"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:269
 msgid "Sync tv show with options like only unwatched"
-msgstr ""
+msgstr "Synchronisierung von Serien mit Optionen wie \"nur ungesehen\""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:270
 msgid "Sync and download dialog with thumbnails"
-msgstr ""
+msgstr "Synchronisierungs- und Download-Dialog mit Miniaturansichten"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:276
 msgid "Media controll buttons/images with more contrast."
-msgstr ""
+msgstr "Kontrast von Schaltflächen/Bildern für die Mediensteuerung erhöht."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:281
 msgid "First release."
-msgstr ""
+msgstr "Erste Veröffentlichung."
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr ""
+msgstr "Spielen Sie Ihre Plex-Filme, -Serien und -Musik ab"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
-msgstr ""
+msgstr "girens;plex;medien;spieler;"
 
 #: ../data/ui/about_dialog.ui.in:8
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
+"Ein Plex GTK-Client zum Abspielen von Filmen, Fernsehsendungen und Musik aus "
+"Ihrer Plex-Bibliothek."
 
 #. Add your name to the translator credits list
 #: ../data/ui/about_dialog.ui.in:11
 msgid "translator-credits"
-msgstr ""
+msgstr "Sebin Nyshkim"
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
-msgstr ""
+msgstr "Mehr zeigen"
 
 #: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:118
 msgid "Ondeck"
-msgstr ""
+msgstr "Auf Deck"
 
 #: ../data/ui/discover_view.blp:35
 msgid "Recently added Shows"
-msgstr ""
+msgstr "Kürzlich hinzugefügte Serien"
 
 #: ../data/ui/discover_view.blp:53
 msgid "Recently added Movies"
-msgstr ""
+msgstr "Kürzlich hinzugefügte Filme"
 
 #: ../data/ui/discover_view.blp:71
 msgid "Recently added Music"
-msgstr ""
+msgstr "Kürzlich hinzugefügte Musik"
 
 #: ../data/ui/loading_view.blp:29 ../data/ui/profile_dialog.blp:25
 msgid "Logout"
-msgstr ""
+msgstr "Abmelden"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
-msgstr ""
+msgstr "Mit Benutzerkonto bei Plex anmelden"
 
 #: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
 msgid "Username"
-msgstr ""
+msgstr "Benutzername"
 
 #: ../data/ui/login_view.blp:44
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: ../data/ui/login_view.blp:53
 msgid "Login"
-msgstr ""
+msgstr "Anmelden"
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an url"
-msgstr ""
+msgstr "Plex-Server über eine URL öffnen"
 
 #: ../data/ui/login_view.blp:74
 msgid "The url to the Plex server with the port number"
-msgstr ""
+msgstr "URL zum Plex-Server mit Portnummer"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 #: ../data/ui/main_window.blp:5
 msgid "Girens"
-msgstr ""
+msgstr "Girens"
 
 #: ../data/ui/main_window.blp:159
 msgid "Settings"
-msgstr ""
+msgstr "Einstellungen"
 
 #: ../data/ui/main_window.blp:187
 msgid "Advertise as client"
-msgstr ""
+msgstr "Als Client bekanntgeben"
 
 #: ../data/ui/main_window.blp:188
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
+"Erlauben Sie anderen Geräten in diesem Netzwerk, Girens zu finden und diesen "
+"Client zu steuern."
 
 #: ../data/ui/main_window.blp:197
 msgid "Prefer music clips"
-msgstr ""
+msgstr "Musikclips bevorzugen"
 
 #: ../data/ui/main_window.blp:198
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
 msgstr ""
+"Musikclip statt Audio wiedergeben, wenn der Titel einen Musikclip enthält."
 
 #: ../data/ui/main_window.blp:207
 msgid "Transcode media"
-msgstr ""
+msgstr "Medien umwandeln"
 
 #: ../data/ui/main_window.blp:208
 msgid "Transcode media instead of playing directly."
-msgstr ""
+msgstr "Medien umwandeln, statt sie direkt wiederzugeben."
 
 #: ../data/ui/main_window.blp:217
 msgid "1080p"
@@ -568,23 +586,23 @@ msgstr "240p"
 
 #: ../data/ui/main_window.blp:255
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: ../data/ui/main_window.blp:261
 msgid "Shortcuts"
-msgstr ""
+msgstr "Tastenkombinationen"
 
 #: ../data/ui/main_window.blp:267
 msgid "About Girens"
-msgstr ""
+msgstr "Info zu Girens"
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
-msgstr ""
+msgstr "Wiederholen"
 
 #: ../data/ui/player_view.blp:77
 msgid "Release date"
-msgstr ""
+msgstr "Erscheinungsdatum"
 
 #: ../data/ui/player_view.blp:81
 msgid "Genre"
@@ -600,238 +618,240 @@ msgstr "Audio "
 
 #: ../data/ui/player_view.blp:106
 msgid "Subtitle "
-msgstr ""
+msgstr "Untertitel "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr ""
+msgstr "Kontoinformationen"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #: ../data/ui/profile_dialog.blp:18
 msgid "Subscription plan"
-msgstr ""
+msgstr "Abonnementplan"
 
 #: ../data/ui/profile_dialog.blp:21
 msgid "Secure"
-msgstr ""
+msgstr "Sicher"
 
 #: ../data/ui/resume_dialog.ui:5
 msgid "Do you want resume watching or start from the beginning?"
 msgstr ""
+"Möchten Sie von der letzten Wiedergabeposition aus fortfahren oder von vorne "
+"beginnen?"
 
 #: ../data/ui/resume_dialog.ui:11
 msgid "Resume"
-msgstr ""
+msgstr "Fortfahren"
 
 #: ../data/ui/section_view.blp:40
 msgid "Order"
-msgstr ""
+msgstr "Sortierung"
 
 #: ../data/ui/shortcuts.blp:13
 msgctxt "shortcut window"
 msgid "Playback"
-msgstr ""
+msgstr "Wiedergabe"
 
 #: ../data/ui/shortcuts.blp:17
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr ""
+msgstr "Abspielen/Pause"
 
 #: ../data/ui/shortcuts.blp:23
 msgctxt "shortcut window"
 msgid "Previous"
-msgstr ""
+msgstr "Vorheriges"
 
 #: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Next"
-msgstr ""
+msgstr "Nächstes"
 
 #: ../data/ui/shortcuts.blp:35
 msgctxt "shortcut window"
 msgid "Seek forwards"
-msgstr ""
+msgstr "Vorspulen"
 
 #: ../data/ui/shortcuts.blp:41
 msgctxt "shortcut window"
 msgid "Seek backwards"
-msgstr ""
+msgstr "Zurückspulen"
 
 #: ../data/ui/shortcuts.blp:47
 msgctxt "shortcut window"
 msgid "Stop playing"
-msgstr ""
+msgstr "Wiedergabe stoppen"
 
 #: ../data/ui/shortcuts.blp:53
 msgctxt "shortcut window"
 msgid "Fullscreen"
-msgstr ""
+msgstr "Vollbild"
 
 #: ../data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
-msgstr ""
+msgstr "Musikclips statt Audio wiedergeben"
 
 #: ../data/ui/sync_dialog.blp:4
 msgid "Sync items"
-msgstr ""
+msgstr "Elemente synchronisieren"
 
 #: ../data/ui/sync_dialog.blp:33
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
-msgstr ""
+msgstr "Sync - Einstellungen"
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
-msgstr ""
+msgstr "Umwandeln"
 
 #: ../data/ui/sync_settings.blp:15
 msgid "Converted sync can take a long time"
-msgstr ""
+msgstr "Konvertierte Synchronisierung kann lange dauern"
 
 #: ../data/ui/sync_settings.blp:23
 msgid "Unwatched only"
-msgstr ""
+msgstr "Nur ungesehene"
 
 #: ../data/ui/sync_settings.blp:31
 msgid "Max items"
-msgstr ""
+msgstr "Max. Anzahl"
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr ""
+msgstr "Systemstil folgen"
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr ""
+msgstr "Hell"
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr ""
+msgstr "Dunkel"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
-msgstr ""
+msgstr "Zur Künstleransicht"
 
 #: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
-msgstr ""
+msgstr "Synchronisierung"
 
 #: ../src/album_view.py:99 ../src/cover_box.py:136
 msgid "Shuffle"
-msgstr ""
+msgstr "Zufällig"
 
 #: ../src/album_view.py:138
 msgid "Disc "
-msgstr ""
+msgstr "Disc "
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr ""
+msgstr "Zur Albumansicht"
 
 #: ../src/cover_box.py:116
 msgid "Go to show view"
-msgstr ""
+msgstr "Zur Serienansicht"
 
 #: ../src/cover_box.py:121
 msgid "Mark as Played"
-msgstr ""
+msgstr "Als gespielt markieren"
 
 #: ../src/cover_box.py:126
 msgid "Mark as Unplayed"
-msgstr ""
+msgstr "Als ungespielt markieren"
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr ""
+msgstr "Von vorne beginnen"
 
 #: ../src/player_view.py:297 ../src/player_view.py:298
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
 #: ../src/plex.py:487 ../src/plex.py:495
 msgid "Connecting to "
-msgstr ""
+msgstr "Verbinden zu "
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
 msgid " failed."
-msgstr ""
+msgstr " fehlgeschlagen."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
-msgstr ""
+msgstr "Keine Server für dieses Konto gefunden."
 
 #: ../src/plex.py:487
 msgid " connection urls."
-msgstr ""
+msgstr " Verbindungs-URLs."
 
 #: ../src/plex.py:487
 msgid "There are "
-msgstr ""
+msgstr "Es gibt "
 
 #: ../src/plex.py:487
 msgid "This may take a while"
-msgstr ""
+msgstr "Dies kann eine Weile dauern"
 
 #: ../src/section_view.py:33
 msgid "Added at"
-msgstr ""
+msgstr "Hinzugefügt"
 
 #: ../src/section_view.py:34
 msgid "Last viewed at"
-msgstr ""
+msgstr "Zuletzt gesehen"
 
 #: ../src/section_view.py:35
 msgid "Originally available at"
-msgstr ""
+msgstr "Ursprünglich erschienen auf"
 
 #: ../src/section_view.py:36
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: ../src/section_view.py:37
 msgid "Rating"
-msgstr ""
+msgstr "Einstufung"
 
 #: ../src/section_view.py:38
 msgid "Unwatched"
-msgstr ""
+msgstr "Ungesehen"
 
 #: ../src/section_view.py:39
 msgid "View count"
-msgstr ""
+msgstr "Wiedergabeanzahl"
 
 #: ../src/section_view.py:40
 msgid "User rating"
-msgstr ""
+msgstr "Benutzerwertung"
 
 #: ../src/section_view.py:41
 msgid "Media height"
-msgstr ""
+msgstr "Medienhöhe"
 
 #: ../src/section_view.py:42
 msgid "Duration"
-msgstr ""
+msgstr "Dauer"
 
 #: ../src/section_view.py:144 ../src/sidebar_box.py:103
 msgid "Playlists"
-msgstr ""
+msgstr "Wiedergabelisten"
 
 #: ../src/sidebar_box.py:94
 msgid "Player"
-msgstr "Spieler"
+msgstr "Wiedergabe"
 
 #: ../src/sidebar_box.py:99
 msgid "Home"
-msgstr ""
+msgstr "Startseite"
 
 #: ../src/window.py:352
 msgid "Starting Girens"
-msgstr ""
+msgstr "Girens wird gestartet"
