@@ -8,37 +8,44 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-28 14:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-10-31 11:06+0000\n"
+"Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/girens/girens/sv/"
+">\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
+msgstr "Girens för Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:6
 msgid "Gerben Droogers"
-msgstr ""
+msgstr "Gerben Droogers"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid ""
 "Girens is a Plex GTK client for playing movies, TV shows and music from your "
 "Plex library."
 msgstr ""
+"Girens är en Plex GTK-klient för att spela upp filmer, TV-program och musik "
+"från ditt Plex-bibliotek."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
 "Girens is a Plex media player client. You can watch and listen to your "
 "music, shows and movies with this GTK app."
 msgstr ""
+"Girens är en Plex media spelare-klient. Du kan titta på och lyssna på din "
+"musik, program och filmer med denna GTK-app."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "Hemskärmen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
@@ -46,7 +53,7 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr ""
+msgstr "Album skärmen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:35
 #: ../data/nl.g4d.Girens.appdata.xml.in:50
@@ -71,23 +78,24 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:255
 #: ../data/nl.g4d.Girens.appdata.xml.in:266
 msgid "Changes:"
-msgstr ""
+msgstr "Ändringar:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Migrated from GTK 3 to GTK 4"
-msgstr ""
+msgstr "Migrerade från GTK 3 till GTK 4"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Migrated from Libhandy to Libadwaita"
-msgstr ""
+msgstr "Migrerade från Libhandy till Libadwaita"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Migrated to Blueprint for ui files"
-msgstr ""
+msgstr "Migrerade till Blueprint för ui-filer"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
 msgstr ""
+"Förbättrade listor för stora bibliotek (tack vare de nya Gtk4-listorna)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Redesigned the album/artist view"
