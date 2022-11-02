@@ -3,6 +3,7 @@ import mpv
 import threading
 import time
 import ctypes
+import uuid
 
 gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, GLib, GdkPixbuf, GObject, Gio
@@ -53,9 +54,18 @@ class Player(GObject.Object):
         self._video_output_driver = "x11,"
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
+        self._session = None
 
         self._tracklist = None
         self._player_view._frame.connect('realize', self.__on_realize)
+        self._timout = GLib.timeout_add(30000, self.__ping_session)
+
+    def __ping_session(self):
+        if self._session != None and self._item != None:
+            thread = threading.Thread(target=self._item.pingSession,kwargs={'session':self._session})
+            thread.daemon = True
+            thread.start()
+        return True
 
     def __on_settings_changed(self, widget, key):
         if key == 'volume-level':
@@ -85,6 +95,7 @@ class Player(GObject.Object):
         #    self._player.start = offset
         #else:
         #    self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
+        #pass
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
@@ -103,7 +114,7 @@ class Player(GObject.Object):
             self._paused = value
             if (self._stop_command_given == False):
                 self.emit('media-paused', value)
-            if (value == True):
+            if (value == True and self._progresNow is not None):
                 self.__updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
 
         @self._player.property_observer('track-list')
@@ -177,7 +188,7 @@ class Player(GObject.Object):
 
     def __stop(self):
         try:
-            self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+            self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID, session=self._session)
         except:
             print("Error by updating timeline")
         #self._player.terminate()
@@ -219,6 +230,7 @@ class Player(GObject.Object):
             self._progresNow = 0
             self.sid = None
             self.aid = None
+            self._session = None
 
             if (from_beginning == False and offset_param != None):
                 offset = offset_param / 1000
@@ -230,11 +242,19 @@ class Player(GObject.Object):
             source = self._plex.get_item_download_path(self._item_loading)
             if (source == None):
                 self._direct = (self._settings.get_boolean("play-media-direct") or self._item_loading.listType != 'video')
-                source = self._item_loading.getStreamURL(offset=offset, directPlay=self._direct, videoResolution=self._settings.get_string("transcode-media-to-resolution"))
+                if self._direct == False:
+                    self._session = str(uuid.uuid4())
+                    self._item_loading.getDecision(session=self._session, protocol="dash", videoResolution=self._settings.get_string("transcode-media-to-resolution"))
+                source = self._item_loading.getStreamURL(session=self._session, directPlay=self._direct, videoResolution=self._settings.get_string("transcode-media-to-resolution"), protocol="dash", fileExtension="mpd")
 
             self.__createPlayer(offset=offset)
             self._player.volume = self._settings.get_int("volume-level")
+            self.pause()
             self._player.play(source)
+            self._player.wait_for_property("duration")
+            self.play()
+            self._player.playback_time = offset
+
             if self._item_loading.listType == 'video':
                 thread = threading.Thread(target=self.emit,args={'video-starting'})
                 thread.daemon = True
@@ -385,15 +405,8 @@ class Player(GObject.Object):
             self._player.command('seek', 30)
 
     def seek_to_time(self, time, reference='absolute'):
-        if self._direct:
-            self._player.seek(time, reference=reference, precision='exact')
-        else:
-            self._restart = True
-            if reference == 'absolute':
-                self._restart_offset = time
-            else:
-                self._restart_offset = self._progresNow + time
-            self._player.command('stop')
+        self._player.playback_time = time
+        #self._player.seek(time, reference=reference, precision='exact')
 
     def play_index(self, index):
         self._next_index = index
@@ -456,7 +469,7 @@ class Player(GObject.Object):
         GLib.idle_add(self.start_with_params, False, None)
         
     def __updateTimeline(self, progres, state=None, duration=None, playQueueItemID=None):
-        thread = threading.Thread(target=self._item.updateTimeline,args={progres},kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID})
+        thread = threading.Thread(target=self._item.updateTimeline,args={progres},kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID,'session':self._session})
         thread.daemon = True
         thread.start()
         if progres > 1000 and self._playqueue_refreshed == False:

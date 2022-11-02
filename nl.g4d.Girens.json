@@ -118,6 +118,8 @@
                         "--disable-doc",
                         "--disable-ffplay",
                         "--enable-version3",
+                        "--enable-demuxer=dash",
+                        "--enable-libxml2",
                         "--disable-programs",
                         "--disable-encoders",
                         "--disable-muxers"
@@ -172,7 +174,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/tijder/python-plexapi",
-                    "commit" : "d33c8a6ef49e8ecfeb33b20420bc8295ff028b21"
+                    "commit" : "3fff9765bbf8dd3c65e5ce506e2394c8bc8e6ffb"
                 }
             ],
             "modules" : [

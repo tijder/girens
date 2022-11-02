@@ -58,6 +58,8 @@ class PlayerView(Gtk.ScrolledWindow):
     _old_screensize = 640
     _width = 640
 
+    _refreshing_item = False
+
     _last_button_click = 0
 
     _last_x = None
@@ -286,6 +288,7 @@ class PlayerView(Gtk.ScrolledWindow):
 
 
     def __set_stream_widgets(self):
+        self._refreshing_item = True
         self._selected_subtitle_stream = None
         self._sub_store = Gtk.StringList()
         sub_selected = 0
@@ -317,6 +320,7 @@ class PlayerView(Gtk.ScrolledWindow):
                     self._selected_audio_stream = stream
                     audio_selected = y
                 y = y + 1
+            break
 
         self.__set_combobox(self._subtitle_box, self._sub_store, sub_selected)
         self.__set_combobox(self._audio_box, self._audio_store, audio_selected)
@@ -324,6 +328,7 @@ class PlayerView(Gtk.ScrolledWindow):
         self._subtitle_box.set_visible(len(self._sub_store) > 1)
         self._audio_box.set_visible(len(self._audio_store) > 1)
         self._options_list.set_visible(len(self._audio_store) > 1 or len(self._sub_store) > 1)
+        self._refreshing_item = False
 
     def __set_combobox(self, box, store, selected):
         box.set_model(store)
@@ -356,7 +361,7 @@ class PlayerView(Gtk.ScrolledWindow):
         elif what == 'subtitle':
             current_stream = self._selected_subtitle_stream
 
-        if (stream is not current_stream):
+        if stream is not current_stream and self._refreshing_item is False:
             if what == 'audio':
                 self._selected_audio_stream = stream
                 self._player.set_audio(stream)
