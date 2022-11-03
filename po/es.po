@@ -8,45 +8,52 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-28 14:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-11-04 21:01+0000\n"
+"Last-Translator: Sergio Varela <sergitroll9@gmail.com>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/girens/girens/es/"
+">\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
+msgstr "Girens para Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:6
 msgid "Gerben Droogers"
-msgstr ""
+msgstr "Gerben Droogers"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid ""
 "Girens is a Plex GTK client for playing movies, TV shows and music from your "
 "Plex library."
 msgstr ""
+"Girens es un cliente GTK de Plex para reproducir películas, programas de "
+"televisión y música de tu biblioteca de Plex."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
 "Girens is a Plex media player client. You can watch and listen to your "
 "music, shows and movies with this GTK app."
 msgstr ""
+"Girens es un cliente del reproductor multimedia Plex. Puedes ver y escuchar "
+"tu música, programas y películas con esta aplicación GTK."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "Pantalla de inicio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr ""
+msgstr "Pantalla del programa"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr ""
+msgstr "Pantalla del álbum"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:35
 #: ../data/nl.g4d.Girens.appdata.xml.in:50
@@ -71,43 +78,45 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:255
 #: ../data/nl.g4d.Girens.appdata.xml.in:266
 msgid "Changes:"
-msgstr ""
+msgstr "Cambios:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Migrated from GTK 3 to GTK 4"
-msgstr ""
+msgstr "Migración de GTK 3 a GTK 4"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Migrated from Libhandy to Libadwaita"
-msgstr ""
+msgstr "Migración de Libhandy a Libadwaita"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Migrated to Blueprint for ui files"
-msgstr ""
+msgstr "Migración a Blueprint para los archivos UI"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
 msgstr ""
+"Listas mejoradas para bibliotecas grandes (gracias a las nuevas listas de "
+"GTK4)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Redesigned the album/artist view"
-msgstr ""
+msgstr "Se ha rediseñado la vista de álbumes/artistas"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:42
 msgid "Redesigned the show view"
-msgstr ""
+msgstr "Se ha rediseñado la vista del programa"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:43
 msgid "Improved the borderless view"
-msgstr ""
+msgstr "Se ha mejorado la vista sin bordes"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:44
 msgid "A lot of bug fixes"
-msgstr ""
+msgstr "Muchas correcciones de errores"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:52
 msgid "Support to login without libsecret"
-msgstr ""
+msgstr "Soporte para iniciar sesión sin libsecret"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:53
 msgid "Added French translation"
@@ -179,80 +188,87 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:105
 msgid "New app icon"
-msgstr ""
+msgstr "Nuevo icono de la aplicación"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:106
 msgid "Double click to toggle fullscreen"
-msgstr ""
+msgstr "Haz doble clic para activar la pantalla completa"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:107
 msgid "Redesigned login view"
-msgstr ""
+msgstr "Vista de inicio de sesión rediseñada"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:108
 msgid "Press k to toggle play or pause media"
 msgstr ""
+"Pulsa la tecla «k» para alternar la reproducción o la pausa de los medios"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:116
 msgid "Fix basic auth urls when downloading"
-msgstr ""
+msgstr "Se han corregido los enlaces básicos de autentificación al descargar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:117
 msgid "Fix crash when latest timeline update failed"
 msgstr ""
+"Se ha corregido el bloqueo que ocurría cuando la última actualización de la "
+"línea de tiempo fallaba"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:118
 msgid "Exit fullscreen with escape"
-msgstr ""
+msgstr "Salir de la pantalla completa con tecla «Esc»"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:119
 #: ../data/nl.g4d.Girens.appdata.xml.in:136
 msgid "Update dependencies"
-msgstr ""
+msgstr "Dependencias actualizadas"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:127
 msgid "Add feature changing subtitle and audio stream with plex remote"
 msgstr ""
+"Añadida la función de cambio de subtítulos y flujo de audio con Plex Remote"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:135
 msgid "Fix music not correct seeking when transcoding"
-msgstr ""
+msgstr "Arreglado el que la música no busque correctamente al transcodificar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:137
 msgid "Fix bug with showing section after playlist is showed"
 msgstr ""
+"Corregido el error de mostrar la sección después de mostrar la lista de "
+"reproducción"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:145
 msgid "Change subtitle and audio stream"
-msgstr ""
+msgstr "Cambiar los subtítulos y el flujo de audio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:146
 msgid "Remove white border in fullscreen"
-msgstr ""
+msgstr "Eliminar el borde blanco en pantalla completa"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:147
 msgid "Option to change volume level"
-msgstr ""
+msgstr "Opción para cambiar el nivel de volumen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:148
 msgid "Option to set dark theme"
-msgstr ""
+msgstr "Opción para establecer un tema oscuro"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:149
 msgid "Change progress bar for seeking bar in video player"
 msgstr ""
+"Cambiar la barra de progreso por la de búsqueda en el reproductor de vídeo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:150
 msgid "Dont refresh allready loaded section"
-msgstr ""
+msgstr "No actualizar la sección ya cargada"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:158
 msgid "Plex token saved with Secret Service"
-msgstr ""
+msgstr "Ficha de Plex guardada con el Servicio Secreto"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:159
 msgid "Advertise as Client on the local network"
-msgstr ""
+msgstr "Anunciarse como Cliente en la red local"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:160
 msgid "Add option to play media without transcoding"
