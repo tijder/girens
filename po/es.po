@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-28 14:46+0200\n"
-"PO-Revision-Date: 2022-11-04 21:01+0000\n"
+"PO-Revision-Date: 2022-11-06 15:06+0000\n"
 "Last-Translator: Sergio Varela <sergitroll9@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/girens/girens/es/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 4.14.2\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -120,71 +120,77 @@ msgstr "Soporte para iniciar sesión sin libsecret"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:53
 msgid "Added French translation"
-msgstr ""
+msgstr "Añadida la traducción al francés"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:54
 msgid "Added Norwegian translation"
-msgstr ""
+msgstr "Añadida la traducción al noruego"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:62
 msgid "Use gnome SDK 40"
-msgstr ""
+msgstr "Utilizar el SDK de GNOME 40"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:63
 msgid "Fix build warnings"
-msgstr ""
+msgstr "Corregidas las advertencias de compilación"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:64
 msgid "Update mpv to 33"
-msgstr ""
+msgstr "Actualizar mpv a 33"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:65
 msgid "Fix play buttons not updating for musicclips"
 msgstr ""
+"Arreglados los botones de reproducción que no se actualizaban en los clips "
+"de música"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:73
 msgid "Add option to play video fullscreen within the Window"
 msgstr ""
+"Añadida la opción de reproducir el vídeo a pantalla completa dentro de la "
+"ventana"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:74
 msgid "Show track and disc number in album view"
-msgstr ""
+msgstr "Mostrar el número de pista y de disco en la vista del álbum"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:75
 msgid "Select name None if no subtitle is selected"
 msgstr ""
+"Seleccione el nombre «Ninguno» si no se ha seleccionado ningún subtítulo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:76
 msgid "Show hours of audio item"
-msgstr ""
+msgstr "Mostrar las horas del elemento de audio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:84
 msgid "Load only needed items of sections"
-msgstr ""
+msgstr "Cargar sólo los elementos necesarios de las secciones"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:85
 msgid "Use readable name for sorting"
-msgstr ""
+msgstr "Utilizar un nombre legible para la clasificación"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:93
 msgid "Dutch translation added"
-msgstr ""
+msgstr "Se ha añadido la traducción al neerlandés"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:94
 msgid "Update layout of settings menu with libhandy widgets"
 msgstr ""
+"Actualizar el diseño del menú de configuración con los widgets de libhandy"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:95
 msgid "Setting for changing transcoding video resolution"
-msgstr ""
+msgstr "Ajuste para cambiar la resolución de vídeo de transcodificación"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:96
 msgid "Unselect sidebar item when changing section"
-msgstr ""
+msgstr "Deseleccionar el elemento de la barra lateral al cambiar de sección"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:97
 msgid "More music play options"
-msgstr ""
+msgstr "Más opciones de reproducción de música"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:105
 msgid "New app icon"
@@ -272,59 +278,61 @@ msgstr "Anunciarse como Cliente en la red local"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:160
 msgid "Add option to play media without transcoding"
-msgstr ""
+msgstr "Añadir la opción de reproducir medios sin transcodificar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:161
 msgid "About dialog added"
-msgstr ""
+msgstr "Se ha añadido el diálogo «Acerca de»"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:162
 msgid "Shortcut dialog added"
-msgstr ""
+msgstr "Se ha añadido un diálogo de acceso directo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:163
 msgid "Fix crash when playing media"
-msgstr ""
+msgstr "Corregido el fallo al reproducir medios de reproducción"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:171
 msgid "Enhanced smallscreen support"
-msgstr ""
+msgstr "Mejora de la compatibilidad con las pantallas pequeñas"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:172
 msgid "Play music clips from music track"
-msgstr ""
+msgstr "Reproducir clips de música a partir de una pista musical"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:180
 msgid "Allow connecting to url instead of Plex user"
-msgstr ""
+msgstr "Permitir la conexión al enlace en lugar del usuario de Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:181
 msgid "Improve multi server support"
-msgstr ""
+msgstr "Mejorado el soporte multi-servidor"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:182
 msgid "Change sorting asc or desc"
-msgstr ""
+msgstr "Cambiar la clasificación ascendente o descendente"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:183
 msgid "Hide media controlls after two seconds if new media started playing"
 msgstr ""
+"Ocultar los controles de los medios de reproducción después de dos segundos "
+"si un nuevo medio de reproducción comenzó a reproducirse"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:184
 msgid "Seek to certain time when playing music"
-msgstr ""
+msgstr "Buscar un tiempo determinado al reproducir música"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:185
 msgid "Default width 640px"
-msgstr ""
+msgstr "Ancho por defecto 640px"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:193
 msgid "Redesigned media controlbox for video player"
-msgstr ""
+msgstr "Caja de control multimedia rediseñada para el reproductor de vídeo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:194
 msgid "Use [ and ] for seeking media"
-msgstr ""
+msgstr "Utilice [ y ] para buscar medios de reproducción"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:195
 msgid "Use media keys to select resume action"
