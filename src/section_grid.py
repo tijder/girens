@@ -20,7 +20,7 @@ from gi.repository import Gtk, GLib, GObject
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/section_grid.ui')
-class SectionGrid(Gtk.Box):
+class SectionGrid(Gtk.Grid):
     __gtype_name__ = 'section_grid'
 
     __gsignals__ = {
@@ -28,6 +28,7 @@ class SectionGrid(Gtk.Box):
     }
 
     _title_button = Gtk.Template.Child()
+    _image = Gtk.Template.Child()
     _data = None
     _title = None
 
@@ -49,3 +50,6 @@ class SectionGrid(Gtk.Box):
 
     def get_title(self):
         return self._title
+
+    def set_from_icon_name(self, icon_name):
+        self._image.set_from_icon_name(icon_name)

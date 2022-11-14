@@ -1,7 +1,14 @@
 using Gtk 4.0;
 
-template section_grid : Box {
+template section_grid : Grid {
+  column-spacing: 12;
+  margin-bottom: 12;
+  margin-end: 6;
+  margin-start: 6;
+  margin-top: 6;
+  Image _image {}
   Label _title_button {
     label: "label";
+    justify: left;
   }
 }

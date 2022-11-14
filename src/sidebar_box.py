@@ -37,6 +37,12 @@ class SidebarBox(Gtk.Box):
         'section-clicked': (GObject.SignalFlags.RUN_FIRST, None, (object,))
     }
 
+    _icons = {
+        'movie': 'camera-video-symbolic',
+        'show': 'video-display-symbolic',
+        'artist': 'audio-x-generic-symbolic'
+    }
+
     _server_box = Gtk.Template.Child()
     _section_list = Gtk.Template.Child()
 
@@ -92,21 +98,25 @@ class SidebarBox(Gtk.Box):
         self._section_player = SectionGrid()
         self._section_player.set_title('Player')
         self._section_player.set_custom_title(_('Player'))
+        self._section_player.set_from_icon_name('media-playback-start-symbolic')
         self._section_list.append(self._section_player)
         self._section_player.get_parent().set_visible(False)
         section_grid = SectionGrid()
         section_grid.set_title('Home')
         section_grid.set_custom_title(_('Home'))
+        section_grid.set_from_icon_name('user-home-symbolic')
         self._section_list.append(section_grid)
         section_grid = SectionGrid()
         section_grid.set_title('Playlists')
         section_grid.set_custom_title(_('Playlists'))
+        section_grid.set_from_icon_name('view-list-symbolic')
         self._section_list.append(section_grid)
         for section in sections:
             if(section.type == 'movie' or section.type == 'show' or section.type == 'artist'):
                 section_grid = SectionGrid()
                 section_grid.set_title(section.title)
                 section_grid.set_data(section)
+                section_grid.set_from_icon_name(self._icons[section.type])
                 self._section_list.append(section_grid)
         self.select_home()
 
