@@ -26,7 +26,7 @@ from .item_bin import ItemBin
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/section_view.ui')
-class SectionView(Gtk.Box):
+class SectionView(Gtk.Overlay):
     __gtype_name__ = 'section_view'
 
     _sort_lables = {
@@ -54,7 +54,7 @@ class SectionView(Gtk.Box):
 
     _sort_active = None
     _sort_value_active = None
-    _load_spinner = Gtk.Template.Child()
+    _load_box = Gtk.Template.Child()
 
     _timout = None
     _add_items_first = False
@@ -131,7 +131,7 @@ class SectionView(Gtk.Box):
         self._filter_box.set_active_id(sort_lable_active)
         self._section_controll_box.set_visible(True)
 
-        self._load_spinner.set_visible(True)
+        self._load_box.set_visible(True)
 
         self.__start_adding_items()
 
@@ -148,7 +148,7 @@ class SectionView(Gtk.Box):
 
         self._section_controll_box.set_visible(False)
 
-        self._load_spinner.set_visible(True)
+        self._load_box.set_visible(True)
 
         thread = threading.Thread(target=self._plex.get_playlists)
         thread.daemon = True
@@ -191,15 +191,14 @@ class SectionView(Gtk.Box):
         self._add_items_first = True
         self.__start_add_items_timout()
 
-        self._load_spinner.set_visible(False)
-
     def __stop_add_items_timout(self):
         if self._timout != None:
             GLib.source_remove(self._timout)
             self._timout = None
 
     def __start_add_items_timout(self):
-        self._timout = GLib.timeout_add(50, self.__show_more_items)
+        self.__show_more_items()
+        #self._timout = GLib.timeout_add(50, self.__show_more_items)
 
     def __show_more_items(self):
         self.__stop_add_items_timout()
@@ -209,7 +208,10 @@ class SectionView(Gtk.Box):
             item_bin.set_item(item)
             items.append(item_bin)
         self._items = []
+        #GLib.idle_add(self._section_flow.add_items, items)
         self._section_flow.add_items(items)
+
+        self._load_box.set_visible(False)
 
     @Gtk.Template.Callback()
     def on_scroller_edge_reached(self, widget, position):
@@ -217,10 +219,12 @@ class SectionView(Gtk.Box):
             self.__start_adding_items()
 
     def __start_adding_items(self):
-        thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':self._sort_active, 'sort_value': self._sort_value_active, 'container_start':self._container_start, 'container_size':self._container_size})
-        thread.daemon = True
-        thread.start()
-        self._container_start = self._container_start + self._container_size
+        if self._section != None:
+            self._load_box.set_visible(True)
+            thread = threading.Thread(target=self._plex.get_section_items, args=(self._section,),kwargs={'sort':self._sort_active, 'sort_value': self._sort_value_active, 'container_start':self._container_start, 'container_size':self._container_size})
+            thread.daemon = True
+            thread.start()
+            self._container_start = self._container_start + self._container_size
 
     def __on_play_button_clicked(self, button):
         sort = None

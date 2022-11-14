@@ -1,62 +1,81 @@
 using Gtk 4.0;
 
-template section_view : Box {
-  orientation: vertical;
-
+template section_view : Overlay {
   Box {
-    margin-top: 10;
-    margin-bottom: 10;
-    Label _title_label {
-      styles [
-        "title-1"
-      ]
-      halign: start;
-      margin-start: 10;
-      margin-bottom: 5;
-      label: "label";
-      ellipsize: end;
+    orientation: vertical;
+
+    Box {
+      margin-top: 10;
+      margin-bottom: 10;
+      Label _title_label {
+        styles [
+          "title-1"
+        ]
+        halign: start;
+        margin-start: 10;
+        margin-bottom: 5;
+        label: "label";
+        ellipsize: end;
+        hexpand: true;
+      }
+
+      Box _section_controll_box {
+        margin-end: 10;
+
+        Button _play_button {
+          Image {
+            icon-name: "media-playback-start-symbolic";
+          }
+        }
+
+        Button _shuffle_button {
+          Image {
+            icon-name: "media-playlist-shuffle-symbolic";
+          }
+        }
+
+        ComboBox _filter_box {
+        }
+
+        Button _order_button {
+          tooltip-text: _("Order");
+
+          Image _order_image {
+            icon-name: "go-up-symbolic";
+          }
+        }
+
+        styles [
+          "linked",
+        ]
+      }
+    }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      edge-reached => on_scroller_edge_reached();
+      .list _section_flow{}
+    }
+  }
+
+  [overlay]
+  Box _load_box {
+    styles [
+      "load-box"
+    ]
+    vexpand: true;
+    hexpand: true;
+    opacity: 0.8;
+    visible: true;
+    Spinner _load_spinner {
+      height-request: 75;
+      width-request: 75;
+      spinning: true;
+      halign: center;
+      valign: center;
+      vexpand: true;
       hexpand: true;
+      visible: true;
     }
-
-    Box _section_controll_box {
-      margin-end: 10;
-
-      Button _play_button {
-        Image {
-          icon-name: "media-playback-start-symbolic";
-        }
-      }
-
-      Button _shuffle_button {
-        Image {
-          icon-name: "media-playlist-shuffle-symbolic";
-        }
-      }
-
-      ComboBox _filter_box {
-      }
-
-      Button _order_button {
-        tooltip-text: _("Order");
-
-        Image _order_image {
-          icon-name: "go-up-symbolic";
-        }
-      }
-
-      styles [
-        "linked",
-      ]
-    }
-  }
-
-  ScrolledWindow {
-    hscrollbar-policy: never;
-    edge-reached => on_scroller_edge_reached();
-    .list _section_flow{}
-  }
-
-  Spinner _load_spinner {
-    height-request: 50;
   }
 }

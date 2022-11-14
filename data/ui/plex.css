@@ -23,4 +23,6 @@
   border-radius: 0;
 }
 
-
+.load-box {
+  background-color: @theme_base_color;
+}
