@@ -55,6 +55,7 @@ class Player(GObject.Object):
         self._deinterlace = "no"
         self._play_music_clip_instead_of_track = False
         self._session = None
+        self._stop_command_given = False
 
         self._tracklist = None
         self._player_view._frame.connect('realize', self.__on_realize)
@@ -83,19 +84,20 @@ class Player(GObject.Object):
     def __on_realize(self, widget):
         self._ctx = None
         self._ctx_opengl_params = {'get_proc_address': mpv.MpvGlGetProcAddressFn(GetProcAddressGetter().wrap)}
-        self._player = mpv.MPV(vo="libmpv", keep_open="yes", start=0, cache='yes')
+        self._player = mpv.MPV(vo="libmpv", keep_open="yes", cache='yes')
         self._player_view._frame.set_auto_render(False)
         self.on_realize()
+        self.__createPlayer()
 
     def __createPlayer(self, offset=0):
         #import locale
         #locale.setlocale(locale.LC_NUMERIC, 'C')
-        self._player.start = offset
+        #self._player.start = offset
         #if self._item_loading.listType == 'video':
         #    self._player.start = offset
         #else:
         #    self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
-        #pass
+        pass
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
@@ -247,13 +249,14 @@ class Player(GObject.Object):
                     self._item_loading.getDecision(session=self._session, protocol="dash", videoResolution=self._settings.get_string("transcode-media-to-resolution"))
                 source = self._item_loading.getStreamURL(session=self._session, directPlay=self._direct, videoResolution=self._settings.get_string("transcode-media-to-resolution"), protocol="dash", fileExtension="mpd")
 
-            self.__createPlayer(offset=offset)
+
             self._player.volume = self._settings.get_int("volume-level")
             self.pause()
             self._player.play(source)
-            self._player.wait_for_property("duration")
+            self._player.wait_for_event('playback-restart')
+            if offset > 0:
+               self._player.playback_time = offset
             self.play()
-            self._player.playback_time = offset
 
             if self._item_loading.listType == 'video':
                 thread = threading.Thread(target=self.emit,args={'video-starting'})
@@ -261,7 +264,7 @@ class Player(GObject.Object):
                 thread.start()
             else:
                 self.view_shown()
-            self.__updateTimeline(0, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
+            #self.__updateTimeline(0, state='playing', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
             thread = threading.Thread(target=self.__wait_for_playback)
             thread.daemon = True
             thread.start()
