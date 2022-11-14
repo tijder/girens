@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-28 14:46+0200\n"
+"POT-Creation-Date: 2022-11-14 22:38+0100\n"
 "PO-Revision-Date: 2022-10-30 10:32+0000\n"
 "Last-Translator: Sebin Nyshkim <sebin.nyshkim@icloud.com>\n"
-"Language-Team: German <https://hosted.weblate.org/projects/girens/girens/de/>"
-"\n"
+"Language-Team: German <https://hosted.weblate.org/projects/girens/girens/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +94,8 @@ msgstr "Zu Blueprint für UI-Dateien migriert"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-msgstr "Verbesserte Listen für große Bibliotheken (dank der neuen Gtk4-Listen)."
+msgstr ""
+"Verbesserte Listen für große Bibliotheken (dank der neuen Gtk4-Listen)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Redesigned the album/artist view"
@@ -646,7 +647,7 @@ msgstr ""
 msgid "Resume"
 msgstr "Fortfahren"
 
-#: ../data/ui/section_view.blp:40
+#: ../data/ui/section_view.blp:41
 msgid "Order"
 msgstr "Sortierung"
 
@@ -771,7 +772,7 @@ msgstr "Als ungespielt markieren"
 msgid "Start from the beginning"
 msgstr "Von vorne beginnen"
 
-#: ../src/player_view.py:297 ../src/player_view.py:298
+#: ../src/player_view.py:300 ../src/player_view.py:301
 msgid "None"
 msgstr "Keine"
 
@@ -840,18 +841,22 @@ msgstr "Medienhöhe"
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../src/section_view.py:144 ../src/sidebar_box.py:103
+#: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
 msgstr "Wiedergabelisten"
 
-#: ../src/sidebar_box.py:94
+#: ../src/sidebar_box.py:100
 msgid "Player"
 msgstr "Wiedergabe"
 
-#: ../src/sidebar_box.py:99
+#: ../src/sidebar_box.py:106
 msgid "Home"
 msgstr "Startseite"
 
 #: ../src/window.py:352
 msgid "Starting Girens"
 msgstr "Girens wird gestartet"
+
+#: ../src/window.py:540
+msgid "Help with translating"
+msgstr ""

@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-28 14:46+0200\n"
+"POT-Creation-Date: 2022-11-14 22:38+0100\n"
 "PO-Revision-Date: 2022-10-29 06:48+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/>"
-"\n"
+"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
+">\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -659,7 +659,7 @@ msgstr "Voulez-vous reprendre le visionnage ou commencer depuis le début ?"
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../data/ui/section_view.blp:40
+#: ../data/ui/section_view.blp:41
 msgid "Order"
 msgstr "Ordre"
 
@@ -784,7 +784,7 @@ msgstr "Marquer comme non joué"
 msgid "Start from the beginning"
 msgstr "Commencer depuis le début"
 
-#: ../src/player_view.py:297 ../src/player_view.py:298
+#: ../src/player_view.py:300 ../src/player_view.py:301
 msgid "None"
 msgstr "Aucun"
 
@@ -853,21 +853,25 @@ msgstr "Hauteur des médias"
 msgid "Duration"
 msgstr "Durée"
 
-#: ../src/section_view.py:144 ../src/sidebar_box.py:103
+#: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
 msgstr "Listes de lecture"
 
-#: ../src/sidebar_box.py:94
+#: ../src/sidebar_box.py:100
 msgid "Player"
 msgstr "Lecteur"
 
-#: ../src/sidebar_box.py:99
+#: ../src/sidebar_box.py:106
 msgid "Home"
 msgstr "Accueil"
 
 #: ../src/window.py:352
 msgid "Starting Girens"
 msgstr "Démarrage de Girens"
+
+#: ../src/window.py:540
+msgid "Help with translating"
+msgstr ""
 
 #~ msgid "The homescreen"
 #~ msgstr "L'écran d'accueil"

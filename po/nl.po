@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-28 14:46+0200\n"
+"POT-Creation-Date: 2022-11-14 22:38+0100\n"
 "PO-Revision-Date: 2022-10-28 11:30+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -94,7 +94,8 @@ msgstr "Gemigreerd naar Blueprint voor ui bestanden"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-msgstr "Verbeterde lijsten voor grote bibliotheken (dankzij de nieuwe Gtk4-lijsten)."
+msgstr ""
+"Verbeterde lijsten voor grote bibliotheken (dankzij de nieuwe Gtk4-lijsten)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Redesigned the album/artist view"
@@ -628,7 +629,7 @@ msgstr "Wilt u verder kijken of vanaf het begin beginnen?"
 msgid "Resume"
 msgstr "Hervat"
 
-#: ../data/ui/section_view.blp:40
+#: ../data/ui/section_view.blp:41
 msgid "Order"
 msgstr "Sorteer"
 
@@ -753,7 +754,7 @@ msgstr "Markeer als ongespeeld"
 msgid "Start from the beginning"
 msgstr "Start vanaf het begin"
 
-#: ../src/player_view.py:297 ../src/player_view.py:298
+#: ../src/player_view.py:300 ../src/player_view.py:301
 msgid "None"
 msgstr "Geen"
 
@@ -822,21 +823,25 @@ msgstr "Media grote"
 msgid "Duration"
 msgstr "Duur"
 
-#: ../src/section_view.py:144 ../src/sidebar_box.py:103
+#: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
 msgstr "Afspeellijsten"
 
-#: ../src/sidebar_box.py:94
+#: ../src/sidebar_box.py:100
 msgid "Player"
 msgstr "Speler"
 
-#: ../src/sidebar_box.py:99
+#: ../src/sidebar_box.py:106
 msgid "Home"
 msgstr "Thuis"
 
 #: ../src/window.py:352
 msgid "Starting Girens"
 msgstr "Girens opstarten"
+
+#: ../src/window.py:540
+msgid "Help with translating"
+msgstr "Help met vertalen"
 
 #~ msgid "The homescreen"
 #~ msgstr "Het beginscherm"
