@@ -537,6 +537,7 @@ class PlexWindow(Adw.ApplicationWindow):
         builder.add_from_resource("/nl/g4d/Girens/about_dialog.ui")
         about_dialog = builder.get_object("about_dialog")
         about_dialog.set_modal(True)
+        about_dialog.add_link(_("Help with translating"), "https://hosted.weblate.org/projects/girens/girens/")
         if self is not NotImplemented:
             about_dialog.set_transient_for(self)
         about_dialog.present()

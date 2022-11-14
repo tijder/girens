@@ -18,8 +18,14 @@ template show_view_item : Box {
 
     [overlay]
     Image _watched_image {
+      styles [
+        "watched_tip",
+      ]
       halign: end;
       valign: start;
+      height-request: 33;
+      width-request: 33;
+      opacity: 0.7;
       icon-name: "dialog-information";
     }
 
