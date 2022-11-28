@@ -30,6 +30,24 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2022-11-28" version="2.0.1">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Use dash as transcode protocol</li>
+          <li>Fix problems with playback</li>
+          <li>Show loading box in section view</li>
+          <li>Show icon in sidebar</li>
+          <li>Remove arrow from popover menu</li>
+          <li>Show view item fix background of watched tip</li>
+          <li>Help with translating url added in about widget</li>
+          <li>Added German translation</li>
+          <li>Added Spanish translation</li>
+          <li>Added Turkish translation</li>
+          <li>Added Swedish translation</li>
+        </ul>
+      </description>
+    </release>
     <release date="2022-10-28" version="2.0.0">
       <description>
         <p>Changes:</p>
@@ -51,7 +69,7 @@
         <ul>
           <li>Support to login without libsecret</li>
           <li>Added French translation</li>
-          <li>Added Norwegian translation</li>
+          <li>Added Norwegian Bokmål translation</li>
         </ul>
       </description>
     </release>
