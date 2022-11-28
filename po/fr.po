@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 15:59+0100\n"
-"PO-Revision-Date: 2022-10-29 06:48+0000\n"
+"PO-Revision-Date: 2022-11-29 09:41+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
-">\n"
+"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -84,47 +84,48 @@ msgstr "Changements :"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Use dash as transcode protocol"
-msgstr ""
+msgstr "Utilisation de dash comme protocole de transcodage"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Fix problems with playback"
-msgstr ""
+msgstr "Correction de problèmes de lecture"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Show loading box in section view"
-msgstr ""
+msgstr "Affichage d’une icône de chargement dans la vue des sections"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Show icon in sidebar"
-msgstr ""
+msgstr "Affichage d’une icône dans la barre latérale"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Remove arrow from popover menu"
-msgstr ""
+msgstr "Suppression de la flèche du menu contextuel"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:42
 msgid "Show view item fix background of watched tip"
-msgstr ""
+msgstr "Correction de la vue des émissions"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:43
 msgid "Help with translating url added in about widget"
 msgstr ""
+"Ajout d’une URL pour contribuer aux traductions dans la fenêtre À propos"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:44
 msgid "Added German translation"
-msgstr ""
+msgstr "Ajout d’une traduction allemande"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:45
 msgid "Added Spanish translation"
-msgstr ""
+msgstr "Ajout d’une traduction espagnole"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:46
 msgid "Added Turkish translation"
-msgstr ""
+msgstr "Ajout d’une traduction turque"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:47
 msgid "Added Swedish translation"
-msgstr ""
+msgstr "Ajout d’une traduction suédoise"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:55
 msgid "Migrated from GTK 3 to GTK 4"
@@ -170,7 +171,7 @@ msgstr "Ajout de la traduction française"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:72
 msgid "Added Norwegian Bokmål translation"
-msgstr ""
+msgstr "Ajout d’une traduction en norvégien Bokmål"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:80
 msgid "Use gnome SDK 40"
@@ -916,7 +917,7 @@ msgstr "Démarrage de Girens"
 
 #: ../src/window.py:540
 msgid "Help with translating"
-msgstr ""
+msgstr "Contribuer aux traductions"
 
 #~ msgid "Added Norwegian translation"
 #~ msgstr "Ajout d'une traduction en norvégien"
