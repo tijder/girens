@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-28 15:59+0100\n"
-"PO-Revision-Date: 2022-12-09 10:04+0000\n"
+"PO-Revision-Date: 2022-12-10 12:47+0000\n"
 "Last-Translator: Antonio Hauren <antoniohauren@protonmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/girens/girens/"
 "pt/>\n"
@@ -40,18 +40,20 @@ msgid ""
 "Girens is a Plex media player client. You can watch and listen to your "
 "music, shows and movies with this GTK app."
 msgstr ""
+"Girens é um reprodutor de mídia Plex. Você pode ouvir música, assistir shows "
+"e filmes com esse aplicativo GTK."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "A tela inicial"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr ""
+msgstr "A tela de exibição"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr ""
+msgstr "A tela de álbum"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:35
 #: ../data/nl.g4d.Girens.appdata.xml.in:53
@@ -77,27 +79,27 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:273
 #: ../data/nl.g4d.Girens.appdata.xml.in:284
 msgid "Changes:"
-msgstr ""
+msgstr "Mudanças:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Use dash as transcode protocol"
-msgstr ""
+msgstr "Usa dash como protocolo de transcodificação"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Fix problems with playback"
-msgstr ""
+msgstr "Resolver problemas de reprodução"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Show loading box in section view"
-msgstr ""
+msgstr "Mostrar caixa de carregamento na tela de seção"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Show icon in sidebar"
-msgstr ""
+msgstr "Mostrar ícone na barra lateral"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Remove arrow from popover menu"
-msgstr ""
+msgstr "Remover seta do menu flutuante"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:42
 msgid "Show view item fix background of watched tip"
