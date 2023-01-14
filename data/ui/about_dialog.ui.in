@@ -4,7 +4,7 @@
   <object class="AdwAboutWindow" id="about_dialog">
     <property name="application_name">@PRETTYNAME@</property>
     <property name="version">@VERSION@</property>
-    <property name="copyright">© 2018-2022 Gerben Droogers.</property>
+    <property name="copyright">© 2018-2023 Gerben Droogers.</property>
     <property name="comments" translatable="yes">A Plex GTK client for playing movies, TV shows and music from your Plex library.</property>
     <property name="website">@PACKAGE_URL@</property>
     <property name="developer-name">@CONTRIBUTORS@</property>
