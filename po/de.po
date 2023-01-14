@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-28 15:59+0100\n"
+"POT-Creation-Date: 2023-01-14 15:55+0100\n"
 "PO-Revision-Date: 2022-10-30 10:32+0000\n"
 "Last-Translator: Sebin Nyshkim <sebin.nyshkim@icloud.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/girens/girens/de/"
@@ -22,10 +22,6 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
 msgstr "Girens für Plex"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:6
-msgid "Gerben Droogers"
-msgstr "Gerben Droogers"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid ""
@@ -499,6 +495,10 @@ msgstr "Kontrast von Schaltflächen/Bildern für die Mediensteuerung erhöht."
 msgid "First release."
 msgstr "Erste Veröffentlichung."
 
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Girens"
+msgstr "Girens"
+
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
 msgstr "Spielen Sie Ihre Plex-Filme, -Serien und -Musik ab"
@@ -575,10 +575,6 @@ msgstr "Token"
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
 msgstr "Verbinden"
-
-#: ../data/ui/main_window.blp:5
-msgid "Girens"
-msgstr "Girens"
 
 #: ../data/ui/main_window.blp:159
 msgid "Settings"
@@ -905,6 +901,9 @@ msgstr "Girens wird gestartet"
 #: ../src/window.py:540
 msgid "Help with translating"
 msgstr ""
+
+#~ msgid "Gerben Droogers"
+#~ msgstr "Gerben Droogers"
 
 #~ msgid "Added Norwegian translation"
 #~ msgstr "Norwegische Übersetzung hinzugefügt"

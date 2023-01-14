@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-28 15:59+0100\n"
+"POT-Creation-Date: 2023-01-14 15:55+0100\n"
 "PO-Revision-Date: 2022-11-16 02:48+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
@@ -22,10 +22,6 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
 msgstr "Girens for Plex"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:6
-msgid "Gerben Droogers"
-msgstr "Gerben Droogers"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid ""
@@ -515,6 +511,10 @@ msgstr "Mediakontrollknapper/bilder med økt kontrast"
 msgid "First release."
 msgstr "Første utgave."
 
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Girens"
+msgstr "Girens"
+
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
 msgstr "Spill dine Plex-filmer, programmer og musikk"
@@ -599,10 +599,6 @@ msgstr "Symbol"
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
 msgstr "Koble til"
-
-#: ../data/ui/main_window.blp:5
-msgid "Girens"
-msgstr "Girens"
 
 #: ../data/ui/main_window.blp:159
 msgid "Settings"
@@ -943,6 +939,9 @@ msgstr "Starter Girens …"
 #, fuzzy
 msgid "Help with translating"
 msgstr "Bistå oversettelsen"
+
+#~ msgid "Gerben Droogers"
+#~ msgstr "Gerben Droogers"
 
 #, fuzzy
 #~ msgid "Added Norwegian translation"

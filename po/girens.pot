@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-28 15:59+0100\n"
+"POT-Creation-Date: 2023-01-14 15:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,10 +19,6 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:6
-msgid "Gerben Droogers"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
@@ -472,6 +468,10 @@ msgstr ""
 msgid "First release."
 msgstr ""
 
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Girens"
+msgstr ""
+
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
 msgstr ""
@@ -545,10 +545,6 @@ msgstr ""
 
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
-msgstr ""
-
-#: ../data/ui/main_window.blp:5
-msgid "Girens"
 msgstr ""
 
 #: ../data/ui/main_window.blp:159

@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-28 15:59+0100\n"
+"POT-Creation-Date: 2023-01-14 15:55+0100\n"
 "PO-Revision-Date: 2022-11-29 09:41+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/>"
-"\n"
+"Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
+">\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,10 +22,6 @@ msgstr ""
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
 msgstr "Girens pour Plex"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:6
-msgid "Gerben Droogers"
-msgstr "Gerben Droogers"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid ""
@@ -513,6 +509,10 @@ msgstr "Boutons / images de contrôle des médias avec plus de contraste."
 msgid "First release."
 msgstr "Première version."
 
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Girens"
+msgstr "Girens"
+
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
 msgstr "Jouez vos films, émissions et musiques Plex"
@@ -589,10 +589,6 @@ msgstr "Jeton"
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
 msgstr "Se connecter"
-
-#: ../data/ui/main_window.blp:5
-msgid "Girens"
-msgstr "Girens"
 
 #: ../data/ui/main_window.blp:159
 msgid "Settings"
@@ -918,6 +914,9 @@ msgstr "Démarrage de Girens"
 #: ../src/window.py:540
 msgid "Help with translating"
 msgstr "Contribuer aux traductions"
+
+#~ msgid "Gerben Droogers"
+#~ msgstr "Gerben Droogers"
 
 #~ msgid "Added Norwegian translation"
 #~ msgstr "Ajout d'une traduction en norvégien"
