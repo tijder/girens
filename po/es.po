@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-14 15:55+0100\n"
+"POT-Creation-Date: 2023-02-17 19:28+0100\n"
 "PO-Revision-Date: 2022-11-06 15:06+0000\n"
 "Last-Translator: Sergio Varela <sergitroll9@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/girens/girens/es/"
@@ -24,12 +24,8 @@ msgid "Girens for Plex"
 msgstr "Girens para Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
-msgid ""
-"Girens is a Plex GTK client for playing movies, TV shows and music from your "
-"Plex library."
+msgid "Watch your Plex content"
 msgstr ""
-"Girens es un cliente GTK de Plex para reproducir películas, programas de "
-"televisión y música de tu biblioteca de Plex."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -890,6 +886,13 @@ msgstr ""
 #: ../src/window.py:540
 msgid "Help with translating"
 msgstr ""
+
+#~ msgid ""
+#~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
+#~ "your Plex library."
+#~ msgstr ""
+#~ "Girens es un cliente GTK de Plex para reproducir películas, programas de "
+#~ "televisión y música de tu biblioteca de Plex."
 
 #~ msgid "Gerben Droogers"
 #~ msgstr "Gerben Droogers"

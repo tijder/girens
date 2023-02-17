@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-14 15:55+0100\n"
+"POT-Creation-Date: 2023-02-17 19:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,9 +22,7 @@ msgid "Girens for Plex"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
-msgid ""
-"Girens is a Plex GTK client for playing movies, TV shows and music from your "
-"Plex library."
+msgid "Watch your Plex content"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11

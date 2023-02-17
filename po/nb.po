@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-14 15:55+0100\n"
+"POT-Creation-Date: 2023-02-17 19:28+0100\n"
 "PO-Revision-Date: 2022-11-16 02:48+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
@@ -24,12 +24,8 @@ msgid "Girens for Plex"
 msgstr "Girens for Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
-msgid ""
-"Girens is a Plex GTK client for playing movies, TV shows and music from your "
-"Plex library."
+msgid "Watch your Plex content"
 msgstr ""
-"Girens er en Plex-klient skrevet i GTK for å spille filmer, TV-programmer, "
-"og musikk fra ditt Plex-bibliotek."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -939,6 +935,13 @@ msgstr "Starter Girens …"
 #, fuzzy
 msgid "Help with translating"
 msgstr "Bistå oversettelsen"
+
+#~ msgid ""
+#~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
+#~ "your Plex library."
+#~ msgstr ""
+#~ "Girens er en Plex-klient skrevet i GTK for å spille filmer, TV-"
+#~ "programmer, og musikk fra ditt Plex-bibliotek."
 
 #~ msgid "Gerben Droogers"
 #~ msgstr "Gerben Droogers"

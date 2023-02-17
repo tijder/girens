@@ -3,8 +3,8 @@
 <component type="desktop-application">
   <id>nl.g4d.Girens</id>
   <name>Girens for Plex</name>
-  <developer_name>Gerben Droogers</developer_name>
-  <summary>Girens is a Plex GTK client for playing movies, TV shows and music from your Plex library.</summary>
+  <developer_name translatable="no">Gerben Droogers</developer_name>
+  <summary>Watch your Plex content</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <description>
