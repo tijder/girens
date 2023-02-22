@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 19:28+0100\n"
-"PO-Revision-Date: 2022-11-06 15:06+0000\n"
-"Last-Translator: Sergio Varela <sergitroll9@gmail.com>\n"
+"PO-Revision-Date: 2023-02-23 03:39+0000\n"
+"Last-Translator: Andrés Alcarraz <alcarraz@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/girens/girens/es/"
 ">\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.2\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -25,7 +25,7 @@ msgstr "Girens para Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr ""
+msgstr "Mira tu contenido de Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -79,7 +79,7 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Fix problems with playback"
-msgstr ""
+msgstr "Corregir problemas de reproducción"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Show loading box in section view"
@@ -87,31 +87,32 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Show icon in sidebar"
-msgstr ""
+msgstr "Mostrar icono en la barra lateral"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Remove arrow from popover menu"
-msgstr ""
+msgstr "Eliminar flecha del menú emergente"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:42
 msgid "Show view item fix background of watched tip"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:43
+#, fuzzy
 msgid "Help with translating url added in about widget"
-msgstr ""
+msgstr "Se agregó la url de ayuda con la traducción en la ventana de acerca de"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:44
 msgid "Added German translation"
-msgstr ""
+msgstr "Se agregó traducción al Alemán"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:45
 msgid "Added Spanish translation"
-msgstr ""
+msgstr "Se agregó traducción al Español"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:46
 msgid "Added Turkish translation"
-msgstr ""
+msgstr "Se agregó traducción al Turco"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:47
 msgid "Added Swedish translation"
