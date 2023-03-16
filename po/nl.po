@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 19:28+0100\n"
-"PO-Revision-Date: 2022-10-28 11:30+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
-">\n"
+"PO-Revision-Date: 2023-03-17 13:40+0000\n"
+"Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/>"
+"\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -25,7 +25,7 @@ msgstr "Girens voor Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr "Bekijk je Plex media"
+msgstr "Bekijk uw Plex-media"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -75,7 +75,7 @@ msgstr "Veranderingen:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "Use dash as transcode protocol"
-msgstr "Gebruik dash als transcodeprotocol"
+msgstr "Dash gebruiken als transcodeerprotocol"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:38
 msgid "Fix problems with playback"
@@ -83,11 +83,11 @@ msgstr "Problemen met afspelen oplossen"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:39
 msgid "Show loading box in section view"
-msgstr "Toon laad icon in sectieweergave"
+msgstr "Laadelement tonen in sectieweergave"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:40
 msgid "Show icon in sidebar"
-msgstr "Toon pictogram in zijbalk"
+msgstr "Pictogram tonen in zijbalk"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:41
 msgid "Remove arrow from popover menu"
@@ -164,7 +164,7 @@ msgstr "Noors Bokmål vertaling toegevoegd"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:80
 msgid "Use gnome SDK 40"
-msgstr "Gebruik gnome SDK 40"
+msgstr "Gebruik GNOME-SDK 40"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:81
 msgid "Fix build warnings"
@@ -348,7 +348,7 @@ msgstr "Zoek naar een bepaalde tijd bij het afspelen van muziek"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:203
 msgid "Default width 640px"
-msgstr "Standaard breedte 640px"
+msgstr "Standaardbreedte 640px"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:211
 msgid "Redesigned media controlbox for video player"
@@ -388,7 +388,7 @@ msgstr "Opdrachtregelopties"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:227
 msgid "Gnome search provider"
-msgstr "Gnome search provider"
+msgstr "GNOME zoek-provider"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:228
 msgid "Onscreen controller"
@@ -482,11 +482,11 @@ msgstr "Girens"
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr "Speel je Plex films, shows en muziek af"
+msgstr "Speel uw films, shows en muziek van Plex af"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
-msgstr "girens;plex;media;player;"
+msgstr "girens;plex;media;player;speler;"
 
 #: ../data/ui/about_dialog.ui.in:8
 msgid ""
@@ -494,16 +494,18 @@ msgid ""
 "library."
 msgstr ""
 "Een Plex GTK-client voor het afspelen van films, tv-programma's en muziek "
-"uit je Plex-bibliotheek."
+"uit uw Plex-bibliotheek."
 
 #. Add your name to the translator credits list
 #: ../data/ui/about_dialog.ui.in:11
 msgid "translator-credits"
-msgstr "Gerben Droogers"
+msgstr ""
+"Gerben Droogers\n"
+"Philip Goto <philip.goto@gmail.com>"
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
-msgstr "Meer zien"
+msgstr "Meer tonen"
 
 #: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:118
 msgid "Ondeck"
@@ -543,11 +545,11 @@ msgstr "Inloggen"
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an url"
-msgstr "Ga naar een Plex server op basis van een url"
+msgstr "Ga naar een Plex-server op basis van een URL"
 
 #: ../data/ui/login_view.blp:74
 msgid "The url to the Plex server with the port number"
-msgstr "De url naar de Plex server met het poortnummer"
+msgstr "De URL naar de Plex-server met het poortnummer"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
@@ -555,7 +557,7 @@ msgstr "Token"
 
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
-msgstr "Verbind"
+msgstr "Verbinden"
 
 #: ../data/ui/main_window.blp:159
 msgid "Settings"
@@ -563,7 +565,7 @@ msgstr "Instellingen"
 
 #: ../data/ui/main_window.blp:187
 msgid "Advertise as client"
-msgstr "Adverteer als client"
+msgstr "Adverteren als cliënt"
 
 #: ../data/ui/main_window.blp:188
 msgid ""
@@ -572,7 +574,7 @@ msgstr "Laat andere apparaten op dit netwerk Girens vinden en bedienen."
 
 #: ../data/ui/main_window.blp:197
 msgid "Prefer music clips"
-msgstr "Voorkeur aan muziekclips"
+msgstr "Muziekclips prefereren"
 
 #: ../data/ui/main_window.blp:198
 msgid ""
@@ -584,7 +586,7 @@ msgstr ""
 
 #: ../data/ui/main_window.blp:207
 msgid "Transcode media"
-msgstr "Transcodeer media"
+msgstr "Media transcoderen"
 
 #: ../data/ui/main_window.blp:208
 msgid "Transcode media instead of playing directly."
@@ -620,11 +622,11 @@ msgstr "Over Girens"
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
-msgstr "Herhaal"
+msgstr "Herhalen"
 
 #: ../data/ui/player_view.blp:77
 msgid "Release date"
-msgstr "Verschijningsdatum"
+msgstr "Uitgavedatum"
 
 #: ../data/ui/player_view.blp:81
 msgid "Genre"
@@ -644,7 +646,7 @@ msgstr "Ondertitel "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr "Gerbuikers info"
+msgstr "Accountinfo"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
@@ -664,11 +666,11 @@ msgstr "Wilt u verder kijken of vanaf het begin beginnen?"
 
 #: ../data/ui/resume_dialog.ui:11
 msgid "Resume"
-msgstr "Hervat"
+msgstr "Hervatten"
 
 #: ../data/ui/section_view.blp:41
 msgid "Order"
-msgstr "Sorteer"
+msgstr "Sorteren"
 
 #: ../data/ui/shortcuts.blp:13
 msgctxt "shortcut window"
@@ -678,7 +680,7 @@ msgstr "Afspelen"
 #: ../data/ui/shortcuts.blp:17
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr "Spelen/Pauze"
+msgstr "Afspelen/pauzeren"
 
 #: ../data/ui/shortcuts.blp:23
 msgctxt "shortcut window"
@@ -693,7 +695,7 @@ msgstr "Volgende"
 #: ../data/ui/shortcuts.blp:35
 msgctxt "shortcut window"
 msgid "Seek forwards"
-msgstr "Zoek vooruit"
+msgstr "Vooruit zoeken"
 
 #: ../data/ui/shortcuts.blp:41
 msgctxt "shortcut window"
@@ -703,7 +705,7 @@ msgstr "Achteruit zoeken"
 #: ../data/ui/shortcuts.blp:47
 msgctxt "shortcut window"
 msgid "Stop playing"
-msgstr "Stop met spelen"
+msgstr "Stopen met afspelen"
 
 #: ../data/ui/shortcuts.blp:53
 msgctxt "shortcut window"
@@ -713,11 +715,11 @@ msgstr "Volledig scherm"
 #: ../data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
-msgstr "Muziekclips afspelen in plaats van een audiotrack"
+msgstr "Muziekclips afspelen in plaats van audiotrack"
 
 #: ../data/ui/sync_dialog.blp:4
 msgid "Sync items"
-msgstr "Sync-items"
+msgstr "Items synchroniseren"
 
 #: ../data/ui/sync_dialog.blp:33
 msgid "Ok"
@@ -729,7 +731,7 @@ msgstr "Sync - instellingen"
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
-msgstr "Convert"
+msgstr "Converteren"
 
 #: ../data/ui/sync_settings.blp:15
 msgid "Converted sync can take a long time"
@@ -737,7 +739,7 @@ msgstr "Geconverteerde synchronisatie kan lang duren"
 
 #: ../data/ui/sync_settings.blp:23
 msgid "Unwatched only"
-msgstr "Onbekeken alleen"
+msgstr "Alleen onbekeken"
 
 #: ../data/ui/sync_settings.blp:31
 msgid "Max items"
@@ -745,27 +747,27 @@ msgstr "Max items"
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr "Volg systeem style"
+msgstr "Systeemstijl volgen"
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr "Lichte style"
+msgstr "Lichte stijl"
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr "Donkere style"
+msgstr "Donkere stijl"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
-msgstr "Ga naar artiest scherm"
+msgstr "Artiestweergave"
 
 #: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
-msgstr "Synchroniseer"
+msgstr "Synchroniseren"
 
 #: ../src/album_view.py:99 ../src/cover_box.py:136
 msgid "Shuffle"
-msgstr "Shuffle"
+msgstr "Shufflen"
 
 #: ../src/album_view.py:138
 msgid "Disc "
@@ -773,23 +775,23 @@ msgstr "Schijf "
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr "Ga naar album scherm"
+msgstr "Albumweergave"
 
 #: ../src/cover_box.py:116
 msgid "Go to show view"
-msgstr "Ga naar serie scherm"
+msgstr "Serieweergave"
 
 #: ../src/cover_box.py:121
 msgid "Mark as Played"
-msgstr "Markeer als gespeeld"
+msgstr "Markeren als afgespeeld"
 
 #: ../src/cover_box.py:126
 msgid "Mark as Unplayed"
-msgstr "Markeer als ongespeeld"
+msgstr "Markeren als onafgespeeld"
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr "Start vanaf het begin"
+msgstr "Starten vanaf het begin"
 
 #: ../src/player_view.py:300 ../src/player_view.py:301
 msgid "None"
@@ -810,7 +812,7 @@ msgstr "Er zijn geen servers gevonden voor dit account."
 
 #: ../src/plex.py:487
 msgid " connection urls."
-msgstr " verbindings urls."
+msgstr " verbindings-URL's."
 
 #: ../src/plex.py:487
 msgid "There are "
