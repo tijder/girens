@@ -57,12 +57,12 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "75d938912ddd50f5658d874c59e1b50e13b28bf1"
+                    "commit" : "9880b06a376b5183d677fda495f4d2dc2c933ce9"
                 },
                 {
                     "type" : "file",
-                    "url" : "https://waf.io/waf-2.0.23",
-                    "sha256" : "28a2e4583314a162cfcbffefb8a9202c1d7869040d30b5852da479b76d9c0491",
+                    "url" : "https://waf.io/waf-2.0.25",
+                    "sha256" : "21199cd220ccf60434133e1fd2ab8c8e5217c3799199c82722543970dc8e38d5",
                     "dest-filename" : "waf"
                 }
             ],
@@ -80,8 +80,8 @@
                     "sources" : [
                         {
                             "type" : "archive",
-                            "url" : "https://github.com/libass/libass/releases/download/0.16.0/libass-0.16.0.tar.xz",
-                            "sha256" : "5dbde9e22339119cf8eed59eea6c623a0746ef5a90b689e68a090109078e3c08"
+                            "url" : "https://github.com/libass/libass/releases/download/0.17.1/libass-0.17.1.tar.xz",
+                            "sha256" : "f0da0bbfba476c16ae3e1cfd862256d30915911f7abaa1b16ce62ee653192784"
                         }
                     ],
                     "modules" : [
@@ -128,7 +128,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "eacfcbae690f914a4b1b4ad06999f138540cc3d8"
+                            "commit" : "7a8560cb22dd9f5c54df71af3fef26db9a2a28b0"
                         }
                     ]
                 }
