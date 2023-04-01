@@ -226,6 +226,7 @@ class PlayerView(Gtk.ScrolledWindow):
             self.__fullscreen()
         else:
             self._last_button_click = time.time()
+            self.__show_controlls()
 
     def __on_motion_over(self):
         self._timout = None
