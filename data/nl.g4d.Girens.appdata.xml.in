@@ -30,6 +30,20 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2023-07-19" version="2.0.2">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Fix directplay for users without download rights</li>
+          <li>Show media controls on click</li>
+          <li>Change summary</li>
+          <li>Update blp files to use blueprint syntax</li>
+          <li>Update dependencies</li>
+          <li>Added Portuguese translation</li>
+          <li>Added Finnish translation</li>
+        </ul>
+      </description>
+    </release>
     <release date="2022-11-28" version="2.0.1">
       <description>
         <p>Changes:</p>
