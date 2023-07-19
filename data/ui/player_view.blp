@@ -1,9 +1,9 @@
 using Gtk 4.0;
 using Adw 1;
 
-template player_view : ScrolledWindow {
+template $player_view : ScrolledWindow {
   EventControllerKey {
-    key-pressed => on_keypress();
+    key-pressed => $on_keypress();
   }
   Box {
     vexpand: true;
@@ -12,14 +12,14 @@ template player_view : ScrolledWindow {
       height-request: 500;
 
       EventControllerMotion {
-        motion => on_motion();
+        motion => $on_motion();
       }
 
       Overlay _overlay {
         Stack _stack {
           GestureClick {
 	          button: 1;
-	          pressed => on_button_press_event();
+	          pressed => $on_button_press_event();
 	          exclusive: true;
           }
 
@@ -120,7 +120,7 @@ template player_view : ScrolledWindow {
 
       ScrolledWindow {
         vscrollbar-policy: never;
-        .list _deck_shows_box {
+        $list _deck_shows_box {
           vexpand: false;
         }
       }

@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template PlexWindow : Adw.ApplicationWindow {
+template $PlexWindow : Adw.ApplicationWindow {
   title: "Girens";
   default-width: 640;
   default-height: 800;
@@ -45,13 +45,13 @@ template PlexWindow : Adw.ApplicationWindow {
         width-request: 360;
 
         Adw.HeaderBar content_header {
-          show-start-title-buttons: bind sidebar_leaflet.folded inverted;
+          show-start-title-buttons: bind-property sidebar_leaflet.folded inverted;
 
           [start]
           Button _back_button {
             visible: bind sidebar_leaflet.folded;
             icon-name: "go-previous-symbolic";
-            clicked => sidebar_back_cb() swapped;
+            clicked => $sidebar_back_cb() swapped;
           }
 
           ToggleButton _search_toggle_button {
@@ -96,46 +96,46 @@ template PlexWindow : Adw.ApplicationWindow {
               vhomogeneous: false;
 
               Adw.ViewStackPage _discover_revealer {
-                child: .discover_view _discover_view {};
+                child: $discover_view _discover_view {};
               }
 
               Adw.ViewStackPage _show_revealer {
-                child: .show_view _show_view {};
+                child: $show_view _show_view {};
               }
 
               Adw.ViewStackPage _section_revealer {
-                child: .section_view _section_view {};
+                child: $section_view _section_view {};
               }
 
               Adw.ViewStackPage _search_revealer {
-                child: .search_view _search_view {};
+                child: $search_view _search_view {};
               }
 
               Adw.ViewStackPage _artist_revealer {
-                child: .artist_view _artist_view {};
+                child: $artist_view _artist_view {};
               }
 
               Adw.ViewStackPage _album_revealer {
-                child: .album_view _album_view {};
+                child: $album_view _album_view {};
               }
 
               Adw.ViewStackPage _player_revealer {
-                child: .player_view _player_view {};
+                child: $player_view _player_view {};
               }
             }
           }
 
-          .media_box_music _media_box_music {}
+          $media_box_music _media_box_music {}
 
         }
       }
     };
     }
     Adw.ViewStackPage _login_revealer {
-      child: .login_view _login_view {};
+      child: $login_view _login_view {};
     }
     Adw.ViewStackPage _loading_revealer {
-      child: .loading_view _loading_view {};
+      child: $loading_view _loading_view {};
     }
   };
 }
@@ -160,7 +160,7 @@ Popover _menu_popover {
 
       Adw.PreferencesRow {
         use-underline: true;
-        .theme_switcher {}
+        $theme_switcher {}
       }
 
       Adw.PreferencesRow {

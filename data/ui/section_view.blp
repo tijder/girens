@@ -1,6 +1,6 @@
 using Gtk 4.0;
 
-template section_view : Overlay {
+template $section_view : Overlay {
   Box {
     orientation: vertical;
 
@@ -53,8 +53,8 @@ template section_view : Overlay {
 
     ScrolledWindow {
       hscrollbar-policy: never;
-      edge-reached => on_scroller_edge_reached();
-      .list _section_flow{}
+      edge-reached => $on_scroller_edge_reached();
+      $list _section_flow{}
     }
   }
 

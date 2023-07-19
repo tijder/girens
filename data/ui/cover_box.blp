@@ -1,6 +1,6 @@
 using Gtk 4.0;
 
-template cover_box : Button {
+template $cover_box : Button {
   styles ["card"]
   margin-start: 3;
   margin-end: 3;
@@ -12,13 +12,13 @@ template cover_box : Button {
     margin-bottom: 5;
 
     GestureLongPress {
-      pressed => on_long_press();
+      pressed => $on_long_press();
       exclusive: true;
     }
 
     GestureClick {
       button: 3;
-      released => on_right_click();
+      released => $on_right_click();
       exclusive: true;
     }
 

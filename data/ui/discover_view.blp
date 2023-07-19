@@ -1,6 +1,6 @@
 using Gtk 4.0;
 
-template discover_view : ScrolledWindow {
+template $discover_view : ScrolledWindow {
   height-request: 300;
   hscrollbar-policy: never;
   Box {
@@ -19,7 +19,7 @@ template discover_view : ScrolledWindow {
 
     ScrolledWindow {
       vscrollbar-policy: never;
-      .list _deck_shows_box {
+      $list _deck_shows_box {
         vexpand: false;
       }
     }
@@ -37,7 +37,7 @@ template discover_view : ScrolledWindow {
 
     ScrolledWindow {
       vscrollbar-policy: never;
-      .list _seasons_shows_box {
+      $list _seasons_shows_box {
         vexpand: false;
       }
     }
@@ -55,7 +55,7 @@ template discover_view : ScrolledWindow {
 
     ScrolledWindow {
       vscrollbar-policy: never;
-      .list _movies_shows_box {
+      $list _movies_shows_box {
         vexpand: false;
       }
     }
@@ -73,7 +73,7 @@ template discover_view : ScrolledWindow {
 
     ScrolledWindow {
       vscrollbar-policy: never;
-      .list _music_shows_box {
+      $list _music_shows_box {
         vexpand: false;
       }
     }

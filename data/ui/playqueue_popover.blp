@@ -1,11 +1,11 @@
 using Gtk 4.0;
 
-template playqueue_popover : Popover {
+template $playqueue_popover : Popover {
   width-request: 300;
   height-request: 300;
   can-focus: false;
 
   ScrolledWindow {
-    .list_playqueue _playqueue_list{}
+    $list_playqueue _playqueue_list{}
   }
 }
