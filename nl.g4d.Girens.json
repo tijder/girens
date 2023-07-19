@@ -1,7 +1,7 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
+    "runtime-version" : "44",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
@@ -57,7 +57,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "9880b06a376b5183d677fda495f4d2dc2c933ce9"
+                    "commit" : "e3992664008c6d37012e968e2656a38edd8aa151"
                 },
                 {
                     "type" : "file",
@@ -128,7 +128,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "7a8560cb22dd9f5c54df71af3fef26db9a2a28b0"
+                            "commit" : "2cd09fec9f8d3b16d03e762dec6001cc0b792659"
                         }
                     ]
                 }
@@ -152,13 +152,13 @@
                     "name" : "PyOpenGL",
                     "buildsystem" : "simple",
                     "build-commands" : [
-                        "pip3 install --prefix=/app PyOpenGL-3.1.6-py3-none-any.whl"
+                        "pip3 install --prefix=/app PyOpenGL-3.1.7-py3-none-any.whl"
                     ],
                     "sources" : [
                         {
                             "type" : "file",
-                            "url" : "https://files.pythonhosted.org/packages/80/07/003fe74d2af04be917035b42c53c7ea9e3abe1e353753cebccfe792b4e52/PyOpenGL-3.1.6-py3-none-any.whl",
-                            "sha256" : "a7139bc3e15d656feae1f7e3ef68c799941ed43fadc78177a23db7e946c20738"
+                            "url" : "https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl",
+                            "sha256" : "a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a"
                         }
                     ]
                 }
@@ -174,7 +174,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/tijder/python-plexapi",
-                    "commit" : "3fff9765bbf8dd3c65e5ce506e2394c8bc8e6ffb"
+                    "commit" : "cadb3d2a399702ae3908cad70e52e439d9b665a2"
                 }
             ],
             "modules" : [
