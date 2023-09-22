@@ -1,7 +1,7 @@
 {
     "app-id" : "nl.g4d.Girens",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "44",
+    "runtime-version" : "45",
     "sdk" : "org.gnome.Sdk",
     "command" : "girens",
     "finish-args" : [
@@ -47,23 +47,24 @@
                 "/include",
                 "/lib/pkgconfig"
             ],
-            "buildsystem" : "simple",
-            "build-commands" : [
-                "python3 waf configure --prefix=${FLATPAK_DEST} --enable-libmpv-shared --disable-cplayer --disable-alsa --disable-manpage-build --disable-debug-build",
-                "python3 waf build",
-                "python3 waf install"
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dbuild-date=false",
+                "-Dlibmpv=true",
+                "-Dmanpage-build=disabled",
+                "-Dcdda=disabled",
+                "-Ddvbin=disabled",
+                "-Ddvdnav=disabled",
+                "-Dlibarchive=enabled",
+                "-Dsdl2=enabled",
+                "-Dshaderc=disabled",
+                "-Dvulkan=disabled"
             ],
             "sources" : [
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "e3992664008c6d37012e968e2656a38edd8aa151"
-                },
-                {
-                    "type" : "file",
-                    "url" : "https://waf.io/waf-2.0.25",
-                    "sha256" : "21199cd220ccf60434133e1fd2ab8c8e5217c3799199c82722543970dc8e38d5",
-                    "dest-filename" : "waf"
+                    "commit" : "84d6044d2bd4b0a2b6bc8d6f3deaf37747619284"
                 }
             ],
             "modules" : [
@@ -128,7 +129,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "2cd09fec9f8d3b16d03e762dec6001cc0b792659"
+                            "commit" : "035d187c4d5d96cf6d15237df0c0a20be4e933f1"
                         }
                     ]
                 }
