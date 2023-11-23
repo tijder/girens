@@ -61,11 +61,9 @@ class PlexWindow(Adw.ApplicationWindow):
     _style_manager = Adw.StyleManager.get_default()
 
     _content_box_wrapper = Gtk.Template.Child()
-    _content_leaflet = Gtk.Template.Child()
 
     content_header = Gtk.Template.Child()
-    separator_header = Gtk.Template.Child()
-    sidebar_leaflet = Gtk.Template.Child()
+    _split_view = Gtk.Template.Child()
 
     _viewStack_frame = Gtk.Template.Child()
 
@@ -91,7 +89,6 @@ class PlexWindow(Adw.ApplicationWindow):
 
     _media_box_music = Gtk.Template.Child()
 
-    header = Gtk.Template.Child()
     sidebar = Gtk.Template.Child()
     _sidebar_viewport = Gtk.Template.Child()
 
@@ -105,7 +102,6 @@ class PlexWindow(Adw.ApplicationWindow):
     _shortcuts_button = Gtk.Template.Child()
     _sync_image = Gtk.Template.Child()
     _download_button = Gtk.Template.Child()
-    _back_button = Gtk.Template.Child()
     _search_toggle_button = Gtk.Template.Child()
     _prefer_music_clips_check_button = Gtk.Template.Child()
     _advertise_as_client_check_button = Gtk.Template.Child()
@@ -263,7 +259,6 @@ class PlexWindow(Adw.ApplicationWindow):
         self._player.connect("play-music-clip-instead-of-track", self.__on_prefer_music_clips_changed)
         self._player_view._frame.realize()
 
-        self._back_button.connect("clicked", self.__on_back_clicked)
         self._profile_button.connect("clicked", self.__on_profile_clicked)
         self._about_button.connect("activated", self.__on_about_clicked)
 
@@ -383,7 +378,6 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __on_login_success(self, view, status):
         if (status == True):
-            self._viewStack_frame.set_visible_child(self.sidebar_leaflet)
             thread = threading.Thread(target=self._plex.connect_to_server)
             thread.daemon = True
             thread.start()
@@ -437,28 +431,20 @@ class PlexWindow(Adw.ApplicationWindow):
         self.__refresh_data()
 
     def __on_home_clicked(self, view):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._viewStack_pages.set_visible_child(self._discover_view)
         self._discover_view.refresh()
 
     def __on_playlists_clicked(self, view):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._section_view.show_playlists()
         self._viewStack_pages.set_visible_child(self._section_view)
 
     def __on_player_clicked(self, view):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._viewStack_pages.set_visible_child(self._player_view)
 
     def __on_section_clicked(self, view, section):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._section_view.refresh(section)
         #self.__show_view('section')
         self._viewStack_pages.set_visible_child(self._section_view)
-
-    def __on_back_clicked(self, button):
-        self._sidebar_box.unselect_all()
-        self.sidebar_leaflet.set_visible_child(self.header)
 
     def __refresh_data(self):
         if(self._active_view == 'discover'):
@@ -468,7 +454,6 @@ class PlexWindow(Adw.ApplicationWindow):
         self.__on_go_to_show(key)
 
     def __on_go_to_show(self, key):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._show_view.change_show(key)
         self._viewStack_pages.set_visible_child(self._show_view)
         self._sidebar_box.unselect_all()
@@ -477,7 +462,6 @@ class PlexWindow(Adw.ApplicationWindow):
         self.__on_go_to_artist(key)
 
     def __on_go_to_artist(self, key):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._artist_view.change_artist(key)
         self._viewStack_pages.set_visible_child(self._artist_view)
         self._sidebar_box.unselect_all()
@@ -486,7 +470,6 @@ class PlexWindow(Adw.ApplicationWindow):
         self.__on_go_to_album(key)
 
     def __on_go_to_album(self, key):
-        self.sidebar_leaflet.set_visible_child(self._content_leaflet)
         self._album_view.change_album(key)
         self._viewStack_pages.set_visible_child(self._album_view)
         self._sidebar_box.unselect_all()
@@ -551,7 +534,7 @@ class PlexWindow(Adw.ApplicationWindow):
         if (show):
             self._viewStack_frame.set_visible_child(self._loading_view)
         else:
-            self._viewStack_frame.set_visible_child(self.sidebar_leaflet)
+            self._viewStack_frame.set_visible_child(self._split_view)
 
     def go_fullscreen(self):
         self._player_view.go_fullscreen()
@@ -570,13 +553,13 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __remove_extra_widgets(self):
         self.content_header.set_visible(False)
-        self.separator_header.set_visible(False)
-        self.header.set_visible(False)
+        self._split_view.set_pin_sidebar(True)
+        self._split_view.set_show_sidebar(False)
 
     def __add_extra_widgets(self):
         self.content_header.set_visible(True)
-        self.separator_header.set_visible(True)
-        self.header.set_visible(True)
+        self._split_view.set_pin_sidebar(False)
+        self._split_view.set_show_sidebar(True)
 
     def fullscreened(self, widget, state):
         if (widget.is_fullscreen()): # Is fullscreen

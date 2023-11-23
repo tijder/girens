@@ -20,7 +20,7 @@ from gi.repository import Gtk, GLib, GObject
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/section_grid.ui')
-class SectionGrid(Gtk.Grid):
+class SectionGrid(Gtk.Box):
     __gtype_name__ = 'section_grid'
 
     __gsignals__ = {

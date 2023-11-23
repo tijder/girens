@@ -3,57 +3,60 @@ using Adw 1;
 
 template $PlexWindow : Adw.ApplicationWindow {
   title: "Girens";
+  width-request: 360;
+  height-request: 380;
   default-width: 640;
   default-height: 800;
 
-  content:
-  Adw.ViewStack _viewStack_frame {
+  Adw.Breakpoint {
+    condition ("max-width: 545")
+
+    setters {
+      _split_view.collapsed: true;
+    }
+  }
+
+  content: Adw.ViewStack _viewStack_frame {
+    hhomogeneous: false;
+    Adw.ViewStackPage _login_revealer {
+      child: $login_view _login_view {};
+    }
+    Adw.ViewStackPage _loading_revealer {
+      child: $loading_view _loading_view {};
+    }
     Adw.ViewStackPage _main_content {
-    child: Adw.Leaflet sidebar_leaflet {
-      can-navigate-back: true;
-
-      Box header {
-        orientation: vertical;
-        width-request: 180;
-
-        Adw.HeaderBar sidebar_header {
-          show-end-title-buttons: bind sidebar_leaflet.folded;
-          [start]
-          Button _profile_button {
-            Image _avatar_image {
-              icon-name: "preferences-desktop-personal-symbolic";
+      child: Adw.OverlaySplitView _split_view {
+        show-sidebar: bind-property show_sidebar_button.active bidirectional;
+        max-sidebar-width: 240;
+        min-sidebar-width: 180;
+        sidebar: Adw.ToolbarView {
+            [top]
+            Adw.HeaderBar sidebar_header {
+              [start]
+              Button _profile_button {
+                Image _avatar_image {
+                  icon-name: "preferences-desktop-personal-symbolic";
+                }
+              }
             }
-          }
-        }
 
-        // left content
-        ScrolledWindow sidebar {
-          hscrollbar-policy: never;
-          vexpand: true;
-          child: Viewport _sidebar_viewport {};
-        }
-      }
+            // left content
+            content: ScrolledWindow sidebar {
+              hscrollbar-policy: never;
+              vexpand: true;
+              child: Viewport _sidebar_viewport {};
+            };
+          };
 
-      Adw.LeafletPage {
-        navigatable: false;
-        child: Separator separator_header {};
-      }
-
-      Box _content_leaflet {
-        orientation: vertical;
-        hexpand: true;
-        width-request: 360;
-
+      content: Adw.ToolbarView {
+        [top]
         Adw.HeaderBar content_header {
-          show-start-title-buttons: bind-property sidebar_leaflet.folded inverted;
-
-          [start]
-          Button _back_button {
-            visible: bind sidebar_leaflet.folded;
-            icon-name: "go-previous-symbolic";
-            clicked => $sidebar_back_cb() swapped;
+          ToggleButton show_sidebar_button {
+            visible: bind-property _split_view.collapsed;
+            icon-name: 'sidebar-show-symbolic';
+            tooltip-text: _('Toggle Sidebar');
+            active: true;
           }
-
           ToggleButton _search_toggle_button {
               visible: true;
               icon-name: "edit-find-symbolic";
@@ -83,7 +86,7 @@ template $PlexWindow : Adw.ApplicationWindow {
         }
 
         // Right content
-        Box _content_box_wrapper {
+        content: Box _content_box_wrapper {
           orientation: vertical;
           Box content {
             hexpand: true;
@@ -126,16 +129,9 @@ template $PlexWindow : Adw.ApplicationWindow {
           }
 
           $media_box_music _media_box_music {}
-
-        }
-      }
+        };
+      };
     };
-    }
-    Adw.ViewStackPage _login_revealer {
-      child: $login_view _login_view {};
-    }
-    Adw.ViewStackPage _loading_revealer {
-      child: $loading_view _loading_view {};
     }
   };
 }

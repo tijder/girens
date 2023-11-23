@@ -1,14 +1,21 @@
 using Gtk 4.0;
 
-template $section_grid : Grid {
-  column-spacing: 12;
+template $section_grid : Box {
   margin-bottom: 12;
   margin-end: 6;
   margin-start: 6;
   margin-top: 6;
-  Image _image {}
+  Image _image {
+    styles [
+      "sidebar-icon",
+    ]
+  }
   Label _title_button {
     label: "label";
     justify: left;
+    margin-start: 12;
+    styles [
+      "sidebar-label",
+    ]
   }
 }
