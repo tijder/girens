@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-19 19:25+0200\n"
+"POT-Creation-Date: 2023-11-24 10:41+0100\n"
 "PO-Revision-Date: 2023-08-27 13:50+0000\n"
 "Last-Translator: jurko-s <10kursun@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/girens/girens/ru/"
@@ -50,469 +50,476 @@ msgid "The album screen"
 msgstr "Альбомы"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:35
-#: ../data/nl.g4d.Girens.appdata.xml.in:49
-#: ../data/nl.g4d.Girens.appdata.xml.in:67
-#: ../data/nl.g4d.Girens.appdata.xml.in:82
-#: ../data/nl.g4d.Girens.appdata.xml.in:92
-#: ../data/nl.g4d.Girens.appdata.xml.in:103
-#: ../data/nl.g4d.Girens.appdata.xml.in:114
-#: ../data/nl.g4d.Girens.appdata.xml.in:123
-#: ../data/nl.g4d.Girens.appdata.xml.in:135
-#: ../data/nl.g4d.Girens.appdata.xml.in:146
-#: ../data/nl.g4d.Girens.appdata.xml.in:157
+#: ../data/nl.g4d.Girens.appdata.xml.in:43
+#: ../data/nl.g4d.Girens.appdata.xml.in:57
+#: ../data/nl.g4d.Girens.appdata.xml.in:75
+#: ../data/nl.g4d.Girens.appdata.xml.in:90
+#: ../data/nl.g4d.Girens.appdata.xml.in:100
+#: ../data/nl.g4d.Girens.appdata.xml.in:111
+#: ../data/nl.g4d.Girens.appdata.xml.in:122
+#: ../data/nl.g4d.Girens.appdata.xml.in:131
+#: ../data/nl.g4d.Girens.appdata.xml.in:143
+#: ../data/nl.g4d.Girens.appdata.xml.in:154
 #: ../data/nl.g4d.Girens.appdata.xml.in:165
-#: ../data/nl.g4d.Girens.appdata.xml.in:175
-#: ../data/nl.g4d.Girens.appdata.xml.in:188
-#: ../data/nl.g4d.Girens.appdata.xml.in:201
-#: ../data/nl.g4d.Girens.appdata.xml.in:210
-#: ../data/nl.g4d.Girens.appdata.xml.in:223
-#: ../data/nl.g4d.Girens.appdata.xml.in:238
-#: ../data/nl.g4d.Girens.appdata.xml.in:248
-#: ../data/nl.g4d.Girens.appdata.xml.in:258
-#: ../data/nl.g4d.Girens.appdata.xml.in:269
+#: ../data/nl.g4d.Girens.appdata.xml.in:173
+#: ../data/nl.g4d.Girens.appdata.xml.in:183
+#: ../data/nl.g4d.Girens.appdata.xml.in:196
+#: ../data/nl.g4d.Girens.appdata.xml.in:209
+#: ../data/nl.g4d.Girens.appdata.xml.in:218
+#: ../data/nl.g4d.Girens.appdata.xml.in:231
+#: ../data/nl.g4d.Girens.appdata.xml.in:246
+#: ../data/nl.g4d.Girens.appdata.xml.in:256
+#: ../data/nl.g4d.Girens.appdata.xml.in:266
 #: ../data/nl.g4d.Girens.appdata.xml.in:277
-#: ../data/nl.g4d.Girens.appdata.xml.in:287
-#: ../data/nl.g4d.Girens.appdata.xml.in:298
+#: ../data/nl.g4d.Girens.appdata.xml.in:285
+#: ../data/nl.g4d.Girens.appdata.xml.in:295
+#: ../data/nl.g4d.Girens.appdata.xml.in:306
 msgid "Changes:"
 msgstr "Изменения:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
+msgid "New overlay sidebar"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:45
 msgid "Fix directplay for users without download rights"
 msgstr ""
 "Исправление проблем прямого воспроизведения для пользователей без прав на "
 "загрузку"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:38
+#: ../data/nl.g4d.Girens.appdata.xml.in:46
 msgid "Show media controls on click"
 msgstr "Показывать элементы управления мультимедиа по клику"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:39
+#: ../data/nl.g4d.Girens.appdata.xml.in:47
 msgid "Change summary"
 msgstr "История изменений"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:40
+#: ../data/nl.g4d.Girens.appdata.xml.in:48
 msgid "Update blp files to use blueprint syntax"
 msgstr "Обновление файлов blp для использования синтаксиса чертежей"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:41
-#: ../data/nl.g4d.Girens.appdata.xml.in:151
-#: ../data/nl.g4d.Girens.appdata.xml.in:168
+#: ../data/nl.g4d.Girens.appdata.xml.in:49
+#: ../data/nl.g4d.Girens.appdata.xml.in:159
+#: ../data/nl.g4d.Girens.appdata.xml.in:176
 msgid "Update dependencies"
 msgstr "Обновить зависимости"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:42
+#: ../data/nl.g4d.Girens.appdata.xml.in:50
 msgid "Added Portuguese translation"
 msgstr "Добавлен перевод на португальский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:43
+#: ../data/nl.g4d.Girens.appdata.xml.in:51
 msgid "Added Finnish translation"
 msgstr "Добавлен перевод на финский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:51
+#: ../data/nl.g4d.Girens.appdata.xml.in:59
 msgid "Use dash as transcode protocol"
 msgstr "Использовать Dash в качестве протокола перекодирования"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:52
+#: ../data/nl.g4d.Girens.appdata.xml.in:60
 msgid "Fix problems with playback"
 msgstr "Устранение проблем с воспроизведением"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:53
+#: ../data/nl.g4d.Girens.appdata.xml.in:61
 msgid "Show loading box in section view"
 msgstr "Показывать индикатор загрузки при просмотре разделов"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:54
+#: ../data/nl.g4d.Girens.appdata.xml.in:62
 msgid "Show icon in sidebar"
 msgstr "Показывать значок в боковой панели"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:55
+#: ../data/nl.g4d.Girens.appdata.xml.in:63
 msgid "Remove arrow from popover menu"
 msgstr "Удалить стрелку из всплывающего меню"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:56
+#: ../data/nl.g4d.Girens.appdata.xml.in:64
 msgid "Show view item fix background of watched tip"
 msgstr ""
 "Исправление отображения элемента просмотра на фоне просмотренной подсказки"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:57
+#: ../data/nl.g4d.Girens.appdata.xml.in:65
 msgid "Help with translating url added in about widget"
 msgstr "Сылка на помощь в переводе добавлена в виджет \"О программе"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:58
+#: ../data/nl.g4d.Girens.appdata.xml.in:66
 msgid "Added German translation"
 msgstr "Добавлен перевод на немецкий язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:59
+#: ../data/nl.g4d.Girens.appdata.xml.in:67
 msgid "Added Spanish translation"
 msgstr "Добавлен перевод на испанский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:60
+#: ../data/nl.g4d.Girens.appdata.xml.in:68
 msgid "Added Turkish translation"
 msgstr "Добавлен перевод на турецкий язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:61
+#: ../data/nl.g4d.Girens.appdata.xml.in:69
 msgid "Added Swedish translation"
 msgstr "Добавлен перевод на швелский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:69
+#: ../data/nl.g4d.Girens.appdata.xml.in:77
 msgid "Migrated from GTK 3 to GTK 4"
 msgstr "Выполнен переход с GTK 3 на GTK 4"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:70
+#: ../data/nl.g4d.Girens.appdata.xml.in:78
 msgid "Migrated from Libhandy to Libadwaita"
 msgstr "Выполнен переход с Libhandy на Libadwaita"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:71
+#: ../data/nl.g4d.Girens.appdata.xml.in:79
 msgid "Migrated to Blueprint for ui files"
 msgstr "Выполнен переход на Blueprint для файлов интерфейса"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:72
+#: ../data/nl.g4d.Girens.appdata.xml.in:80
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-msgstr "Улучшены списки для больших библиотек (благодаря новым спискам в Gtk4)."
+msgstr ""
+"Улучшены списки для больших библиотек (благодаря новым спискам в Gtk4)."
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:73
+#: ../data/nl.g4d.Girens.appdata.xml.in:81
 msgid "Redesigned the album/artist view"
 msgstr "Изменен дизайн страницы альбома/исполнителя"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:74
+#: ../data/nl.g4d.Girens.appdata.xml.in:82
 msgid "Redesigned the show view"
 msgstr "Изменен дизайн страницы сериала"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:75
+#: ../data/nl.g4d.Girens.appdata.xml.in:83
 msgid "Improved the borderless view"
 msgstr "Улучшен просмотр без границ"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:76
+#: ../data/nl.g4d.Girens.appdata.xml.in:84
 msgid "A lot of bug fixes"
 msgstr "Исправлено множество ошибок"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:84
+#: ../data/nl.g4d.Girens.appdata.xml.in:92
 msgid "Support to login without libsecret"
 msgstr "Поддержка входа в систему без libsecret"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:85
+#: ../data/nl.g4d.Girens.appdata.xml.in:93
 msgid "Added French translation"
 msgstr "Добавлен перевод на французский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:86
+#: ../data/nl.g4d.Girens.appdata.xml.in:94
 msgid "Added Norwegian Bokmål translation"
 msgstr "Добавлен перевод на норвежский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:94
+#: ../data/nl.g4d.Girens.appdata.xml.in:102
 msgid "Use gnome SDK 40"
 msgstr "Использование gnome SDK 40"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:95
+#: ../data/nl.g4d.Girens.appdata.xml.in:103
 msgid "Fix build warnings"
 msgstr "Исправлены предупреждения при сборке"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:96
+#: ../data/nl.g4d.Girens.appdata.xml.in:104
 msgid "Update mpv to 33"
 msgstr "Обновлен mpv до версии 33"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:97
+#: ../data/nl.g4d.Girens.appdata.xml.in:105
 msgid "Fix play buttons not updating for musicclips"
 msgstr ""
 "Исправление не обновляющихся кнопок воспроизведения для музыкальных клипов"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:105
+#: ../data/nl.g4d.Girens.appdata.xml.in:113
 msgid "Add option to play video fullscreen within the Window"
 msgstr "Добавлена возможность полноэкранного воспроизведения видео в окне"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:106
+#: ../data/nl.g4d.Girens.appdata.xml.in:114
 msgid "Show track and disc number in album view"
 msgstr "Показывать название трека и альбома в режиме просмотра альбома"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:107
+#: ../data/nl.g4d.Girens.appdata.xml.in:115
 msgid "Select name None if no subtitle is selected"
 msgstr "Выбирать вариант \"Нет\", если субтитры не выбраны"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:108
+#: ../data/nl.g4d.Girens.appdata.xml.in:116
 msgid "Show hours of audio item"
 msgstr "Показывать часы в длительности аудиофала"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:116
+#: ../data/nl.g4d.Girens.appdata.xml.in:124
 msgid "Load only needed items of sections"
 msgstr "Загружать только необходимые элементы разделов"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:117
+#: ../data/nl.g4d.Girens.appdata.xml.in:125
 msgid "Use readable name for sorting"
 msgstr "Использование читаемого имени для сортировки"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:125
+#: ../data/nl.g4d.Girens.appdata.xml.in:133
 msgid "Dutch translation added"
 msgstr "Добавлен перевод на голландский язык"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:126
+#: ../data/nl.g4d.Girens.appdata.xml.in:134
 msgid "Update layout of settings menu with libhandy widgets"
 msgstr "Обновление макета меню настроек с помощью виджетов libhandy"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:127
+#: ../data/nl.g4d.Girens.appdata.xml.in:135
 msgid "Setting for changing transcoding video resolution"
 msgstr "Настройка изменения разрешения перекодировки видео"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:128
+#: ../data/nl.g4d.Girens.appdata.xml.in:136
 msgid "Unselect sidebar item when changing section"
 msgstr "Снятие выделения элемента боковой панели при смене раздела"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:129
+#: ../data/nl.g4d.Girens.appdata.xml.in:137
 msgid "More music play options"
 msgstr "Дополнительные возможности воспроизведения музыки"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:137
+#: ../data/nl.g4d.Girens.appdata.xml.in:145
 msgid "New app icon"
 msgstr "Новый значок приложения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:138
+#: ../data/nl.g4d.Girens.appdata.xml.in:146
 msgid "Double click to toggle fullscreen"
 msgstr "Двойной клик для перехода в полноэкранный режим"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:139
+#: ../data/nl.g4d.Girens.appdata.xml.in:147
 msgid "Redesigned login view"
 msgstr "Переработан вид входа в систему"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:140
+#: ../data/nl.g4d.Girens.appdata.xml.in:148
 msgid "Press k to toggle play or pause media"
 msgstr "Нажмите \"K\", чтобы включить или приостановить воспроизведение"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:148
+#: ../data/nl.g4d.Girens.appdata.xml.in:156
 msgid "Fix basic auth urls when downloading"
 msgstr "Исправление базовых аутентификационных адресов при загрузке"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:149
+#: ../data/nl.g4d.Girens.appdata.xml.in:157
 msgid "Fix crash when latest timeline update failed"
 msgstr "Исправление сбоя при неудачном обновлении последней временной шкалы"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:150
+#: ../data/nl.g4d.Girens.appdata.xml.in:158
 msgid "Exit fullscreen with escape"
 msgstr "Выход из полноэкранного режима по клавише \"Escape\""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:159
+#: ../data/nl.g4d.Girens.appdata.xml.in:167
 msgid "Add feature changing subtitle and audio stream with plex remote"
 msgstr ""
 "Добавлена функция изменения субтитров и аудиопотока с помощью plex remote"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:167
+#: ../data/nl.g4d.Girens.appdata.xml.in:175
 msgid "Fix music not correct seeking when transcoding"
 msgstr "Исправление некорректного поиска музыки при перекодировании"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:169
+#: ../data/nl.g4d.Girens.appdata.xml.in:177
 msgid "Fix bug with showing section after playlist is showed"
 msgstr ""
 "Исправление ошибки с отображением раздела после показа списка воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:177
+#: ../data/nl.g4d.Girens.appdata.xml.in:185
 msgid "Change subtitle and audio stream"
 msgstr "Изменение субтитров и аудиопотока"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:178
+#: ../data/nl.g4d.Girens.appdata.xml.in:186
 msgid "Remove white border in fullscreen"
 msgstr "Удалена белая граница в полноэкранном режиме"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:179
+#: ../data/nl.g4d.Girens.appdata.xml.in:187
 msgid "Option to change volume level"
 msgstr "Возможность изменения уровня громкости"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:180
+#: ../data/nl.g4d.Girens.appdata.xml.in:188
 msgid "Option to set dark theme"
 msgstr "Возможность установки темной темы"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:181
+#: ../data/nl.g4d.Girens.appdata.xml.in:189
 msgid "Change progress bar for seeking bar in video player"
 msgstr "Заменен индикатор воспроизведения на индикатор перемотки в видеоплеере"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:182
+#: ../data/nl.g4d.Girens.appdata.xml.in:190
 msgid "Dont refresh allready loaded section"
 msgstr "Не обновлять уже загруженную секцию"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:190
+#: ../data/nl.g4d.Girens.appdata.xml.in:198
 msgid "Plex token saved with Secret Service"
 msgstr "Токен Plex сохранен с помощью Secret Service"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:191
+#: ../data/nl.g4d.Girens.appdata.xml.in:199
 msgid "Advertise as Client on the local network"
 msgstr "Объявлять приложение как Клиент в локальной сети"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:192
+#: ../data/nl.g4d.Girens.appdata.xml.in:200
 msgid "Add option to play media without transcoding"
 msgstr "Добавлена возможность воспроизведения медиафайлов без перекодирования"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:193
+#: ../data/nl.g4d.Girens.appdata.xml.in:201
 msgid "About dialog added"
 msgstr "Добавлено диалоговое окно \"О программе\""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:194
+#: ../data/nl.g4d.Girens.appdata.xml.in:202
 msgid "Shortcut dialog added"
 msgstr "Добавлено диалоговое окно быстрого доступа"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:195
+#: ../data/nl.g4d.Girens.appdata.xml.in:203
 msgid "Fix crash when playing media"
 msgstr "Исправлен сбой при воспроизведении мультимедиа"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:203
+#: ../data/nl.g4d.Girens.appdata.xml.in:211
 msgid "Enhanced smallscreen support"
 msgstr "Улучшена поддержка экранов с малой диагональю"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:204
+#: ../data/nl.g4d.Girens.appdata.xml.in:212
 msgid "Play music clips from music track"
 msgstr "Воспроизведение музыкальных клипов из музыкальной дорожки"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:212
+#: ../data/nl.g4d.Girens.appdata.xml.in:220
 msgid "Allow connecting to url instead of Plex user"
 msgstr "Разрешить подключение к url вместо пользователя Plex"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:213
+#: ../data/nl.g4d.Girens.appdata.xml.in:221
 msgid "Improve multi server support"
 msgstr "Улучшена поддержка работы с несколькими серверами"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:214
+#: ../data/nl.g4d.Girens.appdata.xml.in:222
 msgid "Change sorting asc or desc"
 msgstr "Изменение сортировки по возрастанию или убыванию"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:215
+#: ../data/nl.g4d.Girens.appdata.xml.in:223
 msgid "Hide media controlls after two seconds if new media started playing"
 msgstr ""
 "Скрытие элементов управления мультимедиа через две секунды, если началось "
 "воспроизведение нового мультимедиа"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:216
+#: ../data/nl.g4d.Girens.appdata.xml.in:224
 msgid "Seek to certain time when playing music"
 msgstr "Переход к определенному времени при воспроизведении музыки"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:217
+#: ../data/nl.g4d.Girens.appdata.xml.in:225
 msgid "Default width 640px"
 msgstr "Ширина по умолчанию 640px"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:225
+#: ../data/nl.g4d.Girens.appdata.xml.in:233
 msgid "Redesigned media controlbox for video player"
 msgstr "Переработана панель управления медиаплеером для видеоплеера"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:226
+#: ../data/nl.g4d.Girens.appdata.xml.in:234
 msgid "Use [ and ] for seeking media"
 msgstr "Используйте [ и ] для поиска перемотки медиа"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:227
+#: ../data/nl.g4d.Girens.appdata.xml.in:235
 msgid "Use media keys to select resume action"
 msgstr "Использование мультимедийных клавиш для возобновления воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:228
+#: ../data/nl.g4d.Girens.appdata.xml.in:236
 msgid "Hide cursor on video fullscreen"
 msgstr "Скрытие курсора при просмотре видео в полноэкранном режиме"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:229
+#: ../data/nl.g4d.Girens.appdata.xml.in:237
 msgid "Dont hide media controlls when playqueue is active"
 msgstr ""
 "При активной очереди воспроизведения не скрываются элементы управления "
 "мультимедиа"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:230
+#: ../data/nl.g4d.Girens.appdata.xml.in:238
 msgid "Fix starting wrong offset when new media is started"
 msgstr "Исправление неправильного смещения при новом востпроизведении"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:231
+#: ../data/nl.g4d.Girens.appdata.xml.in:239
 msgid "Show media title in resume dialog"
 msgstr ""
 "Отображение заголовка медиафайла в диалоге возобновления воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:232
+#: ../data/nl.g4d.Girens.appdata.xml.in:240
 msgid "Default mpv video output driver changed to xv"
 msgstr "Драйвер видеовыхода mpv по умолчанию заменен на xv"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:240
+#: ../data/nl.g4d.Girens.appdata.xml.in:248
 msgid "Commandline options"
 msgstr "Опции командной строки"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:241
+#: ../data/nl.g4d.Girens.appdata.xml.in:249
 msgid "Gnome search provider"
 msgstr "Провайдер поиска Gnome"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:242
+#: ../data/nl.g4d.Girens.appdata.xml.in:250
 msgid "Onscreen controller"
 msgstr "Наэкранное управление"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:250
+#: ../data/nl.g4d.Girens.appdata.xml.in:258
 msgid "Added media notification (mpris)"
 msgstr "Добавлено уведомление о медиа (mpris)"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:251
+#: ../data/nl.g4d.Girens.appdata.xml.in:259
 msgid "Added play and shuffle button to artist view"
 msgstr ""
 "На экране исполнителя добавлена кнопка воспроизведения и воспроизведения в "
 "случайном порядке"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:252
+#: ../data/nl.g4d.Girens.appdata.xml.in:260
 msgid "Enable mpv default OSC"
 msgstr "Включение mpv стандартного OSC"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:260
+#: ../data/nl.g4d.Girens.appdata.xml.in:268
 msgid "Support for mediakeys"
 msgstr "Поддержка медиа кнопок"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:261
+#: ../data/nl.g4d.Girens.appdata.xml.in:269
 msgid "Resume dialog when media has an offset"
 msgstr "Диалог возобновления при обнаружении различия в месте воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:262
+#: ../data/nl.g4d.Girens.appdata.xml.in:270
 msgid "Play and shuffle button added to show view"
 msgstr ""
 "В раздел сериалов добавлена кнопка воспроизведения и случайного "
 "воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:263
+#: ../data/nl.g4d.Girens.appdata.xml.in:271
 msgid "Load views after main view is loaded"
 msgstr "Загрузка разделов после загрузки главной страницы"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:271
+#: ../data/nl.g4d.Girens.appdata.xml.in:279
 msgid "Fix progres not been updated correctly"
 msgstr "Исправьте некорректное обновление хода воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:279
+#: ../data/nl.g4d.Girens.appdata.xml.in:287
 msgid "Play and shuffle button added in section view"
-msgstr "В разделе добавлена кнопка воспроизведения и случайного воспроизведения"
+msgstr ""
+"В разделе добавлена кнопка воспроизведения и случайного воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:280
+#: ../data/nl.g4d.Girens.appdata.xml.in:288
 msgid "Playqueue will be refreshed when playing next/prev item"
 msgstr ""
 "Очередь воспроизведения будет обновляться при воспроизведении следующего/"
 "предыдущего элемента"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:281
+#: ../data/nl.g4d.Girens.appdata.xml.in:289
 msgid "Keep fullscreen status"
 msgstr "Сохранение полноэкранного состояния"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:289
+#: ../data/nl.g4d.Girens.appdata.xml.in:297
 msgid "List with playqueue items"
 msgstr "Список с элементами очереди воспроизведения"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:290
+#: ../data/nl.g4d.Girens.appdata.xml.in:298
 msgid "Play ondeck items continuous"
 msgstr "Непрерывное воспроизведение последующих элементов"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:291
+#: ../data/nl.g4d.Girens.appdata.xml.in:299
 msgid "Added an album view"
 msgstr "Добавлен раздел альбома"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:292
+#: ../data/nl.g4d.Girens.appdata.xml.in:300
 msgid "Added an artist view"
 msgstr "Добавлен раздел исполнителя"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:300
+#: ../data/nl.g4d.Girens.appdata.xml.in:308
 msgid "Buttons now with more constrast"
 msgstr "Кнопки стали более контрастными"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:301
+#: ../data/nl.g4d.Girens.appdata.xml.in:309
 msgid "Sync tv show with options like only unwatched"
 msgstr ""
 "Синхронизация телепередач с такими опциями как \"только непросмотренные\""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:302
+#: ../data/nl.g4d.Girens.appdata.xml.in:310
 msgid "Sync and download dialog with thumbnails"
 msgstr "Диалог синхронизации и загрузки с миниатюрами"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:308
+#: ../data/nl.g4d.Girens.appdata.xml.in:316
 msgid "Media controll buttons/images with more contrast."
 msgstr "Кнопки/изображения управления медиа с увеличенной контрастностью."
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:313
+#: ../data/nl.g4d.Girens.appdata.xml.in:321
 msgid "First release."
 msgstr "Первый релиз."
 
@@ -545,7 +552,7 @@ msgstr "Yuri Smirnov"
 msgid "Show more"
 msgstr "Показать еще"
 
-#: ../data/ui/discover_view.blp:17 ../data/ui/player_view.blp:118
+#: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:118
 msgid "Ondeck"
 msgstr "Продолжить просмотр"
 
@@ -553,11 +560,11 @@ msgstr "Продолжить просмотр"
 msgid "Recently added Shows"
 msgstr "Недавно добавленные Сералы"
 
-#: ../data/ui/discover_view.blp:53
+#: ../data/ui/discover_view.blp:50
 msgid "Recently added Movies"
 msgstr "Недавно добавленные Фильмы"
 
-#: ../data/ui/discover_view.blp:71
+#: ../data/ui/discover_view.blp:65
 msgid "Recently added Music"
 msgstr "Недавно добавленная Музыка"
 
@@ -598,25 +605,25 @@ msgstr "Токен"
 msgid "Connect"
 msgstr "Подключение"
 
-#: ../data/ui/main_window.blp:159
+#: ../data/ui/main_window.blp:155
 msgid "Settings"
 msgstr "Настройки"
 
-#: ../data/ui/main_window.blp:187
+#: ../data/ui/main_window.blp:183
 msgid "Advertise as client"
 msgstr "Работа в режиме клиента"
 
-#: ../data/ui/main_window.blp:188
+#: ../data/ui/main_window.blp:184
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
 "Разрешить другим устройствам в этой сети находить Girens и управлять им."
 
-#: ../data/ui/main_window.blp:197
+#: ../data/ui/main_window.blp:193
 msgid "Prefer music clips"
 msgstr "Предпочитать музыкальные клипы"
 
-#: ../data/ui/main_window.blp:198
+#: ../data/ui/main_window.blp:194
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
@@ -624,39 +631,39 @@ msgstr ""
 "При воспроизведении музыки, если к треку добавлен музыкальный клип, будет "
 "воспроизводиться он."
 
-#: ../data/ui/main_window.blp:207
+#: ../data/ui/main_window.blp:203
 msgid "Transcode media"
 msgstr "Перекодирование мультимедиа"
 
-#: ../data/ui/main_window.blp:208
+#: ../data/ui/main_window.blp:204
 msgid "Transcode media instead of playing directly."
 msgstr "Перекодирование медиа впесто прямого воспроизведения."
 
-#: ../data/ui/main_window.blp:217
+#: ../data/ui/main_window.blp:213
 msgid "1080p"
 msgstr "1080p"
 
-#: ../data/ui/main_window.blp:224
+#: ../data/ui/main_window.blp:220
 msgid "720p"
 msgstr "720p"
 
-#: ../data/ui/main_window.blp:233
+#: ../data/ui/main_window.blp:229
 msgid "480p"
 msgstr "480p"
 
-#: ../data/ui/main_window.blp:242
+#: ../data/ui/main_window.blp:238
 msgid "240p"
 msgstr "240p"
 
-#: ../data/ui/main_window.blp:255
+#: ../data/ui/main_window.blp:251
 msgid "Info"
 msgstr "Информация"
 
-#: ../data/ui/main_window.blp:261
+#: ../data/ui/main_window.blp:257
 msgid "Shortcuts"
 msgstr "Комбинации клавиш"
 
-#: ../data/ui/main_window.blp:267
+#: ../data/ui/main_window.blp:263
 msgid "About Girens"
 msgstr "О Girens"
 
@@ -924,10 +931,10 @@ msgstr "Плеер"
 msgid "Home"
 msgstr "Home"
 
-#: ../src/window.py:352
+#: ../src/window.py:347
 msgid "Starting Girens"
 msgstr "Запуск Girens"
 
-#: ../src/window.py:540
+#: ../src/window.py:523
 msgid "Help with translating"
 msgstr "Помочь с переводом"
