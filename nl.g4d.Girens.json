@@ -129,7 +129,7 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "035d187c4d5d96cf6d15237df0c0a20be4e933f1"
+                            "commit" : "7212466e735aa187d82f51dadbce957fe3da77f0"
                         }
                     ]
                 }
