@@ -48,6 +48,11 @@ class DiscoverView(Gtk.ScrolledWindow):
         self._seasons_shows_box.set_plex(plex)
         self._music_shows_box.set_plex(plex)
 
+        self._deck_shows_box.set_grid_mode()
+        self._movies_shows_box.set_grid_mode()
+        self._seasons_shows_box.set_grid_mode()
+        self._music_shows_box.set_grid_mode()
+
     def refresh(self):
         self._deck_shows_box.empty_list()
         self._movies_shows_box.empty_list()

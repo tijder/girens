@@ -19,7 +19,6 @@ template $discover_view : ScrolledWindow {
     }
 
     ScrolledWindow {
-      vscrollbar-policy: never;
       $list _deck_shows_box {
         vexpand: false;
       }
@@ -36,11 +35,8 @@ template $discover_view : ScrolledWindow {
       label: _("Recently added Shows");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
-      $list _seasons_shows_box {
-        vexpand: false;
-      }
+    $list _seasons_shows_box {
+      vexpand: false;
     }
 
     Label {
@@ -54,11 +50,8 @@ template $discover_view : ScrolledWindow {
       label: _("Recently added Movies");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
-      $list _movies_shows_box {
-        vexpand: false;
-      }
+    $list _movies_shows_box {
+      vexpand: false;
     }
 
     Label {
@@ -72,11 +65,8 @@ template $discover_view : ScrolledWindow {
       label: _("Recently added Music");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
       $list _music_shows_box {
         vexpand: false;
       }
-    }
   }
 }
