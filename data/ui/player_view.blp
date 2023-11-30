@@ -53,75 +53,79 @@ template $player_view : ScrolledWindow {
       }
     }
 
-    Box _box {
-      orientation: vertical;
-      margin-start: 10;
-      margin-end: 10;
-      Box _card_box {
-        margin-top: 10;
-        margin-bottom: 5;
-        orientation: horizontal;
-        spacing: 12;
+    Revealer _revealer {
+      reveal-child: true;
+      transition-type: slide_up;
+      Box _box {
+        orientation: vertical;
+        margin-start: 10;
+        margin-end: 10;
+        Box _card_box {
+          margin-top: 10;
+          margin-bottom: 5;
+          orientation: horizontal;
+          spacing: 12;
 
-        ListBox {
-          styles["boxed-list"]
-          selection-mode: none;
-          hexpand: true;
-          valign: start;
+          ListBox {
+            styles["boxed-list"]
+            selection-mode: none;
+            hexpand: true;
+            valign: start;
 
-          Adw.ActionRow _title_label {
-            subtitle: _("Title");
-            use-markup: false;
+            Adw.ActionRow _title_label {
+              subtitle: _("Title");
+              use-markup: false;
+            }
+            Adw.ActionRow _release_datum_label {
+              subtitle: _("Release date");
+              use-markup: false;
+            }
+            Adw.ActionRow _genre_label {
+              subtitle: _("Genre");
+              use-markup: false;
+            }
+            Adw.ActionRow _duration_label {
+              subtitle: _("Duration");
+              use-markup: false;
+            }
+            Adw.ActionRow _discription_label {
+              title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. ";
+              subtitle: _("Description");
+              title-lines: 100;
+              use-markup: false;
+            }
           }
-          Adw.ActionRow _release_datum_label {
-            subtitle: _("Release date");
-            use-markup: false;
-          }
-          Adw.ActionRow _genre_label {
-            subtitle: _("Genre");
-            use-markup: false;
-          }
-          Adw.ActionRow _duration_label {
-            subtitle: _("Duration");
-            use-markup: false;
-          }
-          Adw.ActionRow _discription_label {
-            title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur leo nisi, mollis sed suscipit vitae, viverra id erat. Integer vitae orci leo. Nulla ex felis, hendrerit in elit quis, tincidunt sollicitudin tortor. Sed nec porttitor ipsum. Sed quis feugiat velit, nec iaculis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec elementum molestie turpis, sed blandit nunc consequat ac. Quisque vel tortor massa. Suspendisse feugiat sem purus, non consectetur lorem convallis non. Integer tempus nulla non libero hendrerit tempor. Aliquam aliquet dolor quis rutrum vulputate. Integer vestibulum fermentum erat, eu interdum purus vulputate ac. Sed ut leo justo. ";
-            subtitle: _("Description");
-            title-lines: 100;
-            use-markup: false;
+
+          ListBox _options_list {
+            styles["boxed-list"]
+            selection-mode: none;
+            width-request: 300;
+            valign: start;
+
+            Adw.ComboRow _audio_box {
+              subtitle: _("Audio ");
+            }
+            Adw.ComboRow _subtitle_box {
+              subtitle: _("Subtitle ");
+            }
           }
         }
 
-        ListBox _options_list {
-          styles["boxed-list"]
-          selection-mode: none;
-          width-request: 300;
-          valign: start;
-
-          Adw.ComboRow _audio_box {
-            subtitle: _("Audio ");
-          }
-          Adw.ComboRow _subtitle_box {
-            subtitle: _("Subtitle ");
-          }
+        Label _label {
+          styles [
+            "title-4"
+          ]
+          halign: start;
+          margin-top: 20;
+          margin-bottom: 5;
+          label: _("Ondeck");
         }
-      }
 
-      Label _label {
-        styles [
-          "title-4"
-        ]
-        halign: start;
-        margin-top: 20;
-        margin-bottom: 5;
-        label: _("Ondeck");
-      }
-
-      ScrolledWindow {
-        vscrollbar-policy: never;
-        $list _deck_shows_box {
-          vexpand: false;
+        ScrolledWindow {
+          vscrollbar-policy: never;
+          $list _deck_shows_box {
+            vexpand: false;
+          }
         }
       }
     }

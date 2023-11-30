@@ -27,6 +27,7 @@ class PlayerView(Gtk.ScrolledWindow):
     _controlls_bottom = Gtk.Template.Child()
     _video_box = Gtk.Template.Child()
     _box = Gtk.Template.Child()
+    _revealer = Gtk.Template.Child()
     _label = Gtk.Template.Child()
     #_cover_image = Gtk.Template.Child()
 
@@ -135,7 +136,7 @@ class PlayerView(Gtk.ScrolledWindow):
         self.__remove_extra_widgets()
 
     def __remove_extra_widgets(self):
-        self._box.hide()
+        self._revealer.set_reveal_child(False)
         self._video_box.set_vexpand(True)
         self._video_box.set_size_request(-1, -1)
         self.__show_controlls()
@@ -149,8 +150,8 @@ class PlayerView(Gtk.ScrolledWindow):
 
     def __add_extra_widgets(self):
         self.__set_correct_event_size(self._width)
-        self._box.show()
         self._video_box.set_vexpand(False)
+        self._revealer.set_reveal_child(True)
         self.__show_cursor()
         self._controlls_top.get_style_context().remove_class("black_background")
 
