@@ -1,0 +1,6 @@
+option (
+    'network_tests',
+    type: 'boolean',
+    value: true,
+    description: 'Allow networking in unit-tests'
+)

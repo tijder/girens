@@ -328,7 +328,8 @@
             "buildsystem" : "meson",
             "config-opts" : [
                 "--libdir=lib",
-                "-Dbuildtype=debug"
+                "-Dbuildtype=debug",
+                "-Dnetwork_tests=false"
             ],
             "builddir" : true,
             "sources" : [
