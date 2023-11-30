@@ -7,6 +7,6 @@ flatpak:
     variables:
         MANIFEST_PATH: "nl.g4d.Girens.json"
         FLATPAK_MODULE: "girens"
-        RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
+        RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         APP_ID: "nl.g4d.Girens"
     extends: .flatpak
