@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-24 10:41+0100\n"
-"PO-Revision-Date: 2022-12-10 12:47+0000\n"
-"Last-Translator: Antonio Hauren <antoniohauren@protonmail.com>\n"
+"PO-Revision-Date: 2024-02-08 11:01+0000\n"
+"Last-Translator: Thiago Fernandes <tobagind@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/girens/girens/"
 "pt/>\n"
 "Language: pt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -25,23 +25,23 @@ msgstr "Girens para Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr ""
+msgstr "Veja o seu conteúdo no Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
 "Girens is a Plex media player client. You can watch and listen to your "
 "music, shows and movies with this GTK app."
 msgstr ""
-"Girens é um reprodutor de mídia Plex. Você pode ouvir música, assistir shows "
-"e filmes com esse aplicativo GTK."
+"Girens é um cliente de media do Plex. Pode assistir e ouvir a sua música, "
+"séries e filmes com esta aplicação GTK."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr "A tela inicial"
+msgstr "O ecrã inicial"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr "A tela de exibição"
+msgstr "A tela da série"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
@@ -77,49 +77,49 @@ msgstr "Mudanças:"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:37
 msgid "New overlay sidebar"
-msgstr ""
+msgstr "Nova barra lateral de sobreposição"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:45
 msgid "Fix directplay for users without download rights"
-msgstr ""
+msgstr "Corrigir reprodução direta para utilizadores sem direitos de download"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:46
 msgid "Show media controls on click"
-msgstr ""
+msgstr "Mostrar controlos de multimédia ao clicar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:47
 msgid "Change summary"
-msgstr ""
+msgstr "Resumo das alterações"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:48
 msgid "Update blp files to use blueprint syntax"
-msgstr ""
+msgstr "Actualizar ficheiros BLP para utilizar a sintaxe de blueprint"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:49
 #: ../data/nl.g4d.Girens.appdata.xml.in:159
 #: ../data/nl.g4d.Girens.appdata.xml.in:176
 msgid "Update dependencies"
-msgstr ""
+msgstr "Atualizar dependências"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:50
 msgid "Added Portuguese translation"
-msgstr ""
+msgstr "Adicionada tradução para o português"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:51
 msgid "Added Finnish translation"
-msgstr ""
+msgstr "Adicionada tradução para o finlandês"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:59
 msgid "Use dash as transcode protocol"
-msgstr "Usa dash como protocolo de transcodificação"
+msgstr "Utilizar traço como protocolo de transcodificação"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:60
 msgid "Fix problems with playback"
-msgstr "Resolver problemas de reprodução"
+msgstr "Corrigir problemas de reprodução"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:61
 msgid "Show loading box in section view"
-msgstr "Mostrar caixa de carregamento na tela de seção"
+msgstr "Mostrar caixa de carregamento na vista de secção"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:62
 msgid "Show icon in sidebar"
@@ -127,107 +127,109 @@ msgstr "Mostrar ícone na barra lateral"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:63
 msgid "Remove arrow from popover menu"
-msgstr "Remover seta do menu flutuante"
+msgstr "Remover seta do menu de sobreposição"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:64
 msgid "Show view item fix background of watched tip"
-msgstr ""
+msgstr "Corrigir fundo do item visualizado na dica de visualização"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:65
 msgid "Help with translating url added in about widget"
-msgstr ""
+msgstr "Ajuda com a tradução do URL adicionado no widget Acerca"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:66
 msgid "Added German translation"
-msgstr ""
+msgstr "Adicionada tradução para o alemão"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:67
 msgid "Added Spanish translation"
-msgstr ""
+msgstr "Adicionada tradução para o espanhol"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:68
 msgid "Added Turkish translation"
-msgstr ""
+msgstr "Adicionada tradução para o turco"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:69
 msgid "Added Swedish translation"
-msgstr ""
+msgstr "Adicionada tradução para o sueco"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:77
 msgid "Migrated from GTK 3 to GTK 4"
-msgstr ""
+msgstr "Migrado de GTK 3 para GTK 4"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:78
 msgid "Migrated from Libhandy to Libadwaita"
-msgstr ""
+msgstr "Migrado de Libhandy para Libadwaita"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:79
 msgid "Migrated to Blueprint for ui files"
-msgstr ""
+msgstr "Migrado para Blueprint para arquivos ui"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:80
 msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-msgstr ""
+msgstr "Melhorou listas para bibliotecas grandes (graças às novas listas Gtk4)."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:81
 msgid "Redesigned the album/artist view"
-msgstr ""
+msgstr "Redesenhada a visualização de álbuns/artistas"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:82
 msgid "Redesigned the show view"
-msgstr ""
+msgstr "Redesenhada a visualização de programas"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:83
 msgid "Improved the borderless view"
-msgstr ""
+msgstr "Melhorada a visualização sem bordas"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:84
 msgid "A lot of bug fixes"
-msgstr ""
+msgstr "Muitas correções de bugs"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:92
 msgid "Support to login without libsecret"
-msgstr ""
+msgstr "Suporte para iniciar sessão sem libsecret"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:93
 msgid "Added French translation"
-msgstr ""
+msgstr "Adicionada tradução para o francês"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:94
 msgid "Added Norwegian Bokmål translation"
-msgstr ""
+msgstr "Adicionada tradução para o norueguês (bokmål)"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:102
 msgid "Use gnome SDK 40"
-msgstr ""
+msgstr "Usar SDK do GNOME 40"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:103
 msgid "Fix build warnings"
-msgstr ""
+msgstr "Corrigir avisos de compilação"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:104
 msgid "Update mpv to 33"
-msgstr ""
+msgstr "Atualizar MPV para a versão 33"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:105
 msgid "Fix play buttons not updating for musicclips"
 msgstr ""
+"Corrigir botões de reprodução que não estão a ser atualizados para clipes de "
+"música"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:113
 msgid "Add option to play video fullscreen within the Window"
-msgstr ""
+msgstr "Adicionar opção para reproduzir vídeo em ecrã completo dentro da janela"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:114
 msgid "Show track and disc number in album view"
-msgstr ""
+msgstr "Mostrar número da faixa e do disco na visualização do álbum"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:115
 msgid "Select name None if no subtitle is selected"
-msgstr ""
+msgstr "Selecionar Nenhum se nenhum subtítulo for selecionado"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:116
 msgid "Show hours of audio item"
-msgstr ""
+msgstr "Mostrar horas do item de áudio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:124
 msgid "Load only needed items of sections"
