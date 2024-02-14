@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-24 10:41+0100\n"
-"PO-Revision-Date: 2024-02-08 11:01+0000\n"
+"PO-Revision-Date: 2024-02-15 19:02+0000\n"
 "Last-Translator: Thiago Fernandes <thiago@avila-fernandes.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "girens/girens/pt_BR/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.4\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -235,107 +235,110 @@ msgstr "Mostrar horas do item de áudio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:124
 msgid "Load only needed items of sections"
-msgstr ""
+msgstr "Carregar apenas os itens necessários das seções"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:125
 msgid "Use readable name for sorting"
-msgstr ""
+msgstr "Usar nome legível para ordenar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:133
 msgid "Dutch translation added"
-msgstr ""
+msgstr "Tradução para o holandês adicionada"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:134
 msgid "Update layout of settings menu with libhandy widgets"
-msgstr ""
+msgstr "Atualizar layout do menu de configurações com widgets do libhandy"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:135
 msgid "Setting for changing transcoding video resolution"
-msgstr ""
+msgstr "Configuração para alterar a resolução de transcodificação de vídeo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:136
 msgid "Unselect sidebar item when changing section"
-msgstr ""
+msgstr "Deselecionar item da barra lateral ao mudar de seção"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:137
 msgid "More music play options"
-msgstr ""
+msgstr "Mais opções de reprodução de música"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:145
 msgid "New app icon"
-msgstr ""
+msgstr "Novo ícone do aplicativo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:146
 msgid "Double click to toggle fullscreen"
-msgstr ""
+msgstr "Duplo clique para alternar para tela cheia"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:147
 msgid "Redesigned login view"
-msgstr ""
+msgstr "Visual de login redesenhado"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:148
 msgid "Press k to toggle play or pause media"
-msgstr ""
+msgstr "Pressione k para alternar entre reproduzir ou pausar a mídia"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:156
 msgid "Fix basic auth urls when downloading"
-msgstr ""
+msgstr "Corrigir URLs de autenticação básica ao baixar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:157
 msgid "Fix crash when latest timeline update failed"
-msgstr ""
+msgstr "Corrigir falha quando a última atualização da linha do tempo falhou"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:158
 msgid "Exit fullscreen with escape"
-msgstr ""
+msgstr "Sair do modo de tela cheia com a tecla Escape"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:167
 msgid "Add feature changing subtitle and audio stream with plex remote"
 msgstr ""
+"Adicionar recurso para alterar legenda e faixa de áudio com o controle "
+"remoto do Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:175
 msgid "Fix music not correct seeking when transcoding"
-msgstr ""
+msgstr "Corrigir a busca incorreta de música ao transcodificar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:177
 msgid "Fix bug with showing section after playlist is showed"
 msgstr ""
+"Corrigir o bug de mostrar a seção após a lista de reprodução ser mostrada"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:185
 msgid "Change subtitle and audio stream"
-msgstr ""
+msgstr "Alterar legenda e fluxo de áudio"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:186
 msgid "Remove white border in fullscreen"
-msgstr ""
+msgstr "Remover borda branca em tela cheia"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:187
 msgid "Option to change volume level"
-msgstr ""
+msgstr "Opção para alterar o nível de volume"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:188
 msgid "Option to set dark theme"
-msgstr ""
+msgstr "Opção para definir tema escuro"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:189
 msgid "Change progress bar for seeking bar in video player"
-msgstr ""
+msgstr "Alterar barra de progresso para barra de busca no reprodutor de vídeo"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:190
 msgid "Dont refresh allready loaded section"
-msgstr ""
+msgstr "Não atualizar seção já carregada"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:198
 msgid "Plex token saved with Secret Service"
-msgstr ""
+msgstr "Token do Plex guardado com o Secret Service"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:199
 msgid "Advertise as Client on the local network"
-msgstr ""
+msgstr "\"Anunciar como cliente na rede local"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:200
 msgid "Add option to play media without transcoding"
-msgstr ""
+msgstr "Adicionar opção para reproduzir mídia sem transcodificar"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:201
 msgid "About dialog added"
