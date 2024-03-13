@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-24 10:41+0100\n"
-"PO-Revision-Date: 2022-10-29 09:43+0000\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"PO-Revision-Date: 2024-03-14 13:01+0000\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/girens/girens/tr/"
 ">\n"
 "Language: tr\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
+msgstr "Plex için Girens"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr ""
+msgstr "Plex içeriğinizi izleyin"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -505,335 +505,339 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:3
 msgid "Girens"
-msgstr ""
+msgstr "Girens"
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr ""
+msgstr "Plex filmlerinizi, programlarınızı ve müziklerinizi oynatın"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
-msgstr ""
+msgstr "girens;plex;medya;ortam;oynatıcı;"
 
 #: ../data/ui/about_dialog.ui.in:8
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
+"Plex kitaplığınızdaki filmleri, TV programları ve müzikleri oynatmak için "
+"bir Plex GTK istemcisi."
 
 #. Add your name to the translator credits list
 #: ../data/ui/about_dialog.ui.in:11
 msgid "translator-credits"
-msgstr ""
+msgstr "Sabri Ünal <yakushabb@gmail.com>"
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
-msgstr ""
+msgstr "Daha fazla göster"
 
 #: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:118
 msgid "Ondeck"
-msgstr ""
+msgstr "Güvertede"
 
 #: ../data/ui/discover_view.blp:35
 msgid "Recently added Shows"
-msgstr ""
+msgstr "Son Eklenen Programlar"
 
 #: ../data/ui/discover_view.blp:50
 msgid "Recently added Movies"
-msgstr ""
+msgstr "Son Eklenen Filmler"
 
 #: ../data/ui/discover_view.blp:65
 msgid "Recently added Music"
-msgstr ""
+msgstr "Son Eklenen Müzikler"
 
 #: ../data/ui/loading_view.blp:29 ../data/ui/profile_dialog.blp:25
 msgid "Logout"
-msgstr ""
+msgstr "Oturumu Kapat"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
-msgstr ""
+msgstr "Kullanıcı hesabıyla Plex'e giriş yap"
 
 #: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
 msgid "Username"
-msgstr ""
+msgstr "Kullanıcı adı"
 
 #: ../data/ui/login_view.blp:44
 msgid "Password"
-msgstr ""
+msgstr "Parola"
 
 #: ../data/ui/login_view.blp:53
 msgid "Login"
-msgstr ""
+msgstr "Giriş"
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an url"
-msgstr ""
+msgstr "Bir URL'ye göre Plex sunucusuna git"
 
 #: ../data/ui/login_view.blp:74
 msgid "The url to the Plex server with the port number"
-msgstr ""
+msgstr "Bağlantı noktası numarasını içeren Plex sunucusunun URL'si"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
-msgstr ""
+msgstr "Jeton"
 
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
-msgstr ""
+msgstr "Bağlan"
 
 #: ../data/ui/main_window.blp:155
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: ../data/ui/main_window.blp:183
 msgid "Advertise as client"
-msgstr ""
+msgstr "Müşteri olarak reklam ver"
 
 #: ../data/ui/main_window.blp:184
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
+"Bu ağdaki diğer aygıtların Girens'i bulmasına ve bu istemciyi denetlemesine "
+"izin ver."
 
 #: ../data/ui/main_window.blp:193
 msgid "Prefer music clips"
-msgstr ""
+msgstr "Müzik kliplerini yeğle"
 
 #: ../data/ui/main_window.blp:194
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
-msgstr ""
+msgstr "Müzik çalarken parçanın klibi varsa, ses yerine onu oynat."
 
 #: ../data/ui/main_window.blp:203
 msgid "Transcode media"
-msgstr ""
+msgstr "Ortamı yeniden kodla"
 
 #: ../data/ui/main_window.blp:204
 msgid "Transcode media instead of playing directly."
-msgstr ""
+msgstr "Doğrudan oynatmak yerine ortamı yeniden kodla."
 
 #: ../data/ui/main_window.blp:213
 msgid "1080p"
-msgstr ""
+msgstr "1080p"
 
 #: ../data/ui/main_window.blp:220
 msgid "720p"
-msgstr ""
+msgstr "720p"
 
 #: ../data/ui/main_window.blp:229
 msgid "480p"
-msgstr ""
+msgstr "480p"
 
 #: ../data/ui/main_window.blp:238
 msgid "240p"
-msgstr ""
+msgstr "240p"
 
 #: ../data/ui/main_window.blp:251
 msgid "Info"
-msgstr ""
+msgstr "Bilgi"
 
 #: ../data/ui/main_window.blp:257
 msgid "Shortcuts"
-msgstr ""
+msgstr "Kısayollar"
 
 #: ../data/ui/main_window.blp:263
 msgid "About Girens"
-msgstr ""
+msgstr "Girens Hakkında"
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
-msgstr ""
+msgstr "Yinele"
 
 #: ../data/ui/player_view.blp:77
 msgid "Release date"
-msgstr ""
+msgstr "Yayın tarihi"
 
 #: ../data/ui/player_view.blp:81
 msgid "Genre"
-msgstr ""
+msgstr "Tür"
 
 #: ../data/ui/player_view.blp:90
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: ../data/ui/player_view.blp:103
 msgid "Audio "
-msgstr ""
+msgstr "Ses "
 
 #: ../data/ui/player_view.blp:106
 msgid "Subtitle "
-msgstr ""
+msgstr "Altyazı "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr ""
+msgstr "Hesap bilgisi"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
-msgstr ""
+msgstr "E-posta"
 
 #: ../data/ui/profile_dialog.blp:18
 msgid "Subscription plan"
-msgstr ""
+msgstr "Abonelik planı"
 
 #: ../data/ui/profile_dialog.blp:21
 msgid "Secure"
-msgstr ""
+msgstr "Güvenli"
 
 #: ../data/ui/resume_dialog.ui:5
 msgid "Do you want resume watching or start from the beginning?"
-msgstr ""
+msgstr "İzlemeye devam etmek mi yoksa baştan başlamak mı istersiniz?"
 
 #: ../data/ui/resume_dialog.ui:11
 msgid "Resume"
-msgstr ""
+msgstr "Sürdür"
 
 #: ../data/ui/section_view.blp:41
 msgid "Order"
-msgstr ""
+msgstr "Sırala"
 
 #: ../data/ui/shortcuts.blp:13
 msgctxt "shortcut window"
 msgid "Playback"
-msgstr ""
+msgstr "Oynat"
 
 #: ../data/ui/shortcuts.blp:17
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr ""
+msgstr "Oynat/Duraklat"
 
 #: ../data/ui/shortcuts.blp:23
 msgctxt "shortcut window"
 msgid "Previous"
-msgstr ""
+msgstr "Önceki"
 
 #: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Next"
-msgstr ""
+msgstr "Sonraki"
 
 #: ../data/ui/shortcuts.blp:35
 msgctxt "shortcut window"
 msgid "Seek forwards"
-msgstr ""
+msgstr "İleri git"
 
 #: ../data/ui/shortcuts.blp:41
 msgctxt "shortcut window"
 msgid "Seek backwards"
-msgstr ""
+msgstr "Geri git"
 
 #: ../data/ui/shortcuts.blp:47
 msgctxt "shortcut window"
 msgid "Stop playing"
-msgstr ""
+msgstr "Oynatmayı durdur"
 
 #: ../data/ui/shortcuts.blp:53
 msgctxt "shortcut window"
 msgid "Fullscreen"
-msgstr ""
+msgstr "Tam ekran"
 
 #: ../data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
-msgstr ""
+msgstr "Ses parçası yerine müzik kliplerini oynat"
 
 #: ../data/ui/sync_dialog.blp:4
 msgid "Sync items"
-msgstr ""
+msgstr "Öğeleri eşzamanla"
 
 #: ../data/ui/sync_dialog.blp:33
 msgid "Ok"
-msgstr ""
+msgstr "Tamam"
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
-msgstr ""
+msgstr "Eşzamanlama - ayarlar"
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
-msgstr ""
+msgstr "Dönüştür"
 
 #: ../data/ui/sync_settings.blp:15
 msgid "Converted sync can take a long time"
-msgstr ""
+msgstr "Dönüştürülmüş eşzamanlama uzun sürebilir"
 
 #: ../data/ui/sync_settings.blp:23
 msgid "Unwatched only"
-msgstr ""
+msgstr "Yalnızca izlenmeyenler"
 
 #: ../data/ui/sync_settings.blp:31
 msgid "Max items"
-msgstr ""
+msgstr "Azami öge"
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr ""
+msgstr "Sistem biçemini izle"
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr ""
+msgstr "Açık biçem"
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr ""
+msgstr "Koyu biçem"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
-msgstr ""
+msgstr "Sanatçı görünümüne git"
 
 #: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
-msgstr ""
+msgstr "Eşzamanla"
 
 #: ../src/album_view.py:99 ../src/cover_box.py:136
 msgid "Shuffle"
-msgstr ""
+msgstr "Karıştır"
 
 #: ../src/album_view.py:138
 msgid "Disc "
-msgstr ""
+msgstr "Disk "
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr ""
+msgstr "Albüm görünümüne git"
 
 #: ../src/cover_box.py:116
 msgid "Go to show view"
-msgstr ""
+msgstr "Program görünümüne git"
 
 #: ../src/cover_box.py:121
 msgid "Mark as Played"
-msgstr ""
+msgstr "Oynatıldı Olarak İmle"
 
 #: ../src/cover_box.py:126
 msgid "Mark as Unplayed"
-msgstr ""
+msgstr "Oynatılmadı Olarak İmle"
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr ""
+msgstr "Baştan başla"
 
 #: ../src/player_view.py:301 ../src/player_view.py:302
 msgid "None"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
 #: ../src/plex.py:487 ../src/plex.py:495
 msgid "Connecting to "
-msgstr ""
+msgstr "Bağlan "
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
 msgid " failed."
-msgstr ""
+msgstr " başarısız oldu."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
-msgstr ""
+msgstr "Bu hesap için sunucu bulunamadı."
 
 #: ../src/plex.py:487
 msgid " connection urls."
-msgstr ""
+msgstr " bağlantı URL'leri."
 
 #: ../src/plex.py:487
 msgid "There are "
@@ -841,67 +845,67 @@ msgstr ""
 
 #: ../src/plex.py:487
 msgid "This may take a while"
-msgstr ""
+msgstr "Bu biraz zaman alabilir"
 
 #: ../src/section_view.py:33
 msgid "Added at"
-msgstr ""
+msgstr "Eklendi"
 
 #: ../src/section_view.py:34
 msgid "Last viewed at"
-msgstr ""
+msgstr "Son görüntülenme"
 
 #: ../src/section_view.py:35
 msgid "Originally available at"
-msgstr ""
+msgstr "Özgün olarak şu adreste mevcuttur:"
 
 #: ../src/section_view.py:36
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #: ../src/section_view.py:37
 msgid "Rating"
-msgstr ""
+msgstr "Derecelendirme"
 
 #: ../src/section_view.py:38
 msgid "Unwatched"
-msgstr ""
+msgstr "İzlenmedi"
 
 #: ../src/section_view.py:39
 msgid "View count"
-msgstr ""
+msgstr "Görüntüleme sayısı"
 
 #: ../src/section_view.py:40
 msgid "User rating"
-msgstr ""
+msgstr "Kullanıcı puanı"
 
 #: ../src/section_view.py:41
 msgid "Media height"
-msgstr ""
+msgstr "Ortam yüksekliği"
 
 #: ../src/section_view.py:42
 msgid "Duration"
-msgstr ""
+msgstr "Süre"
 
 #: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
-msgstr ""
+msgstr "Oynatma Listeleri"
 
 #: ../src/sidebar_box.py:100
 msgid "Player"
-msgstr ""
+msgstr "Oynatıcı"
 
 #: ../src/sidebar_box.py:106
 msgid "Home"
-msgstr ""
+msgstr "Başlangıç"
 
 #: ../src/window.py:347
 msgid "Starting Girens"
-msgstr ""
+msgstr "Girens Başlatılıyor"
 
 #: ../src/window.py:523
 msgid "Help with translating"
-msgstr ""
+msgstr "Çeviriye yardım edin"
 
 #~ msgid ""
 #~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
