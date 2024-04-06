@@ -1,21 +1,25 @@
 using Gtk 4.0;
 
-template $section_grid : Box {
-  margin-bottom: 12;
-  margin-end: 6;
-  margin-start: 6;
-  margin-top: 6;
-  Image _image {
-    styles [
-      "sidebar-icon",
-    ]
-  }
-  Label _title_button {
-    label: "label";
-    justify: left;
-    margin-start: 12;
-    styles [
-      "sidebar-label",
-    ]
+template $section_grid : Gtk.ListBoxRow {
+  action-name: "win.show-section-by-id";
+  action-target: "home";
+  Box {
+    margin-bottom: 12;
+    margin-end: 6;
+    margin-start: 6;
+    margin-top: 6;
+    Image _image {
+      styles [
+        "sidebar-icon",
+      ]
+    }
+    Label _title_button {
+      label: "label";
+      justify: left;
+      margin-start: 12;
+      styles [
+        "sidebar-label",
+      ]
+    }
   }
 }

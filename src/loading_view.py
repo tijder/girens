@@ -15,29 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk, Adw
 
 
 import cairo
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/loading_view.ui')
-class LoadingView(Gtk.Box):
+class LoadingView(Adw.Bin):
     __gtype_name__ = 'loading_view'
 
-    _loading_text_label = Gtk.Template.Child()
-    _logout_button = Gtk.Template.Child()
+    _status_page = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._logout_button.connect("clicked", self.__on_logout_clicked)
 
     def set_plex(self, plex):
         self._plex = plex
 
     def set_text(self, loading_text):
-        self._loading_text_label.set_text(loading_text)
-
-    def __on_logout_clicked(self, button):
-        self._plex.logout()
-        self.destroy()
+        self._status_page.set_description(loading_text)

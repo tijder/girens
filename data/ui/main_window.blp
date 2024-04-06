@@ -21,9 +21,6 @@ template $PlexWindow : Adw.ApplicationWindow {
     Adw.ViewStackPage _login_revealer {
       child: $login_view _login_view {};
     }
-    Adw.ViewStackPage _loading_revealer {
-      child: $loading_view _loading_view {};
-    }
     Adw.ViewStackPage _main_content {
       child: Adw.OverlaySplitView _split_view {
         show-sidebar: bind show_sidebar_button.active bidirectional;
@@ -98,6 +95,10 @@ template $PlexWindow : Adw.ApplicationWindow {
             Adw.ViewStack _viewStack_pages {
               vhomogeneous: false;
               hhomogeneous: false;
+
+              Adw.ViewStackPage _loading_revealer {
+                child: $loading_view _loading_view {};
+              }
 
               Adw.ViewStackPage _discover_revealer {
                 child: $discover_view _discover_view {};

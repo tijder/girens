@@ -20,6 +20,7 @@ from gi.repository import Gtk, GLib, GObject
 
 
 from .section_grid import SectionGrid
+from .sidebar_server_box import SidebarServerBox
 
 from plexapi.server import PlexServer
 
@@ -43,7 +44,6 @@ class SidebarBox(Gtk.Box):
         'artist': 'audio-x-generic-symbolic'
     }
 
-    _server_box = Gtk.Template.Child()
     _section_list = Gtk.Template.Child()
 
     def __init__(self, plex, player, **kwargs):
@@ -53,32 +53,18 @@ class SidebarBox(Gtk.Box):
         self._player = player
 
         self._plex.connect('servers-retrieved', self.__on_servers_retrieved)
-        self._plex.connect('sections-retrieved', self.__on_sections_retrieved)
+        # self._plex.connect('sections-retrieved', self.__on_sections_retrieved)
         self._player.connect("media-playing", self.__on_media_playing)
-        self._server_box.connect("changed", self.__server_changed)
 
-        self._section_list.connect("row-selected", self.__on_section_clicked)
+        # self._section_list.connect("row-selected", self.__on_section_clicked)
 
     def refresh(self):
         thread = threading.Thread(target=self._plex.get_servers)
         thread.daemon = True
         thread.start()
 
-        while self._section_list.get_first_child() != None:
+        while self._section_list.get_first_child() is not None:
             self._section_list.remove(self._section_list.get_first_child())
-
-        thread = threading.Thread(target=self._plex.get_sections)
-        thread.daemon = True
-        thread.start()
-
-    def unselect_all(self):
-        self._section_list.unselect_all()
-
-    def select_player(self):
-        self._section_list.select_row(self._section_list.get_row_at_index(0))
-
-    def select_home(self):
-        self._section_list.select_row(self._section_list.get_row_at_index(1))
 
     def __server_changed(self, combo):
         tree_iter = combo.get_active_iter()
@@ -88,72 +74,37 @@ class SidebarBox(Gtk.Box):
             if (self._plex._server.friendlyName != server_string):
                 self.emit('other-server-selected', server_object)
 
-    def __on_servers_retrieved(self, plex, servers):
+    def __on_servers_retrieved(self, _plex, servers):
         GLib.idle_add(self.__process_servers, servers)
 
-    def __on_sections_retrieved(self, plex, sections):
-        GLib.idle_add(self.__process_section, sections)
-
-    def __process_section(self, sections):
-        self._section_player = SectionGrid()
-        self._section_player.set_title('Player')
-        self._section_player.set_custom_title(_('Player'))
-        self._section_player.set_from_icon_name('media-playback-start-symbolic')
-        self._section_list.append(self._section_player)
-        self._section_player.get_parent().set_visible(False)
-        section_grid = SectionGrid()
-        section_grid.set_title('Home')
-        section_grid.set_custom_title(_('Home'))
-        section_grid.set_from_icon_name('user-home-symbolic')
-        self._section_list.append(section_grid)
-        section_grid = SectionGrid()
-        section_grid.set_title('Playlists')
-        section_grid.set_custom_title(_('Playlists'))
-        section_grid.set_from_icon_name('view-list-symbolic')
-        self._section_list.append(section_grid)
-        for section in sections:
-            if(section.type == 'movie' or section.type == 'show' or section.type == 'artist'):
-                section_grid = SectionGrid()
-                section_grid.set_title(section.title)
-                section_grid.set_data(section)
-                section_grid.set_from_icon_name(self._icons[section.type])
-                self._section_list.append(section_grid)
-        self.select_home()
-
     def __process_servers(self, servers):
-        self._server_store = Gtk.ListStore(object, str)
-
         for server in servers:
             name = ''
             if type(server) == PlexServer:
                 name = server.friendlyName
             else:
                 name = server.name
-            self._server_store.append([server, name])
 
-        self._server_box.clear()
-        self._server_box.set_model(self._server_store)
-        self._server_box.set_id_column(1)
-        renderer_text = Gtk.CellRendererText()
-        self._server_box.pack_start(renderer_text, True)
-        self._server_box.add_attribute(renderer_text, "text", 1)
-        self._server_box.set_active_id(self._plex._server.friendlyName)
+            sidebarServerBox = SidebarServerBox()
+            self._section_list.append(sidebarServerBox)
+            sidebarServerBox.set_title(name)
+            sidebarServerBox.set_plex(self._plex)
 
     def __on_section_clicked(self, listbox, listboxrow):
-        if(listboxrow != None):
+        if listboxrow is not None:
             child = listboxrow.get_child()
-            if (child.get_data() != None):
+            if child.get_data() is not None:
                 self.emit('section-clicked', listboxrow.get_child().get_data())
             else:
-                if (child.get_title() == 'Home'):
+                if child.get_title() == 'Home':
                     self.emit('home-button-clicked')
-                elif (child.get_title() == 'Playlists'):
+                elif child.get_title() == 'Playlists':
                     self.emit('playlists-button-clicked')
-                elif (child.get_title() == 'Player'):
+                elif child.get_title() == 'Player':
                     self.emit('player-button-clicked')
 
     def __on_media_playing(self, player, playing, playqueue_item, playqueue, offset, item):
-        if item != None and item.listType == 'video':
+        if item is not None and item.listType == 'video':
             GLib.idle_add(self._section_player.get_parent().set_visible, True)
         else:
             GLib.idle_add(self._section_player.get_parent().set_visible, False)

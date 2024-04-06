@@ -52,6 +52,7 @@ girens_sources = [
   'show_view.py',
   'show_view_item.py',
   'sidebar_box.py',
+  'sidebar_server_box.py',
   'sync_dialog.py',
   'sync_item.py',
   'sync_settings.py',

@@ -181,15 +181,15 @@ class Plex(GObject.Object):
 
     def get_latest(self):
         latest = self._library.recentlyAdded()
-        self.emit('shows-latest',latest)
+        self.emit('shows-latest', latest)
 
     def get_deck(self):
         deck = self._library.onDeck()
-        self.emit('shows-deck',deck)
+        self.emit('shows-deck', deck)
 
     def get_section_deck(self, section_id):
         deck = self._library.sectionByID(section_id).onDeck()
-        self.emit('section-shows-deck',deck)
+        self.emit('section-shows-deck', deck)
 
     def get_item(self, key):
         return self._server.fetchItem(int(key))

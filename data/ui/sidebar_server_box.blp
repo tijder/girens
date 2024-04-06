@@ -1,0 +1,31 @@
+using Gtk 4.0;
+
+template $sidebar_server_box : Box {
+  orientation: vertical;
+  hexpand: true;
+  margin-end: 5;
+  margin-start: 5;
+  Box {
+    hexpand: true;
+    margin-end: 10;
+    margin-start: 10;
+    Label _label {
+      styles ["heading"]
+      label: "Test";
+      margin-top: 10;
+      margin-bottom: 5;
+      xalign: 0.10;
+    }
+    Spinner _spinner {
+      visible: true;
+      spinning: false;
+      hexpand: true;
+      halign: end;
+    }
+  }
+  Separator {}
+  ListBox _section_list {
+    styles ["navigation-sidebar"]
+    visible: true;
+  }
+}

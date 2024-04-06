@@ -18,7 +18,6 @@
 from gettext import gettext as _
 from gi.repository import Gtk, Gdk, Gio, GLib, GdkPixbuf, Adw
 
-
 from .sidebar_box import SidebarBox
 from .media_box import MediaBox
 from .media_box_music import MediaBoxMusic
@@ -48,6 +47,7 @@ from .constants import build_type
 import os
 import threading
 import time
+
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/main_window.ui')
 class PlexWindow(Adw.ApplicationWindow):
@@ -139,6 +139,9 @@ class PlexWindow(Adw.ApplicationWindow):
         self.connect("map", self.__screen_mapped)
         self.connect("unrealize", self.__on_destroy)
 
+        action = Gio.SimpleAction(name="show-section-by-id", parameter_type=GLib.VariantType.new('s'))
+        action.connect("activate", self.on_show_section_by_id)
+        self.add_action(action)
         action = Gio.SimpleAction(name="show-album-by-id", parameter_type=GLib.VariantType.new('x'))
         action.connect("activate", self.on_show_album_by_id)
         self.add_action(action)
@@ -168,6 +171,11 @@ class PlexWindow(Adw.ApplicationWindow):
         action.connect("activate", self.on_shuffle_by_id)
         self.add_action(action)
 
+    def on_show_section_by_id(self, action, parameter):
+        self._viewStack_pages.set_visible_child(self._discover_view)
+        self._discover_view.refresh()
+        pass
+
     def on_show_album_by_id(self, action, parameter):
         self.__on_go_to_album(parameter.get_int64())
 
@@ -183,7 +191,8 @@ class PlexWindow(Adw.ApplicationWindow):
         thread.start()
 
     def on_play_item_from_beginning(self, action, parameter):
-        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),),kwargs={'from_beginning':True})
+        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),),
+                                  kwargs={'from_beginning': True})
         thread.daemon = True
         thread.start()
 
@@ -209,10 +218,9 @@ class PlexWindow(Adw.ApplicationWindow):
             thread.start()
 
     def on_shuffle_by_id(self, action, parameter):
-        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),),kwargs={'shuffle':1})
+        thread = threading.Thread(target=self._plex.play_item, args=(parameter.get_int64(),), kwargs={'shuffle': 1})
         thread.daemon = True
         thread.start()
-
 
     def __on_destroy(self, widget):
         if self._remote_client_active is True:
@@ -238,7 +246,7 @@ class PlexWindow(Adw.ApplicationWindow):
         self._player.set_deinterlace(self._deinterlace)
 
     def __screen_mapped(self, map):
-        self._settings = Gio.Settings ("nl.g4d.Girens")
+        self._settings = Gio.Settings("nl.g4d.Girens")
 
         self._player_view.connect("fullscreen", self.__fullscreen)
         self._player_view.connect("windowed", self.__windowed)
@@ -309,11 +317,13 @@ class PlexWindow(Adw.ApplicationWindow):
         self.plexRemoteClient = PlexRemoteClient(remote_player)
 
         self._prefer_music_clips_check_button.connect("state-set", self.__on_prefer_music_clips_check_button_clicked)
-        self._settings.bind ("prefer-music-clips", self._prefer_music_clips_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
-        #self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
+        self._settings.bind("prefer-music-clips", self._prefer_music_clips_check_button, "active",
+                            Gio.SettingsBindFlags.DEFAULT);
+        # self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._advertise_as_client_check_button.connect("state-set", self.__advertise_as_client_check_button_clicked)
-        self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
-        self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
+        self._settings.bind("advertise-as-client", self._advertise_as_client_check_button, "active",
+                            Gio.SettingsBindFlags.DEFAULT);
+        self._settings.bind("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
 
         sr = self._settings.get_string("transcode-media-to-resolution")
         if (sr == "1920x1080"):
@@ -329,7 +339,8 @@ class PlexWindow(Adw.ApplicationWindow):
         self._res_set_720.connect("toggled", self.__res_changed_720)
         self._res_set_480.connect("toggled", self.__res_changed_480)
         self._res_set_240.connect("toggled", self.__res_changed_240)
-        self._settings.bind ("play-media-direct", self._transcode_media_switch, "enable-expansion", Gio.SettingsBindFlags.INVERT_BOOLEAN);
+        self._settings.bind("play-media-direct", self._transcode_media_switch, "enable-expansion",
+                            Gio.SettingsBindFlags.INVERT_BOOLEAN);
 
         width = self._settings.get_int("window-size-width")
         height = self._settings.get_int("window-size-height")
@@ -337,8 +348,8 @@ class PlexWindow(Adw.ApplicationWindow):
 
         MediaPlayer2Service(self)
 
-        #self.connect("configure-event", self.__on_configure_event)
-        #self.connect("window-state-event", self.__on_window_state_event)
+        # self.connect("configure-event", self.__on_configure_event)
+        # self.connect("window-state-event", self.__on_window_state_event)
         self.connect("notify::default-width", self.__on_size_changed)
         self.connect("notify::default-height", self.__on_size_changed)
         self.connect("notify::css-classes", self.__on_size_changed)
@@ -349,19 +360,19 @@ class PlexWindow(Adw.ApplicationWindow):
         self._login_view.try_login()
 
     def __res_changed_1080(self, res_button):
-        if(res_button.get_active()):
+        if (res_button.get_active()):
             self._settings.set_string("transcode-media-to-resolution", "1920x1080")
 
     def __res_changed_720(self, res_button):
-        if(res_button.get_active()):
+        if (res_button.get_active()):
             self._settings.set_string("transcode-media-to-resolution", "1280x720")
 
     def __res_changed_480(self, res_button):
-        if(res_button.get_active()):
+        if (res_button.get_active()):
             self._settings.set_string("transcode-media-to-resolution", "854x480")
 
     def __res_changed_240(self, res_button):
-        if(res_button.get_active()):
+        if (res_button.get_active()):
             self._settings.set_string("transcode-media-to-resolution", "427x240")
 
     def __show_login_view(self):
@@ -371,10 +382,9 @@ class PlexWindow(Adw.ApplicationWindow):
         self.__show_loading_view(False, '')
         self.__show_login_view()
 
-    def __on_login_failed(self,view):
+    def __on_login_failed(self, view):
         self.__show_loading_view(False, '')
         self.__show_login_view()
-
 
     def __on_login_success(self, view, status):
         if (status == True):
@@ -392,7 +402,7 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_logout(self, plex):
         self.__show_login_view()
 
-    def __on_connection_to_server(self, plex):
+    def __on_connection_to_server(self, _plex):
         self._sidebar_box.refresh()
         self._sync_dialog = SyncDialog(self._plex)
         self._sync_dialog.set_transient_for(self)
@@ -402,12 +412,13 @@ class PlexWindow(Adw.ApplicationWindow):
         thread.daemon = True
         thread.start()
         if (self._plex.has_token()):
-            thread = threading.Thread(target=self._plex.download_from_url, args=(self._plex._account.username, self._plex._account.thumb))
+            thread = threading.Thread(target=self._plex.download_from_url,
+                                      args=(self._plex._account.username, self._plex._account.thumb))
             thread.daemon = True
             thread.start()
 
     def __on_downloaded(self, plex, name_image, path):
-        if(self._plex._account.username == name_image):
+        if (self._plex._account.username == name_image):
             GLib.idle_add(self.__set_image, path)
 
     def __on_sync_clicked(self, button):
@@ -443,13 +454,13 @@ class PlexWindow(Adw.ApplicationWindow):
 
     def __on_section_clicked(self, view, section):
         self._section_view.refresh(section)
-        #self.__show_view('section')
+        # self.__show_view('section')
         self._viewStack_pages.set_visible_child(self._section_view)
 
     def __refresh_data(self):
-        if(self._active_view == 'discover'):
+        if (self._active_view == 'discover'):
             self._discover_view.refresh()
-        
+
     def __on_go_to_show_clicked(self, view, key):
         self.__on_go_to_show(key)
 
@@ -532,9 +543,12 @@ class PlexWindow(Adw.ApplicationWindow):
     def __show_loading_view(self, show, load_text):
         self._loading_view.set_text(load_text)
         if (show):
-            self._viewStack_frame.set_visible_child(self._loading_view)
-        else:
             self._viewStack_frame.set_visible_child(self._split_view)
+            self._viewStack_pages.set_visible_child(self._loading_view)
+        else:
+            # self._viewStack_frame.set_visible_child(self._split_view)
+            # self._viewStack_pages.set_visible_child(self._discover_view)
+            pass
 
     def go_fullscreen(self):
         self._player_view.go_fullscreen()
@@ -562,12 +576,13 @@ class PlexWindow(Adw.ApplicationWindow):
         self._split_view.set_show_sidebar(True)
 
     def fullscreened(self, widget, state):
-        if (widget.is_fullscreen()): # Is fullscreen
+        if (widget.is_fullscreen()):  # Is fullscreen
             self._player_view.set_fullscreen_state()
             self.__remove_extra_widgets()
             if (self._inhibitCookie == None):
-                self._inhibitCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.IDLE, "Girens is playing in fullscreen")
-        else: # Is not fullscreen
+                self._inhibitCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.IDLE,
+                                                                     "Girens is playing in fullscreen")
+        else:  # Is not fullscreen
             self._player_view.set_unfullscreen_state()
             self.__add_extra_widgets()
             if (self._inhibitCookie != None):
@@ -587,7 +602,8 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_size_changed(self, widget, event):
         if self._window_placement_update_timeout != None:
             GLib.source_remove(self._window_placement_update_timeout)
-        self._window_placement_update_timeout = GLib.timeout_add(500, self.__update_screen_size_change, [self.get_width(), self.get_height()])
+        self._window_placement_update_timeout = GLib.timeout_add(500, self.__update_screen_size_change,
+                                                                 [self.get_width(), self.get_height()])
 
     def __update_screen_size_change(self, size):
         width = self.get_width()
@@ -616,5 +632,5 @@ class PlexWindow(Adw.ApplicationWindow):
             "resource:///nl/g4d/Girens/plex.css")
         css_provider.load_from_file(css_provider_resource)
 
-        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        
+        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css_provider,
+                                                  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
