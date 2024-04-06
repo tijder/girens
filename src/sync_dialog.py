@@ -25,7 +25,7 @@ import sys
 import gc
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/sync_dialog.ui')
-class SyncDialog(Gtk.Dialog):
+class SyncDialog(Gtk.Window):
     __gtype_name__ = 'sync_dialog'
 
     _item_box = Gtk.Template.Child()

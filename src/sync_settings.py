@@ -22,7 +22,7 @@ import cairo
 import threading
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/sync_settings.ui')
-class SyncSettings(Gtk.Dialog):
+class SyncSettings(Gtk.Window):
     __gtype_name__ = 'sync_settings'
 
     _convert_button = Gtk.Template.Child()
