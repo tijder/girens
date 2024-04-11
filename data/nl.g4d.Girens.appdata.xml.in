@@ -324,6 +324,7 @@
   </releases>
   <url type="homepage">https://gitlab.gnome.org/tijder/girens</url>
   <url type="bugtracker">https://gitlab.gnome.org/tijder/girens/issues</url>
+  <url type="vcs-browser">https://gitlab.gnome.org/tijder/girens</url>
   <url type="translate">https://hosted.weblate.org/projects/girens/girens/</url>
   <update_contact>girens_at_g4d.nl</update_contact>
   <recommends>
