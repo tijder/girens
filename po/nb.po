@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-24 10:41+0100\n"
+"POT-Creation-Date: 2024-04-23 19:13+0200\n"
 "PO-Revision-Date: 2022-11-16 02:48+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
@@ -49,495 +49,6 @@ msgstr "Programsskjermen"
 msgid "The album screen"
 msgstr "Albumsskjermen"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:35
-#: ../data/nl.g4d.Girens.appdata.xml.in:43
-#: ../data/nl.g4d.Girens.appdata.xml.in:57
-#: ../data/nl.g4d.Girens.appdata.xml.in:75
-#: ../data/nl.g4d.Girens.appdata.xml.in:90
-#: ../data/nl.g4d.Girens.appdata.xml.in:100
-#: ../data/nl.g4d.Girens.appdata.xml.in:111
-#: ../data/nl.g4d.Girens.appdata.xml.in:122
-#: ../data/nl.g4d.Girens.appdata.xml.in:131
-#: ../data/nl.g4d.Girens.appdata.xml.in:143
-#: ../data/nl.g4d.Girens.appdata.xml.in:154
-#: ../data/nl.g4d.Girens.appdata.xml.in:165
-#: ../data/nl.g4d.Girens.appdata.xml.in:173
-#: ../data/nl.g4d.Girens.appdata.xml.in:183
-#: ../data/nl.g4d.Girens.appdata.xml.in:196
-#: ../data/nl.g4d.Girens.appdata.xml.in:209
-#: ../data/nl.g4d.Girens.appdata.xml.in:218
-#: ../data/nl.g4d.Girens.appdata.xml.in:231
-#: ../data/nl.g4d.Girens.appdata.xml.in:246
-#: ../data/nl.g4d.Girens.appdata.xml.in:256
-#: ../data/nl.g4d.Girens.appdata.xml.in:266
-#: ../data/nl.g4d.Girens.appdata.xml.in:277
-#: ../data/nl.g4d.Girens.appdata.xml.in:285
-#: ../data/nl.g4d.Girens.appdata.xml.in:295
-#: ../data/nl.g4d.Girens.appdata.xml.in:306
-msgid "Changes:"
-msgstr "Endringer:"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:37
-msgid "New overlay sidebar"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:45
-msgid "Fix directplay for users without download rights"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:46
-msgid "Show media controls on click"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:47
-msgid "Change summary"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:48
-msgid "Update blp files to use blueprint syntax"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:49
-#: ../data/nl.g4d.Girens.appdata.xml.in:159
-#: ../data/nl.g4d.Girens.appdata.xml.in:176
-msgid "Update dependencies"
-msgstr "Oppdaterte avhengigheter"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:50
-msgid "Added Portuguese translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:51
-msgid "Added Finnish translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:59
-msgid "Use dash as transcode protocol"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:60
-msgid "Fix problems with playback"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:61
-msgid "Show loading box in section view"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:62
-msgid "Show icon in sidebar"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:63
-msgid "Remove arrow from popover menu"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:64
-msgid "Show view item fix background of watched tip"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:65
-msgid "Help with translating url added in about widget"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:66
-msgid "Added German translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:67
-msgid "Added Spanish translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:68
-msgid "Added Turkish translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:69
-msgid "Added Swedish translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:77
-msgid "Migrated from GTK 3 to GTK 4"
-msgstr "Migrering fra GTK 3 til GTK 4"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:78
-#, fuzzy
-msgid "Migrated from Libhandy to Libadwaita"
-msgstr "Migrering fra libhandy til libadwaita"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:79
-#, fuzzy
-msgid "Migrated to Blueprint for ui files"
-msgstr "Migrering fra til Blueprint for grensesnittsfiler"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:80
-#, fuzzy
-msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-msgstr "Forbedrede lister for store bibliotek (Takkket være nye GTK4-lister)."
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:81
-msgid "Redesigned the album/artist view"
-msgstr "Redesignet album/artistvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:82
-#, fuzzy
-msgid "Redesigned the show view"
-msgstr "Redisignet programsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:83
-msgid "Improved the borderless view"
-msgstr "Forbedret kantløs visning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:84
-msgid "A lot of bug fixes"
-msgstr "Mange feilfikser"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:92
-#, fuzzy
-msgid "Support to login without libsecret"
-msgstr "Støtte for innlogging uten libsecret"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:93
-msgid "Added French translation"
-msgstr "Ny Fransk oversettelse"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:94
-msgid "Added Norwegian Bokmål translation"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:102
-#, fuzzy
-msgid "Use gnome SDK 40"
-msgstr "Bruk av GNOME-SDK 40"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:103
-#, fuzzy
-msgid "Fix build warnings"
-msgstr "Byggadvarsler fikset"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:104
-#, fuzzy
-msgid "Update mpv to 33"
-msgstr "Mpv oppdatert til versjon 33"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:105
-#, fuzzy
-msgid "Fix play buttons not updating for musicclips"
-msgstr "Fikset avspillingsknapper som ikke oppdaterer seg for musikk-klipp"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:113
-#, fuzzy
-msgid "Add option to play video fullscreen within the Window"
-msgstr "Alternativ for å spille fullskjermsvideo inne i vinduet"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:114
-msgid "Show track and disc number in album view"
-msgstr "Visning av spor og disknummer i albumsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:115
-msgid "Select name None if no subtitle is selected"
-msgstr "Valg navnet «Ingen» hvis ingen undertekst er valgt"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:116
-#, fuzzy
-msgid "Show hours of audio item"
-msgstr "Vis antall timer lyd i element"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:124
-#, fuzzy
-msgid "Load only needed items of sections"
-msgstr "Kun last inn nødvendige elementer av seksjoner"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:125
-msgid "Use readable name for sorting"
-msgstr "Bruk lesbart navn i sortering"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:133
-msgid "Dutch translation added"
-msgstr "Nederlandsk oversettelse"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:134
-msgid "Update layout of settings menu with libhandy widgets"
-msgstr "Oppdatert oppsett for innstillingsmeny med libhandy-miniprogrammer"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:135
-msgid "Setting for changing transcoding video resolution"
-msgstr "Innstilling for endring av videooppløsning transkoding utføres i"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:136
-msgid "Unselect sidebar item when changing section"
-msgstr "Fravalgt sidefeltselement ved endring av seksjon"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:137
-msgid "More music play options"
-msgstr "Flere musikkavspillingsalternativer"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:145
-msgid "New app icon"
-msgstr "Nytt programikon"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:146
-msgid "Double click to toggle fullscreen"
-msgstr "Dobbeltklikk for å veksle fullskjermsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:147
-msgid "Redesigned login view"
-msgstr "Redesignet innloggingsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:148
-#, fuzzy
-msgid "Press k to toggle play or pause media"
-msgstr "Trykk «k» for å veksle avspilling og pausing av media"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:156
-msgid "Fix basic auth urls when downloading"
-msgstr "Fikset nettadresser med enkel identitetsbekreftelse ved nedlasting"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:157
-msgid "Fix crash when latest timeline update failed"
-msgstr "Fikset krasj når siste tidslinjeoppdatering mislyktes"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:158
-#, fuzzy
-msgid "Exit fullscreen with escape"
-msgstr "Avslutt fullskjerm med Esc"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:167
-#, fuzzy
-msgid "Add feature changing subtitle and audio stream with plex remote"
-msgstr ""
-"Legg til funksjon for endring av undertekst og lydstrøm med Plex-"
-"fjernkontroll"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:175
-msgid "Fix music not correct seeking when transcoding"
-msgstr "Fikset blafring av musikk under transkoding"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:177
-msgid "Fix bug with showing section after playlist is showed"
-msgstr "Fikset feil med visning av seksjon etter at spillelisten vises"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:185
-msgid "Change subtitle and audio stream"
-msgstr "Endre undertekst og lydstrøm"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:186
-msgid "Remove white border in fullscreen"
-msgstr "Fjern hvitt omriss i fullskjermsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:187
-msgid "Option to change volume level"
-msgstr "Alternativ for endring av lydstyrkenivå"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:188
-msgid "Option to set dark theme"
-msgstr "Alternativ for ikledelse av mørk drakt"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:189
-msgid "Change progress bar for seeking bar in video player"
-msgstr "Endret framdriftsindikator for blafringsfelt i videospiller"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:190
-msgid "Dont refresh allready loaded section"
-msgstr "Ingen gjenoppfrisking av allerede innlastet seksjon"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:198
-#, fuzzy
-msgid "Plex token saved with Secret Service"
-msgstr "Plex-symbol lagret med hemmelighetstjeneste"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:199
-#, fuzzy
-msgid "Advertise as Client on the local network"
-msgstr "Kunngjør som klient på lokalnettverket"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:200
-msgid "Add option to play media without transcoding"
-msgstr "Alternativ for avspilling av media uten transkoding"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:201
-msgid "About dialog added"
-msgstr "«Om»-dialog lagt til"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:202
-msgid "Shortcut dialog added"
-msgstr "Snarveisdialog lagt til"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:203
-msgid "Fix crash when playing media"
-msgstr "Fikset krasj ved avspilling av media"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:211
-msgid "Enhanced smallscreen support"
-msgstr "Forbedret støtte for små skjermer"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:212
-msgid "Play music clips from music track"
-msgstr "Spill musikk-klipp fra musikksporet"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:220
-#, fuzzy
-msgid "Allow connecting to url instead of Plex user"
-msgstr "Tillat tilkobling til nettadresse istedenfor Plex-bruker"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:221
-#, fuzzy
-msgid "Improve multi server support"
-msgstr "Forbedret multitjener-støtte"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:222
-msgid "Change sorting asc or desc"
-msgstr "Endre sortering stigende eller synkende"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:223
-msgid "Hide media controlls after two seconds if new media started playing"
-msgstr ""
-"Skjul mediakontroller etter to sekunder hvis avspilling av ny media startes"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:224
-msgid "Seek to certain time when playing music"
-msgstr "Blafre til gitt tid ved avspilling av musikk"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:225
-msgid "Default width 640px"
-msgstr "Forvagt bredde 640 piksler"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:233
-msgid "Redesigned media controlbox for video player"
-msgstr "Redesignet media-kontrollboks for videoavspiller"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:234
-msgid "Use [ and ] for seeking media"
-msgstr "Bruk [ og } for blafring av media"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:235
-msgid "Use media keys to select resume action"
-msgstr "Bruk av mediataster for å velge gjenopptakelse av handling"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:236
-msgid "Hide cursor on video fullscreen"
-msgstr "Skjul peker ved videofullskjermsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:237
-#, fuzzy
-msgid "Dont hide media controlls when playqueue is active"
-msgstr "Ikke skjul mediakontroller når avspillerkø er aktiv"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:238
-msgid "Fix starting wrong offset when new media is started"
-msgstr "Fiks start fra feil forskyvning når ny media startes"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:239
-msgid "Show media title in resume dialog"
-msgstr "Vis medianavn i fortsettelsesdialog"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:240
-msgid "Default mpv video output driver changed to xv"
-msgstr "Forvalgt mpv-videoutdatadriver endret til xv"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:248
-#, fuzzy
-msgid "Commandline options"
-msgstr "Kommandolinjevalg"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:249
-#, fuzzy
-msgid "Gnome search provider"
-msgstr "GNOME-søketilbyder"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:250
-#, fuzzy
-msgid "Onscreen controller"
-msgstr "Kontroller i bildeflaten"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:258
-#, fuzzy
-msgid "Added media notification (mpris)"
-msgstr "Mediamerknader (MPRIS) lagt til"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:259
-#, fuzzy
-msgid "Added play and shuffle button to artist view"
-msgstr "Tillagt avspilling og omstokkingsknapp i artistvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:260
-#, fuzzy
-msgid "Enable mpv default OSC"
-msgstr "Skru på forvalgt bildeflatekontroller for mpv"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:268
-msgid "Support for mediakeys"
-msgstr "Støtte for mediataster"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:269
-msgid "Resume dialog when media has an offset"
-msgstr "Fortsettelsesdialog når media har forskyvning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:270
-#, fuzzy
-msgid "Play and shuffle button added to show view"
-msgstr "Spill og omstokkingsknapp lagt til i programvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:271
-#, fuzzy
-msgid "Load views after main view is loaded"
-msgstr "Last inn visninger etter at hovedvisningen er innlastet"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:279
-msgid "Fix progres not been updated correctly"
-msgstr "Fiks framdrift som ikke oppdateres rett"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:287
-msgid "Play and shuffle button added in section view"
-msgstr "Spill- og omstokkingsknapper lagt til i seksjonsvisning"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:288
-#, fuzzy
-msgid "Playqueue will be refreshed when playing next/prev item"
-msgstr "Spillerkø omstokket ved avspilling av neste/forrige element"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:289
-#, fuzzy
-msgid "Keep fullscreen status"
-msgstr "Behold fullskjermsstatus"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:297
-#, fuzzy
-msgid "List with playqueue items"
-msgstr "Liste med avspillerkøelementer"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:298
-msgid "Play ondeck items continuous"
-msgstr "Spill dekksvisningselementer sammenhengende"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:299
-msgid "Added an album view"
-msgstr "Albumsvsining lagt til"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:300
-msgid "Added an artist view"
-msgstr "Artistvisning lagt til"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:308
-msgid "Buttons now with more constrast"
-msgstr "Knapper med økt kontrast"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:309
-msgid "Sync tv show with options like only unwatched"
-msgstr "Synkroniser TV-programmer med alternativer, som f.eks. kun usette"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:310
-msgid "Sync and download dialog with thumbnails"
-msgstr "Synkroniserings- og nedlastingsdialog med miniatyrbilder"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:316
-#, fuzzy
-msgid "Media controll buttons/images with more contrast."
-msgstr "Mediakontrollknapper/bilder med økt kontrast"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:321
-msgid "First release."
-msgstr "Første utgave."
-
 #: ../data/nl.g4d.Girens.desktop.in:3
 msgid "Girens"
 msgstr "Girens"
@@ -567,21 +78,21 @@ msgstr "Allan Nordhøy <epost@anotheragency.no>"
 msgid "Show more"
 msgstr "Vis mer"
 
-#: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:118
+#: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:121
 msgid "Ondeck"
 msgstr "Dekksvisning"
 
-#: ../data/ui/discover_view.blp:35
+#: ../data/ui/discover_view.blp:36
 #, fuzzy
 msgid "Recently added Shows"
 msgstr "Nylig tillagte programmer"
 
-#: ../data/ui/discover_view.blp:50
+#: ../data/ui/discover_view.blp:54
 #, fuzzy
 msgid "Recently added Movies"
 msgstr "Nylig tillagte filmer"
 
-#: ../data/ui/discover_view.blp:65
+#: ../data/ui/discover_view.blp:72
 #, fuzzy
 msgid "Recently added Music"
 msgstr "Nylig tillagt musikk"
@@ -627,26 +138,30 @@ msgstr "Symbol"
 msgid "Connect"
 msgstr "Koble til"
 
-#: ../data/ui/main_window.blp:155
+#: ../data/ui/main_window.blp:57
+msgid "Toggle Sidebar"
+msgstr ""
+
+#: ../data/ui/main_window.blp:156
 msgid "Settings"
 msgstr "Innstillinger"
 
-#: ../data/ui/main_window.blp:183
+#: ../data/ui/main_window.blp:184
 msgid "Advertise as client"
 msgstr "Kunngjør som klient"
 
-#: ../data/ui/main_window.blp:184
+#: ../data/ui/main_window.blp:185
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
 "Tillat andre enheter på dette nettverket å finne Girens og kontrollere denne "
 "klienten."
 
-#: ../data/ui/main_window.blp:193
+#: ../data/ui/main_window.blp:194
 msgid "Prefer music clips"
 msgstr "Foretrekk musikk-klipp"
 
-#: ../data/ui/main_window.blp:194
+#: ../data/ui/main_window.blp:195
 #, fuzzy
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
@@ -654,39 +169,39 @@ msgid ""
 msgstr ""
 "Spill spor som har musikk-klipp ved avspilling av musikk istedenfor lyden."
 
-#: ../data/ui/main_window.blp:203
+#: ../data/ui/main_window.blp:204
 msgid "Transcode media"
 msgstr "Transkod media"
 
-#: ../data/ui/main_window.blp:204
+#: ../data/ui/main_window.blp:205
 msgid "Transcode media instead of playing directly."
 msgstr "Transkod media istedenfor direkte avspilling."
 
-#: ../data/ui/main_window.blp:213
+#: ../data/ui/main_window.blp:214
 msgid "1080p"
 msgstr "1080p"
 
-#: ../data/ui/main_window.blp:220
+#: ../data/ui/main_window.blp:221
 msgid "720p"
 msgstr "720p"
 
-#: ../data/ui/main_window.blp:229
+#: ../data/ui/main_window.blp:230
 msgid "480p"
 msgstr "480p"
 
-#: ../data/ui/main_window.blp:238
+#: ../data/ui/main_window.blp:239
 msgid "240p"
 msgstr "240p"
 
-#: ../data/ui/main_window.blp:251
+#: ../data/ui/main_window.blp:252
 msgid "Info"
 msgstr "Info"
 
-#: ../data/ui/main_window.blp:257
+#: ../data/ui/main_window.blp:258
 msgid "Shortcuts"
 msgstr "Snarveier"
 
-#: ../data/ui/main_window.blp:263
+#: ../data/ui/main_window.blp:264
 msgid "About Girens"
 msgstr "Om Girens"
 
@@ -694,23 +209,23 @@ msgstr "Om Girens"
 msgid "Repeat"
 msgstr "Gjentagelse"
 
-#: ../data/ui/player_view.blp:77
+#: ../data/ui/player_view.blp:80
 msgid "Release date"
 msgstr "Utgivelsesdato"
 
-#: ../data/ui/player_view.blp:81
+#: ../data/ui/player_view.blp:84
 msgid "Genre"
 msgstr "Sjanger"
 
-#: ../data/ui/player_view.blp:90
+#: ../data/ui/player_view.blp:93
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: ../data/ui/player_view.blp:103
+#: ../data/ui/player_view.blp:106
 msgid "Audio "
 msgstr "Lyd "
 
-#: ../data/ui/player_view.blp:106
+#: ../data/ui/player_view.blp:109
 msgid "Subtitle "
 msgstr "Undertekst "
 
@@ -874,7 +389,7 @@ msgstr "Marker som uspilt"
 msgid "Start from the beginning"
 msgstr "Start fra begynnelsen"
 
-#: ../src/player_view.py:301 ../src/player_view.py:302
+#: ../src/player_view.py:302 ../src/player_view.py:303
 msgid "None"
 msgstr "Ingen"
 
@@ -966,6 +481,307 @@ msgstr "Starter Girens …"
 #, fuzzy
 msgid "Help with translating"
 msgstr "Bistå oversettelsen"
+
+#~ msgid "Changes:"
+#~ msgstr "Endringer:"
+
+#~ msgid "Update dependencies"
+#~ msgstr "Oppdaterte avhengigheter"
+
+#~ msgid "Migrated from GTK 3 to GTK 4"
+#~ msgstr "Migrering fra GTK 3 til GTK 4"
+
+#, fuzzy
+#~ msgid "Migrated from Libhandy to Libadwaita"
+#~ msgstr "Migrering fra libhandy til libadwaita"
+
+#, fuzzy
+#~ msgid "Migrated to Blueprint for ui files"
+#~ msgstr "Migrering fra til Blueprint for grensesnittsfiler"
+
+#, fuzzy
+#~ msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
+#~ msgstr ""
+#~ "Forbedrede lister for store bibliotek (Takkket være nye GTK4-lister)."
+
+#~ msgid "Redesigned the album/artist view"
+#~ msgstr "Redesignet album/artistvisning"
+
+#, fuzzy
+#~ msgid "Redesigned the show view"
+#~ msgstr "Redisignet programsvisning"
+
+#~ msgid "Improved the borderless view"
+#~ msgstr "Forbedret kantløs visning"
+
+#~ msgid "A lot of bug fixes"
+#~ msgstr "Mange feilfikser"
+
+#, fuzzy
+#~ msgid "Support to login without libsecret"
+#~ msgstr "Støtte for innlogging uten libsecret"
+
+#~ msgid "Added French translation"
+#~ msgstr "Ny Fransk oversettelse"
+
+#, fuzzy
+#~ msgid "Use gnome SDK 40"
+#~ msgstr "Bruk av GNOME-SDK 40"
+
+#, fuzzy
+#~ msgid "Fix build warnings"
+#~ msgstr "Byggadvarsler fikset"
+
+#, fuzzy
+#~ msgid "Update mpv to 33"
+#~ msgstr "Mpv oppdatert til versjon 33"
+
+#, fuzzy
+#~ msgid "Fix play buttons not updating for musicclips"
+#~ msgstr "Fikset avspillingsknapper som ikke oppdaterer seg for musikk-klipp"
+
+#, fuzzy
+#~ msgid "Add option to play video fullscreen within the Window"
+#~ msgstr "Alternativ for å spille fullskjermsvideo inne i vinduet"
+
+#~ msgid "Show track and disc number in album view"
+#~ msgstr "Visning av spor og disknummer i albumsvisning"
+
+#~ msgid "Select name None if no subtitle is selected"
+#~ msgstr "Valg navnet «Ingen» hvis ingen undertekst er valgt"
+
+#, fuzzy
+#~ msgid "Show hours of audio item"
+#~ msgstr "Vis antall timer lyd i element"
+
+#, fuzzy
+#~ msgid "Load only needed items of sections"
+#~ msgstr "Kun last inn nødvendige elementer av seksjoner"
+
+#~ msgid "Use readable name for sorting"
+#~ msgstr "Bruk lesbart navn i sortering"
+
+#~ msgid "Dutch translation added"
+#~ msgstr "Nederlandsk oversettelse"
+
+#~ msgid "Update layout of settings menu with libhandy widgets"
+#~ msgstr "Oppdatert oppsett for innstillingsmeny med libhandy-miniprogrammer"
+
+#~ msgid "Setting for changing transcoding video resolution"
+#~ msgstr "Innstilling for endring av videooppløsning transkoding utføres i"
+
+#~ msgid "Unselect sidebar item when changing section"
+#~ msgstr "Fravalgt sidefeltselement ved endring av seksjon"
+
+#~ msgid "More music play options"
+#~ msgstr "Flere musikkavspillingsalternativer"
+
+#~ msgid "New app icon"
+#~ msgstr "Nytt programikon"
+
+#~ msgid "Double click to toggle fullscreen"
+#~ msgstr "Dobbeltklikk for å veksle fullskjermsvisning"
+
+#~ msgid "Redesigned login view"
+#~ msgstr "Redesignet innloggingsvisning"
+
+#, fuzzy
+#~ msgid "Press k to toggle play or pause media"
+#~ msgstr "Trykk «k» for å veksle avspilling og pausing av media"
+
+#~ msgid "Fix basic auth urls when downloading"
+#~ msgstr "Fikset nettadresser med enkel identitetsbekreftelse ved nedlasting"
+
+#~ msgid "Fix crash when latest timeline update failed"
+#~ msgstr "Fikset krasj når siste tidslinjeoppdatering mislyktes"
+
+#, fuzzy
+#~ msgid "Exit fullscreen with escape"
+#~ msgstr "Avslutt fullskjerm med Esc"
+
+#, fuzzy
+#~ msgid "Add feature changing subtitle and audio stream with plex remote"
+#~ msgstr ""
+#~ "Legg til funksjon for endring av undertekst og lydstrøm med Plex-"
+#~ "fjernkontroll"
+
+#~ msgid "Fix music not correct seeking when transcoding"
+#~ msgstr "Fikset blafring av musikk under transkoding"
+
+#~ msgid "Fix bug with showing section after playlist is showed"
+#~ msgstr "Fikset feil med visning av seksjon etter at spillelisten vises"
+
+#~ msgid "Change subtitle and audio stream"
+#~ msgstr "Endre undertekst og lydstrøm"
+
+#~ msgid "Remove white border in fullscreen"
+#~ msgstr "Fjern hvitt omriss i fullskjermsvisning"
+
+#~ msgid "Option to change volume level"
+#~ msgstr "Alternativ for endring av lydstyrkenivå"
+
+#~ msgid "Option to set dark theme"
+#~ msgstr "Alternativ for ikledelse av mørk drakt"
+
+#~ msgid "Change progress bar for seeking bar in video player"
+#~ msgstr "Endret framdriftsindikator for blafringsfelt i videospiller"
+
+#~ msgid "Dont refresh allready loaded section"
+#~ msgstr "Ingen gjenoppfrisking av allerede innlastet seksjon"
+
+#, fuzzy
+#~ msgid "Plex token saved with Secret Service"
+#~ msgstr "Plex-symbol lagret med hemmelighetstjeneste"
+
+#, fuzzy
+#~ msgid "Advertise as Client on the local network"
+#~ msgstr "Kunngjør som klient på lokalnettverket"
+
+#~ msgid "Add option to play media without transcoding"
+#~ msgstr "Alternativ for avspilling av media uten transkoding"
+
+#~ msgid "About dialog added"
+#~ msgstr "«Om»-dialog lagt til"
+
+#~ msgid "Shortcut dialog added"
+#~ msgstr "Snarveisdialog lagt til"
+
+#~ msgid "Fix crash when playing media"
+#~ msgstr "Fikset krasj ved avspilling av media"
+
+#~ msgid "Enhanced smallscreen support"
+#~ msgstr "Forbedret støtte for små skjermer"
+
+#~ msgid "Play music clips from music track"
+#~ msgstr "Spill musikk-klipp fra musikksporet"
+
+#, fuzzy
+#~ msgid "Allow connecting to url instead of Plex user"
+#~ msgstr "Tillat tilkobling til nettadresse istedenfor Plex-bruker"
+
+#, fuzzy
+#~ msgid "Improve multi server support"
+#~ msgstr "Forbedret multitjener-støtte"
+
+#~ msgid "Change sorting asc or desc"
+#~ msgstr "Endre sortering stigende eller synkende"
+
+#~ msgid "Hide media controlls after two seconds if new media started playing"
+#~ msgstr ""
+#~ "Skjul mediakontroller etter to sekunder hvis avspilling av ny media "
+#~ "startes"
+
+#~ msgid "Seek to certain time when playing music"
+#~ msgstr "Blafre til gitt tid ved avspilling av musikk"
+
+#~ msgid "Default width 640px"
+#~ msgstr "Forvagt bredde 640 piksler"
+
+#~ msgid "Redesigned media controlbox for video player"
+#~ msgstr "Redesignet media-kontrollboks for videoavspiller"
+
+#~ msgid "Use [ and ] for seeking media"
+#~ msgstr "Bruk [ og } for blafring av media"
+
+#~ msgid "Use media keys to select resume action"
+#~ msgstr "Bruk av mediataster for å velge gjenopptakelse av handling"
+
+#~ msgid "Hide cursor on video fullscreen"
+#~ msgstr "Skjul peker ved videofullskjermsvisning"
+
+#, fuzzy
+#~ msgid "Dont hide media controlls when playqueue is active"
+#~ msgstr "Ikke skjul mediakontroller når avspillerkø er aktiv"
+
+#~ msgid "Fix starting wrong offset when new media is started"
+#~ msgstr "Fiks start fra feil forskyvning når ny media startes"
+
+#~ msgid "Show media title in resume dialog"
+#~ msgstr "Vis medianavn i fortsettelsesdialog"
+
+#~ msgid "Default mpv video output driver changed to xv"
+#~ msgstr "Forvalgt mpv-videoutdatadriver endret til xv"
+
+#, fuzzy
+#~ msgid "Commandline options"
+#~ msgstr "Kommandolinjevalg"
+
+#, fuzzy
+#~ msgid "Gnome search provider"
+#~ msgstr "GNOME-søketilbyder"
+
+#, fuzzy
+#~ msgid "Onscreen controller"
+#~ msgstr "Kontroller i bildeflaten"
+
+#, fuzzy
+#~ msgid "Added media notification (mpris)"
+#~ msgstr "Mediamerknader (MPRIS) lagt til"
+
+#, fuzzy
+#~ msgid "Added play and shuffle button to artist view"
+#~ msgstr "Tillagt avspilling og omstokkingsknapp i artistvisning"
+
+#, fuzzy
+#~ msgid "Enable mpv default OSC"
+#~ msgstr "Skru på forvalgt bildeflatekontroller for mpv"
+
+#~ msgid "Support for mediakeys"
+#~ msgstr "Støtte for mediataster"
+
+#~ msgid "Resume dialog when media has an offset"
+#~ msgstr "Fortsettelsesdialog når media har forskyvning"
+
+#, fuzzy
+#~ msgid "Play and shuffle button added to show view"
+#~ msgstr "Spill og omstokkingsknapp lagt til i programvisning"
+
+#, fuzzy
+#~ msgid "Load views after main view is loaded"
+#~ msgstr "Last inn visninger etter at hovedvisningen er innlastet"
+
+#~ msgid "Fix progres not been updated correctly"
+#~ msgstr "Fiks framdrift som ikke oppdateres rett"
+
+#~ msgid "Play and shuffle button added in section view"
+#~ msgstr "Spill- og omstokkingsknapper lagt til i seksjonsvisning"
+
+#, fuzzy
+#~ msgid "Playqueue will be refreshed when playing next/prev item"
+#~ msgstr "Spillerkø omstokket ved avspilling av neste/forrige element"
+
+#, fuzzy
+#~ msgid "Keep fullscreen status"
+#~ msgstr "Behold fullskjermsstatus"
+
+#, fuzzy
+#~ msgid "List with playqueue items"
+#~ msgstr "Liste med avspillerkøelementer"
+
+#~ msgid "Play ondeck items continuous"
+#~ msgstr "Spill dekksvisningselementer sammenhengende"
+
+#~ msgid "Added an album view"
+#~ msgstr "Albumsvsining lagt til"
+
+#~ msgid "Added an artist view"
+#~ msgstr "Artistvisning lagt til"
+
+#~ msgid "Buttons now with more constrast"
+#~ msgstr "Knapper med økt kontrast"
+
+#~ msgid "Sync tv show with options like only unwatched"
+#~ msgstr "Synkroniser TV-programmer med alternativer, som f.eks. kun usette"
+
+#~ msgid "Sync and download dialog with thumbnails"
+#~ msgstr "Synkroniserings- og nedlastingsdialog med miniatyrbilder"
+
+#, fuzzy
+#~ msgid "Media controll buttons/images with more contrast."
+#~ msgstr "Mediakontrollknapper/bilder med økt kontrast"
+
+#~ msgid "First release."
+#~ msgstr "Første utgave."
 
 #~ msgid ""
 #~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
