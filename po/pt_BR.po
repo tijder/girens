@@ -8,8 +8,9 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-23 19:13+0200\n"
-"PO-Revision-Date: 2024-02-15 19:02+0000\n"
-"Last-Translator: Thiago Fernandes <thiago@avila-fernandes.com>\n"
+"PO-Revision-Date: 2024-05-02 22:07+0000\n"
+"Last-Translator: Fernando Lopes <118869201+plasmus777@users.noreply.github."
+"com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "girens/girens/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.5.3-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -49,7 +50,7 @@ msgstr "A tela de álbum"
 
 #: ../data/nl.g4d.Girens.desktop.in:3
 msgid "Girens"
-msgstr ""
+msgstr "Girens"
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
