@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-23 19:13+0200\n"
-"PO-Revision-Date: 2024-03-14 13:01+0000\n"
+"PO-Revision-Date: 2024-05-05 11:07+0000\n"
 "Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/girens/girens/tr/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.5.3\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -130,7 +130,7 @@ msgstr "Bağlan"
 
 #: ../data/ui/main_window.blp:57
 msgid "Toggle Sidebar"
-msgstr ""
+msgstr "Kenar Çubuğunu Aç/Kapat"
 
 #: ../data/ui/main_window.blp:156
 msgid "Settings"
