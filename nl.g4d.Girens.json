@@ -64,7 +64,7 @@
                 {
                     "type" : "git",
                     "url" : "https://github.com/mpv-player/mpv",
-                    "commit" : "818ce7c51a6b9179307950e919983e0909942098"
+                    "commit" : "02254b92dd237f03aa0a151c2a68778c4ea848f9"
                 }
             ],
             "modules" : [
@@ -162,23 +162,23 @@
                         {
                             "type" : "git",
                             "url" : "https://github.com/FFmpeg/FFmpeg",
-                            "commit" : "e38092ef9395d7049f871ef4d5411eb410e283e0"
+                            "commit" : "083443d67cb159ce469e5d902346b8d0c2cd1c93"
                         }
                     ]
                 }
             ]
         },
         {
-            "name" : "python-mpv",
+            "name" : "mpv",
             "buildsystem" : "simple",
             "build-commands" : [
-                "pip3 install --prefix=/app python_mpv-1.0.5-py3-none-any.whl"
+                "pip3 install --prefix=/app mpv-1.0.6-py3-none-any.whl"
             ],
             "sources" : [
 		{
 		    "type" : "file",
-		    "url" : "https://files.pythonhosted.org/packages/2b/fb/71a1af53867518f757bb9269a1466b2ee163325c9519f8b3ea1358b0e2ec/python_mpv-1.0.5-py3-none-any.whl",
-		    "sha256" : "1f6261b2a36954bcca84d31cb6ec2608cab6a3d1c13b2b8ed1a3bc5a84efd378"
+		    "url" : "https://files.pythonhosted.org/packages/06/cc/bf336b42a121ae3a52331128ca57613998395b9605fda7ebbcbebdd1552f/mpv-1.0.6-py3-none-any.whl",
+		    "sha256" : "93067ee1ca38f036c1a474d8a62a87f402e125657044388561ea3fed8723f3c2"
 		}
 	    ],
             "modules" : [
