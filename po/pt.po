@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-23 19:13+0200\n"
+"POT-Creation-Date: 2024-05-06 21:36+0200\n"
 "PO-Revision-Date: 2024-02-15 19:02+0000\n"
 "Last-Translator: Thiago Fernandes <thiago@avila-fernandes.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/girens/girens/"
@@ -94,6 +94,10 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr ""
+
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
 msgstr ""
@@ -110,12 +114,16 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr ""
+
 #: ../data/ui/login_view.blp:69
-msgid "Go to Plex server based on an url"
+msgid "Go to Plex server based on an URL"
 msgstr ""
 
 #: ../data/ui/login_view.blp:74
-msgid "The url to the Plex server with the port number"
+msgid "The URL to the Plex server with the port number"
 msgstr ""
 
 #: ../data/ui/login_view.blp:80
@@ -339,7 +347,7 @@ msgid "Shuffle"
 msgstr ""
 
 #: ../src/album_view.py:138
-msgid "Disc "
+msgid "Disc {}"
 msgstr ""
 
 #: ../src/cover_box.py:95
@@ -366,13 +374,12 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
-#: ../src/plex.py:487 ../src/plex.py:495
-msgid "Connecting to "
+#: ../src/plex.py:135 ../src/plex.py:464
+msgid "Connecting to {}."
 msgstr ""
 
-#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
-msgid " failed."
+#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
+msgid "Connecting to {} failed."
 msgstr ""
 
 #: ../src/plex.py:483
@@ -380,15 +387,11 @@ msgid "No servers found for this account."
 msgstr ""
 
 #: ../src/plex.py:487
-msgid " connection urls."
-msgstr ""
-
-#: ../src/plex.py:487
-msgid "There are "
-msgstr ""
-
-#: ../src/plex.py:487
-msgid "This may take a while"
+#, python-brace-format
+msgid ""
+"Connecting to {0}.\n"
+"There are {1} connection urls.\n"
+"This may take a while."
 msgstr ""
 
 #: ../src/section_view.py:33

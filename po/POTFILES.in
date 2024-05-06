@@ -20,7 +20,6 @@ src/cover_box.py
 src/player_view.py
 src/plex.py
 src/plex.py src/plex.py
-src/plex.py src/plex.py src/plex.py
 src/section_view.py
 src/sidebar_box.py
 src/window.py

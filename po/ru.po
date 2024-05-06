@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-23 19:13+0200\n"
+"POT-Creation-Date: 2024-05-06 21:36+0200\n"
 "PO-Revision-Date: 2024-04-26 14:07+0000\n"
 "Last-Translator: hectop <npilosov83@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/girens/girens/ru/"
@@ -97,6 +97,10 @@ msgstr "Недавно добавленная Музыка"
 msgid "Logout"
 msgstr "Выйти"
 
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr ""
+
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
 msgstr "Войти в Plex с учетной записью пользователя"
@@ -113,13 +117,17 @@ msgstr "Пароль"
 msgid "Login"
 msgstr "Логин"
 
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr ""
+
 #: ../data/ui/login_view.blp:69
-msgid "Go to Plex server based on an url"
-msgstr "Подключение к серверу Plex по адресу"
+msgid "Go to Plex server based on an URL"
+msgstr ""
 
 #: ../data/ui/login_view.blp:74
-msgid "The url to the Plex server with the port number"
-msgstr "Адрес сервера Plex с номером порта"
+msgid "The URL to the Plex server with the port number"
+msgstr ""
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
@@ -345,8 +353,8 @@ msgid "Shuffle"
 msgstr "Перемешать"
 
 #: ../src/album_view.py:138
-msgid "Disc "
-msgstr "Диск "
+msgid "Disc {}"
+msgstr ""
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
@@ -372,30 +380,25 @@ msgstr "Начать сначала"
 msgid "None"
 msgstr "Нет"
 
-#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
-#: ../src/plex.py:487 ../src/plex.py:495
-msgid "Connecting to "
-msgstr "Подключение к "
+#: ../src/plex.py:135 ../src/plex.py:464
+msgid "Connecting to {}."
+msgstr ""
 
-#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
-msgid " failed."
-msgstr " не удалось."
+#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
+msgid "Connecting to {} failed."
+msgstr ""
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
 msgstr "Для этой учетной записи не найдено ни одного сервера."
 
 #: ../src/plex.py:487
-msgid " connection urls."
-msgstr " адреса подключения."
-
-#: ../src/plex.py:487
-msgid "There are "
-msgstr "Есть "
-
-#: ../src/plex.py:487
-msgid "This may take a while"
-msgstr "Это может занять некоторое время"
+#, python-brace-format
+msgid ""
+"Connecting to {0}.\n"
+"There are {1} connection urls.\n"
+"This may take a while."
+msgstr ""
 
 #: ../src/section_view.py:33
 msgid "Added at"
@@ -456,6 +459,30 @@ msgstr "Запуск Girens"
 #: ../src/window.py:523
 msgid "Help with translating"
 msgstr "Помочь с переводом"
+
+#~ msgid "Go to Plex server based on an url"
+#~ msgstr "Подключение к серверу Plex по адресу"
+
+#~ msgid "The url to the Plex server with the port number"
+#~ msgstr "Адрес сервера Plex с номером порта"
+
+#~ msgid "Disc "
+#~ msgstr "Диск "
+
+#~ msgid "Connecting to "
+#~ msgstr "Подключение к "
+
+#~ msgid " failed."
+#~ msgstr " не удалось."
+
+#~ msgid " connection urls."
+#~ msgstr " адреса подключения."
+
+#~ msgid "There are "
+#~ msgstr "Есть "
+
+#~ msgid "This may take a while"
+#~ msgstr "Это может занять некоторое время"
 
 #~ msgid "Changes:"
 #~ msgstr "Изменения:"

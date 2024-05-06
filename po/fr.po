@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-23 19:13+0200\n"
+"POT-Creation-Date: 2024-05-06 21:36+0200\n"
 "PO-Revision-Date: 2022-11-29 09:41+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
@@ -97,6 +97,10 @@ msgstr "Musiques ajoutées récemment"
 msgid "Logout"
 msgstr "Déconnexion"
 
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr ""
+
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
 msgstr "Connectez-vous à Plex avec un compte utilisateur"
@@ -113,13 +117,17 @@ msgstr "Mot de passe"
 msgid "Login"
 msgstr "Connexion"
 
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr ""
+
 #: ../data/ui/login_view.blp:69
-msgid "Go to Plex server based on an url"
-msgstr "Aller au serveur Plex à partir d’une URL"
+msgid "Go to Plex server based on an URL"
+msgstr ""
 
 #: ../data/ui/login_view.blp:74
-msgid "The url to the Plex server with the port number"
-msgstr "L’URL du serveur Plex avec le numéro du port"
+msgid "The URL to the Plex server with the port number"
+msgstr ""
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
@@ -346,8 +354,8 @@ msgid "Shuffle"
 msgstr "Mélanger"
 
 #: ../src/album_view.py:138
-msgid "Disc "
-msgstr "Disque "
+msgid "Disc {}"
+msgstr ""
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
@@ -373,30 +381,25 @@ msgstr "Commencer depuis le début"
 msgid "None"
 msgstr "Aucun"
 
-#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
-#: ../src/plex.py:487 ../src/plex.py:495
-msgid "Connecting to "
-msgstr "Connexion à "
+#: ../src/plex.py:135 ../src/plex.py:464
+msgid "Connecting to {}."
+msgstr ""
 
-#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
-msgid " failed."
-msgstr " échoué."
+#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
+msgid "Connecting to {} failed."
+msgstr ""
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
 msgstr "Aucun serveur trouvé pour ce compte."
 
 #: ../src/plex.py:487
-msgid " connection urls."
-msgstr " URLs de connexion."
-
-#: ../src/plex.py:487
-msgid "There are "
-msgstr "Il y a "
-
-#: ../src/plex.py:487
-msgid "This may take a while"
-msgstr "Cela peut prendre du temps"
+#, python-brace-format
+msgid ""
+"Connecting to {0}.\n"
+"There are {1} connection urls.\n"
+"This may take a while."
+msgstr ""
 
 #: ../src/section_view.py:33
 msgid "Added at"
@@ -457,6 +460,30 @@ msgstr "Démarrage de Girens"
 #: ../src/window.py:523
 msgid "Help with translating"
 msgstr "Contribuer aux traductions"
+
+#~ msgid "Go to Plex server based on an url"
+#~ msgstr "Aller au serveur Plex à partir d’une URL"
+
+#~ msgid "The url to the Plex server with the port number"
+#~ msgstr "L’URL du serveur Plex avec le numéro du port"
+
+#~ msgid "Disc "
+#~ msgstr "Disque "
+
+#~ msgid "Connecting to "
+#~ msgstr "Connexion à "
+
+#~ msgid " failed."
+#~ msgstr " échoué."
+
+#~ msgid " connection urls."
+#~ msgstr " URLs de connexion."
+
+#~ msgid "There are "
+#~ msgstr "Il y a "
+
+#~ msgid "This may take a while"
+#~ msgstr "Cela peut prendre du temps"
 
 #~ msgid "Changes:"
 #~ msgstr "Changements :"

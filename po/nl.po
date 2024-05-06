@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-23 19:13+0200\n"
+"POT-Creation-Date: 2024-05-06 21:36+0200\n"
 "PO-Revision-Date: 2024-05-02 22:07+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/>"
-"\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
+">\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +98,10 @@ msgstr "Onlangs toegevoegde muziek"
 msgid "Logout"
 msgstr "Uitloggen"
 
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr "Gerbruikersnaam en wachtwoord"
+
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
 msgstr "Inloggen op Plex met een gebruikersaccount"
@@ -114,12 +118,16 @@ msgstr "Wachtwoord"
 msgid "Login"
 msgstr "Inloggen"
 
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr "URL en token"
+
 #: ../data/ui/login_view.blp:69
-msgid "Go to Plex server based on an url"
+msgid "Go to Plex server based on an URL"
 msgstr "Ga naar een Plex-server op basis van een URL"
 
 #: ../data/ui/login_view.blp:74
-msgid "The url to the Plex server with the port number"
+msgid "The URL to the Plex server with the port number"
 msgstr "De URL naar de Plex-server met het poortnummer"
 
 #: ../data/ui/login_view.blp:80
@@ -345,8 +353,8 @@ msgid "Shuffle"
 msgstr "Shufflen"
 
 #: ../src/album_view.py:138
-msgid "Disc "
-msgstr "Schijf "
+msgid "Disc {}"
+msgstr "Schijf {}"
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
@@ -372,30 +380,25 @@ msgstr "Starten vanaf het begin"
 msgid "None"
 msgstr "Geen"
 
-#: ../src/plex.py:135 ../src/plex.py:147 ../src/plex.py:464 ../src/plex.py:472
-#: ../src/plex.py:487 ../src/plex.py:495
-msgid "Connecting to "
-msgstr "Verbinden met "
+#: ../src/plex.py:135 ../src/plex.py:464
+msgid "Connecting to {}."
+msgstr ""
 
-#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:495
-msgid " failed."
-msgstr " mislukt."
+#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
+msgid "Connecting to {} failed."
+msgstr ""
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
 msgstr "Er zijn geen servers gevonden voor dit account."
 
 #: ../src/plex.py:487
-msgid " connection urls."
-msgstr " verbindings-URL's."
-
-#: ../src/plex.py:487
-msgid "There are "
-msgstr "Er zijn "
-
-#: ../src/plex.py:487
-msgid "This may take a while"
-msgstr "Dit kan een tijdje duren"
+#, python-brace-format
+msgid ""
+"Connecting to {0}.\n"
+"There are {1} connection urls.\n"
+"This may take a while."
+msgstr ""
 
 #: ../src/section_view.py:33
 msgid "Added at"
@@ -456,6 +459,30 @@ msgstr "Girens opstarten"
 #: ../src/window.py:523
 msgid "Help with translating"
 msgstr "Help met vertalen"
+
+#~ msgid "Go to Plex server based on an url"
+#~ msgstr "Ga naar een Plex-server op basis van een URL"
+
+#~ msgid "The url to the Plex server with the port number"
+#~ msgstr "De URL naar de Plex-server met het poortnummer"
+
+#~ msgid "Disc "
+#~ msgstr "Schijf "
+
+#~ msgid "Connecting to "
+#~ msgstr "Verbinden met "
+
+#~ msgid " failed."
+#~ msgstr " mislukt."
+
+#~ msgid " connection urls."
+#~ msgstr " verbindings-URL's."
+
+#~ msgid "There are "
+#~ msgstr "Er zijn "
+
+#~ msgid "This may take a while"
+#~ msgstr "Dit kan een tijdje duren"
 
 #~ msgid "Changes:"
 #~ msgstr "Veranderingen:"
