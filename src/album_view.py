@@ -135,7 +135,7 @@ class AlbumView(Gtk.ScrolledWindow):
                 listBox.set_css_classes(["boxed-list"])
                 listBox.connect("row-activated", self.__on_row_actived)
 
-                label = Gtk.Label(label=_('Disc ') + str(parentindex))
+                label = Gtk.Label(label=_('Disc {}').format(str(parentindex)))
                 label.set_margin_bottom(10)
                 label.set_visible(True)
                 self._item_box.append(label)

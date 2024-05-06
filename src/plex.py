@@ -132,7 +132,7 @@ class Plex(GObject.Object):
 
     def login_with_url(self, baseurl, token):
         try:
-            self.emit('loading', _('Connecting to ') + baseurl, True)
+            self.emit('loading', _('Connecting to {}.').format(baseurl), True)
             self._server = PlexServer(baseurl, token)
             self._account = self._server.account()
             self._library = self._server.library
@@ -144,7 +144,7 @@ class Plex(GObject.Object):
             self.emit('loading', 'Success', False)
             self.emit('login-status',True,'')
         except:
-            self.emit('loading', _('Connecting to ') + baseurl + _(' failed.'), True)
+            self.emit('loading', _('Connecting to {} failed.').format(baseurl), True)
             self.emit('login-status',False,'Login failed')
             print('connection failed (login with url)')
 
@@ -461,7 +461,7 @@ class Plex(GObject.Object):
     def connect_to_server(self):
         if (self._server_token is not None and self._server_url is not None):
             try:
-                self.emit('loading', _('Connecting to ') + self._server_url + '.', True)
+                self.emit('loading', _('Connecting to {}.').format(self._server_url), True)
                 self._server = PlexServer(self._server_url, self._server_token)
                 self._library = self._server.library
                 self.set_server_token(self._server._token, self._server._baseurl, self._server.machineIdentifier, self._server.friendlyName)
@@ -469,7 +469,7 @@ class Plex(GObject.Object):
                 self.emit('loading', 'Success', False)
                 return None
             except:
-                self.emit('loading', _('Connecting to ') + self._server_url + _(' failed.'), True)
+                self.emit('loading', _('Connecting to {} failed.').format(self._server_url), True)
                 print('custom url connection failed')
 
         servers_found = False
@@ -484,7 +484,9 @@ class Plex(GObject.Object):
 
     def connect_to_resource(self, resource):
         try:
-            self.emit('loading', _('Connecting to ') + resource.name + '.\n'+ _('There are ') + str(len(resource.connections)) + _(' connection urls.') + '\n' + _('This may take a while'), True)
+            message = _('Connecting to {0}.\nThere are {1} connection urls.\nThis may take a while.')
+            formatted_message = message.format(resource.name, str(len(resource.connections)))
+            self.emit('loading', formatted_message, True)
             self._server = resource.connect(ssl=self._account.secure)
             self._library = self._server.library
             self.set_server_token(self._server._token, self._server._baseurl, self._server.machineIdentifier, self._server.friendlyName)
@@ -492,6 +494,6 @@ class Plex(GObject.Object):
             self.emit('loading', 'Success', False)
             return True
         except:
-            self.emit('loading', _('Connecting to ') + resource.name + _(' failed.'), True)
+            self.emit('loading', _('Connecting to {} failed.').format(resource.name), True)
             print('connection failed (when trying to connect to resource)')
             return False
