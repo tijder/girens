@@ -16,7 +16,7 @@
         "--own-name=org.mpris.MediaPlayer2.Girens",
         "--talk-name=ca.desrt.dconf",
         "--talk-name=org.freedesktop.secrets",
-        "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+        "--metadata=X-DConf=migrate-path=/nl/g4d/Girens/"
     ],
     "cleanup" : [
         "/include",
