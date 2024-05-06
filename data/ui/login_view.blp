@@ -26,7 +26,7 @@ template $login_view : Box {
 
         StackPage {
         name: 'password';
-        title: 'Username and password';
+        title: _("Username and password");
         child: Adw.PreferencesGroup {
             margin-top: 10;
             Adw.ActionRow {
@@ -61,17 +61,17 @@ template $login_view : Box {
 
         StackPage {
         name: 'token';
-        title: 'Url and token';
+        title: _("URL and token");
         child: Adw.PreferencesGroup {
             margin-top: 10;
 
             Adw.ActionRow {
-              title: _("Go to Plex server based on an url");
+              title: _("Go to Plex server based on an URL");
               use-underline: true;
             }
 
             Adw.EntryRow _server_url_entry {
-              title: _("The url to the Plex server with the port number");
+              title: _("The URL to the Plex server with the port number");
               input-purpose: url;
               use-underline: true;
             }
