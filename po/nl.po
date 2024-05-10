@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2024-05-02 22:07+0000\n"
+"PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
-">\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/>"
+"\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5.3-dev\n"
+"X-Generator: Weblate 5.5.4\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -25,7 +25,7 @@ msgstr "Girens voor Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr "Bekijk uw Plex-media"
+msgstr "Bekĳk uw Plex-media"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -33,7 +33,7 @@ msgid ""
 "music, shows and movies with this GTK app."
 msgstr ""
 "Girens is een Plex mediaspeler. Met deze GTK-app kunt u uw muziek, series en "
-"films bekijken en beluisteren."
+"films bekĳken en beluisteren."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
@@ -72,7 +72,7 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Gerben Droogers\n"
-"Philip Goto https://flipflop97.github.io/"
+"Philip Goto https://philipgoto.nl/"
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
@@ -80,7 +80,7 @@ msgstr "Meer tonen"
 
 #: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:121
 msgid "Ondeck"
-msgstr "Verder kijken"
+msgstr "Verder kĳken"
 
 #: ../data/ui/discover_view.blp:36
 msgid "Recently added Shows"
@@ -100,19 +100,19 @@ msgstr "Uitloggen"
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr "Gerbruikersnaam en wachtwoord"
+msgstr "Gerbruikers­naam en wachtwoord"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
-msgstr "Inloggen op Plex met een gebruikersaccount"
+msgstr "Inloggen op Plex met een gebruikers­account"
 
 #: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
 msgid "Username"
-msgstr "Gebruikersnaam"
+msgstr "Gebruikers­naam"
 
 #: ../data/ui/login_view.blp:44
 msgid "Password"
-msgstr "Wachtwoord"
+msgstr "Wacht­woord"
 
 #: ../data/ui/login_view.blp:53
 msgid "Login"
@@ -128,7 +128,7 @@ msgstr "Ga naar een Plex-server op basis van een URL"
 
 #: ../data/ui/login_view.blp:74
 msgid "The URL to the Plex server with the port number"
-msgstr "De URL naar de Plex-server met het poortnummer"
+msgstr "De URL naar de Plex-server met het poort­nummer"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
@@ -209,7 +209,7 @@ msgstr "Herhalen"
 
 #: ../data/ui/player_view.blp:80
 msgid "Release date"
-msgstr "Uitgavedatum"
+msgstr "Uitgave­datum"
 
 #: ../data/ui/player_view.blp:84
 msgid "Genre"
@@ -217,7 +217,7 @@ msgstr "Genre"
 
 #: ../data/ui/player_view.blp:93
 msgid "Description"
-msgstr "Beschrijving"
+msgstr "Beschrĳving"
 
 #: ../data/ui/player_view.blp:106
 msgid "Audio "
@@ -237,7 +237,7 @@ msgstr "E-mail"
 
 #: ../data/ui/profile_dialog.blp:18
 msgid "Subscription plan"
-msgstr "Abonnementsplan"
+msgstr "Abonnements­plan"
 
 #: ../data/ui/profile_dialog.blp:21
 msgid "Secure"
@@ -245,7 +245,7 @@ msgstr "Beveiligd"
 
 #: ../data/ui/resume_dialog.ui:5
 msgid "Do you want resume watching or start from the beginning?"
-msgstr "Wilt u verder kijken of vanaf het begin beginnen?"
+msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 
 #: ../data/ui/resume_dialog.ui:11
 msgid "Resume"
@@ -306,11 +306,11 @@ msgstr "Items synchroniseren"
 
 #: ../data/ui/sync_dialog.blp:33
 msgid "Ok"
-msgstr "Ok"
+msgstr "Oké"
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
-msgstr "Sync - instellingen"
+msgstr "Synchronisatie - instellingen"
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
@@ -330,19 +330,19 @@ msgstr "Max items"
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr "Systeemstijl volgen"
+msgstr "Systeemstĳl volgen"
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr "Lichte stijl"
+msgstr "Lichte stĳl"
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr "Donkere stijl"
+msgstr "Donkere stĳl"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
-msgstr "Artiestweergave"
+msgstr "Artiest­weergave"
 
 #: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
@@ -354,15 +354,15 @@ msgstr "Shufflen"
 
 #: ../src/album_view.py:138
 msgid "Disc {}"
-msgstr "Schijf {}"
+msgstr "Schĳf {}"
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr "Albumweergave"
+msgstr "Album­weergave"
 
 #: ../src/cover_box.py:116
 msgid "Go to show view"
-msgstr "Serieweergave"
+msgstr "Serie­weergave"
 
 #: ../src/cover_box.py:121
 msgid "Mark as Played"
@@ -382,15 +382,15 @@ msgstr "Geen"
 
 #: ../src/plex.py:135 ../src/plex.py:464
 msgid "Connecting to {}."
-msgstr ""
+msgstr "Verbinden met {}."
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
 msgid "Connecting to {} failed."
-msgstr ""
+msgstr "Verbinden met {} mislukt."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
-msgstr "Er zijn geen servers gevonden voor dit account."
+msgstr "Er zĳn geen servers gevonden voor dit account."
 
 #: ../src/plex.py:487
 #, python-brace-format
@@ -399,6 +399,9 @@ msgid ""
 "There are {1} connection urls.\n"
 "This may take a while."
 msgstr ""
+"Verbinden met {0}.\n"
+"Er zĳn {1} verbindings-URL's.\n"
+"Dit kan even duren."
 
 #: ../src/section_view.py:33
 msgid "Added at"
@@ -410,7 +413,7 @@ msgstr "Laatst bekeken op"
 
 #: ../src/section_view.py:35
 msgid "Originally available at"
-msgstr "Oorspronkelijk beschikbaar op"
+msgstr "Oorspronkelĳk beschikbaar op"
 
 #: ../src/section_view.py:36
 msgid "Title"
@@ -426,15 +429,15 @@ msgstr "Onbekeken"
 
 #: ../src/section_view.py:39
 msgid "View count"
-msgstr "Bekijk aantal"
+msgstr "Weergaven"
 
 #: ../src/section_view.py:40
 msgid "User rating"
-msgstr "Beoordeling van de gebruiker"
+msgstr "Gebruikers­beoordeling"
 
 #: ../src/section_view.py:41
 msgid "Media height"
-msgstr "Media grote"
+msgstr "Media­hoogte"
 
 #: ../src/section_view.py:42
 msgid "Duration"
@@ -442,7 +445,7 @@ msgstr "Duur"
 
 #: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
-msgstr "Afspeellijsten"
+msgstr "Afspeel­lĳsten"
 
 #: ../src/sidebar_box.py:100
 msgid "Player"
@@ -454,11 +457,11 @@ msgstr "Thuis"
 
 #: ../src/window.py:347
 msgid "Starting Girens"
-msgstr "Girens opstarten"
+msgstr "Girens wordt opgestart"
 
 #: ../src/window.py:523
 msgid "Help with translating"
-msgstr "Help met vertalen"
+msgstr "Help mee vertalen"
 
 #~ msgid "Go to Plex server based on an url"
 #~ msgstr "Ga naar een Plex-server op basis van een URL"
