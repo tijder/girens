@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2024-05-05 11:07+0000\n"
+"PO-Revision-Date: 2024-05-08 12:08+0000\n"
 "Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/girens/girens/tr/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5.3\n"
+"X-Generator: Weblate 5.5.4-rc\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -98,7 +98,7 @@ msgstr "Oturumu Kapat"
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr ""
+msgstr "Kullanıcı adı ve parola"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
@@ -118,15 +118,15 @@ msgstr "Giriş"
 
 #: ../data/ui/login_view.blp:64
 msgid "URL and token"
-msgstr ""
+msgstr "URL ve jeton"
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an URL"
-msgstr ""
+msgstr "URLʼye göre Plex sunucusuna git"
 
 #: ../data/ui/login_view.blp:74
 msgid "The URL to the Plex server with the port number"
-msgstr ""
+msgstr "Bağlantı noktası numarasını içeren Plex sunucu URLʼsi"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
@@ -352,7 +352,7 @@ msgstr "Karıştır"
 
 #: ../src/album_view.py:138
 msgid "Disc {}"
-msgstr ""
+msgstr "Disk {}"
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
@@ -380,11 +380,11 @@ msgstr "Hiçbiri"
 
 #: ../src/plex.py:135 ../src/plex.py:464
 msgid "Connecting to {}."
-msgstr ""
+msgstr "{} sunucusuna bağlanıyor."
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
 msgid "Connecting to {} failed."
-msgstr ""
+msgstr "{} sunucusuna bağlanılamadı."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
@@ -397,6 +397,9 @@ msgid ""
 "There are {1} connection urls.\n"
 "This may take a while."
 msgstr ""
+"{0} sunucusuna bağlanıyor.\n"
+"{1} bağlantı URLʼsi var.\n"
+"Biraz zaman alabilir."
 
 #: ../src/section_view.py:33
 msgid "Added at"
