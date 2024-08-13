@@ -8,378 +8,389 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-08-14 10:09+0000\n"
+"Last-Translator: luca rastelli <mad_fer_it@msn.com>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/girens/girens/it/"
+">\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
+msgstr "Girens per Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr ""
+msgstr "Guarda il tuo contenuto di Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
 "Girens is a Plex media player client. You can watch and listen to your "
 "music, shows and movies with this GTK app."
 msgstr ""
+"Girens è un client media per Plex. Puoi guardare ed ascoltare la tua musica, "
+"le serie televisive ed i film con questa app GTK."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "Schermata iniziale"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr ""
+msgstr "Vista serie"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr ""
+msgstr "Vista album"
 
 #: ../data/nl.g4d.Girens.desktop.in:3
 msgid "Girens"
-msgstr ""
+msgstr "Girens"
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr ""
+msgstr "Riproduci i tuoi film di Plex, le serie televisive e la musica"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
-msgstr ""
+msgstr "girens;plex;media;player;"
 
 #: ../data/ui/about_dialog.ui.in:8
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
+"Un client Plex GTK per riprodurre film, serie televisive e musica dalla tua "
+"libreria Plex."
 
 #. Add your name to the translator credits list
 #: ../data/ui/about_dialog.ui.in:11
 msgid "translator-credits"
-msgstr ""
+msgstr "crediti-traduttori"
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
-msgstr ""
+msgstr "Mostra altro"
 
 #: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:121
 msgid "Ondeck"
-msgstr ""
+msgstr "Riprendi"
 
 #: ../data/ui/discover_view.blp:36
 msgid "Recently added Shows"
-msgstr ""
+msgstr "Serie aggiunte di recente"
 
 #: ../data/ui/discover_view.blp:54
 msgid "Recently added Movies"
-msgstr ""
+msgstr "Film aggiunti di recente"
 
 #: ../data/ui/discover_view.blp:72
 msgid "Recently added Music"
-msgstr ""
+msgstr "Musica aggiunta di recente"
 
 #: ../data/ui/loading_view.blp:29 ../data/ui/profile_dialog.blp:25
 msgid "Logout"
-msgstr ""
+msgstr "Esci"
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr ""
+msgstr "Nome utente e password"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
-msgstr ""
+msgstr "Entra su Plex con un account utente"
 
 #: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
 msgid "Username"
-msgstr ""
+msgstr "Nome utente"
 
 #: ../data/ui/login_view.blp:44
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: ../data/ui/login_view.blp:53
 msgid "Login"
-msgstr ""
+msgstr "Entra"
 
 #: ../data/ui/login_view.blp:64
 msgid "URL and token"
-msgstr ""
+msgstr "URL e token"
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an URL"
-msgstr ""
+msgstr "Vai ad un server Plex basato su un URL"
 
 #: ../data/ui/login_view.blp:74
 msgid "The URL to the Plex server with the port number"
-msgstr ""
+msgstr "L'URL del server Plex con il numero della porta"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
-msgstr ""
+msgstr "Connetti"
 
 #: ../data/ui/main_window.blp:57
 msgid "Toggle Sidebar"
-msgstr ""
+msgstr "Mostra barra laterale"
 
 #: ../data/ui/main_window.blp:156
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 #: ../data/ui/main_window.blp:184
 msgid "Advertise as client"
-msgstr ""
+msgstr "Mostra come client"
 
 #: ../data/ui/main_window.blp:185
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
+"Permetti ad altri dispositivi su questa rete di cercare Girens e controllare "
+"questo client."
 
 #: ../data/ui/main_window.blp:194
 msgid "Prefer music clips"
-msgstr ""
+msgstr "Preferisci spezzoni musicali"
 
 #: ../data/ui/main_window.blp:195
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
 msgstr ""
+"Quando riproduci la musica e la traccia ha uno spezzone musicale, riproduci "
+"quello invece dell'audio."
 
 #: ../data/ui/main_window.blp:204
 msgid "Transcode media"
-msgstr ""
+msgstr "Codifica media"
 
 #: ../data/ui/main_window.blp:205
 msgid "Transcode media instead of playing directly."
-msgstr ""
+msgstr "Codifica media invece di riprodurlo direttamente."
 
 #: ../data/ui/main_window.blp:214
 msgid "1080p"
-msgstr ""
+msgstr "1080p"
 
 #: ../data/ui/main_window.blp:221
 msgid "720p"
-msgstr ""
+msgstr "720p"
 
 #: ../data/ui/main_window.blp:230
 msgid "480p"
-msgstr ""
+msgstr "480p"
 
 #: ../data/ui/main_window.blp:239
 msgid "240p"
-msgstr ""
+msgstr "240p"
 
 #: ../data/ui/main_window.blp:252
 msgid "Info"
-msgstr ""
+msgstr "Informazioni"
 
 #: ../data/ui/main_window.blp:258
 msgid "Shortcuts"
-msgstr ""
+msgstr "Scorcatoie"
 
 #: ../data/ui/main_window.blp:264
 msgid "About Girens"
-msgstr ""
+msgstr "Informazioni su Girens"
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
-msgstr ""
+msgstr "Ripeti"
 
 #: ../data/ui/player_view.blp:80
 msgid "Release date"
-msgstr ""
+msgstr "Data di uscita"
 
 #: ../data/ui/player_view.blp:84
 msgid "Genre"
-msgstr ""
+msgstr "Genere"
 
 #: ../data/ui/player_view.blp:93
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #: ../data/ui/player_view.blp:106
 msgid "Audio "
-msgstr ""
+msgstr "Audio "
 
 #: ../data/ui/player_view.blp:109
 msgid "Subtitle "
-msgstr ""
+msgstr "Sottotitoli "
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr ""
+msgstr "Informazioni account"
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: ../data/ui/profile_dialog.blp:18
 msgid "Subscription plan"
-msgstr ""
+msgstr "Piano di abbonamento"
 
 #: ../data/ui/profile_dialog.blp:21
 msgid "Secure"
-msgstr ""
+msgstr "Sicuro"
 
 #: ../data/ui/resume_dialog.ui:5
 msgid "Do you want resume watching or start from the beginning?"
-msgstr ""
+msgstr "Vuoi riprendere da dove avevi lasciato o ricominciare da capo?"
 
 #: ../data/ui/resume_dialog.ui:11
 msgid "Resume"
-msgstr ""
+msgstr "Riprendi"
 
 #: ../data/ui/section_view.blp:41
 msgid "Order"
-msgstr ""
+msgstr "Ordina"
 
 #: ../data/ui/shortcuts.blp:13
 msgctxt "shortcut window"
 msgid "Playback"
-msgstr ""
+msgstr "Riproduzione"
 
 #: ../data/ui/shortcuts.blp:17
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr ""
+msgstr "Riproduci/Pausa"
 
 #: ../data/ui/shortcuts.blp:23
 msgctxt "shortcut window"
 msgid "Previous"
-msgstr ""
+msgstr "Precedente"
 
 #: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Next"
-msgstr ""
+msgstr "Prossimo"
 
 #: ../data/ui/shortcuts.blp:35
 msgctxt "shortcut window"
 msgid "Seek forwards"
-msgstr ""
+msgstr "Cerca in avanti"
 
 #: ../data/ui/shortcuts.blp:41
 msgctxt "shortcut window"
 msgid "Seek backwards"
-msgstr ""
+msgstr "Cerca indietro"
 
 #: ../data/ui/shortcuts.blp:47
 msgctxt "shortcut window"
 msgid "Stop playing"
-msgstr ""
+msgstr "Ferma riproduzione"
 
 #: ../data/ui/shortcuts.blp:53
 msgctxt "shortcut window"
 msgid "Fullscreen"
-msgstr ""
+msgstr "Schermo intero"
 
 #: ../data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
-msgstr ""
+msgstr "Riproduci spezzoni musicali invece della traccia audio"
 
 #: ../data/ui/sync_dialog.blp:4
 msgid "Sync items"
-msgstr ""
+msgstr "Sincronizza oggetti"
 
 #: ../data/ui/sync_dialog.blp:33
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
-msgstr ""
+msgstr "Sincronizzazione - impostazioni"
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
-msgstr ""
+msgstr "Converti"
 
 #: ../data/ui/sync_settings.blp:15
 msgid "Converted sync can take a long time"
-msgstr ""
+msgstr "La conversione potrebbe richiedere molto tempo"
 
 #: ../data/ui/sync_settings.blp:23
 msgid "Unwatched only"
-msgstr ""
+msgstr "Mostra solo non visti"
 
 #: ../data/ui/sync_settings.blp:31
 msgid "Max items"
-msgstr ""
+msgstr "Oggetti massimi"
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr ""
+msgstr "Segui stile di sistema"
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr ""
+msgstr "Stile chiaro"
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr ""
+msgstr "Stile scuro"
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
-msgstr ""
+msgstr "Vai alla vista artisti"
 
 #: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
-msgstr ""
+msgstr "Sincronizzazione"
 
 #: ../src/album_view.py:99 ../src/cover_box.py:136
 msgid "Shuffle"
-msgstr ""
+msgstr "Mischia"
 
 #: ../src/album_view.py:138
 msgid "Disc {}"
-msgstr ""
+msgstr "Disco {}"
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr ""
+msgstr "Vai alla vista album"
 
 #: ../src/cover_box.py:116
 msgid "Go to show view"
-msgstr ""
+msgstr "Vai alla vista serie"
 
 #: ../src/cover_box.py:121
 msgid "Mark as Played"
-msgstr ""
+msgstr "Segna come Visto"
 
 #: ../src/cover_box.py:126
 msgid "Mark as Unplayed"
-msgstr ""
+msgstr "Segna come Non visto"
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr ""
+msgstr "Parti dall'inizio"
 
 #: ../src/player_view.py:302 ../src/player_view.py:303
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #: ../src/plex.py:135 ../src/plex.py:464
 msgid "Connecting to {}."
-msgstr ""
+msgstr "Connessione a {}."
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
 msgid "Connecting to {} failed."
-msgstr ""
+msgstr "Connessione a {} fallita."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
-msgstr ""
+msgstr "Nessun server trovato su questo account."
 
 #: ../src/plex.py:487
 #, python-brace-format
@@ -388,63 +399,66 @@ msgid ""
 "There are {1} connection urls.\n"
 "This may take a while."
 msgstr ""
+"Connessione a {0}.\n"
+"Questi sono {1} url di connessione.\n"
+"Potrebbe richiedere un po'."
 
 #: ../src/section_view.py:33
 msgid "Added at"
-msgstr ""
+msgstr "Aggiunto a"
 
 #: ../src/section_view.py:34
 msgid "Last viewed at"
-msgstr ""
+msgstr "Ultimo visto alle ore"
 
 #: ../src/section_view.py:35
 msgid "Originally available at"
-msgstr ""
+msgstr "Originariamente disponibile su"
 
 #: ../src/section_view.py:36
 msgid "Title"
-msgstr ""
+msgstr "Titolo"
 
 #: ../src/section_view.py:37
 msgid "Rating"
-msgstr ""
+msgstr "Voto"
 
 #: ../src/section_view.py:38
 msgid "Unwatched"
-msgstr ""
+msgstr "Non visti"
 
 #: ../src/section_view.py:39
 msgid "View count"
-msgstr ""
+msgstr "Conteggio visualizzazioni"
 
 #: ../src/section_view.py:40
 msgid "User rating"
-msgstr ""
+msgstr "Voti utente"
 
 #: ../src/section_view.py:41
 msgid "Media height"
-msgstr ""
+msgstr "Altezza media"
 
 #: ../src/section_view.py:42
 msgid "Duration"
-msgstr ""
+msgstr "Durata"
 
 #: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
-msgstr ""
+msgstr "Scalette"
 
 #: ../src/sidebar_box.py:100
 msgid "Player"
-msgstr ""
+msgstr "Lettore"
 
 #: ../src/sidebar_box.py:106
 msgid "Home"
-msgstr ""
+msgstr "Pagina iniziale"
 
 #: ../src/window.py:347
 msgid "Starting Girens"
-msgstr ""
+msgstr "Avvio Girens"
 
 #: ../src/window.py:523
 msgid "Help with translating"
-msgstr ""
+msgstr "Aiutaci con le traduzioni"
