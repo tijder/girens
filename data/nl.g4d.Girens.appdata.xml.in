@@ -30,6 +30,14 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2024-08-14" version="2.0.5">
+      <description translate="no">
+        <p>Changes:</p>
+        <ul>
+          <li>Added Italion translations</li>
+        </ul>
+      </description>
+    </release>
     <release date="2024-05-14" version="2.0.4">
       <description translate="no">
         <p>Changes:</p>
