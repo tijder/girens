@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using Adw 1;
 
 template $section_view : Overlay {
   Box {
@@ -67,10 +68,9 @@ template $section_view : Overlay {
     hexpand: true;
     opacity: 0.8;
     visible: true;
-    Spinner _load_spinner {
+    Adw.Spinner _load_spinner {
       height-request: 75;
       width-request: 75;
-      spinning: true;
       halign: center;
       valign: center;
       vexpand: true;

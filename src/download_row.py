@@ -66,4 +66,4 @@ class DownloadRow(Gtk.Box):
 
     def __on_item_downloading(self, plex, item, status):
         if (status == False and self._item.key == item.key):
-            self._download_spinner.stop()
+            self._download_spinner.hide()
