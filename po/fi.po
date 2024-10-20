@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2022-12-02 11:49+0000\n"
+"PO-Revision-Date: 2024-10-21 18:16+0000\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos@iki.fi>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/girens/girens/fi/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 5.8-rc\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -98,7 +98,7 @@ msgstr "Kirjaudu ulos"
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr ""
+msgstr "Käyttäjätunnus ja salasana"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
@@ -118,15 +118,15 @@ msgstr "Kirjaudu"
 
 #: ../data/ui/login_view.blp:64
 msgid "URL and token"
-msgstr ""
+msgstr "URL-osoite ja poletti"
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an URL"
-msgstr ""
+msgstr "Siirry Plex-palvelimelle URL-osoitteeseen pohjautuen"
 
 #: ../data/ui/login_view.blp:74
 msgid "The URL to the Plex server with the port number"
-msgstr ""
+msgstr "Plex-palvelimen URL-osoite ja porttinumero"
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
@@ -138,7 +138,7 @@ msgstr "Yhdistä"
 
 #: ../data/ui/main_window.blp:57
 msgid "Toggle Sidebar"
-msgstr ""
+msgstr "Sivupalkki päällä/pois"
 
 #: ../data/ui/main_window.blp:156
 msgid "Settings"
@@ -241,7 +241,7 @@ msgstr "Tilaus"
 
 #: ../data/ui/profile_dialog.blp:21
 msgid "Secure"
-msgstr ""
+msgstr "Turvallinen"
 
 #: ../data/ui/resume_dialog.ui:5
 msgid "Do you want resume watching or start from the beginning?"
@@ -354,7 +354,7 @@ msgstr "Sekoita"
 
 #: ../src/album_view.py:138
 msgid "Disc {}"
-msgstr ""
+msgstr "Levy {}"
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
@@ -382,11 +382,11 @@ msgstr "Ei mitään"
 
 #: ../src/plex.py:135 ../src/plex.py:464
 msgid "Connecting to {}."
-msgstr ""
+msgstr "Yhdistetään kohteeseen {}."
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
 msgid "Connecting to {} failed."
-msgstr ""
+msgstr "Kohteeseen {} yhdistäminen epäonnistui."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
