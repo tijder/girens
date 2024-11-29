@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2024-10-21 18:16+0000\n"
-"Last-Translator: Jiri Grönroos <jiri.gronroos@iki.fi>\n"
+"PO-Revision-Date: 2024-11-30 10:00+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/girens/girens/fi/"
 ">\n"
 "Language: fi\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-rc\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
+msgstr "Girens Plexille"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr ""
+msgstr "Katso Plex-sisältöäsi"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
@@ -310,7 +310,7 @@ msgstr "OK"
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
-msgstr ""
+msgstr "Synkronointiasetukset"
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
@@ -399,6 +399,9 @@ msgid ""
 "There are {1} connection urls.\n"
 "This may take a while."
 msgstr ""
+"Yhdistetään {0}:een.\n"
+"On olemassa {1} yhteys-URL-osoitetta.\n"
+"Tämä saattaa kestää jonkin aikaa."
 
 #: ../src/section_view.py:33
 msgid "Added at"
@@ -434,7 +437,7 @@ msgstr "Käyttäjäarvio"
 
 #: ../src/section_view.py:41
 msgid "Media height"
-msgstr ""
+msgstr "Median korkeus"
 
 #: ../src/section_view.py:42
 msgid "Duration"
