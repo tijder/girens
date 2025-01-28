@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2024-11-30 10:00+0000\n"
+"PO-Revision-Date: 2025-01-29 15:03+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/girens/girens/fi/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -114,7 +114,7 @@ msgstr "Salasana"
 
 #: ../data/ui/login_view.blp:53
 msgid "Login"
-msgstr "Kirjaudu"
+msgstr "Sisäänkirjautuminen"
 
 #: ../data/ui/login_view.blp:64
 msgid "URL and token"
