@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2025-02-01 16:02+0000\n"
+"PO-Revision-Date: 2025-02-04 13:02+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/girens/girens/fi/"
 ">\n"
@@ -70,7 +70,7 @@ msgstr ""
 #. Add your name to the translator credits list
 #: ../data/ui/about_dialog.ui.in:11
 msgid "translator-credits"
-msgstr "kääntäjien ansiot"
+msgstr "Jiri Grönroos <jiri.gronroos+l10n@iki.fi>"
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
