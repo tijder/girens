@@ -5,392 +5,381 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Girens 2.0.1\n"
+"Project-Id-Version: Girens 2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2025-02-04 13:02+0000\n"
-"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
-"Language-Team: Finnish <https://hosted.weblate.org/projects/girens/girens/fi/"
-">\n"
-"Language: fi\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr "Girens Plexille"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr "Katso Plex-sisältöäsi"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
 "Girens is a Plex media player client. You can watch and listen to your "
 "music, shows and movies with this GTK app."
 msgstr ""
-"Girens on Plex-mediasoitinasiakas. Voit katsoa ja kuunnella musiikkia, tv-"
-"sarjoja ja elokuvia tällä GTK-sovelluksella."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr "Kotinäyttö"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr "Ohjelmanäyttö"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr "Albuminäyttö"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:3
 msgid "Girens"
-msgstr "Girens"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:4
 msgid "Play your Plex movies, shows and music"
-msgstr "Toista Plex-kirjaston elokuvia, tv-ohjelmia ja musiikkia"
+msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
-msgstr "girens;plex;media;player;mediasoitin;"
+msgstr ""
 
 #: ../data/ui/about_dialog.ui.in:8
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
-"Plex-asiakasohjelmisto GTK:lla tehtynä. Toista Plex-kirjastosi elokuvat, tv-"
-"ohjelmat ja musiikki."
 
 #. Add your name to the translator credits list
 #: ../data/ui/about_dialog.ui.in:11
 msgid "translator-credits"
-msgstr "Jiri Grönroos <jiri.gronroos+l10n@iki.fi>"
+msgstr ""
 
 #: ../data/ui/artist_view.blp:57
 msgid "Show more"
-msgstr "Näytä lisää"
+msgstr ""
 
 #: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:121
 msgid "Ondeck"
-msgstr "Kannella"
+msgstr ""
 
 #: ../data/ui/discover_view.blp:36
 msgid "Recently added Shows"
-msgstr "Äskettäin lisätyt ohjelmistot"
+msgstr ""
 
 #: ../data/ui/discover_view.blp:54
 msgid "Recently added Movies"
-msgstr "Äskettäin lisätyt elokuvat"
+msgstr ""
 
 #: ../data/ui/discover_view.blp:72
 msgid "Recently added Music"
-msgstr "Äskettäin lisätty musiikki"
+msgstr ""
 
 #: ../data/ui/loading_view.blp:29 ../data/ui/profile_dialog.blp:25
 msgid "Logout"
-msgstr "Kirjaudu ulos"
+msgstr ""
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr "Käyttäjätunnus ja salasana"
+msgstr ""
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
-msgstr "Kirjaudu Plexiin käyttäjätilillä"
+msgstr ""
 
 #: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
 msgid "Username"
-msgstr "Käyttäjätunnus"
+msgstr ""
 
 #: ../data/ui/login_view.blp:44
 msgid "Password"
-msgstr "Salasana"
+msgstr ""
 
 #: ../data/ui/login_view.blp:53
 msgid "Login"
-msgstr "Sisäänkirjautuminen"
+msgstr ""
 
 #: ../data/ui/login_view.blp:64
 msgid "URL and token"
-msgstr "URL-osoite ja poletti"
+msgstr ""
 
 #: ../data/ui/login_view.blp:69
 msgid "Go to Plex server based on an URL"
-msgstr "Siirry Plex-palvelimelle URL-osoitteeseen pohjautuen"
+msgstr ""
 
 #: ../data/ui/login_view.blp:74
 msgid "The URL to the Plex server with the port number"
-msgstr "Plex-palvelimen URL-osoite ja porttinumero"
+msgstr ""
 
 #: ../data/ui/login_view.blp:80
 msgid "Token"
-msgstr "Poletti"
+msgstr ""
 
 #: ../data/ui/login_view.blp:89
 msgid "Connect"
-msgstr "Yhdistä"
+msgstr ""
 
 #: ../data/ui/main_window.blp:57
 msgid "Toggle Sidebar"
-msgstr "Sivupalkki päällä/pois"
+msgstr ""
 
 #: ../data/ui/main_window.blp:156
 msgid "Settings"
-msgstr "Asetukset"
+msgstr ""
 
 #: ../data/ui/main_window.blp:184
 msgid "Advertise as client"
-msgstr "Mainosta asiakasohjelmistona"
+msgstr ""
 
 #: ../data/ui/main_window.blp:185
 msgid ""
 "Allow other devices on this network to find Girens and control this client."
 msgstr ""
-"Salli muiden laitteiden tässä verkossa, jotta Girens on mahdollista löytää "
-"ja sitä on mahdollista ohjata."
 
 #: ../data/ui/main_window.blp:194
 msgid "Prefer music clips"
-msgstr "Suosi musiikkileikkeitä"
+msgstr ""
 
 #: ../data/ui/main_window.blp:195
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
 msgstr ""
-"Kun musiikkia toistetaan ja kappaleella on musiikkileike, toista se äänen "
-"sijaan."
 
 #: ../data/ui/main_window.blp:204
 msgid "Transcode media"
-msgstr "Muunna media"
+msgstr ""
 
 #: ../data/ui/main_window.blp:205
 msgid "Transcode media instead of playing directly."
-msgstr "Muunna media sen sijaan, että se toistetaan sellaisenaan."
+msgstr ""
 
 #: ../data/ui/main_window.blp:214
 msgid "1080p"
-msgstr "1080p"
+msgstr ""
 
 #: ../data/ui/main_window.blp:221
 msgid "720p"
-msgstr "720p"
+msgstr ""
 
 #: ../data/ui/main_window.blp:230
 msgid "480p"
-msgstr "480p"
+msgstr ""
 
 #: ../data/ui/main_window.blp:239
 msgid "240p"
-msgstr "240p"
+msgstr ""
 
 #: ../data/ui/main_window.blp:252
 msgid "Info"
-msgstr "Tiedot"
+msgstr ""
 
 #: ../data/ui/main_window.blp:258
 msgid "Shortcuts"
-msgstr "Pikanäppäimet"
+msgstr ""
 
 #: ../data/ui/main_window.blp:264
 msgid "About Girens"
-msgstr "Tietoja - Girens"
+msgstr ""
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
-msgstr "Kertaa"
+msgstr ""
 
 #: ../data/ui/player_view.blp:80
 msgid "Release date"
-msgstr "Julkaisupäivä"
+msgstr ""
 
 #: ../data/ui/player_view.blp:84
 msgid "Genre"
-msgstr "Tyylilaji"
+msgstr ""
 
 #: ../data/ui/player_view.blp:93
 msgid "Description"
-msgstr "Kuvaus"
+msgstr ""
 
 #: ../data/ui/player_view.blp:106
 msgid "Audio "
-msgstr "Ääni "
+msgstr ""
 
 #: ../data/ui/player_view.blp:109
 msgid "Subtitle "
-msgstr "Tekstitys "
+msgstr ""
 
 #: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
 msgid "Account info"
-msgstr "Tilin tiedot"
+msgstr ""
 
 #: ../data/ui/profile_dialog.blp:15
 msgid "Email"
-msgstr "Sähköposti"
+msgstr ""
 
 #: ../data/ui/profile_dialog.blp:18
 msgid "Subscription plan"
-msgstr "Tilaus"
+msgstr ""
 
 #: ../data/ui/profile_dialog.blp:21
 msgid "Secure"
-msgstr "Turvallinen"
+msgstr ""
 
 #: ../data/ui/resume_dialog.ui:5
 msgid "Do you want resume watching or start from the beginning?"
-msgstr "Haluatko palata katseluun vai aloittaa katselun alusta?"
+msgstr ""
 
 #: ../data/ui/resume_dialog.ui:11
 msgid "Resume"
-msgstr "Palaa"
+msgstr ""
 
 #: ../data/ui/section_view.blp:41
 msgid "Order"
-msgstr "Järjestys"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:13
 msgctxt "shortcut window"
 msgid "Playback"
-msgstr "Toisto"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:17
 msgctxt "shortcut window"
 msgid "Play/Pause"
-msgstr "Toista/keskeytä"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:23
 msgctxt "shortcut window"
 msgid "Previous"
-msgstr "Edellinen"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Next"
-msgstr "Seuraava"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:35
 msgctxt "shortcut window"
 msgid "Seek forwards"
-msgstr "Kelaa eteenpäin"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:41
 msgctxt "shortcut window"
 msgid "Seek backwards"
-msgstr "Kelaa taaksepäin"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:47
 msgctxt "shortcut window"
 msgid "Stop playing"
-msgstr "Lopeta toisto"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:53
 msgctxt "shortcut window"
 msgid "Fullscreen"
-msgstr "Koko näyttö"
+msgstr ""
 
 #: ../data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
-msgstr "Toista musiikkileikkeitä kappaleiden sijaan"
+msgstr ""
 
 #: ../data/ui/sync_dialog.blp:4
 msgid "Sync items"
-msgstr "Synkronoi kohteet"
+msgstr ""
 
 #: ../data/ui/sync_dialog.blp:33
 msgid "Ok"
-msgstr "OK"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
-msgstr "Synkronointiasetukset"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:14
 msgid "Convert"
-msgstr "Muunna"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:15
 msgid "Converted sync can take a long time"
-msgstr "Muuntosynkronointi voi kestää kauan"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:23
 msgid "Unwatched only"
-msgstr "Vain katsomattomat"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:31
 msgid "Max items"
-msgstr "Kohteita enintään"
+msgstr ""
 
 #: ../data/ui/theme_switcher.blp:25
 msgid "Follow system style"
-msgstr "Seuraa järjestelmän tyyliä"
+msgstr ""
 
 #: ../data/ui/theme_switcher.blp:39
 msgid "Light style"
-msgstr "Vaalea tyyli"
+msgstr ""
 
 #: ../data/ui/theme_switcher.blp:53
 msgid "Dark style"
-msgstr "Tumma tyyli"
+msgstr ""
 
 #: ../src/album_view.py:93 ../src/cover_box.py:104
 msgid "Go to artist view"
-msgstr "Siirry esittäjänäkymään"
+msgstr ""
 
 #: ../src/album_view.py:96 ../src/cover_box.py:131
 msgid "Sync"
-msgstr "Synkronoi"
+msgstr ""
 
 #: ../src/album_view.py:99 ../src/cover_box.py:136
 msgid "Shuffle"
-msgstr "Sekoita"
+msgstr ""
 
 #: ../src/album_view.py:138
 msgid "Disc {}"
-msgstr "Levy {}"
+msgstr ""
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"
-msgstr "Siirry albuminäkymään"
+msgstr ""
 
 #: ../src/cover_box.py:116
 msgid "Go to show view"
-msgstr "Siirry ohjelmanäkymään"
+msgstr ""
 
 #: ../src/cover_box.py:121
 msgid "Mark as Played"
-msgstr "Merkitse toistetuksi"
+msgstr ""
 
 #: ../src/cover_box.py:126
 msgid "Mark as Unplayed"
-msgstr "Merkitse toistamattomaksi"
+msgstr ""
 
 #: ../src/cover_box.py:141
 msgid "Start from the beginning"
-msgstr "Aloita alusta"
+msgstr ""
 
 #: ../src/player_view.py:302 ../src/player_view.py:303
 msgid "None"
-msgstr "Ei mitään"
+msgstr ""
 
 #: ../src/plex.py:135 ../src/plex.py:464
 msgid "Connecting to {}."
-msgstr "Yhdistetään kohteeseen {}."
+msgstr ""
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
 msgid "Connecting to {} failed."
-msgstr "Kohteeseen {} yhdistäminen epäonnistui."
+msgstr ""
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
-msgstr "Tällä tilillä ei löydy palvelimia."
+msgstr ""
 
 #: ../src/plex.py:487
 #, python-brace-format
@@ -399,97 +388,63 @@ msgid ""
 "There are {1} connection urls.\n"
 "This may take a while."
 msgstr ""
-"Yhdistetään {0}:een.\n"
-"On olemassa {1} yhteys-URL-osoitetta.\n"
-"Tämä saattaa kestää jonkin aikaa."
 
 #: ../src/section_view.py:33
 msgid "Added at"
-msgstr "Lisätty"
+msgstr ""
 
 #: ../src/section_view.py:34
 msgid "Last viewed at"
-msgstr "Viimeksi katsottu"
+msgstr ""
 
 #: ../src/section_view.py:35
 msgid "Originally available at"
-msgstr "Alun perin saatavilla"
+msgstr ""
 
 #: ../src/section_view.py:36
 msgid "Title"
-msgstr "Otsikko"
+msgstr ""
 
 #: ../src/section_view.py:37
 msgid "Rating"
-msgstr "Arvio"
+msgstr ""
 
 #: ../src/section_view.py:38
 msgid "Unwatched"
-msgstr "Katsomaton"
+msgstr ""
 
 #: ../src/section_view.py:39
 msgid "View count"
-msgstr "Katselukerrat"
+msgstr ""
 
 #: ../src/section_view.py:40
 msgid "User rating"
-msgstr "Käyttäjäarvio"
+msgstr ""
 
 #: ../src/section_view.py:41
 msgid "Media height"
-msgstr "Median korkeus"
+msgstr ""
 
 #: ../src/section_view.py:42
 msgid "Duration"
-msgstr "Kesto"
+msgstr ""
 
 #: ../src/section_view.py:144 ../src/sidebar_box.py:111
 msgid "Playlists"
-msgstr "Soittolistat"
+msgstr ""
 
 #: ../src/sidebar_box.py:100
 msgid "Player"
-msgstr "Soitin"
+msgstr ""
 
 #: ../src/sidebar_box.py:106
 msgid "Home"
-msgstr "Koti"
+msgstr ""
 
 #: ../src/window.py:347
 msgid "Starting Girens"
-msgstr "Käynnistetään Girens"
+msgstr ""
 
 #: ../src/window.py:523
 msgid "Help with translating"
-msgstr "Auta kääntämisessä"
-
-#~ msgid "Go to Plex server based on an url"
-#~ msgstr "Siirry Plex-palvelimelle URL-osoitteen perusteella"
-
-#~ msgid "The url to the Plex server with the port number"
-#~ msgstr "Plex-palvelimen URL-osoite porttinumeron kera"
-
-#~ msgid "Disc "
-#~ msgstr "Levy "
-
-#~ msgid "Connecting to "
-#~ msgstr "Yhdistetään kohteeseen "
-
-#~ msgid " failed."
-#~ msgstr " epäonnistui."
-
-#~ msgid "This may take a while"
-#~ msgstr "Tämä saattaa kestää hetken"
-
-#~ msgid "Changes:"
-#~ msgstr "Muutokset:"
-
-#~ msgid ""
-#~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
-#~ "your Plex library."
-#~ msgstr ""
-#~ "Girens on GTK:llä tehty Plex-asiakas elokuvien, tv-ohjelmien ja musiikin "
-#~ "toistamiseen Plex-kirjastosta."
-
-#~ msgid "Gerben Droogers"
-#~ msgstr "Gerben Droogers"
+msgstr ""
