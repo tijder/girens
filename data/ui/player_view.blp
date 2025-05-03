@@ -23,6 +23,12 @@ template $player_view : ScrolledWindow {
 	          exclusive: true;
           }
 
+          GestureClick {
+            button: 3;
+            released => $on_right_click();
+            exclusive: true;
+          }
+
           GLArea _frame {
             hexpand: true;
           }

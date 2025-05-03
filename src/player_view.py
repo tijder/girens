@@ -229,6 +229,10 @@ class PlayerView(Gtk.ScrolledWindow):
             self._last_button_click = time.time()
             self.__show_controlls()
 
+    @Gtk.Template.Callback()
+    def on_right_click(self, widget, n_press, x, y):
+        self._player.play_pause()
+
     def __on_motion_over(self):
         self._timout = None
         GLib.idle_add(self._media_box.set_reveal_child, False)
