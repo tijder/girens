@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-06 21:36+0200\n"
-"PO-Revision-Date: 2022-11-16 02:48+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2026-01-21 23:01+0000\n"
+"Last-Translator: marius <marius+weblate@vaagan.eu>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
 "girens/nb_NO/>\n"
 "Language: nb\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
@@ -104,7 +104,7 @@ msgstr "Logg ut"
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr ""
+msgstr "Brukernavn og passord"
 
 #: ../data/ui/login_view.blp:33
 #, fuzzy
@@ -400,15 +400,15 @@ msgstr "Ingen"
 
 #: ../src/plex.py:135 ../src/plex.py:464
 msgid "Connecting to {}."
-msgstr ""
+msgstr "Kobler til {}."
 
 #: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
 msgid "Connecting to {} failed."
-msgstr ""
+msgstr "Kobling til {} mislyktes."
 
 #: ../src/plex.py:483
 msgid "No servers found for this account."
-msgstr "Fant ingen tjenere for denne kontoen:"
+msgstr "Fant ingen tjenere for denne kontoen."
 
 #: ../src/plex.py:487
 #, python-brace-format
