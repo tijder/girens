@@ -30,6 +30,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2026-03-15" version="2.0.8">
+      <description translate="no">
+        <p>Changes:</p>
+        <ul>
+          <li>Updated translations</li>
+          <li>Update dependencies</li>
+        </ul>
+      </description>
+    </release>
     <release date="2025-05-03" version="2.0.7">
       <description translate="no">
         <p>Changes:</p>
