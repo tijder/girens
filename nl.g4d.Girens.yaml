@@ -1,0 +1,313 @@
+app-id: nl.g4d.Girens
+runtime: org.gnome.Platform
+runtime-version: 'master'
+sdk: org.gnome.Sdk
+command: girens
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=pulseaudio
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=all
+  - --filesystem=xdg-run/dconf
+  - --filesystem=~/.config/dconf:ro
+  - --own-name=org.mpris.MediaPlayer2.Girens
+  - --talk-name=ca.desrt.dconf
+  - --talk-name=org.freedesktop.secrets
+  - --metadata=X-DConf=migrate-path=/nl/g4d/Girens/
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /man
+  - /share/doc
+  - /share/gtk-doc
+  - /share/man
+  - /share/pkgconfig
+  - '*.la'
+  - '*.a'
+modules:
+  - name: blueprint-compiler
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/jwestman/blueprint-compiler.git
+        tag: v0.20.0
+        commit: aa5298cc1677cf855bd61f9671607362bd203f4f
+        x-checker-data:
+          type: git
+  - name: libmpv
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    buildsystem: meson
+    config-opts:
+      - -Dbuild-date=false
+      - -Dlibmpv=true
+      - -Dmanpage-build=disabled
+      - -Dcdda=disabled
+      - -Ddvbin=disabled
+      - -Ddvdnav=disabled
+      - -Dlibarchive=enabled
+      - -Dshaderc=disabled
+      - -Dvulkan=disabled
+    sources:
+      - type: git
+        url: https://github.com/mpv-player/mpv
+        tag: v0.41.0
+        commit: 41f6a645068483470267271e1d09966ca3b9f413
+        x-checker-data:
+          type: git
+    modules:
+      - name: libass
+        cleanup:
+          - /include
+          - /lib/*.la
+          - /lib/pkgconfig
+        config-opts:
+          - --disable-static
+        sources:
+          - type: archive
+            url: https://github.com/libass/libass/releases/download/0.17.4/libass-0.17.4.tar.xz
+            sha256: 78f1179b838d025e9c26e8fef33f8092f65611444ffa1bfc0cfac6a33511a05a
+            x-checker-data:
+              type: anitya
+              project-id: 1560
+              stable-only: true
+              url-template: https://github.com/libass/libass/releases/download/$version/libass-$version.tar.xz
+        modules:
+          - name: fribidi
+            cleanup:
+              - /bin
+              - /include
+              - /lib/pkgconfig
+              - /lib/*.la
+              - /share/man
+            sources:
+              - type: archive
+                url: https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz
+                sha256: 1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c
+                x-checker-data:
+                  type: anitya
+                  project-id: 857
+                  stable-only: true
+                  url-template: https://github.com/fribidi/fribidi/releases/download/v$version/fribidi-$version.tar.xz
+          - name: libplacebo
+            buildsystem: meson
+            config-opts:
+              - -Dvulkan=enabled
+              - -Dshaderc=disabled
+            cleanup:
+              - /lib/pkgconfig
+              - /include
+            sources:
+              - type: git
+                url: https://code.videolan.org/videolan/libplacebo.git
+                tag: v7.360.1
+                commit: cee9b076f2c63104ccfd497fa79c39a867293ec4
+                x-checker-data:
+                  type: git
+            modules:
+              - name: glslang
+                buildsystem: cmake-ninja
+                builddir: true
+                config-opts:
+                  - -DBUILD_SHARED_LIBS=ON
+                  - -DENABLE_OPT=OFF
+                cleanup:
+                  - /bin
+                  - /lib/cmake
+                  - /include
+                sources:
+                  - type: archive
+                    archive-type: tar
+                    url: https://github.com/KhronosGroup/glslang/archive/refs/tags/16.2.0.tar.gz
+                    sha256: 01985335785c97906a91afe3cb5ee015997696181ec6c125bab5555602ba08e2
+                    x-checker-data:
+                      type: anitya
+                      project-id: 205796
+                      stable-only: true
+                      url-template: https://github.com/KhronosGroup/glslang/archive/refs/tags/$version.tar.gz
+  - name: ffmpeg
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/ffmpeg/examples
+    config-opts:
+      - --enable-shared
+      - --disable-static
+      - --enable-gnutls
+      - --disable-doc
+      - --disable-ffplay
+      - --enable-version3
+      - --enable-demuxer=dash
+      - --enable-libxml2
+      - --disable-programs
+      - --disable-encoders
+      - --disable-muxers
+    sources:
+      - type: git
+        url: https://github.com/FFmpeg/FFmpeg
+        tag: n8.0.1
+        commit: 894da5ca7d742e4429ffb2af534fcda0103ef593
+  - name: mpv
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=/app mpv-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/f4/cf/0d5f52753366ecf2c3d763e331dcda54b0f20a1a8e52b175feb9c625399d/mpv-1.0.8-py3-none-any.whl
+        sha256: dcf77f612e3f5ce49bd89393f37d286de7ac290db6b0800f1fdcfe0aeb5ba9b8
+        x-checker-data:
+          type: pypi
+          packagetype: bdist_wheel
+          name: mpv
+    modules:
+      - name: PyOpenGL
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app pyopengl-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/de/e4/1ba6f44e491c4eece978685230dde56b14d51a0365bc1b774ddaa94d14cd/pyopengl-3.1.10-py3-none-any.whl
+            sha256: 794a943daced39300879e4e47bd94525280685f42dbb5a998d336cfff151d74f
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: PyOpenGL
+  - name: PlexAPI
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation --prefix=/app ./
+    sources:
+      - type: git
+        url: https://github.com/tijder/python-plexapi
+        commit: cadb3d2a399702ae3908cad70e52e439d9b665a2
+    modules:
+      - name: idna
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app idna-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/0e/61/66938bbb5fc52dbdf84594873d5b51fb1f7c7794e9c0f5bd885f30bc507b/idna-3.11-py3-none-any.whl
+            sha256: 771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: idna
+      - name: certifi
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app certifi-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/9a/3c/c17fb3ca2d9c3acff52e30b309f538586f9f5b9c9cf454f3845fc9af4881/certifi-2026.2.25-py3-none-any.whl
+            sha256: 027692e4402ad994f1c42e52a4997a9763c646b73e4096e4d5d6db8af1d6f0fa
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: certifi
+      - name: chardet
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app chardet-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/87/13/6aa6c9118ce153a806bb0472e27e8f8c24e6925db8a5b9fe99e03e45af15/chardet-7.1.0-py3-none-any.whl
+            sha256: 7f677725333bf53f84b7f57458f44669a8a5eb2ac4092ac699cdfa9b1af08a5f
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: chardet
+      - name: urllib3
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app urllib3-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/39/08/aaaad47bc4e9dc8c725e68f9d04865dbcb2052843ff09c97b08904852d84/urllib3-2.6.3-py3-none-any.whl
+            sha256: bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: urllib3
+      - name: requests
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app requests-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/1e/db/4254e3eabe8020b458f1a747140d32277ec7a271daf1d235b70dc0b4e6e3/requests-2.32.5-py3-none-any.whl
+            sha256: 2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: requests
+        modules:
+          - name: charset-normalizer
+            buildsystem: simple
+            build-commands:
+              - pip3 install --prefix=/app charset_normalizer-*.whl
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/c5/60/3a621758945513adfd4db86827a5bafcc615f913dbd0b4c2ed64a65731be/charset_normalizer-3.4.5-py3-none-any.whl
+                sha256: 9db5e3fcdcee89a78c04dffb3fe33c79f77bd741a624946db2591c81b2fc85b0
+                x-checker-data:
+                  type: pypi
+                  packagetype: bdist_wheel
+                  name: charset-normalizer
+      - name: tqdm
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app tqdm-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/16/e1/3079a9ff9b8e11b846c6ac5c8b5bfb7ff225eee721825310c91b3b50304f/tqdm-4.67.3-py3-none-any.whl
+            sha256: ee1e4c0e59148062281c49d80b25b67771a127c85fc9676d3be5f243206826bf
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: tqdm
+      - name: six
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app six-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl
+            sha256: 4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: six
+      - name: websocket-client
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app websocket_client-*.whl
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/34/db/b10e48aa8fff7407e67470363eac595018441cf32d5e1001567a7aeba5d2/websocket_client-1.9.0-py3-none-any.whl
+            sha256: af248a825037ef591efbf6ed20cc5faa03d3b47b9e5a2230a529eeee1c1fc3ef
+            x-checker-data:
+              type: pypi
+              packagetype: bdist_wheel
+              name: websocket-client
+  - name: plex-remote
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation --prefix=/app ./
+    sources:
+      - type: git
+        url: https://github.com/tijder/plex-remote
+        commit: c29ef9549c166902e53b3a1b603b365d70ebdf93
+  - name: girens
+    buildsystem: meson
+    config-opts:
+      - --libdir=lib
+      - -Dbuildtype=debug
+      - -Dnetwork_tests=false
+    builddir: true
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/tijder/girens

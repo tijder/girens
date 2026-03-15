@@ -29,7 +29,16 @@ ksecretservice.
 
 ## How to build
 
-The easiest way to build this App from source is with [Gnome-builder](https://wiki.gnome.org/Apps/Builder). Install Gnome-builder on your machine. Clone thise git project to your machine. Open the git project in Gnome-builder and click run.
+```bash
+flatpak-builder --user --force-clean --install-deps-from=flathub builddir nl.g4d.Girens.yaml
+flatpak-builder --run builddir nl.g4d.Girens.yaml
+```
+
+## Update depedencies
+
+```bash
+flatpak run org.flathub.flatpak-external-data-checker nl.g4d.Girens.yaml --edit-only
+```
 
 ## Screenshots
 

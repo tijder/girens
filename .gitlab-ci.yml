@@ -1,11 +1,13 @@
-include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
+include:
+  - project: 'gnome/citemplates'
+    file: 'flatpak/flatpak_ci_initiative.yml'
 
 variables:
     BUNDLE: "nl.g4d.Girens.flatpak"
 
 flatpak:
     variables:
-        MANIFEST_PATH: "nl.g4d.Girens.json"
+        MANIFEST_PATH: "nl.g4d.Girens.yaml"
         FLATPAK_MODULE: "girens"
         RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         APP_ID: "nl.g4d.Girens"
