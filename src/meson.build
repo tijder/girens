@@ -43,6 +43,7 @@ girens_sources = [
   'playqueue_item.py',
   'playqueue_popover.py',
   'plex.py',
+  'plex_compat.py',
   'profile_dialog.py',
   'remote_player.py',
   'resume_dialog.py',

@@ -279,6 +279,8 @@ class Plex(GObject.Object):
         self.emit('search-item-retrieved', search, items)
 
     def download_cover(self, key, thumb):
+        if thumb is None:
+            return
         url_image = self._server.transcodeImage(thumb, 300, 200)
         if (url_image is not None and url_image != ""):
             path = self.__download(url_image, 'thumb_' + str(key))
@@ -295,7 +297,10 @@ class Plex(GObject.Object):
         parent_item = None
         if item.TYPE == "track":
             parent_item = item.album()
-        playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1, parent=parent_item, sort=sort)
+        if parent_item is not None:
+            playqueue = PlayQueue.create(self._server, parent_item, startItem=item, shuffle=shuffle, continuous=1)
+        else:
+            playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1)
         self._player.set_playqueue(playqueue)
         GLib.idle_add(self.__play_item, from_beginning)
 

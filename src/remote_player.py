@@ -1,7 +1,7 @@
 from plex_remote.player_abstract import PlayerAbstract
 from urllib.parse import urlsplit
 from plexapi.server import PlexServer
-from plexapi.playqueue import PlayQueue
+from .plex_compat import playqueue_from_url
 from gi.repository import GLib
 import threading
 
@@ -101,7 +101,7 @@ class RemotePlayer(PlayerAbstract):
 
     def handle_play(self, address, protocol, port, key, offset_param, playQueue, token):
         tmp_server = PlexServer(protocol + "://" + address + ":" + port, token)
-        playqueue = PlayQueue.get_from_url(tmp_server, playQueue, key)
+        playqueue = playqueue_from_url(tmp_server, playQueue, key)
         if playqueue.items[0].listType == 'video':
             GLib.idle_add(self._window.go_fullscreen)
         self._player.set_playqueue(playqueue)

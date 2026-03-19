@@ -44,7 +44,7 @@ class AlbumItem(Gtk.Box):
 
         self._title_label.set_text(self._item.title)
         if self._item.index is not None:
-            self._index_label.set_text(self._item.index)
+            self._index_label.set_text(str(self._item.index))
         con_sec, con_min, con_hour = self.__convertMillis(int(self._item.duration))
 
         time = ""

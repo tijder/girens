@@ -94,7 +94,7 @@ class ShowView(Gtk.ScrolledWindow):
                 listBox.set_css_classes(["boxed-list"])
                 listBox.connect("row-activated", self.__on_row_actived)
                 seasons.update({episode.parentIndex : listBox})
-                self._season_stack.add_titled(listBox, episode.parentIndex, episode.parentTitle)
+                self._season_stack.add_titled(listBox, str(episode.parentIndex), episode.parentTitle)
             self.__add_to_hub(seasons[episode.parentIndex], episode)
 
         if len(seasons) == 1:

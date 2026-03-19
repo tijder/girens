@@ -31,7 +31,7 @@ ksecretservice.
 
 ```bash
 flatpak-builder --user --force-clean --install-deps-from=flathub builddir nl.g4d.Girens.yaml
-flatpak-builder --run builddir nl.g4d.Girens.yaml
+flatpak-builder --run builddir nl.g4d.Girens.yaml girens
 ```
 
 ## Update depedencies

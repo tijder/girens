@@ -10,6 +10,9 @@ from gi.repository import Gtk, GLib, GdkPixbuf, GObject, Gio
 from OpenGL import GL
 
 from .resume_dialog import ResumeDialog
+from .plex_compat import (get_stream_url, get_decision, ping_session, update_timeline,
+                           get_selected_audio_stream, get_selected_subtitle_stream, get_stream,
+                           set_default_audio_stream, set_default_subtitle_stream, get_download_url)
 
 # import gi
 # gi.require_version('Gtk', '3.0')
@@ -63,7 +66,7 @@ class Player(GObject.Object):
 
     def __ping_session(self):
         if self._session != None and self._item != None:
-            thread = threading.Thread(target=self._item.pingSession,kwargs={'session':self._session})
+            thread = threading.Thread(target=ping_session, args=(self._item, self._session))
             thread.daemon = True
             thread.start()
         return True
@@ -134,8 +137,8 @@ class Player(GObject.Object):
 
 
     def __set_selected_stream(self):
-        plex_audio = self._item.getSelectedAudioStream()
-        plex_sub = self._item.getSelectedSubtitleStream()
+        plex_audio = get_selected_audio_stream(self._item)
+        plex_sub = get_selected_subtitle_stream(self._item)
 
         self.__set_stream(plex_sub, 'sid')
         self.__set_stream(plex_audio, 'aid')
@@ -145,7 +148,7 @@ class Player(GObject.Object):
         extern_stream_title = False
 
         if isinstance(plex_stream, str) or isinstance(plex_stream, int):
-            plex_stream = self._item.getStream(int(plex_stream))
+            plex_stream = get_stream(self._item, int(plex_stream))
 
         if plex_stream is None:
             pindex = 0
@@ -168,10 +171,10 @@ class Player(GObject.Object):
 
         if stream_id == False and extern_stream_title != False:
             self._track_isset = False
-            self._player.command('sub-add', plex_stream.getDownloadUrl(), 'auto', extern_stream_title)
+            self._player.command('sub-add', get_download_url(plex_stream), 'auto', extern_stream_title)
 
     def set_subtitle(self, plex_stream):
-        self._item.setDefaultSubtitleStream(plex_stream)
+        set_default_subtitle_stream(self._item, plex_stream)
         if self._direct:
             self.__set_stream(plex_stream, 'sid')
         else:
@@ -180,7 +183,7 @@ class Player(GObject.Object):
             self._player.command('stop')
 
     def set_audio(self, plex_stream):
-        self._item.setDefaultAudioStream(plex_stream)
+        set_default_audio_stream(self._item, plex_stream)
         if self._direct:
             self.__set_stream(plex_stream, 'aid')
         else:
@@ -190,7 +193,7 @@ class Player(GObject.Object):
 
     def __stop(self):
         try:
-            self._item.updateTimeline(self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID, session=self._session)
+            update_timeline(self._item, self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID, session=self._session)
         except:
             print("Error by updating timeline")
         #self._player.terminate()
@@ -246,8 +249,11 @@ class Player(GObject.Object):
                 self._direct = (self._settings.get_boolean("play-media-direct") or self._item_loading.listType != 'video')
                 if self._direct == False:
                     self._session = str(uuid.uuid4())
-                    self._item_loading.getDecision(session=self._session, protocol="dash", videoResolution=self._settings.get_string("transcode-media-to-resolution"))
-                source = self._item_loading.getStreamURL(session=self._session, directPlay=self._direct, videoResolution=self._settings.get_string("transcode-media-to-resolution"), protocol="dash", fileExtension="mpd")
+                    try:
+                        get_decision(self._item_loading, self._session, protocol="dash", videoResolution=self._settings.get_string("transcode-media-to-resolution"))
+                    except Exception:
+                        pass
+                source = get_stream_url(self._item_loading, session=self._session, directPlay=self._direct, videoResolution=self._settings.get_string("transcode-media-to-resolution"), protocol="dash", fileExtension="mpd")
 
 
             self._player.volume = self._settings.get_int("volume-level")
@@ -472,7 +478,7 @@ class Player(GObject.Object):
         GLib.idle_add(self.start_with_params, False, None)
         
     def __updateTimeline(self, progres, state=None, duration=None, playQueueItemID=None):
-        thread = threading.Thread(target=self._item.updateTimeline,args={progres},kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID,'session':self._session})
+        thread = threading.Thread(target=update_timeline, args=(self._item, progres), kwargs={'state':state,'duration':duration,'playQueueItemID':playQueueItemID,'session':self._session})
         thread.daemon = True
         thread.start()
         if progres > 1000 and self._playqueue_refreshed == False:

@@ -113,7 +113,7 @@ class SectionView(Gtk.Overlay):
         self._filter_box.clear()
         self._sort_store = Gtk.ListStore(object, str)
         sort_lable_active = sort
-        for sort_avaible in self._section.ALLOWED_SORT:
+        for sort_avaible in [s.key for s in self._section.listSorts()]:
             lable = sort_avaible
             if sort_avaible in self._sort_lables:
                 lable = self._sort_lables[sort_avaible]

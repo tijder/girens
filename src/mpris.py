@@ -170,7 +170,7 @@ class MediaPlayer2Service(Server):
         if media.type != 'track':
             user_rating = 1.0
         else:
-            user_rating = media.userRating / 10
+            user_rating = (media.userRating or 0) / 10
 
         if media.type in {'movie', 'clip'}:
             index = 0
@@ -195,9 +195,9 @@ class MediaPlayer2Service(Server):
             'xesam:albumArtist': GLib.Variant('as', [artist])
         }
 
-        last_played = media.viewedAt
+        last_played = getattr(media, 'lastViewedAt', None)
         if last_played is not None:
-            last_played_str = last_played.format("%FT%T%:z")
+            last_played_str = last_played.isoformat()
             metadata['xesam:lastUsed'] = GLib.Variant('s', last_played_str)
 
         path_image = self.app._plex.path_for_download('thumb_' + str(media.ratingKey))[1]
