@@ -291,11 +291,11 @@ class MediaBox(GObject.Object):
         if self._play_image != None:
             self._play_image.set_from_icon_name(string)
 
-    def __updat_time_left_label(self, string):
+    def __update_time_left_label(self, string):
         if self._time_left_label != None:
             self._time_left_label.set_text(str(string))
 
-    def __updat_time_right_label(self, string):
+    def __update_time_right_label(self, string):
         if self._time_right_label != None:
             self._time_right_label.set_text(str(string))
 
@@ -326,8 +326,8 @@ class MediaBox(GObject.Object):
             self._fraction = self._progress / self._item.duration
             self.__update_progress_bar(self._fraction)
 
-            self.__updat_time_left_label(self.__convertMillis(self._progress))
-            self.__updat_time_right_label("-" + self.__convertMillis(self._item.duration - self._progress))
+            self.__update_time_left_label(self.__convertMillis(self._progress))
+            self.__update_time_right_label("-" + self.__convertMillis(self._item.duration - self._progress))
 
             title = ''
             subtitle = ''

@@ -32,8 +32,8 @@ modules:
     sources:
       - type: git
         url: https://gitlab.gnome.org/jwestman/blueprint-compiler.git
-        tag: v0.20.0
-        commit: aa5298cc1677cf855bd61f9671607362bd203f4f
+        tag: v0.20.4
+        commit: 31b62c24a72c1670d2d93dcdf2d130f1ae12778e
         x-checker-data:
           type: git
   - name: libmpv
@@ -178,11 +178,15 @@ modules:
   - name: PlexAPI
     buildsystem: simple
     build-commands:
-      - pip3 install --no-build-isolation --prefix=/app ./
+      - pip3 install --prefix=/app plexapi-*.whl
     sources:
-      - type: git
-        url: https://github.com/tijder/python-plexapi
-        commit: cadb3d2a399702ae3908cad70e52e439d9b665a2
+      - type: file
+        url: https://files.pythonhosted.org/packages/ce/bf/053e89b1fb3ef0a0ce55830448b6fda38d9445d904f9b67e93a6633ba4df/plexapi-4.18.0-py3-none-any.whl
+        sha256: 31b4d7dae985a38191e7565b323285be4a5f69c14625956d171f1835004dc9eb
+        x-checker-data:
+          type: pypi
+          packagetype: bdist_wheel
+          name: PlexAPI
     modules:
       - name: idna
         buildsystem: simple
@@ -214,8 +218,8 @@ modules:
           - pip3 install --prefix=/app chardet-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/87/13/6aa6c9118ce153a806bb0472e27e8f8c24e6925db8a5b9fe99e03e45af15/chardet-7.1.0-py3-none-any.whl
-            sha256: 7f677725333bf53f84b7f57458f44669a8a5eb2ac4092ac699cdfa9b1af08a5f
+            url: https://files.pythonhosted.org/packages/c2/47/97786f40be59ff5ff10ec5ebcb1ef0ad28dd915717cb210cee89ae7a83a6/chardet-7.2.0-py3-none-any.whl
+            sha256: f8ea866b9fbd8df5f19032d765a4d81dcbf6194a3c7388b44d378d02c9784170
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -251,8 +255,8 @@ modules:
               - pip3 install --prefix=/app charset_normalizer-*.whl
             sources:
               - type: file
-                url: https://files.pythonhosted.org/packages/c5/60/3a621758945513adfd4db86827a5bafcc615f913dbd0b4c2ed64a65731be/charset_normalizer-3.4.5-py3-none-any.whl
-                sha256: 9db5e3fcdcee89a78c04dffb3fe33c79f77bd741a624946db2591c81b2fc85b0
+                url: https://files.pythonhosted.org/packages/2a/68/687187c7e26cb24ccbd88e5069f5ef00eba804d36dde11d99aad0838ab45/charset_normalizer-3.4.6-py3-none-any.whl
+                sha256: 947cf925bc916d90adba35a64c82aace04fa39b46b52d4630ece166655905a69
                 x-checker-data:
                   type: pypi
                   packagetype: bdist_wheel
@@ -293,14 +297,6 @@ modules:
               type: pypi
               packagetype: bdist_wheel
               name: websocket-client
-  - name: plex-remote
-    buildsystem: simple
-    build-commands:
-      - pip3 install --no-build-isolation --prefix=/app ./
-    sources:
-      - type: git
-        url: https://github.com/tijder/plex-remote
-        commit: c29ef9549c166902e53b3a1b603b365d70ebdf93
   - name: girens
     buildsystem: meson
     config-opts:
@@ -309,5 +305,5 @@ modules:
       - -Dnetwork_tests=false
     builddir: true
     sources:
-      - type: git
-        url: https://gitlab.gnome.org/tijder/girens
+     - type: git
+       url: https://gitlab.gnome.org/tijder/girens

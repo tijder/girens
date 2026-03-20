@@ -35,9 +35,7 @@ from .player_view import PlayerView
 from .album_view import AlbumView
 from .download_menu import DownloadMenu
 from .mpris import MediaPlayer2Service
-from .remote_player import RemotePlayer
 from .sync_settings import SyncSettings
-from plex_remote.plex_remote_client import PlexRemoteClient
 from .theme_switcher import ThemeSwitcher
 
 from .plex import Plex
@@ -47,7 +45,6 @@ from .constants import build_type
 
 import os
 import threading
-import time
 
 @Gtk.Template(resource_path='/nl/g4d/Girens/main_window.ui')
 class PlexWindow(Adw.ApplicationWindow):
@@ -55,7 +52,6 @@ class PlexWindow(Adw.ApplicationWindow):
 
     _active_view = None
     _show_id = None
-    _remote_client_active = None
     _inhibitCookie = None
 
     _style_manager = Adw.StyleManager.get_default()
@@ -104,7 +100,6 @@ class PlexWindow(Adw.ApplicationWindow):
     _download_button = Gtk.Template.Child()
     _search_toggle_button = Gtk.Template.Child()
     _prefer_music_clips_check_button = Gtk.Template.Child()
-    _advertise_as_client_check_button = Gtk.Template.Child()
     _about_button = Gtk.Template.Child()
     _volume_adjustment = Gtk.Template.Child()
 
@@ -128,17 +123,15 @@ class PlexWindow(Adw.ApplicationWindow):
 
         self._video_output_driver = "xv,"
         self._deinterlace = "no"
-        if video_output_driver != None:
+        if video_output_driver is not None:
             self._video_output_driver = video_output_driver
-        if deinterlace != None:
+        if deinterlace is not None:
             self._deinterlace = deinterlace
 
         self._aplication = kwargs["application"]
         self._show_id = show_id
 
         self.connect("map", self.__screen_mapped)
-        self.connect("unrealize", self.__on_destroy)
-
         action = Gio.SimpleAction(name="show-album-by-id", parameter_type=GLib.VariantType.new('x'))
         action.connect("activate", self.on_show_album_by_id)
         self.add_action(action)
@@ -213,12 +206,6 @@ class PlexWindow(Adw.ApplicationWindow):
         thread.daemon = True
         thread.start()
 
-
-    def __on_destroy(self, widget):
-        if self._remote_client_active is True:
-            thread = threading.Thread(target=self.plexRemoteClient.stop)
-            thread.daemon = True
-            thread.start()
 
     def show_by_id(self, show_id):
         item = self._plex.get_item(show_id[1])
@@ -304,15 +291,9 @@ class PlexWindow(Adw.ApplicationWindow):
         self._login_view.connect("login-failed", self.__on_login_failed)
         self._login_view.connect("login-not-found", self.__on_login_not_found)
 
-        remote_player = RemotePlayer(self._player, self)
-
-        self.plexRemoteClient = PlexRemoteClient(remote_player)
-
         self._prefer_music_clips_check_button.connect("state-set", self.__on_prefer_music_clips_check_button_clicked)
         self._settings.bind ("prefer-music-clips", self._prefer_music_clips_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         #self._settings.bind ("play-media-direct", self._direct_play_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
-        self._advertise_as_client_check_button.connect("state-set", self.__advertise_as_client_check_button_clicked)
-        self._settings.bind ("advertise-as-client", self._advertise_as_client_check_button, "active", Gio.SettingsBindFlags.DEFAULT);
         self._settings.bind ("volume-level", self._volume_adjustment, "value", Gio.SettingsBindFlags.DEFAULT);
 
         sr = self._settings.get_string("transcode-media-to-resolution")
@@ -377,7 +358,7 @@ class PlexWindow(Adw.ApplicationWindow):
 
 
     def __on_login_success(self, view, status):
-        if (status == True):
+        if status:
             thread = threading.Thread(target=self._plex.connect_to_server)
             thread.daemon = True
             thread.start()
@@ -503,18 +484,6 @@ class PlexWindow(Adw.ApplicationWindow):
     def __on_prefer_music_clips_changed(self, player, value):
         self._prefer_music_clips_check_button.set_active(value)
 
-    def __advertise_as_client_check_button_clicked(self, button, state):
-        if state:
-            thread = threading.Thread(target=self.plexRemoteClient.start)
-            thread.daemon = True
-            thread.start()
-            self._remote_client_active = True
-        else:
-            thread = threading.Thread(target=self.plexRemoteClient.stop)
-            thread.daemon = True
-            thread.start()
-            self._remote_client_active = False
-
     def __on_about_clicked(self, button):
         builder = Gtk.Builder()
         builder.add_from_resource("/nl/g4d/Girens/about_dialog.ui")
@@ -565,12 +534,12 @@ class PlexWindow(Adw.ApplicationWindow):
         if (widget.is_fullscreen()): # Is fullscreen
             self._player_view.set_fullscreen_state()
             self.__remove_extra_widgets()
-            if (self._inhibitCookie == None):
+            if self._inhibitCookie is None:
                 self._inhibitCookie = self.get_application().inhibit(self, Gtk.ApplicationInhibitFlags.IDLE, "Girens is playing in fullscreen")
         else: # Is not fullscreen
             self._player_view.set_unfullscreen_state()
             self.__add_extra_widgets()
-            if (self._inhibitCookie != None):
+            if self._inhibitCookie is not None:
                 self.get_application().uninhibit(self._inhibitCookie)
                 self._inhibitCookie = None
 
@@ -585,7 +554,7 @@ class PlexWindow(Adw.ApplicationWindow):
         self._menu_popover.popdown()
 
     def __on_size_changed(self, widget, event):
-        if self._window_placement_update_timeout != None:
+        if self._window_placement_update_timeout is not None:
             GLib.source_remove(self._window_placement_update_timeout)
         self._window_placement_update_timeout = GLib.timeout_add(500, self.__update_screen_size_change, [self.get_width(), self.get_height()])
 
@@ -605,7 +574,7 @@ class PlexWindow(Adw.ApplicationWindow):
             self._album_view.width_changed(width)
             self._artist_view.width_changed(width)
             self._show_view.width_changed(width)
-            if self._window_placement_update_timeout != None:
+            if self._window_placement_update_timeout is not None:
                 GLib.source_remove(self._window_placement_update_timeout)
             self._window_placement_update_timeout = None
         return False

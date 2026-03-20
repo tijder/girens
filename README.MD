@@ -1,5 +1,8 @@
 # Girens for Plex
 
+> **⚠ Maintenance mode**
+> This project is in maintenance mode. No new features will be added. Dependency updates and bug fixes will still be applied.
+
 Girens is a [Plex](https://www.plex.tv/) media player client. You can watch and listen to your music, shows and movies with this GTK app.
 
 ## Why this app

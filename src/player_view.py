@@ -350,14 +350,14 @@ class PlayerView(Gtk.ScrolledWindow):
             for parts in self._item.iterParts():
                 for stream in parts.subtitleStreams():
                     i = i + 1
-                    if i is self._subtitle_box.get_selected():
+                    if i == self._subtitle_box.get_selected():
                         self.__on_process_slected(stream, 'subtitle')
 
     def __on_audio_selected(self, widget, param):
         i = 0
         for parts in self._item.iterParts():
             for stream in parts.audioStreams():
-                if (i is self._audio_box.get_selected()):
+                if i == self._audio_box.get_selected():
                     self.__on_process_slected(stream, 'audio')
                 i = i + 1
 

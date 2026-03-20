@@ -189,16 +189,15 @@ class SectionView(Gtk.Overlay):
         #self.__start_adding_items()
         #self.__show_more_items()
         self._add_items_first = True
-        self.__start_add_items_timout()
+        self.__show_items()
 
     def __stop_add_items_timout(self):
-        if self._timout != None:
+        if self._timout is not None:
             GLib.source_remove(self._timout)
             self._timout = None
 
-    def __start_add_items_timout(self):
+    def __show_items(self):
         self.__show_more_items()
-        #self._timout = GLib.timeout_add(50, self.__show_more_items)
 
     def __show_more_items(self):
         self.__stop_add_items_timout()

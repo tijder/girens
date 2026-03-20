@@ -7,6 +7,7 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from plexapi import utils
 from plexapi.playqueue import PlayQueue
+from plexapi.library import LibrarySection
 from gi.repository import GObject, GLib, Secret, Gio
 
 import json
@@ -86,7 +87,7 @@ class Plex(GObject.Object):
             return Secret.password_lookup_sync(Secret.Schema.new("nl.g4d.Girens", Secret.SchemaFlags.NONE, {'uuid': Secret.SchemaAttributeType.STRING}), {'uuid': uuid}, None)
         except GLib.GError as e:
             if 'tokens' in self._config:
-                return self._config['tokens'][uuid];g
+                return self._config['tokens'][uuid]
 
     def set_server_token(self, token, server_url, server_uuid, name):
         self._settings.set_string("server-url", self._server._baseurl)
@@ -119,7 +120,7 @@ class Plex(GObject.Object):
             self._account = MyPlexAccount(token=token)
             self.set_token(self._account._token, self._account.username, self._account.email, self._account.uuid)
             self.emit('login-status',True,'')
-        except:
+        except Exception:
             self.emit('login-status',False,'Login failed')
 
     def login(self, username, password):
@@ -127,7 +128,7 @@ class Plex(GObject.Object):
             self._account = MyPlexAccount(username, password)
             self.set_token(self._account._token, self._account.username, self._account.email, self._account.uuid)
             self.emit('login-status',True,'')
-        except:
+        except Exception:
             self.emit('login-status',False,'Login failed')
 
     def login_with_url(self, baseurl, token):
@@ -143,7 +144,7 @@ class Plex(GObject.Object):
             self.emit('connection-to-server')
             self.emit('loading', 'Success', False)
             self.emit('login-status',True,'')
-        except:
+        except Exception:
             self.emit('loading', _('Connecting to {} failed.').format(baseurl), True)
             self.emit('login-status',False,'Login failed')
             print('connection failed (login with url)')
@@ -233,7 +234,7 @@ class Plex(GObject.Object):
         return None
 
     def get_section_items(self, section, container_start=0, container_size=10, sort=None, sort_value=None):
-        if (sort != None):
+        if sort is not None:
             if 'sections' not in self._config:
                 self._config['sections'] = {}
             if section.uuid not in self._config['sections']:
@@ -294,10 +295,25 @@ class Plex(GObject.Object):
     def play_item(self, item, shuffle=0, from_beginning=None, sort=None):
         if type(item) in [str, int]:
             item = self._server.fetchItem(item)
-        parent_item = None
-        if item.TYPE == "track":
+        if isinstance(item, LibrarySection):
+            section_path = f"/library/sections/{item.key}/all"
+            if sort:
+                section_path += f"?sort={sort}"
+            args = {
+                "type": item.CONTENT_TYPE,
+                "uri": f"server://{self._server.machineIdentifier}/{self._server.library.identifier}{section_path}",
+                "shuffle": shuffle,
+                "continuous": 0,
+                "repeat": 0,
+                "includeChapters": 1,
+                "includeRelated": 1,
+            }
+            path = f"/playQueues{utils.joinArgs(args)}"
+            data = self._server.query(path, method=self._server._session.post)
+            playqueue = PlayQueue(self._server, data, initpath=path)
+            playqueue._server = self._server
+        elif item.TYPE == "track":
             parent_item = item.album()
-        if parent_item is not None:
             playqueue = PlayQueue.create(self._server, parent_item, startItem=item, shuffle=shuffle, continuous=1)
         else:
             playqueue = PlayQueue.create(self._server, item, shuffle=shuffle, continuous=1)
@@ -325,7 +341,7 @@ class Plex(GObject.Object):
             self._config['sync'][str(item.ratingKey)]['rating_key'] = str(item.ratingKey)
             self._config['sync'][str(item.ratingKey)]['converted'] = converted
             self._config['sync'][str(item.ratingKey)]['only_unwatched'] = only_unwatched
-            if (max_items != None):
+            if max_items is not None:
                 self._config['sync'][str(item.ratingKey)]['max_items'] = max_items
             self.__save_config()
             self.get_sync_items()
@@ -368,7 +384,7 @@ class Plex(GObject.Object):
                             count = count + 1
                             if ('max_items' in sync[item_keys] and count > int(sync[item_keys]['max_items'])):
                                 break
-                            if(self.get_item_download_path(download_item) == None):
+                            if self.get_item_download_path(download_item) is None:
                                 self.__download_item(download_item, converted=sync[item_keys]['converted'])
                             if ('item_' + str(download_item.ratingKey) in download_files):
                                 download_files.remove('item_' + str(download_item.ratingKey))
@@ -450,7 +466,7 @@ class Plex(GObject.Object):
             handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
             opener = urllib.request.build_opener(handler)
             port = ""
-            if parse.port != None:
+            if parse.port is not None:
                 port = ":" + str(parse.port)
             url_img_combined = parse.scheme + "://" + parse.hostname + port + parse.path + "?" + parse.query
             try:
@@ -458,7 +474,7 @@ class Plex(GObject.Object):
                 with open(path, 'w+b') as file:
                     file.write(img_raw.read())
                 return path
-            except:
+            except Exception:
                 print("Failed downloading: " + url_img_combined)
         else:
             return path
@@ -473,7 +489,7 @@ class Plex(GObject.Object):
                 self.emit('connection-to-server')
                 self.emit('loading', 'Success', False)
                 return None
-            except:
+            except Exception:
                 self.emit('loading', _('Connecting to {} failed.').format(self._server_url), True)
                 print('custom url connection failed')
 
@@ -484,7 +500,7 @@ class Plex(GObject.Object):
                 if self.connect_to_resource(resource):
                     break
 
-        if (servers_found == False):
+        if not servers_found:
             self.emit('loading', _('No servers found for this account.'), True)
 
     def connect_to_resource(self, resource):
@@ -498,7 +514,7 @@ class Plex(GObject.Object):
             self.emit('connection-to-server')
             self.emit('loading', 'Success', False)
             return True
-        except:
+        except Exception:
             self.emit('loading', _('Connecting to {} failed.').format(resource.name), True)
             print('connection failed (when trying to connect to resource)')
             return False

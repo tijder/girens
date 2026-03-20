@@ -16,11 +16,6 @@
         <summary>The volume level of the audio</summary>
         <description></description>
     </key>
-    <key type="b" name="advertise-as-client">
-        <default>false</default>
-        <summary>Allow other devices on this network to find Girens and control this client</summary>
-        <description></description>
-    </key>
     <key type="s" name="color-scheme">
       <choices>
         <choice value="auto"/>

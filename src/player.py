@@ -59,13 +59,17 @@ class Player(GObject.Object):
         self._play_music_clip_instead_of_track = False
         self._session = None
         self._stop_command_given = False
+        self._prev = False
+        self._next = False
+        self._eof = False
+        self._offset = 0
 
         self._tracklist = None
         self._player_view._frame.connect('realize', self.__on_realize)
         self._timout = GLib.timeout_add(30000, self.__ping_session)
 
     def __ping_session(self):
-        if self._session != None and self._item != None:
+        if self._session is not None and self._item is not None:
             thread = threading.Thread(target=ping_session, args=(self._item, self._session))
             thread.daemon = True
             thread.start()
@@ -90,17 +94,6 @@ class Player(GObject.Object):
         self._player = mpv.MPV(vo="libmpv", keep_open="yes", cache='yes')
         self._player_view._frame.set_auto_render(False)
         self.on_realize()
-        self.__createPlayer()
-
-    def __createPlayer(self, offset=0):
-        #import locale
-        #locale.setlocale(locale.LC_NUMERIC, 'C')
-        #self._player.start = offset
-        #if self._item_loading.listType == 'video':
-        #    self._player.start = offset
-        #else:
-        #    self._player = mpv.MPV(input_cursor="no", cursor_autohide="no", input_default_bindings="no", start=offset)
-        pass
 
         @self._player.property_observer('time-pos')
         def __time_observer(_name, value):
@@ -117,9 +110,9 @@ class Player(GObject.Object):
         @self._player.property_observer('pause')
         def __on_pause(_name, value):
             self._paused = value
-            if (self._stop_command_given == False):
+            if not self._stop_command_given:
                 self.emit('media-paused', value)
-            if (value == True and self._progresNow is not None):
+            if value and self._progresNow is not None:
                 self.__updateTimeline(self._progresNow * 1000, state='paused', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID)
 
         @self._player.property_observer('track-list')
@@ -194,7 +187,7 @@ class Player(GObject.Object):
     def __stop(self):
         try:
             update_timeline(self._item, self._progresUpdate * 1000, state='stopped', duration=self._item_loading.duration, playQueueItemID=self._item.playQueueItemID, session=self._session)
-        except:
+        except Exception:
             print("Error by updating timeline")
         #self._player.terminate()
 
@@ -215,13 +208,13 @@ class Player(GObject.Object):
             self._from_beginning = from_beginning
             self._stop_command_given = True
             self._player.command('stop')
-        elif new_item.viewOffset != 0 and from_beginning == None and offset_param == None:
+        elif new_item.viewOffset != 0 and from_beginning is None and offset_param is None:
             GLib.idle_add(self.__ask_resume_or_beginning, new_item)
         else:
             self._stop_command_given = False
             self._item = new_item
             self._item_loading = self._item
-            if self._play_music_clip_instead_of_track and self._item.type == 'track' and self._item.primaryExtraKey != None:
+            if self._play_music_clip_instead_of_track and self._item.type == 'track' and self._item.primaryExtraKey is not None:
                 self._item_clip = self._plex._server.fetchItem(self._item.primaryExtraKey)
                 self._item_loading = self._item_clip
             self._next = False
@@ -237,7 +230,7 @@ class Player(GObject.Object):
             self.aid = None
             self._session = None
 
-            if (from_beginning == False and offset_param != None):
+            if not from_beginning and offset_param is not None:
                 offset = offset_param / 1000
             elif from_beginning == False:
                 offset = self._item_loading.viewOffset / 1000
@@ -245,7 +238,7 @@ class Player(GObject.Object):
                 offset = 0
 
             source = self._plex.get_item_download_path(self._item_loading)
-            if (source == None):
+            if source is None:
                 self._direct = (self._settings.get_boolean("play-media-direct") or self._item_loading.listType != 'video')
                 if self._direct == False:
                     self._session = str(uuid.uuid4())
@@ -290,12 +283,12 @@ class Player(GObject.Object):
         self._item_loading = None
         self._playing = False
 
-        if (self._play_wait == True):
+        if self._play_wait:
             self._play_wait = False
             GLib.idle_add(self.start_with_params, self._from_beginning, self._offset_param)
         elif (self._restart):
             GLib.idle_add(self.start_with_params, False, self._restart_offset * 1000)
-        elif (self._next_index != None):
+        elif self._next_index is not None:
             self._offset = self._next_index
             self._next_index = None
             GLib.idle_add(self.start)
@@ -456,10 +449,13 @@ class Player(GObject.Object):
 
     def __playqueue_refreshed(self):
         i = 0
+        self._offset = 0
+        playQueueSelectedItem = self._playqueue.items[0] if self._playqueue.items else None
         for item in self._playqueue.items:
             if item.playQueueItemID == self._playqueue.playQueueSelectedItemID:
                 self._offset = i
                 playQueueSelectedItem = item
+                break
             i += 1
         self.emit("playqueue-refreshed", playQueueSelectedItem, self._playqueue)
 
@@ -537,7 +533,7 @@ class GetProcAddressGetter:
             return self._egl_impl
         except AttributeError:
             pass
-        raise 'Cannot initialize OpenGL'
+        raise RuntimeError('Cannot initialize OpenGL')
 
     def wrap(self, _, name: bytes):
         address = self._func(name)

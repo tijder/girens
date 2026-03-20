@@ -20,140 +20,6 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12-dev\n"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:5
-msgid "Girens for Plex"
-msgstr "Girens для Plex"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:7
-msgid "Watch your Plex content"
-msgstr "Просмотр контента с Plex"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:11
-msgid ""
-"Girens is a Plex media player client. You can watch and listen to your "
-"music, shows and movies with this GTK app."
-msgstr ""
-"Girens - это клиент-медиаплеер Plex. С помощью этого GTK-приложения можно "
-"смотреть сериалы и фильмы, слушать музыку."
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:20
-msgid "The home screen"
-msgstr "Главная"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:24
-msgid "The show screen"
-msgstr "Сериалы"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:28
-msgid "The album screen"
-msgstr "Экран альбома"
-
-#: ../data/nl.g4d.Girens.desktop.in:3
-msgid "Girens"
-msgstr "Girens"
-
-#: ../data/nl.g4d.Girens.desktop.in:4
-msgid "Play your Plex movies, shows and music"
-msgstr "Воспроизведение фильмов, передач и музыки с Plex"
-
-#: ../data/nl.g4d.Girens.desktop.in:10
-msgid "girens;plex;media;player;"
-msgstr "girens;plex;media;player;гиренс;плекс;медиа;плееер;"
-
-#: ../data/ui/about_dialog.ui.in:8
-msgid ""
-"A Plex GTK client for playing movies, TV shows and music from your Plex "
-"library."
-msgstr ""
-"GTK-клиент Plex для воспроизведения фильмов, телепередач и музыки из "
-"библиотеки Plex."
-
-#. Add your name to the translator credits list
-#: ../data/ui/about_dialog.ui.in:11
-msgid "translator-credits"
-msgstr "Yuri Smirnov"
-
-#: ../data/ui/artist_view.blp:57
-msgid "Show more"
-msgstr "Показать еще"
-
-#: ../data/ui/discover_view.blp:18 ../data/ui/player_view.blp:121
-msgid "Ondeck"
-msgstr "Продолжить просмотр"
-
-#: ../data/ui/discover_view.blp:36
-msgid "Recently added Shows"
-msgstr "Недавно добавленные Сериалы"
-
-#: ../data/ui/discover_view.blp:54
-msgid "Recently added Movies"
-msgstr "Недавно добавленные Фильмы"
-
-#: ../data/ui/discover_view.blp:72
-msgid "Recently added Music"
-msgstr "Недавно добавленная Музыка"
-
-#: ../data/ui/loading_view.blp:29 ../data/ui/profile_dialog.blp:25
-msgid "Logout"
-msgstr "Выйти"
-
-#: ../data/ui/login_view.blp:29
-msgid "Username and password"
-msgstr "Имя пользователя и пароль"
-
-#: ../data/ui/login_view.blp:33
-msgid "Login to Plex with an user acount"
-msgstr "Войти в Plex с учетной записью пользователя"
-
-#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
-msgid "Username"
-msgstr "Имя пользователя"
-
-#: ../data/ui/login_view.blp:44
-msgid "Password"
-msgstr "Пароль"
-
-#: ../data/ui/login_view.blp:53
-msgid "Login"
-msgstr "Логин"
-
-#: ../data/ui/login_view.blp:64
-msgid "URL and token"
-msgstr "URL и токен"
-
-#: ../data/ui/login_view.blp:69
-msgid "Go to Plex server based on an URL"
-msgstr "Перейти на Plex-сервер на этом URL"
-
-#: ../data/ui/login_view.blp:74
-msgid "The URL to the Plex server with the port number"
-msgstr "URL-адрес сервера Plex с номером порта"
-
-#: ../data/ui/login_view.blp:80
-msgid "Token"
-msgstr "Токен"
-
-#: ../data/ui/login_view.blp:89
-msgid "Connect"
-msgstr "Подключение"
-
-#: ../data/ui/main_window.blp:57
-msgid "Toggle Sidebar"
-msgstr "Свернуть Боковую Панель"
-
-#: ../data/ui/main_window.blp:156
-msgid "Settings"
-msgstr "Настройки"
-
-#: ../data/ui/main_window.blp:184
-msgid "Advertise as client"
-msgstr "Работа в режиме клиента"
-
-#: ../data/ui/main_window.blp:185
-msgid ""
-"Allow other devices on this network to find Girens and control this client."
-msgstr ""
-"Разрешить другим устройствам в этой сети находить Girens и управлять им."
 
 #: ../data/ui/main_window.blp:194
 msgid "Prefer music clips"
@@ -354,7 +220,7 @@ msgstr "Перемешать"
 
 #: ../src/album_view.py:138
 msgid "Disc {}"
-msgstr "Описание {}"
+msgstr "Диск {}"
 
 #: ../src/cover_box.py:95
 msgid "Go to album view"

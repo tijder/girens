@@ -1,6 +1,10 @@
 # original source https://gitlab.gnome.org/GNOME/gnome-music/blob/master/gnomemusic/mpris.py
 
+import logging
+
 from gi.repository import GLib, Gio
+
+logger = logging.getLogger(__name__)
 
 
 class Server:
@@ -363,18 +367,6 @@ class MediaPlayer2Service(Server):
         elif interface_name == MediaPlayer2Service.MEDIA_PLAYER2_PLAYER_IFACE:
             if property_name in ['Rate', 'Volume']:
                 self.player.set_volume(new_value * 100)
-            elif property_name == 'LoopStatus':
-                if new_value == 'None':
-                    self.player.props.repeat_mode = RepeatMode.NONE
-                elif new_value == 'Track':
-                    self.player.props.repeat_mode = RepeatMode.SONG
-                elif new_value == 'Playlist':
-                    self.player.props.repeat_mode = RepeatMode.ALL
-            elif property_name == 'Shuffle':
-                if new_value:
-                    self.player.props.repeat_mode = RepeatMode.SHUFFLE
-                else:
-                    self.player.props.repeat_mode = RepeatMode.NONE
         else:
             logger.warning(
                 "MPRIS does not implement {} interface".format(interface_name))
