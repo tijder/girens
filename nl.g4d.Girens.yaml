@@ -1,6 +1,6 @@
 app-id: nl.g4d.Girens
 runtime: org.gnome.Platform
-runtime-version: 'master'
+runtime-version: master
 sdk: org.gnome.Sdk
 command: girens
 finish-args:
@@ -27,15 +27,6 @@ cleanup:
   - '*.la'
   - '*.a'
 modules:
-  - name: blueprint-compiler
-    buildsystem: meson
-    sources:
-      - type: git
-        url: https://gitlab.gnome.org/jwestman/blueprint-compiler.git
-        tag: v0.20.4
-        commit: 31b62c24a72c1670d2d93dcdf2d130f1ae12778e
-        x-checker-data:
-          type: git
   - name: libmpv
     cleanup:
       - /include
@@ -181,8 +172,8 @@ modules:
       - pip3 install --prefix=/app plexapi-*.whl
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/ce/bf/053e89b1fb3ef0a0ce55830448b6fda38d9445d904f9b67e93a6633ba4df/plexapi-4.18.0-py3-none-any.whl
-        sha256: 31b4d7dae985a38191e7565b323285be4a5f69c14625956d171f1835004dc9eb
+        url: https://files.pythonhosted.org/packages/17/a8/9f1c54ce351d681aa0eb2221f7deccbdd5a95421507eb59e6f7ec83931d7/plexapi-4.18.1-py3-none-any.whl
+        sha256: d8330cee337bc55dc006c392a58b3259239d787a32cbe4064b50a9b07a6e0b35
         x-checker-data:
           type: pypi
           packagetype: bdist_wheel
@@ -218,8 +209,8 @@ modules:
           - pip3 install --prefix=/app chardet-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/c2/47/97786f40be59ff5ff10ec5ebcb1ef0ad28dd915717cb210cee89ae7a83a6/chardet-7.2.0-py3-none-any.whl
-            sha256: f8ea866b9fbd8df5f19032d765a4d81dcbf6194a3c7388b44d378d02c9784170
+            url: https://files.pythonhosted.org/packages/91/d7/47988d40231b41376f5a66346ef3b322c81091dfd4c0f84df5a1e3bb06b5/chardet-7.4.0.post1-py3-none-any.whl
+            sha256: 57a62ef50f69bc2fb3a3ea1ffffec6d10f3d2112d3b05d6e3cb15c2c9b55f6cc
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -242,8 +233,8 @@ modules:
           - pip3 install --prefix=/app requests-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/1e/db/4254e3eabe8020b458f1a747140d32277ec7a271daf1d235b70dc0b4e6e3/requests-2.32.5-py3-none-any.whl
-            sha256: 2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6
+            url: https://files.pythonhosted.org/packages/56/5d/c814546c2333ceea4ba42262d8c4d55763003e767fa169adc693bd524478/requests-2.33.0-py3-none-any.whl
+            sha256: 3324635456fa185245e24865e810cecec7b4caf933d7eb133dcde67d48cee69b
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -305,5 +296,5 @@ modules:
       - -Dnetwork_tests=false
     builddir: true
     sources:
-     - type: git
-       url: https://gitlab.gnome.org/tijder/girens
+      - type: git
+        url: https://gitlab.gnome.org/tijder/girens
