@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Adw, Gio
+from gi.repository import Gtk, GLib, GObject, GdkPixbuf, Gdk, Adw, Gio
 
 from .album_item import AlbumItem
 
@@ -33,6 +33,8 @@ class AlbumView(Gtk.ScrolledWindow):
     _subtitle_label = Gtk.Template.Child()
     _item_box = Gtk.Template.Child()
     _cover_image = Gtk.Template.Child()
+    _cover_picture = Gtk.Template.Child()
+    _cover_placeholder = Gtk.Template.Child()
 
     _menu_button = Gtk.Template.Child()
     _play_button = Gtk.Template.Child()
@@ -69,7 +71,8 @@ class AlbumView(Gtk.ScrolledWindow):
 
         self._discs = {}
 
-        self._cover_image.set_from_icon_name("emblem-synchronizing-symbolic")
+        self._cover_picture.set_filename(None)
+        self._cover_placeholder.set_visible(True)
 
         self._connection_album_retrieved = self._plex.connect("album-retrieved", self.__album_retrieved)
 
@@ -147,10 +150,13 @@ class AlbumView(Gtk.ScrolledWindow):
 
     def __on_cover_downloaded(self, plex, rating_key, path):
         if(self._download_key == rating_key):
-            GLib.idle_add(self.__set_image, path)
+            pix = GdkPixbuf.Pixbuf.new_from_file_at_size(path, 150, 150)
+            GLib.idle_add(self.__set_image, pix)
 
     def __set_image(self, pix):
-        self._cover_image.set_from_file(pix)
+        texture = Gdk.Texture.new_for_pixbuf(pix)
+        self._cover_picture.set_paintable(texture)
+        self._cover_placeholder.set_visible(False)
 
     def __on_row_actived(self, widget, row):
         row.get_child().play_item()
@@ -173,4 +179,4 @@ class AlbumView(Gtk.ScrolledWindow):
         if self._cover_image.get_parent() != cover_box:
             self._cover_image.unparent()
             self._cover_image.set_parent(cover_box)
-            
+
