@@ -66,6 +66,7 @@ class AlbumView(Gtk.ScrolledWindow):
         self._title_label.set_text('')
         self._subtitle_label.set_text('')
         self._key = key
+        self._download_key = None
         while self._item_box.get_first_child() != None:
             self._item_box.remove(self._item_box.get_first_child())
 
