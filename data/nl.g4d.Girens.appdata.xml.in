@@ -30,6 +30,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2026-05-14" version="2.0.9">
+      <description translate="no">
+        <p>Changes:</p>
+        <ul>
+          <li>Use upstream plexapi</li>
+          <li>Remove remote client support</li>
+          <li>Remove dependency blueprint-compiler and update dependencies</li>
+          <li>Fix cover artwork</li>
+          <li>Fix album download key when switching albums</li>
+        </ul>
+      </description>
+    </release>
     <release date="2026-03-15" version="2.0.8">
       <description translate="no">
         <p>Changes:</p>
