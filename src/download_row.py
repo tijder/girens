@@ -62,7 +62,8 @@ class DownloadRow(Gtk.Box):
             GLib.idle_add(self.__set_image, pix)
 
     def __set_image(self, pix):
-        self._cover_image.set_from_pixbuf(pix)
+        texture = Gdk.Texture.new_for_pixbuf(pix)
+        self._cover_image.set_paintable(texture)
 
     def __on_item_downloading(self, plex, item, status):
         if (status == False and self._item.key == item.key):

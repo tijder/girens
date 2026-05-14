@@ -7,9 +7,10 @@ template $playqueue_item : Box {
   margin-bottom: 5;
 
   Overlay {
-    Image _cover_image {
+    Picture _cover_image {
       width-request: 50;
       height-request: 50;
+      content-fit: contain;
       styles [
         "cover_image",
       ]

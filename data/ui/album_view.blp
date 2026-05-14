@@ -19,12 +19,24 @@ template $album_view : ScrolledWindow {
         Box _cover_box {
           orientation: vertical;
 
-          Image _cover_image {
-            styles [
-              "cover_image",
-            ]
-            height-request: 150;
+          Overlay _cover_image {
             valign: center;
+
+            Picture _cover_picture {
+              styles [
+                "cover_image",
+              ]
+              content-fit: contain;
+              width-request: 150;
+              height-request: 150;
+            }
+
+            [overlay]
+            Image _cover_placeholder {
+              icon-name: "emblem-synchronizing-symbolic";
+              halign: center;
+              valign: center;
+            }
           }
         }
 

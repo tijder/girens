@@ -64,4 +64,5 @@ class PlayqueueItem(Gtk.Box):
             GLib.idle_add(self.__set_image, pix)
 
     def __set_image(self, pix):
-        self._cover_image.set_from_pixbuf(pix)
+        texture = Gdk.Texture.new_for_pixbuf(pix)
+        self._cover_image.set_paintable(texture)

@@ -3,9 +3,10 @@ using Gtk 4.0;
 template $sync_item : Box {
   height-request: 50;
   Overlay {
-    Image _cover_image {
+    Picture _cover_image {
       width-request: 100;
       height-request: 100;
+      content-fit: contain;
       styles [
         "cover_image",
       ]
