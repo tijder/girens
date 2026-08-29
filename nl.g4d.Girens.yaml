@@ -27,6 +27,28 @@ cleanup:
   - '*.la'
   - '*.a'
 modules:
+  - name: ffmpeg
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/ffmpeg/examples
+    config-opts:
+      - --enable-shared
+      - --disable-static
+      - --enable-gnutls
+      - --disable-doc
+      - --disable-ffplay
+      - --enable-version3
+      - --enable-demuxer=dash
+      - --enable-libxml2
+      - --disable-programs
+      - --disable-encoders
+      - --disable-muxers
+    sources:
+      - type: git
+        url: https://github.com/FFmpeg/FFmpeg
+        tag: n9.0.1
+        commit: bf1b838f2ab88b4f8fd83443325c782ea0e0f7fa
   - name: libmpv
     cleanup:
       - /include
@@ -59,8 +81,8 @@ modules:
           - --disable-static
         sources:
           - type: archive
-            url: https://github.com/libass/libass/releases/download/0.17.4/libass-0.17.4.tar.xz
-            sha256: 78f1179b838d025e9c26e8fef33f8092f65611444ffa1bfc0cfac6a33511a05a
+            url: https://github.com/libass/libass/releases/download/0.17.5/libass-0.17.5.tar.xz
+            sha256: 2dca25c0e0c837ddf00b52011b3f82cac1e4ddd3ad018227806b0c2288864acc
             x-checker-data:
               type: anitya
               project-id: 1560
@@ -112,35 +134,13 @@ modules:
                 sources:
                   - type: archive
                     archive-type: tar
-                    url: https://github.com/KhronosGroup/glslang/archive/refs/tags/16.2.0.tar.gz
-                    sha256: 01985335785c97906a91afe3cb5ee015997696181ec6c125bab5555602ba08e2
+                    url: https://github.com/KhronosGroup/glslang/archive/refs/tags/16.5.0.tar.gz
+                    sha256: 01af17195fbeb59e39e31e9506de35bb39dfd35807ea0c9a1a99d7d1183ddd45
                     x-checker-data:
                       type: anitya
                       project-id: 205796
                       stable-only: true
                       url-template: https://github.com/KhronosGroup/glslang/archive/refs/tags/$version.tar.gz
-  - name: ffmpeg
-    cleanup:
-      - /include
-      - /lib/pkgconfig
-      - /share/ffmpeg/examples
-    config-opts:
-      - --enable-shared
-      - --disable-static
-      - --enable-gnutls
-      - --disable-doc
-      - --disable-ffplay
-      - --enable-version3
-      - --enable-demuxer=dash
-      - --enable-libxml2
-      - --disable-programs
-      - --disable-encoders
-      - --disable-muxers
-    sources:
-      - type: git
-        url: https://github.com/FFmpeg/FFmpeg
-        tag: n8.0.1
-        commit: 894da5ca7d742e4429ffb2af534fcda0103ef593
   - name: mpv
     buildsystem: simple
     build-commands:
@@ -172,8 +172,8 @@ modules:
       - pip3 install --prefix=/app plexapi-*.whl
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/17/a8/9f1c54ce351d681aa0eb2221f7deccbdd5a95421507eb59e6f7ec83931d7/plexapi-4.18.1-py3-none-any.whl
-        sha256: d8330cee337bc55dc006c392a58b3259239d787a32cbe4064b50a9b07a6e0b35
+        url: https://files.pythonhosted.org/packages/64/a8/09a5680e8184ad6251db8f8732fe8bf1f9a85c6377433833da965babd927/plexapi-4.18.2-py3-none-any.whl
+        sha256: 7ff9f30db57af08407500b2d59e5e57d674d2aa6082dce418086019abb5b8f78
         x-checker-data:
           type: pypi
           packagetype: bdist_wheel
@@ -185,8 +185,8 @@ modules:
           - pip3 install --prefix=/app idna-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/0e/61/66938bbb5fc52dbdf84594873d5b51fb1f7c7794e9c0f5bd885f30bc507b/idna-3.11-py3-none-any.whl
-            sha256: 771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea
+            url: https://files.pythonhosted.org/packages/57/b0/0e52c878c53f245edd3a11020f20979b3f490f245af532c7cae3027754b5/idna-3.19-py3-none-any.whl
+            sha256: 815e7be7a7806d54abb586dc943addc79e8b2ee16915059658cbeff4b1b43bf4
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -197,8 +197,8 @@ modules:
           - pip3 install --prefix=/app certifi-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/9a/3c/c17fb3ca2d9c3acff52e30b309f538586f9f5b9c9cf454f3845fc9af4881/certifi-2026.2.25-py3-none-any.whl
-            sha256: 027692e4402ad994f1c42e52a4997a9763c646b73e4096e4d5d6db8af1d6f0fa
+            url: https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl
+            sha256: 62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -209,8 +209,8 @@ modules:
           - pip3 install --prefix=/app chardet-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/91/d7/47988d40231b41376f5a66346ef3b322c81091dfd4c0f84df5a1e3bb06b5/chardet-7.4.0.post1-py3-none-any.whl
-            sha256: 57a62ef50f69bc2fb3a3ea1ffffec6d10f3d2112d3b05d6e3cb15c2c9b55f6cc
+            url: https://files.pythonhosted.org/packages/cf/6e/5a0b348fa4cd7847567a28c6e697ccf58391960bfd13a6e7473ee23ca2f2/chardet-7.6.0-py3-none-any.whl
+            sha256: 4076d795897ce45239825956a1334e134322ecc4bfe84dbb12acd5390de0fbc1
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -221,8 +221,8 @@ modules:
           - pip3 install --prefix=/app urllib3-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/39/08/aaaad47bc4e9dc8c725e68f9d04865dbcb2052843ff09c97b08904852d84/urllib3-2.6.3-py3-none-any.whl
-            sha256: bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4
+            url: https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl
+            sha256: 9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -233,8 +233,8 @@ modules:
           - pip3 install --prefix=/app requests-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/56/5d/c814546c2333ceea4ba42262d8c4d55763003e767fa169adc693bd524478/requests-2.33.0-py3-none-any.whl
-            sha256: 3324635456fa185245e24865e810cecec7b4caf933d7eb133dcde67d48cee69b
+            url: https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl
+            sha256: 2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -246,8 +246,8 @@ modules:
               - pip3 install --prefix=/app charset_normalizer-*.whl
             sources:
               - type: file
-                url: https://files.pythonhosted.org/packages/2a/68/687187c7e26cb24ccbd88e5069f5ef00eba804d36dde11d99aad0838ab45/charset_normalizer-3.4.6-py3-none-any.whl
-                sha256: 947cf925bc916d90adba35a64c82aace04fa39b46b52d4630ece166655905a69
+                url: https://files.pythonhosted.org/packages/cc/61/d01fc49b8dea277640b55a9e15960dbca9fdc8c9fde18e572d39c59f4019/charset_normalizer-3.5.1-py3-none-any.whl
+                sha256: 6df0ec430f9a831772c23ca5a224cba36517a58a84bb32c32bb59a9fa67c47f6
                 x-checker-data:
                   type: pypi
                   packagetype: bdist_wheel
@@ -258,8 +258,8 @@ modules:
           - pip3 install --prefix=/app tqdm-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/16/e1/3079a9ff9b8e11b846c6ac5c8b5bfb7ff225eee721825310c91b3b50304f/tqdm-4.67.3-py3-none-any.whl
-            sha256: ee1e4c0e59148062281c49d80b25b67771a127c85fc9676d3be5f243206826bf
+            url: https://files.pythonhosted.org/packages/f9/1c/01bfd571a64e7f270e6bab5e33777debe0edc56759233ce84f27dec92d14/tqdm-4.70.0-py3-none-any.whl
+            sha256: 7f585706bfddbdebf89daac705b2dfcc16890130727d3197ca62c732b4310953
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
@@ -282,8 +282,8 @@ modules:
           - pip3 install --prefix=/app websocket_client-*.whl
         sources:
           - type: file
-            url: https://files.pythonhosted.org/packages/34/db/b10e48aa8fff7407e67470363eac595018441cf32d5e1001567a7aeba5d2/websocket_client-1.9.0-py3-none-any.whl
-            sha256: af248a825037ef591efbf6ed20cc5faa03d3b47b9e5a2230a529eeee1c1fc3ef
+            url: https://files.pythonhosted.org/packages/3e/0e/7b514f6eb4bf518a9af0285c1a78297467b95fd7d1ebab08b41f8889ab2f/websocket_client-1.9.1-py3-none-any.whl
+            sha256: 19a871b81d0022589dd9e8e1b1891e0516d32113837dfb987d7691b6a425a1e2
             x-checker-data:
               type: pypi
               packagetype: bdist_wheel
