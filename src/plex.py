@@ -508,7 +508,7 @@ class Plex(GObject.Object):
             message = _('Connecting to {0}.\nThere are {1} connection urls.\nThis may take a while.')
             formatted_message = message.format(resource.name, str(len(resource.connections)))
             self.emit('loading', formatted_message, True)
-            self._server = resource.connect(ssl=self._account.secure)
+            self._server = resource.connect()
             self._library = self._server.library
             self.set_server_token(self._server._token, self._server._baseurl, self._server.machineIdentifier, self._server.friendlyName)
             self.emit('connection-to-server')
