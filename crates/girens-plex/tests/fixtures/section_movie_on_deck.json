@@ -1,0 +1,349 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Country": [
+          {
+            "tag": "tag-dbab4112"
+          }
+        ],
+        "Director": [
+          {
+            "tag": "tag-12a7fa75"
+          }
+        ],
+        "Genre": [
+          {
+            "tag": "tag-64cff131"
+          },
+          {
+            "tag": "tag-9a3c1642"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-85613821",
+            "type": "coverPoster",
+            "url": "/library/metadata/186042/thumb/1792655221"
+          },
+          {
+            "alt": "alt-85613821",
+            "type": "background",
+            "url": "/library/metadata/186042/art/1792655221"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "audioProfile": "dolby truehd + dolby atmos",
+                "container": "mkv",
+                "duration": 7440000,
+                "file": "file-8578ae9f",
+                "id": 315935,
+                "key": "/library/parts/315935/1728585019/file.bin",
+                "size": 31954000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 8,
+            "audioCodec": "truehd",
+            "audioProfile": "dolby truehd + dolby atmos",
+            "bitrate": 34321,
+            "container": "mkv",
+            "duration": 7440000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 303377,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "Role": [
+          {
+            "tag": "tag-f19b13f1"
+          },
+          {
+            "tag": "tag-73ed8668"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-2dc48715",
+          "bottomRight": "bottomRight-36c4e9c7",
+          "topLeft": "topLeft-948014c4",
+          "topRight": "topRight-87261693"
+        },
+        "Writer": [
+          {
+            "tag": "tag-81ed2431"
+          },
+          {
+            "tag": "tag-12a7fa75"
+          }
+        ],
+        "addedAt": 1728593210,
+        "art": "/library/metadata/186042/art/1792655221",
+        "audienceRating": 6.5,
+        "audienceRatingImage": "audienceRatingImage-2081fad7",
+        "chapterSource": "chapterSource-721c9525",
+        "contentRating": "PG-13",
+        "contentRatingAge": 10,
+        "duration": 7440000,
+        "guid": "guid-cd9f7bdf",
+        "key": "/library/metadata/186042",
+        "lastViewedAt": 1775216369,
+        "originallyAvailableAt": "2020-01-02",
+        "primaryExtraKey": "/library/metadata/186043",
+        "ratingKey": "186042",
+        "slug": "slug-a67de6c7",
+        "studio": "studio-bc70cc07",
+        "summary": "summary-b237fca1",
+        "tagline": "tagline-2f6e2ddf",
+        "thumb": "/library/metadata/186042/thumb/1792655221",
+        "title": "title-85613821",
+        "type": "movie",
+        "updatedAt": 1792655221,
+        "viewCount": 1,
+        "viewOffset": 740697,
+        "year": 2023
+      },
+      {
+        "Country": [
+          {
+            "tag": "tag-dbab4112"
+          }
+        ],
+        "Director": [
+          {
+            "tag": "tag-f7cbe237"
+          },
+          {
+            "tag": "tag-c8903a50"
+          }
+        ],
+        "Genre": [
+          {
+            "tag": "tag-85f1c8c8"
+          },
+          {
+            "tag": "tag-bd2d677b"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-2990e11b",
+            "type": "coverPoster",
+            "url": "/library/metadata/183610/thumb/1792655208"
+          },
+          {
+            "alt": "alt-2990e11b",
+            "type": "background",
+            "url": "/library/metadata/183610/art/1792655208"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "audioProfile": "dolby truehd + dolby atmos",
+                "container": "mkv",
+                "duration": 6240000,
+                "file": "file-11e24a76",
+                "id": 310698,
+                "key": "/library/parts/310698/1694778313/file.bin",
+                "size": 30819000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 8,
+            "audioCodec": "truehd",
+            "audioProfile": "dolby truehd + dolby atmos",
+            "bitrate": 39610,
+            "container": "mkv",
+            "duration": 6240000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 299443,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "Role": [
+          {
+            "tag": "tag-61f6ef42"
+          },
+          {
+            "tag": "tag-f1172091"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-4eb7a5e4",
+          "bottomRight": "bottomRight-77081155",
+          "topLeft": "topLeft-d743b4a9",
+          "topRight": "topRight-f5e84540"
+        },
+        "Writer": [
+          {
+            "tag": "tag-f529ccbb"
+          },
+          {
+            "tag": "tag-8130f4f2"
+          }
+        ],
+        "addedAt": 1696831105,
+        "art": "/library/metadata/183610/art/1792655208",
+        "audienceRating": 6.3,
+        "audienceRatingImage": "audienceRatingImage-2081fad7",
+        "chapterSource": "chapterSource-721c9525",
+        "contentRating": "PG",
+        "contentRatingAge": 9,
+        "duration": 6240000,
+        "guid": "guid-3732e5d8",
+        "key": "/library/metadata/183610",
+        "lastViewedAt": 1753805820,
+        "originallyAvailableAt": "2020-01-02",
+        "primaryExtraKey": "/library/metadata/183614",
+        "ratingKey": "183610",
+        "slug": "slug-c737fda0",
+        "studio": "studio-31fa5478",
+        "summary": "summary-0a64a0e2",
+        "tagline": "tagline-2521f08d",
+        "thumb": "/library/metadata/183610/thumb/1792655208",
+        "title": "title-2990e11b",
+        "type": "movie",
+        "updatedAt": 1792655208,
+        "viewOffset": 4687896,
+        "year": 2022
+      },
+      {
+        "Country": [
+          {
+            "tag": "tag-10436829"
+          }
+        ],
+        "Director": [
+          {
+            "tag": "tag-207e4adc"
+          }
+        ],
+        "Genre": [
+          {
+            "tag": "tag-64cff131"
+          },
+          {
+            "tag": "tag-85f1c8c8"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-56d8d362",
+            "type": "coverPoster",
+            "url": "/library/metadata/152757/thumb/1561925749"
+          },
+          {
+            "alt": "alt-56d8d362",
+            "type": "background",
+            "url": "/library/metadata/152757/art/1561925749"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "audioProfile": "dts",
+                "container": "mkv",
+                "duration": 7440000,
+                "file": "file-cbe3e897",
+                "id": 265179,
+                "key": "/library/parts/265179/1518006994/file.bin",
+                "size": 24867000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 6,
+            "audioCodec": "dca",
+            "audioProfile": "dts",
+            "bitrate": 26643,
+            "container": "mkv",
+            "duration": 7440000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 261172,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "Role": [
+          {
+            "tag": "tag-2bbe63e9"
+          },
+          {
+            "tag": "tag-06c8e6fa"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-f03b3ce4",
+          "bottomRight": "bottomRight-9baf4754",
+          "topLeft": "160303",
+          "topRight": "260303"
+        },
+        "Writer": [
+          {
+            "tag": "tag-207e4adc"
+          },
+          {
+            "tag": "tag-78a00b12"
+          }
+        ],
+        "addedAt": 1518046410,
+        "art": "/library/metadata/152757/art/1561925749",
+        "chapterSource": "chapterSource-721c9525",
+        "contentRating": "NR",
+        "duration": 7440000,
+        "guid": "guid-950e072b",
+        "key": "/library/metadata/152757",
+        "lastViewedAt": 1699709380,
+        "loudnessAnalysisVersion": "loudnessAnalysisVersion-a7e46abf",
+        "originalTitle": "originalTitle-b076f024",
+        "originallyAvailableAt": "2020-01-02",
+        "rating": 6.0,
+        "ratingKey": "152757",
+        "studio": "studio-36d5be28",
+        "summary": "summary-dcad5f4c",
+        "tagline": "tagline-99dd1988",
+        "thumb": "/library/metadata/152757/thumb/1561925749",
+        "title": "title-56d8d362",
+        "type": "movie",
+        "updatedAt": 1561925749,
+        "viewOffset": 1363600,
+        "year": 2017
+      }
+    ],
+    "allowSync": true,
+    "art": "/:/resources/movie-fanart.jpg",
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 17,
+    "librarySectionTitle": "librarySectionTitle-ef9e821a",
+    "librarySectionUUID": "librarySectionUUID-557d3153",
+    "offset": 0,
+    "size": 3,
+    "thumb": "/:/resources/movie.png",
+    "title1": "title1-ef9e821a",
+    "title2": "title2-f7db8bdf",
+    "totalSize": 8,
+    "viewGroup": "movie",
+    "viewMode": 65592
+  }
+}

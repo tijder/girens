@@ -1,6 +1,8 @@
 using Gtk 4.0;
+using Adw 1;
 
-template $media_box_video_top : Revealer {
+template $media_box_video_top : Adw.Bin {
+  Revealer _revealer {
   Box {
     height-request: 50;
 
@@ -49,4 +51,5 @@ template $media_box_video_top : Revealer {
       "media_box",
     ]
   }
+}
 }

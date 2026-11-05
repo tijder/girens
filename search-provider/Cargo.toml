@@ -1,0 +1,11 @@
+[package]
+name = "girens-sp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "GNOME Shell search provider for Girens"
+
+[dependencies]
+serde_json = "1"
+zbus = "6"

@@ -1,0 +1,21 @@
+{
+  "MediaContainer": {
+    "allowSync": true,
+    "art": "/:/resources/artist-fanart.jpg",
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 23,
+    "librarySectionTitle": "librarySectionTitle-5952adda",
+    "librarySectionUUID": "librarySectionUUID-030c7f4b",
+    "mixedParents": true,
+    "nocache": true,
+    "offset": 0,
+    "size": 0,
+    "sortAsc": true,
+    "thumb": "/:/resources/artist.png",
+    "title1": "title1-5952adda",
+    "title2": "title2-f7db8bdf",
+    "totalSize": 0,
+    "viewGroup": "track",
+    "viewMode": 458810
+  }
+}

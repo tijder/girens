@@ -2,7 +2,11 @@ app-id: nl.g4d.Girens
 runtime: org.gnome.Platform
 runtime-version: master
 sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
 command: girens
+build-options:
+  append-path: /usr/lib/sdk/rust-stable/bin
 finish-args:
   - --share=network
   - --share=ipc
@@ -141,153 +145,6 @@ modules:
                       project-id: 205796
                       stable-only: true
                       url-template: https://github.com/KhronosGroup/glslang/archive/refs/tags/$version.tar.gz
-  - name: mpv
-    buildsystem: simple
-    build-commands:
-      - pip3 install --prefix=/app mpv-*.whl
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/f4/cf/0d5f52753366ecf2c3d763e331dcda54b0f20a1a8e52b175feb9c625399d/mpv-1.0.8-py3-none-any.whl
-        sha256: dcf77f612e3f5ce49bd89393f37d286de7ac290db6b0800f1fdcfe0aeb5ba9b8
-        x-checker-data:
-          type: pypi
-          packagetype: bdist_wheel
-          name: mpv
-    modules:
-      - name: PyOpenGL
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app pyopengl-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/de/e4/1ba6f44e491c4eece978685230dde56b14d51a0365bc1b774ddaa94d14cd/pyopengl-3.1.10-py3-none-any.whl
-            sha256: 794a943daced39300879e4e47bd94525280685f42dbb5a998d336cfff151d74f
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: PyOpenGL
-  - name: PlexAPI
-    buildsystem: simple
-    build-commands:
-      - pip3 install --prefix=/app plexapi-*.whl
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/64/a8/09a5680e8184ad6251db8f8732fe8bf1f9a85c6377433833da965babd927/plexapi-4.18.2-py3-none-any.whl
-        sha256: 7ff9f30db57af08407500b2d59e5e57d674d2aa6082dce418086019abb5b8f78
-        x-checker-data:
-          type: pypi
-          packagetype: bdist_wheel
-          name: PlexAPI
-    modules:
-      - name: idna
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app idna-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/57/b0/0e52c878c53f245edd3a11020f20979b3f490f245af532c7cae3027754b5/idna-3.19-py3-none-any.whl
-            sha256: 815e7be7a7806d54abb586dc943addc79e8b2ee16915059658cbeff4b1b43bf4
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: idna
-      - name: certifi
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app certifi-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl
-            sha256: 62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: certifi
-      - name: chardet
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app chardet-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/cf/6e/5a0b348fa4cd7847567a28c6e697ccf58391960bfd13a6e7473ee23ca2f2/chardet-7.6.0-py3-none-any.whl
-            sha256: 4076d795897ce45239825956a1334e134322ecc4bfe84dbb12acd5390de0fbc1
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: chardet
-      - name: urllib3
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app urllib3-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl
-            sha256: 9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: urllib3
-      - name: requests
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app requests-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl
-            sha256: 2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: requests
-        modules:
-          - name: charset-normalizer
-            buildsystem: simple
-            build-commands:
-              - pip3 install --prefix=/app charset_normalizer-*.whl
-            sources:
-              - type: file
-                url: https://files.pythonhosted.org/packages/cc/61/d01fc49b8dea277640b55a9e15960dbca9fdc8c9fde18e572d39c59f4019/charset_normalizer-3.5.1-py3-none-any.whl
-                sha256: 6df0ec430f9a831772c23ca5a224cba36517a58a84bb32c32bb59a9fa67c47f6
-                x-checker-data:
-                  type: pypi
-                  packagetype: bdist_wheel
-                  name: charset-normalizer
-      - name: tqdm
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app tqdm-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/f9/1c/01bfd571a64e7f270e6bab5e33777debe0edc56759233ce84f27dec92d14/tqdm-4.70.0-py3-none-any.whl
-            sha256: 7f585706bfddbdebf89daac705b2dfcc16890130727d3197ca62c732b4310953
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: tqdm
-      - name: six
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app six-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl
-            sha256: 4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: six
-      - name: websocket-client
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app websocket_client-*.whl
-        sources:
-          - type: file
-            url: https://files.pythonhosted.org/packages/3e/0e/7b514f6eb4bf518a9af0285c1a78297467b95fd7d1ebab08b41f8889ab2f/websocket_client-1.9.1-py3-none-any.whl
-            sha256: 19a871b81d0022589dd9e8e1b1891e0516d32113837dfb987d7691b6a425a1e2
-            x-checker-data:
-              type: pypi
-              packagetype: bdist_wheel
-              name: websocket-client
   - name: girens
     buildsystem: meson
     config-opts:
@@ -295,6 +152,9 @@ modules:
       - -Dbuildtype=debug
       - -Dnetwork_tests=false
     builddir: true
+    build-options:
+      build-args:
+        - --share=network
     sources:
       - type: git
         url: https://gitlab.gnome.org/tijder/girens

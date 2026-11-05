@@ -1,0 +1,321 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Director": [
+          {
+            "tag": "tag-70f1c8f3"
+          },
+          {
+            "tag": "tag-eb2c2d16"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-06efb8ff",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1440281991"
+          },
+          {
+            "alt": "alt-06efb8ff",
+            "type": "snapshot",
+            "url": "/library/metadata/141859/thumb/1789521008"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "audioProfile": "lc",
+                "container": "flv",
+                "duration": 1440000,
+                "file": "file-817c8c9e",
+                "id": 242276,
+                "key": "/library/parts/242276/1440281526/file.bin",
+                "size": 568000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 2,
+            "audioCodec": "aac",
+            "audioProfile": "lc",
+            "bitrate": 3197,
+            "container": "flv",
+            "duration": 1440000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 239856,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-c230ce51",
+          "bottomRight": "bottomRight-efbf69e7",
+          "topLeft": "topLeft-39005987",
+          "topRight": "topRight-0d730f5d"
+        },
+        "Writer": [
+          {
+            "tag": "tag-7d695e3b"
+          },
+          {
+            "tag": "tag-4720dd00"
+          }
+        ],
+        "addedAt": 1440281991,
+        "art": "/library/metadata/141857/art/1440281991",
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "grandparentArt": "/library/metadata/141857/art/1440281991",
+        "grandparentGuid": "grandparentGuid-f5841fe8",
+        "grandparentKey": "/library/metadata/141857",
+        "grandparentRatingKey": "141857",
+        "grandparentTheme": "/library/metadata/141857/theme/1440281991",
+        "grandparentThumb": "/library/metadata/141857/thumb/1440281991",
+        "grandparentTitle": "grandparentTitle-1d9cdf48",
+        "guid": "guid-8b9e913f",
+        "index": 10,
+        "key": "/library/metadata/141859",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-6ca85320",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/141858",
+        "parentRatingKey": "141858",
+        "parentThumb": "/library/metadata/141858/thumb/1513884814",
+        "parentTitle": "parentTitle-c5a365e2",
+        "rating": 9.0,
+        "ratingKey": "141859",
+        "skipCount": 1,
+        "studio": "studio-8a3d38d0",
+        "summary": "summary-df5fe401",
+        "thumb": "/library/metadata/141859/thumb/1789521008",
+        "title": "title-06efb8ff",
+        "type": "episode",
+        "updatedAt": 1789521008,
+        "year": 2014
+      },
+      {
+        "Director": [
+          {
+            "tag": "tag-70f1c8f3"
+          },
+          {
+            "tag": "tag-812c55c5"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-d2c74bb4",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1440289190"
+          },
+          {
+            "alt": "alt-d2c74bb4",
+            "type": "snapshot",
+            "url": "/library/metadata/141860/thumb/1789521008"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "audioProfile": "lc",
+                "container": "flv",
+                "duration": 1440000,
+                "file": "file-b1ed4f76",
+                "id": 242277,
+                "key": "/library/parts/242277/1440281988/file.bin",
+                "size": 570000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 2,
+            "audioCodec": "aac",
+            "audioProfile": "lc",
+            "bitrate": 3209,
+            "container": "flv",
+            "duration": 1440000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 239857,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-304b8f75",
+          "bottomRight": "bottomRight-eb3cd7b9",
+          "topLeft": "222857",
+          "topRight": "topRight-e04b5faf"
+        },
+        "Writer": [
+          {
+            "tag": "tag-7d695e3b"
+          },
+          {
+            "tag": "tag-4720dd00"
+          }
+        ],
+        "addedAt": 1440289190,
+        "art": "/library/metadata/141857/art/1440289190",
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "grandparentArt": "/library/metadata/141857/art/1440289190",
+        "grandparentGuid": "grandparentGuid-f5841fe8",
+        "grandparentKey": "/library/metadata/141857",
+        "grandparentRatingKey": "141857",
+        "grandparentTheme": "/library/metadata/141857/theme/1440289190",
+        "grandparentThumb": "/library/metadata/141857/thumb/1440289190",
+        "grandparentTitle": "grandparentTitle-1d9cdf48",
+        "guid": "guid-c05ba0ce",
+        "index": 11,
+        "key": "/library/metadata/141860",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-6ca85320",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/141858",
+        "parentRatingKey": "141858",
+        "parentThumb": "/library/metadata/141858/thumb/1513884814",
+        "parentTitle": "parentTitle-c5a365e2",
+        "rating": 9.7,
+        "ratingKey": "141860",
+        "studio": "studio-8a3d38d0",
+        "summary": "summary-cdf8cb98",
+        "thumb": "/library/metadata/141860/thumb/1789521008",
+        "title": "title-d2c74bb4",
+        "type": "episode",
+        "updatedAt": 1789521008,
+        "year": 2014
+      },
+      {
+        "Director": [
+          {
+            "tag": "tag-70f1c8f3"
+          },
+          {
+            "tag": "tag-bdf1bd3c"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-7f8d7bc7",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1440289190"
+          },
+          {
+            "alt": "alt-7f8d7bc7",
+            "type": "snapshot",
+            "url": "/library/metadata/141861/thumb/1789521008"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "audioProfile": "lc",
+                "container": "flv",
+                "duration": 1440000,
+                "file": "file-da606c80",
+                "id": 242278,
+                "key": "/library/parts/242278/1440282450/file.bin",
+                "size": 569000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 2,
+            "audioCodec": "aac",
+            "audioProfile": "lc",
+            "bitrate": 3206,
+            "container": "flv",
+            "duration": 1440000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 239858,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-0bd74a11",
+          "bottomRight": "bottomRight-cede8f60",
+          "topLeft": "topLeft-15baf645",
+          "topRight": "213966"
+        },
+        "Writer": [
+          {
+            "tag": "tag-7d695e3b"
+          },
+          {
+            "tag": "tag-4720dd00"
+          }
+        ],
+        "addedAt": 1440289190,
+        "art": "/library/metadata/141857/art/1440289190",
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "grandparentArt": "/library/metadata/141857/art/1440289190",
+        "grandparentGuid": "grandparentGuid-f5841fe8",
+        "grandparentKey": "/library/metadata/141857",
+        "grandparentRatingKey": "141857",
+        "grandparentTheme": "/library/metadata/141857/theme/1440289190",
+        "grandparentThumb": "/library/metadata/141857/thumb/1440289190",
+        "grandparentTitle": "grandparentTitle-1d9cdf48",
+        "guid": "guid-4aed424c",
+        "index": 12,
+        "key": "/library/metadata/141861",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-6ca85320",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/141858",
+        "parentRatingKey": "141858",
+        "parentThumb": "/library/metadata/141858/thumb/1513884814",
+        "parentTitle": "parentTitle-c5a365e2",
+        "rating": 9.0,
+        "ratingKey": "141861",
+        "skipCount": 1,
+        "studio": "studio-8a3d38d0",
+        "summary": "summary-abb639ea",
+        "thumb": "/library/metadata/141861/thumb/1789521008",
+        "title": "title-7f8d7bc7",
+        "type": "episode",
+        "updatedAt": 1789521008,
+        "year": 2014
+      }
+    ],
+    "allowSync": true,
+    "art": "/library/metadata/141857/art/1513884815",
+    "banner": "/library/metadata/141857/banner/1513884815",
+    "identifier": "com.plexapp.plugins.library",
+    "key": "141857",
+    "librarySectionID": 6,
+    "librarySectionTitle": "librarySectionTitle-3eac1615",
+    "librarySectionUUID": "librarySectionUUID-b948ee5c",
+    "mixedParents": true,
+    "nocache": true,
+    "offset": 0,
+    "parentIndex": 1,
+    "parentTitle": "parentTitle-1d9cdf48",
+    "parentYear": 2014,
+    "size": 3,
+    "sortAsc": true,
+    "theme": "/library/metadata/141857/theme/1513884815",
+    "title1": "title1-3eac1615",
+    "title2": "title2-1d9cdf48",
+    "totalSize": 15,
+    "viewGroup": "episode",
+    "viewMode": 131133
+  }
+}

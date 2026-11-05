@@ -1,0 +1,48 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Image": [
+          {
+            "alt": "alt-532fd7ad",
+            "type": "coverPoster",
+            "url": "/library/metadata/175759/thumb/1784188427"
+          }
+        ],
+        "Location": [
+          {
+            "path": "path-a4d0d218"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-4d07a925",
+          "bottomRight": "bottomRight-5f7fb680",
+          "topLeft": "topLeft-b9f1bd58",
+          "topRight": "topRight-dd9a3567"
+        },
+        "addedAt": 1596189307,
+        "guid": "guid-c51e8520",
+        "index": 1,
+        "key": "/library/metadata/175759/children",
+        "lastViewedAt": 1633138885,
+        "librarySectionID": 23,
+        "librarySectionKey": "/library/sections/23",
+        "librarySectionTitle": "librarySectionTitle-5952adda",
+        "ratingKey": "175759",
+        "skipCount": 13,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175759/thumb/1784188427",
+        "title": "title-532fd7ad",
+        "type": "artist",
+        "updatedAt": 1784188427,
+        "viewCount": 34
+      }
+    ],
+    "allowSync": true,
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 23,
+    "librarySectionTitle": "librarySectionTitle-5952adda",
+    "librarySectionUUID": "librarySectionUUID-030c7f4b",
+    "size": 1
+  }
+}

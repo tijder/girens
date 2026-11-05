@@ -1,0 +1,143 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Image": [
+          {
+            "alt": "alt-1f775c4a",
+            "type": "coverPoster",
+            "url": "/library/metadata/157023/thumb/1627365110"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-d269f5aa",
+          "bottomRight": "461511",
+          "topLeft": "521712",
+          "topRight": "topRight-7335254b"
+        },
+        "addedAt": 1533760544,
+        "allowSync": true,
+        "guid": "guid-633c9b6b",
+        "index": 1,
+        "key": "/library/metadata/157023/children",
+        "lastViewedAt": 1547988123,
+        "leafCount": 64,
+        "librarySectionID": 23,
+        "librarySectionTitle": "librarySectionTitle-5952adda",
+        "librarySectionUUID": "librarySectionUUID-030c7f4b",
+        "loudnessAnalysisVersion": "2",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-89538458",
+        "parentKey": "/library/metadata/157022",
+        "parentRatingKey": "157022",
+        "parentThumb": "/library/metadata/157022/thumb/1601443202",
+        "parentTitle": "parentTitle-0f3fec58",
+        "ratingKey": "157023",
+        "skipCount": 4,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/157023/thumb/1627365110",
+        "title": "title-1f775c4a",
+        "type": "album",
+        "updatedAt": 1627365110,
+        "viewCount": 60,
+        "year": 2014
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-1c032e8c",
+            "type": "coverPoster",
+            "url": "/library/metadata/157444/thumb/1627365109"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-768b6550",
+          "bottomRight": "bottomRight-97637eed",
+          "topLeft": "113339",
+          "topRight": "topRight-d63b7b89"
+        },
+        "addedAt": 1533844415,
+        "allowSync": true,
+        "guid": "guid-d43da0bd",
+        "index": 1,
+        "key": "/library/metadata/157444/children",
+        "lastViewedAt": 1557091324,
+        "leafCount": 57,
+        "librarySectionID": 23,
+        "librarySectionTitle": "librarySectionTitle-5952adda",
+        "librarySectionUUID": "librarySectionUUID-030c7f4b",
+        "loudnessAnalysisVersion": "2",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-89538458",
+        "parentKey": "/library/metadata/157022",
+        "parentRatingKey": "157022",
+        "parentThumb": "/library/metadata/157022/thumb/1601443202",
+        "parentTitle": "parentTitle-0f3fec58",
+        "ratingKey": "157444",
+        "skipCount": 3,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/157444/thumb/1627365109",
+        "title": "title-1c032e8c",
+        "type": "album",
+        "updatedAt": 1627365109,
+        "viewCount": 52,
+        "year": 2016
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-f7b69fb0",
+            "type": "coverPoster",
+            "url": "/library/metadata/161180/thumb/1701145850"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-c5d314a6",
+          "bottomRight": "433031",
+          "topLeft": "topLeft-99a6f5c7",
+          "topRight": "381511"
+        },
+        "addedAt": 1546627783,
+        "allowSync": true,
+        "guid": "guid-1ae36e01",
+        "index": 1,
+        "key": "/library/metadata/161180/children",
+        "lastViewedAt": 1585600125,
+        "leafCount": 53,
+        "librarySectionID": 23,
+        "librarySectionTitle": "librarySectionTitle-5952adda",
+        "librarySectionUUID": "librarySectionUUID-030c7f4b",
+        "loudnessAnalysisVersion": "2",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-89538458",
+        "parentKey": "/library/metadata/157022",
+        "parentRatingKey": "157022",
+        "parentThumb": "/library/metadata/157022/thumb/1601443202",
+        "parentTitle": "parentTitle-0f3fec58",
+        "ratingKey": "161180",
+        "skipCount": 8,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/161180/thumb/1701145850",
+        "title": "title-f7b69fb0",
+        "type": "album",
+        "updatedAt": 1701145850,
+        "viewCount": 41,
+        "year": 2018
+      }
+    ],
+    "allowSync": false,
+    "art": "/:/resources/artist-fanart.jpg",
+    "identifier": "com.plexapp.plugins.library",
+    "mixedParents": true,
+    "nocache": true,
+    "offset": 0,
+    "size": 3,
+    "sortAsc": true,
+    "thumb": "/:/resources/artist.png",
+    "title1": "title1-5952adda",
+    "title2": "title2-5697c832",
+    "totalSize": 51,
+    "viewGroup": "album",
+    "viewMode": 65592
+  }
+}

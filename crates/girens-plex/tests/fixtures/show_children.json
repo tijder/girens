@@ -1,0 +1,72 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Image": [
+          {
+            "alt": "alt-c5a365e2",
+            "type": "coverPoster",
+            "url": "/library/metadata/141858/thumb/1513884814"
+          },
+          {
+            "alt": "alt-c5a365e2",
+            "type": "background",
+            "url": "/library/metadata/141857/art/1513884815"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-dddd0d6c",
+          "bottomRight": "bottomRight-38fc8237",
+          "topLeft": "492011",
+          "topRight": "topRight-590590ee"
+        },
+        "addedAt": 1493204749,
+        "art": "/library/metadata/141857/art/1513884815",
+        "guid": "guid-6ca85320",
+        "index": 1,
+        "key": "/library/metadata/141858/children",
+        "leafCount": 15,
+        "parentGuid": "parentGuid-f5841fe8",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/141857",
+        "parentRatingKey": "141857",
+        "parentStudio": "parentStudio-8a3d38d0",
+        "parentTheme": "/library/metadata/141857/theme/1513884815",
+        "parentThumb": "/library/metadata/141857/thumb/1513884815",
+        "parentTitle": "parentTitle-1d9cdf48",
+        "parentYear": 2014,
+        "ratingKey": "141858",
+        "skipCount": 2,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/141858/thumb/1513884814",
+        "title": "title-c5a365e2",
+        "type": "season",
+        "updatedAt": 1513884814,
+        "viewedLeafCount": 0
+      }
+    ],
+    "allowSync": true,
+    "art": "/library/metadata/141857/art/1513884815",
+    "banner": "/library/metadata/141857/banner/1513884815",
+    "identifier": "com.plexapp.plugins.library",
+    "key": "141857",
+    "librarySectionID": 6,
+    "librarySectionTitle": "librarySectionTitle-3eac1615",
+    "librarySectionUUID": "librarySectionUUID-b948ee5c",
+    "nocache": true,
+    "offset": 0,
+    "parentIndex": 1,
+    "parentTitle": "parentTitle-1d9cdf48",
+    "parentYear": 2014,
+    "size": 1,
+    "sortAsc": true,
+    "summary": "summary-a12469be",
+    "theme": "/library/metadata/141857/theme/1513884815",
+    "thumb": "/library/metadata/141857/thumb/1513884815",
+    "title1": "title1-3eac1615",
+    "title2": "title2-1d9cdf48",
+    "totalSize": 1,
+    "viewGroup": "season",
+    "viewMode": 131132
+  }
+}

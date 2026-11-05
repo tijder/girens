@@ -1,10 +1,4 @@
-configure_file(
-  input: 'girens-sp.in',
-  output: 'girens-sp',
-  configuration: conf_service,
-  install: true,
-  install_dir: libexecdir
-)
+# The girens-sp binary itself is built by Cargo, see src/meson.build.
 configure_file(
   input: project_id + '.SearchProvider.service.in',
   output: project_id + '.SearchProvider.service',

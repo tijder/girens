@@ -2,13 +2,15 @@
 
 version=$(fgrep "version: " ../meson.build | grep -v "meson" | grep -o "'.*'" | sed "s/'//g")
 
-find ../src -iname "*.py" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-python.pot
+# The Python sources in legacy/ are extracted until the Rust port replaces them.
+find ../legacy -iname "*.py" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-python.pot
+find ../src -iname "*.rs" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-rust.pot --force-po -L Rust --keyword=gettext --keyword=ngettext:1,2 --keyword=pgettext:1c,2
 find ../data/ui -iname "*.ui" -or -iname "*.xml" -or -iname "*.ui.in" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-glade.pot -L Glade
 find ../data/ui -iname "*.blp" | xargs xgettext --package-name=Girens --package-version=$version --output=girens-blueprint.pot --from-code=UTF-8 --add-comments --keyword=_ --keyword=C_:1c,2
 find ../data/ -iname "*.desktop.in" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-desktop.pot -L Desktop
 find ../data/ -iname "*.appdata.xml.in" | xargs xgettext --no-wrap --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-appdata.pot
 
-msgcat --sort-by-file --use-first --output-file=girens.pot girens-python.pot girens-glade.pot girens-blueprint.pot girens-desktop.pot girens-appdata.pot
+msgcat --sort-by-file --use-first --output-file=girens.pot girens-python.pot girens-rust.pot girens-glade.pot girens-blueprint.pot girens-desktop.pot girens-appdata.pot
 
 sed 's/#: //g;s/:[0-9]*//g;s/\.\.\///g' <(fgrep "#: " girens.pot) | sed s/\ /\\n/ | sort | uniq > POTFILES.in
 

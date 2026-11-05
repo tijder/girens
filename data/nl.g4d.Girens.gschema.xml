@@ -54,5 +54,10 @@
         <summary>The plex server url</summary>
         <description></description>
     </key>
+    <key type="s" name="client-identifier">
+        <default>""</default>
+        <summary>Identifier of this installation towards Plex</summary>
+        <description>Generated on first start; Plex lists devices by it.</description>
+    </key>
   </schema>
 </schemalist>

@@ -26,3 +26,8 @@
 .load-box {
   background-color: @theme_base_color;
 }
+
+/* Detail pages are one list; it should look like page content, not a sheet. */
+listview.page-list {
+  background: none;
+}

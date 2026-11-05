@@ -28,6 +28,7 @@
     <file>playqueue_item.ui</file>
     <file>artist_view.ui</file>
     <file>album_view.ui</file>
+    <file>album_header.ui</file>
     <file>album_item.ui</file>
     <file>resume_dialog.ui</file>
     <file>player_view.ui</file>

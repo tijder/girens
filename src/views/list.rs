@@ -1,0 +1,193 @@
+//! A scrolling row, or in grid mode a grid, of cover tiles.
+
+use std::cell::{Cell, RefCell};
+
+use adw::subclass::prelude::*;
+use girens_plex::model::Item;
+use gtk::prelude::*;
+use gtk::{gio, glib, CompositeTemplate};
+
+use super::CoverBox;
+
+const DEFAULT_COVER_WIDTH: i32 = 200;
+
+mod imp {
+    use super::*;
+
+    #[derive(CompositeTemplate)]
+    #[template(resource = "/nl/g4d/Girens/list.ui")]
+    pub struct List {
+        #[template_child]
+        pub _scrolled_window: TemplateChild<gtk::ScrolledWindow>,
+        #[template_child]
+        pub _grid_view: TemplateChild<gtk::GridView>,
+        pub store: gio::ListStore,
+        pub cover_width: Cell<i32>,
+        pub in_show_view: Cell<bool>,
+        pub on_end_reached: RefCell<Option<Box<dyn Fn()>>>,
+    }
+
+    impl Default for List {
+        fn default() -> Self {
+            Self {
+                _scrolled_window: TemplateChild::default(),
+                _grid_view: TemplateChild::default(),
+                store: gio::ListStore::new::<glib::BoxedAnyObject>(),
+                cover_width: Cell::new(DEFAULT_COVER_WIDTH),
+                in_show_view: Cell::new(false),
+                on_end_reached: RefCell::default(),
+            }
+        }
+    }
+
+    #[glib::object_subclass]
+    impl ObjectSubclass for List {
+        const NAME: &'static str = "list";
+        type Type = super::List;
+        type ParentType = adw::Bin;
+
+        fn class_init(klass: &mut Self::Class) {
+            klass.bind_template();
+        }
+
+        fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
+            obj.init_template();
+        }
+    }
+
+    impl ObjectImpl for List {
+        fn constructed(&self) {
+            self.parent_constructed();
+            let list = self.obj();
+
+            let factory = gtk::SignalListItemFactory::new();
+            factory.connect_setup(glib::clone!(
+                #[weak]
+                list,
+                move |_, object| {
+                    let Some(list_item) = object.downcast_ref::<gtk::ListItem>() else {
+                        return;
+                    };
+                    list_item.set_activatable(false);
+                    list_item.set_child(Some(&CoverBox::new(list.imp().in_show_view.get())));
+                }
+            ));
+            factory.connect_bind(glib::clone!(
+                #[weak]
+                list,
+                move |_, object| {
+                    let Some((cover, item)) = cover_and_item(object) else {
+                        return;
+                    };
+                    cover.set_item(&item.borrow::<Item>(), list.imp().cover_width.get());
+                }
+            ));
+            factory.connect_unbind(|_, object| {
+                if let Some((cover, _)) = cover_and_item(object) {
+                    cover.unbind();
+                }
+            });
+
+            self._grid_view.set_factory(Some(&factory));
+            self._grid_view
+                .set_model(Some(&gtk::NoSelection::new(Some(self.store.clone()))));
+
+            self._scrolled_window.connect_edge_reached(glib::clone!(
+                #[weak]
+                list,
+                move |_, position| {
+                    if position != gtk::PositionType::Bottom {
+                        return;
+                    }
+                    if let Some(callback) = list.imp().on_end_reached.borrow().as_ref() {
+                        callback();
+                    }
+                }
+            ));
+        }
+    }
+
+    impl WidgetImpl for List {}
+    impl BinImpl for List {}
+
+    fn cover_and_item(object: &glib::Object) -> Option<(CoverBox, glib::BoxedAnyObject)> {
+        let list_item = object.downcast_ref::<gtk::ListItem>()?;
+        Some((
+            list_item.child().and_downcast::<CoverBox>()?,
+            list_item.item().and_downcast::<glib::BoxedAnyObject>()?,
+        ))
+    }
+}
+
+glib::wrapper! {
+    pub struct List(ObjectSubclass<imp::List>)
+        @extends adw::Bin, gtk::Widget,
+        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
+}
+
+impl List {
+    pub fn set_items(&self, items: Vec<Item>) {
+        let objects: Vec<glib::BoxedAnyObject> =
+            items.into_iter().map(glib::BoxedAnyObject::new).collect();
+        let store = &self.imp().store;
+        store.splice(0, store.n_items(), &objects);
+    }
+
+    pub fn append(&self, items: Vec<Item>) {
+        let objects: Vec<glib::BoxedAnyObject> =
+            items.into_iter().map(glib::BoxedAnyObject::new).collect();
+        self.imp().store.extend_from_slice(&objects);
+    }
+
+    pub fn clear(&self) {
+        self.imp().store.remove_all();
+    }
+
+    pub fn len(&self) -> u32 {
+        self.imp().store.n_items()
+    }
+
+    /// Changes the width of the tiles, for narrow windows.
+    pub fn set_cover_width(&self, width: i32) {
+        let imp = self.imp();
+        if imp.cover_width.replace(width) != width {
+            // Rebinds the visible tiles so that they take the new size.
+            let count = imp.store.n_items();
+            imp.store.items_changed(0, count, count);
+        }
+    }
+
+    /// Replaces the item with the same rating key, if it is in the list.
+    pub fn update_item(&self, item: &Item) {
+        let store = &self.imp().store;
+        for position in 0..store.n_items() {
+            let found = store
+                .item(position)
+                .and_downcast::<glib::BoxedAnyObject>()
+                .is_some_and(|object| object.borrow::<Item>().rating_key == item.rating_key);
+            if found {
+                store.splice(position, 1, &[glib::BoxedAnyObject::new(item.clone())]);
+            }
+        }
+    }
+
+    /// Switches from one horizontal row to a vertically scrolling grid.
+    pub fn set_grid_mode(&self) {
+        let imp = self.imp();
+        imp._grid_view.set_orientation(gtk::Orientation::Vertical);
+        imp._grid_view.set_max_columns(10);
+        imp._scrolled_window
+            .set_policy(gtk::PolicyType::Never, gtk::PolicyType::Automatic);
+        imp._scrolled_window.set_vexpand(true);
+    }
+
+    /// Tiles inside a show page present episodes differently.
+    pub fn set_in_show_view(&self, in_show_view: bool) {
+        self.imp().in_show_view.set(in_show_view);
+    }
+
+    /// Called when the user scrolls to the end of a grid.
+    pub fn connect_end_reached(&self, callback: impl Fn() + 'static) {
+        self.imp().on_end_reached.replace(Some(Box::new(callback)));
+    }
+}

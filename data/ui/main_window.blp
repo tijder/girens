@@ -44,7 +44,9 @@ template $PlexWindow : Adw.ApplicationWindow {
             content: ScrolledWindow sidebar {
               hscrollbar-policy: never;
               vexpand: true;
-              child: Viewport _sidebar_viewport {};
+              child: Viewport _sidebar_viewport {
+                child: $sidebar_box _sidebar_box {};
+              };
             };
           };
 

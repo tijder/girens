@@ -10,13 +10,11 @@ template $download_row : Box {
   margin-bottom: 5;
 
   Overlay {
-    Picture _cover_image {
-      width-request: 50;
-      height-request: 50;
-      content-fit: contain;
+    Image _cover_image {
       styles [
         "cover_image",
       ]
+      pixel-size: 50;
     }
 
     [overlay]

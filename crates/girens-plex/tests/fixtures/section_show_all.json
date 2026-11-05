@@ -1,0 +1,168 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Genre": [
+          {
+            "tag": "tag-0a74deea"
+          },
+          {
+            "tag": "tag-1dd10f24"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-1d9cdf48",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1513884815"
+          },
+          {
+            "alt": "alt-1d9cdf48",
+            "type": "background",
+            "url": "/library/metadata/141857/art/1513884815"
+          }
+        ],
+        "Role": [
+          {
+            "tag": "tag-e0ea0225"
+          },
+          {
+            "tag": "tag-b68fb02b"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "722729",
+          "bottomRight": "821515",
+          "topLeft": "topLeft-1e199fcb",
+          "topRight": "topRight-c788171a"
+        },
+        "addedAt": 1493204749,
+        "art": "/library/metadata/141857/art/1513884815",
+        "banner": "/library/metadata/141857/banner/1513884815",
+        "childCount": 1,
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "guid": "guid-f5841fe8",
+        "index": 1,
+        "key": "/library/metadata/141857/children",
+        "leafCount": 15,
+        "originallyAvailableAt": "2020-01-02",
+        "primaryExtraKey": "/library/metadata/142135",
+        "rating": 7.2,
+        "ratingKey": "141857",
+        "skipCount": 2,
+        "studio": "studio-8a3d38d0",
+        "summary": "summary-a12469be",
+        "theme": "/library/metadata/141857/theme/1513884815",
+        "thumb": "/library/metadata/141857/thumb/1513884815",
+        "title": "title-1d9cdf48",
+        "type": "show",
+        "updatedAt": 1513884815,
+        "viewedLeafCount": 0,
+        "year": 2014
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-1ce0a763",
+            "type": "coverPoster",
+            "url": "/library/metadata/30304/thumb/1513884789"
+          },
+          {
+            "alt": "alt-1ce0a763",
+            "type": "background",
+            "url": "/library/metadata/30304/art/1513884789"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-1e86274f",
+          "bottomRight": "bottomRight-6a32dea9",
+          "topLeft": "topLeft-e5ea5d2a",
+          "topRight": "topRight-6663d19b"
+        },
+        "addedAt": 1438956865,
+        "art": "/library/metadata/30304/art/1513884789",
+        "banner": "/library/metadata/30304/banner/1513884789",
+        "childCount": 1,
+        "duration": 1500000,
+        "guid": "guid-46de9682",
+        "index": 1,
+        "key": "/library/metadata/30304/children",
+        "lastViewedAt": 1439729876,
+        "leafCount": 3,
+        "originallyAvailableAt": "2020-01-02",
+        "rating": 5.8,
+        "ratingKey": "30304",
+        "skipCount": 4,
+        "studio": "studio-d8d4b3b0",
+        "summary": "summary-2497378d",
+        "thumb": "/library/metadata/30304/thumb/1513884789",
+        "title": "title-1ce0a763",
+        "titleSort": "titleSort-72e814cf",
+        "type": "show",
+        "updatedAt": 1513884789,
+        "viewCount": 12,
+        "viewedLeafCount": 3,
+        "year": 2012
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-cd09a070",
+            "type": "coverPoster",
+            "url": "/library/metadata/30340/thumb/1513884788"
+          },
+          {
+            "alt": "alt-cd09a070",
+            "type": "background",
+            "url": "/library/metadata/30340/art/1513884788"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "354989",
+          "bottomRight": "bottomRight-7b08f563",
+          "topLeft": "302356",
+          "topRight": "topRight-9c848f31"
+        },
+        "addedAt": 1438968848,
+        "art": "/library/metadata/30340/art/1513884788",
+        "banner": "/library/metadata/30340/banner/1513884788",
+        "childCount": 1,
+        "duration": 1500000,
+        "guid": "guid-ca7863b3",
+        "index": 1,
+        "key": "/library/metadata/30340/children",
+        "lastViewedAt": 1439302739,
+        "leafCount": 3,
+        "originallyAvailableAt": "2020-01-02",
+        "rating": 2.3,
+        "ratingKey": "30340",
+        "studio": "studio-e158bc57",
+        "summary": "summary-72951044",
+        "thumb": "/library/metadata/30340/thumb/1513884788",
+        "title": "title-cd09a070",
+        "type": "show",
+        "updatedAt": 1513884788,
+        "viewCount": 12,
+        "viewedLeafCount": 3,
+        "year": 2013
+      }
+    ],
+    "allowSync": true,
+    "art": "/:/resources/show-fanart.jpg",
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 6,
+    "librarySectionTitle": "librarySectionTitle-3eac1615",
+    "librarySectionUUID": "librarySectionUUID-b948ee5c",
+    "nocache": true,
+    "offset": 0,
+    "size": 3,
+    "sortAsc": true,
+    "thumb": "/:/resources/show.png",
+    "title1": "title1-3eac1615",
+    "title2": "title2-82c900df",
+    "totalSize": 41,
+    "viewGroup": "show",
+    "viewMode": 131122
+  }
+}

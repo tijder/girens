@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using Adw 1;
 
 Adjustment _scale_adjustment {
   upper: 1;
@@ -6,7 +7,8 @@ Adjustment _scale_adjustment {
   page-increment: 0.01;
 }
 
-template $media_box_video_bottom : Revealer {
+template $media_box_video_bottom : Adw.Bin {
+  Revealer _revealer {
   reveal-child: true;
 
   Box {
@@ -47,10 +49,8 @@ template $media_box_video_bottom : Revealer {
       hexpand: true;
 
       Overlay {
-        Picture _cover_image {
-          width-request: 50;
-          height-request: 50;
-          content-fit: contain;
+        Image _cover_image {
+          pixel-size: 50;
         }
 
         [overlay]
@@ -122,4 +122,5 @@ template $media_box_video_bottom : Revealer {
       ]
     }
   }
+}
 }

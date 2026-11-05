@@ -1,0 +1,98 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Image": [
+          {
+            "alt": "alt-9be2be67",
+            "type": "coverPoster",
+            "url": "/library/metadata/175795/thumb/1711003616"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-2ea942c8",
+          "bottomRight": "bottomRight-95b42acf",
+          "topLeft": "topLeft-16ded6b5",
+          "topRight": "topRight-b75eac64"
+        },
+        "addedAt": 1596189314,
+        "guid": "guid-869a80c3",
+        "index": 1,
+        "key": "/library/metadata/175795/children",
+        "lastViewedAt": 1633138885,
+        "loudnessAnalysisVersion": "2",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-c51e8520",
+        "parentKey": "/library/metadata/175759",
+        "parentRatingKey": "175759",
+        "parentThumb": "/library/metadata/175759/thumb/1784188427",
+        "parentTitle": "parentTitle-532fd7ad",
+        "ratingKey": "175795",
+        "skipCount": 11,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175795/thumb/1711003616",
+        "title": "title-9be2be67",
+        "titleSort": "titleSort-353f886f",
+        "type": "album",
+        "updatedAt": 1711003616,
+        "viewCount": 25,
+        "year": 2012
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-6e567c73",
+            "type": "coverPoster",
+            "url": "/library/metadata/175760/thumb/1627015197"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-40fc73c1",
+          "bottomRight": "bottomRight-7f397bcd",
+          "topLeft": "topLeft-6a935a77",
+          "topRight": "topRight-5fe6a7f6"
+        },
+        "addedAt": 1596189307,
+        "guid": "guid-12ce4745",
+        "index": 1,
+        "key": "/library/metadata/175760/children",
+        "lastViewedAt": 1600004161,
+        "loudnessAnalysisVersion": "2",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-c51e8520",
+        "parentKey": "/library/metadata/175759",
+        "parentRatingKey": "175759",
+        "parentThumb": "/library/metadata/175759/thumb/1784188427",
+        "parentTitle": "parentTitle-532fd7ad",
+        "ratingKey": "175760",
+        "skipCount": 2,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175760/thumb/1627015197",
+        "title": "title-6e567c73",
+        "titleSort": "titleSort-d77fb129",
+        "type": "album",
+        "updatedAt": 1627015197,
+        "viewCount": 8,
+        "year": 2011
+      }
+    ],
+    "allowSync": true,
+    "art": "/:/resources/artist-fanart.jpg",
+    "identifier": "com.plexapp.plugins.library",
+    "key": "175759",
+    "librarySectionID": 23,
+    "librarySectionTitle": "librarySectionTitle-5952adda",
+    "librarySectionUUID": "librarySectionUUID-030c7f4b",
+    "nocache": true,
+    "offset": 0,
+    "parentIndex": 1,
+    "parentTitle": "parentTitle-532fd7ad",
+    "size": 2,
+    "thumb": "/library/metadata/175759/thumb/1784188427",
+    "title1": "title1-5952adda",
+    "title2": "title2-532fd7ad",
+    "totalSize": 2,
+    "viewGroup": "album",
+    "viewMode": 65592
+  }
+}

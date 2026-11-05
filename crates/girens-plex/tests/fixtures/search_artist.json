@@ -1,0 +1,129 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Country": [
+          {
+            "tag": "tag-3a386c13"
+          }
+        ],
+        "Genre": [
+          {
+            "tag": "tag-36e21d56"
+          },
+          {
+            "tag": "tag-f18dec6d"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-d4ea648e",
+            "type": "coverPoster",
+            "url": "/library/metadata/111764/thumb/1793507140"
+          },
+          {
+            "alt": "alt-d4ea648e",
+            "type": "background",
+            "url": "/library/metadata/111764/art/1793507140"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-906b842c",
+          "bottomRight": "bottomRight-457de193",
+          "topLeft": "topLeft-33e0ba2a",
+          "topRight": "983847"
+        },
+        "addedAt": 1472155386,
+        "art": "/library/metadata/111764/art/1793507140",
+        "guid": "guid-a9438d41",
+        "index": 1,
+        "key": "/library/metadata/111764/children",
+        "lastViewedAt": 1766337148,
+        "librarySectionID": 22,
+        "librarySectionKey": "/library/sections/22",
+        "librarySectionTitle": "librarySectionTitle-19198073",
+        "ratingKey": "111764",
+        "skipCount": 42,
+        "summary": "summary-6a45bc06",
+        "thumb": "/library/metadata/111764/thumb/1793507140",
+        "title": "title-d4ea648e",
+        "titleSort": "titleSort-c8a6c8a1",
+        "type": "artist",
+        "updatedAt": 1793507140,
+        "viewCount": 144
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-532fd7ad",
+            "type": "coverPoster",
+            "url": "/library/metadata/175759/thumb/1784188427"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-4d07a925",
+          "bottomRight": "bottomRight-5f7fb680",
+          "topLeft": "topLeft-b9f1bd58",
+          "topRight": "topRight-dd9a3567"
+        },
+        "addedAt": 1596189307,
+        "guid": "guid-c51e8520",
+        "index": 1,
+        "key": "/library/metadata/175759/children",
+        "lastViewedAt": 1633138885,
+        "librarySectionID": 23,
+        "librarySectionKey": "/library/sections/23",
+        "librarySectionTitle": "librarySectionTitle-5952adda",
+        "ratingKey": "175759",
+        "skipCount": 13,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175759/thumb/1784188427",
+        "title": "title-532fd7ad",
+        "type": "artist",
+        "updatedAt": 1784188427,
+        "viewCount": 34
+      },
+      {
+        "Country": [
+          {
+            "tag": "tag-8d23a6e3"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-83eb632f",
+            "type": "coverPoster",
+            "url": "/library/metadata/114541/thumb/1793507149"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "030310",
+          "bottomRight": "080314",
+          "topLeft": "topLeft-640eb3e1",
+          "topRight": "080311"
+        },
+        "addedAt": 1472231951,
+        "guid": "guid-abb6f4c8",
+        "index": 1,
+        "key": "/library/metadata/114541/children",
+        "lastViewedAt": 1734348401,
+        "librarySectionID": 22,
+        "librarySectionKey": "/library/sections/22",
+        "librarySectionTitle": "librarySectionTitle-19198073",
+        "ratingKey": "114541",
+        "skipCount": 8,
+        "summary": "summary-3b2be950",
+        "thumb": "/library/metadata/114541/thumb/1793507149",
+        "title": "title-83eb632f",
+        "type": "artist",
+        "updatedAt": 1793507149,
+        "viewCount": 15
+      }
+    ],
+    "allowSync": false,
+    "identifier": "com.plexapp.plugins.library",
+    "offset": 0,
+    "size": 3,
+    "totalSize": 12
+  }
+}

@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $profile_dialog : Adw.PreferencesWindow {
+template $profile_dialog : Adw.PreferencesDialog {
   title: _("Account info");
 
   Adw.PreferencesPage {
@@ -16,9 +16,6 @@ template $profile_dialog : Adw.PreferencesWindow {
       }
       Adw.ActionRow _subscriptionplan_value_label {
         subtitle: _("Subscription plan");
-      }
-      Adw.ActionRow _secure_value_label {
-        subtitle: _("Secure");
       }
 
       Gtk.Button _logout_button {

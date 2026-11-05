@@ -1,0 +1,20 @@
+[package]
+name = "girens-plex"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Minimal Plex client covering the endpoints Girens uses"
+
+[dependencies]
+reqwest = { version = "0.13", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["fs", "io-util"] }
+url = "2"
+
+[dev-dependencies]
+reqwest = "0.13"
+tokio = { version = "1", features = ["macros", "rt"] }
+wiremock = "0.6"

@@ -1,0 +1,188 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Image": [
+          {
+            "alt": "alt-4ad0b367",
+            "type": "coverPoster",
+            "url": "/library/metadata/175759/thumb/1784188427"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "container": "mp3",
+                "duration": 0,
+                "file": "file-17c9d9ac",
+                "id": 295434,
+                "key": "/library/parts/295434/1596186947/file.bin",
+                "size": 0
+              }
+            ],
+            "audioChannels": 1,
+            "audioCodec": "mp3",
+            "bitrate": 65,
+            "container": "mp3",
+            "duration": 0,
+            "hasVoiceActivity": false,
+            "id": 290097
+          }
+        ],
+        "addedAt": 1596189314,
+        "duration": 0,
+        "grandparentGuid": "grandparentGuid-c51e8520",
+        "grandparentKey": "/library/metadata/175759",
+        "grandparentRatingKey": "175759",
+        "grandparentThumb": "/library/metadata/175759/thumb/1784188427",
+        "grandparentTitle": "grandparentTitle-532fd7ad",
+        "guid": "guid-f37a911c",
+        "index": 1,
+        "key": "/library/metadata/175796",
+        "parentGuid": "parentGuid-869a80c3",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/175795",
+        "parentRatingKey": "175795",
+        "parentThumb": "/library/metadata/175795/thumb/1711003616",
+        "parentTitle": "parentTitle-9be2be67",
+        "parentYear": 2012,
+        "ratingKey": "175796",
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175795/thumb/1711003616",
+        "title": "title-4ad0b367",
+        "type": "track",
+        "updatedAt": 1605418220
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-d3162cc3",
+            "type": "coverPoster",
+            "url": "/library/metadata/175759/thumb/1784188427"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "container": "mp3",
+                "duration": 60000,
+                "file": "file-4d7e56bc",
+                "id": 295435,
+                "key": "/library/parts/295435/1596186947/file.bin",
+                "size": 0
+              }
+            ],
+            "audioChannels": 1,
+            "audioCodec": "mp3",
+            "bitrate": 64,
+            "container": "mp3",
+            "duration": 60000,
+            "hasVoiceActivity": false,
+            "id": 290098
+          }
+        ],
+        "addedAt": 1596189314,
+        "duration": 60000,
+        "grandparentGuid": "grandparentGuid-c51e8520",
+        "grandparentKey": "/library/metadata/175759",
+        "grandparentRatingKey": "175759",
+        "grandparentThumb": "/library/metadata/175759/thumb/1784188427",
+        "grandparentTitle": "grandparentTitle-532fd7ad",
+        "guid": "guid-f9815bc5",
+        "index": 2,
+        "key": "/library/metadata/175797",
+        "parentGuid": "parentGuid-869a80c3",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/175795",
+        "parentRatingKey": "175795",
+        "parentThumb": "/library/metadata/175795/thumb/1711003616",
+        "parentTitle": "parentTitle-9be2be67",
+        "parentYear": 2012,
+        "ratingKey": "175797",
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175795/thumb/1711003616",
+        "title": "title-d3162cc3",
+        "type": "track",
+        "updatedAt": 1605418220
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-3cb1be4f",
+            "type": "coverPoster",
+            "url": "/library/metadata/175759/thumb/1784188427"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "container": "mp3",
+                "duration": 60000,
+                "file": "file-a9659755",
+                "id": 295436,
+                "key": "/library/parts/295436/1596186948/file.bin",
+                "size": 0
+              }
+            ],
+            "audioChannels": 1,
+            "audioCodec": "mp3",
+            "bitrate": 64,
+            "container": "mp3",
+            "duration": 60000,
+            "hasVoiceActivity": false,
+            "id": 290099
+          }
+        ],
+        "addedAt": 1596189314,
+        "duration": 60000,
+        "grandparentGuid": "grandparentGuid-c51e8520",
+        "grandparentKey": "/library/metadata/175759",
+        "grandparentRatingKey": "175759",
+        "grandparentThumb": "/library/metadata/175759/thumb/1784188427",
+        "grandparentTitle": "grandparentTitle-532fd7ad",
+        "guid": "guid-3e17c92f",
+        "index": 3,
+        "key": "/library/metadata/175798",
+        "parentGuid": "parentGuid-869a80c3",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/175795",
+        "parentRatingKey": "175795",
+        "parentThumb": "/library/metadata/175795/thumb/1711003616",
+        "parentTitle": "parentTitle-9be2be67",
+        "parentYear": 2012,
+        "ratingKey": "175798",
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/175795/thumb/1711003616",
+        "title": "title-3cb1be4f",
+        "type": "track",
+        "updatedAt": 1605418220
+      }
+    ],
+    "allowSync": true,
+    "art": "/:/resources/artist-fanart.jpg",
+    "grandparentRatingKey": 175759,
+    "grandparentThumb": "/library/metadata/175759/thumb/1784188427",
+    "grandparentTitle": "grandparentTitle-532fd7ad",
+    "identifier": "com.plexapp.plugins.library",
+    "key": "175795",
+    "librarySectionID": 23,
+    "librarySectionTitle": "librarySectionTitle-5952adda",
+    "librarySectionUUID": "librarySectionUUID-030c7f4b",
+    "nocache": true,
+    "offset": 0,
+    "parentIndex": 1,
+    "parentTitle": "parentTitle-9be2be67",
+    "parentYear": 2012,
+    "size": 3,
+    "sortAsc": true,
+    "thumb": "/library/metadata/175795/thumb/1711003616",
+    "title1": "title1-532fd7ad",
+    "title2": "title2-9be2be67",
+    "totalSize": 58,
+    "viewGroup": "track",
+    "viewMode": 458810
+  }
+}

@@ -1,5 +1,6 @@
 blueprints = custom_target('blueprints',
   input: files(
+    'album_header.blp',
     'album_item.blp',
     'album_view.blp',
     'artist_view.blp',

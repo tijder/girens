@@ -1,0 +1,74 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Genre": [
+          {
+            "tag": "tag-0a74deea"
+          },
+          {
+            "tag": "tag-1dd10f24"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-1d9cdf48",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1513884815"
+          },
+          {
+            "alt": "alt-1d9cdf48",
+            "type": "background",
+            "url": "/library/metadata/141857/art/1513884815"
+          }
+        ],
+        "Role": [
+          {
+            "tag": "tag-e0ea0225"
+          },
+          {
+            "tag": "tag-b68fb02b"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "722729",
+          "bottomRight": "821515",
+          "topLeft": "topLeft-1e199fcb",
+          "topRight": "topRight-c788171a"
+        },
+        "addedAt": 1493204749,
+        "art": "/library/metadata/141857/art/1513884815",
+        "banner": "/library/metadata/141857/banner/1513884815",
+        "childCount": 1,
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "guid": "guid-f5841fe8",
+        "index": 1,
+        "key": "/library/metadata/141857/children",
+        "leafCount": 15,
+        "librarySectionID": 6,
+        "librarySectionKey": "/library/sections/6",
+        "librarySectionTitle": "librarySectionTitle-3eac1615",
+        "originallyAvailableAt": "2020-01-02",
+        "primaryExtraKey": "/library/metadata/142135",
+        "rating": 7.2,
+        "ratingKey": "141857",
+        "skipCount": 2,
+        "studio": "studio-8a3d38d0",
+        "summary": "summary-a12469be",
+        "theme": "/library/metadata/141857/theme/1513884815",
+        "thumb": "/library/metadata/141857/thumb/1513884815",
+        "title": "title-1d9cdf48",
+        "type": "show",
+        "updatedAt": 1513884815,
+        "viewedLeafCount": 0,
+        "year": 2014
+      }
+    ],
+    "allowSync": false,
+    "identifier": "com.plexapp.plugins.library",
+    "offset": 0,
+    "size": 1,
+    "totalSize": 1
+  }
+}

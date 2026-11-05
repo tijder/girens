@@ -1,0 +1,329 @@
+{
+  "MediaContainer": {
+    "Directory": [
+      {
+        "Location": [
+          {
+            "id": 74,
+            "path": "path-f1f0fcd3"
+          },
+          {
+            "id": 69,
+            "path": "path-4f1b815d"
+          }
+        ],
+        "agent": "tv.plex.agents.movie",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 29753243,
+        "createdAt": 1431458699,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "17",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1777046466,
+        "scanner": "Plex Movie",
+        "title": "title-ef9e821a",
+        "type": "movie",
+        "updatedAt": 1700571129,
+        "uuid": "uuid-557d3153"
+      },
+      {
+        "Location": [
+          {
+            "id": 63,
+            "path": "path-b6164853"
+          },
+          {
+            "id": 36,
+            "path": "path-67c17d87"
+          }
+        ],
+        "agent": "com.plexapp.agents.youtube",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 26585626,
+        "createdAt": 1426970105,
+        "directory": true,
+        "filters": true,
+        "hidden": 1,
+        "key": "14",
+        "language": "xn",
+        "refreshing": false,
+        "scannedAt": 1700119935,
+        "scanner": "Plex Movie Scanner",
+        "title": "title-6aabf9e6",
+        "type": "movie",
+        "updatedAt": 1599444578,
+        "uuid": "uuid-45d5ad4d"
+      },
+      {
+        "Location": [
+          {
+            "id": 59,
+            "path": "path-4d114689"
+          },
+          {
+            "id": 29,
+            "path": "path-147637ed"
+          }
+        ],
+        "agent": "tv.plex.agents.series",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 26595380,
+        "createdAt": 1394572950,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "6",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1700515607,
+        "scanner": "Plex TV Series",
+        "title": "title-3eac1615",
+        "type": "show",
+        "updatedAt": 1700515501,
+        "uuid": "uuid-b948ee5c"
+      },
+      {
+        "Location": [
+          {
+            "id": 28,
+            "path": "path-1d0bdb28"
+          }
+        ],
+        "agent": "tv.plex.agents.series",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 0,
+        "createdAt": 1442346759,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "19",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1638528652,
+        "scanner": "Plex TV Series",
+        "title": "title-da72bf5b",
+        "type": "show",
+        "updatedAt": 1638528642,
+        "uuid": "uuid-ee026c24"
+      },
+      {
+        "Location": [
+          {
+            "id": 73,
+            "path": "path-a8b2119b"
+          },
+          {
+            "id": 72,
+            "path": "path-18a0946f"
+          }
+        ],
+        "agent": "tv.plex.agents.series",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 29637140,
+        "createdAt": 1394478796,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "4",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1770757736,
+        "scanner": "Plex TV Series",
+        "title": "title-6adcc696",
+        "type": "show",
+        "updatedAt": 1700571048,
+        "uuid": "uuid-efe522a6"
+      },
+      {
+        "Location": [
+          {
+            "id": 67,
+            "path": "path-af117f2f"
+          },
+          {
+            "id": 64,
+            "path": "path-f619c8db"
+          }
+        ],
+        "agent": "com.plexapp.agents.none",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 24626007,
+        "createdAt": 1533749465,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "23",
+        "language": "xn",
+        "refreshing": false,
+        "scannedAt": 1659648704,
+        "scanner": "Plex Music Scanner",
+        "title": "title-5952adda",
+        "type": "artist",
+        "updatedAt": 1599444219,
+        "uuid": "uuid-030c7f4b"
+      },
+      {
+        "Location": [
+          {
+            "id": 41,
+            "path": "path-96fdde51"
+          }
+        ],
+        "agent": "tv.plex.agents.music",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 29420105,
+        "createdAt": 1468179482,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "22",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1760555754,
+        "scanner": "Plex Music",
+        "title": "title-19198073",
+        "type": "artist",
+        "updatedAt": 1604858411,
+        "uuid": "uuid-76b0ed9c"
+      },
+      {
+        "Location": [
+          {
+            "id": 18,
+            "path": "path-c81c6871"
+          }
+        ],
+        "agent": "tv.plex.agents.music",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 23621059,
+        "createdAt": 1424935191,
+        "directory": true,
+        "filters": true,
+        "hidden": 1,
+        "key": "13",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1638528643,
+        "scanner": "Plex Music",
+        "title": "title-6c19a0c0",
+        "type": "artist",
+        "updatedAt": 1638528642,
+        "uuid": "uuid-f3964b46"
+      },
+      {
+        "Location": [
+          {
+            "id": 16,
+            "path": "path-27772771"
+          }
+        ],
+        "agent": "tv.plex.agents.music",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 0,
+        "createdAt": 1422814590,
+        "directory": true,
+        "filters": true,
+        "hidden": 1,
+        "key": "12",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1638530180,
+        "scanner": "Plex Music",
+        "title": "title-44b20566",
+        "type": "artist",
+        "updatedAt": 1638528642,
+        "uuid": "uuid-c365bff4"
+      },
+      {
+        "Location": [
+          {
+            "id": 3,
+            "path": "path-661ece47"
+          }
+        ],
+        "agent": "tv.plex.agents.none",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 0,
+        "createdAt": 1394442377,
+        "directory": true,
+        "filters": true,
+        "hidden": 1,
+        "key": "3",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1638528654,
+        "scanner": "Plex Photo Scanner",
+        "title": "title-cbbba360",
+        "type": "photo",
+        "updatedAt": 1599444436,
+        "uuid": "uuid-a4be236a"
+      },
+      {
+        "Location": [
+          {
+            "id": 25,
+            "path": "path-9a511bfb"
+          }
+        ],
+        "agent": "tv.plex.agents.none",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 0,
+        "createdAt": 1422296258,
+        "directory": true,
+        "filters": true,
+        "hidden": 0,
+        "key": "11",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1638528655,
+        "scanner": "Plex Photo Scanner",
+        "title": "title-227ec8fe",
+        "type": "photo",
+        "updatedAt": 1599444449,
+        "uuid": "uuid-5b78e309"
+      },
+      {
+        "Location": [
+          {
+            "id": 8,
+            "path": "path-6f83d464"
+          }
+        ],
+        "agent": "tv.plex.agents.none",
+        "allowSync": true,
+        "content": true,
+        "contentChangedAt": 0,
+        "createdAt": 1400442542,
+        "directory": true,
+        "filters": true,
+        "hidden": 1,
+        "key": "8",
+        "language": "en-US",
+        "refreshing": false,
+        "scannedAt": 1638528656,
+        "scanner": "Plex Photo Scanner",
+        "title": "title-2ada6baf",
+        "type": "photo",
+        "updatedAt": 1444725971,
+        "uuid": "uuid-5ec2f5cf"
+      }
+    ],
+    "allowSync": false,
+    "size": 12,
+    "title1": "title1-d233dd50"
+  }
+}

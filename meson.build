@@ -3,7 +3,6 @@ project(
   version: '2.0.10',
   meson_version: '>= 0.59.0',
 )
-python3 = import('python3')
 gnome = import('gnome')
 
 service_dir = join_paths(get_option('datadir'), 'dbus-1', 'services')
@@ -17,7 +16,6 @@ project_id = 'nl.g4d.Girens'
 conf_service = configuration_data()
 conf_service.set('projectname', meson.project_name())
 conf_service.set('libexecdir', libexecdir)
-conf_service.set('PYTHON', python3.find_python().path())
 conf_service.set('VERSION', meson.project_version())
 conf_service.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf_service.set('BUILD_TYPE', get_option('buildtype'))

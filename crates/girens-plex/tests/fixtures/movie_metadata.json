@@ -1,0 +1,443 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Country": [
+          {
+            "filter": "filter-6bcc73d2",
+            "id": 221,
+            "tag": "tag-aa5ab35a"
+          }
+        ],
+        "Director": [
+          {
+            "filter": "filter-a4dd44e4",
+            "id": 42440,
+            "tag": "tag-9543e079",
+            "thumb": "thumb-bcad6cbd"
+          }
+        ],
+        "Genre": [
+          {
+            "filter": "filter-22344069",
+            "id": 8,
+            "tag": "tag-64cff131"
+          },
+          {
+            "filter": "filter-fc222f65",
+            "id": 150,
+            "tag": "tag-85f1c8c8"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-c90c7d9b",
+            "type": "coverPoster",
+            "url": "/library/metadata/147021/thumb/1789520846"
+          },
+          {
+            "alt": "alt-c90c7d9b",
+            "type": "background",
+            "url": "/library/metadata/147021/art/1789520846"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "Stream": [
+                  {
+                    "bitDepth": 8,
+                    "bitrate": 28148,
+                    "chromaLocation": "left",
+                    "chromaSubsampling": "4:2:0",
+                    "codec": "h264",
+                    "codedHeight": 1088,
+                    "codedWidth": 1920,
+                    "displayTitle": "1080p",
+                    "extendedDisplayTitle": "1080p (H.264)",
+                    "frameRate": 23.976,
+                    "hasScalingMatrix": false,
+                    "height": 1080,
+                    "id": 772223,
+                    "index": 0,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "level": 41,
+                    "profile": "high",
+                    "refFrames": 2,
+                    "scanType": "progressive",
+                    "streamType": 1,
+                    "width": 1920
+                  },
+                  {
+                    "audioChannelLayout": "5.1(side)",
+                    "bitrate": 1536,
+                    "canNormalizeLoudness": true,
+                    "channels": 6,
+                    "codec": "dca",
+                    "default": true,
+                    "displayTitle": "English (DTS 5.1)",
+                    "extendedDisplayTitle": "Surround 5.1 (English DTS)",
+                    "gainOffset": "gainOffset-5dcdf9da",
+                    "id": 772224,
+                    "index": 1,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "loudness": "loudness-8307a8d8",
+                    "loudnessAnalysisVersion": "loudnessAnalysisVersion-a7e46abf",
+                    "lra": "lra-1b70df7d",
+                    "peak": "peak-d12ffeed",
+                    "profile": "dts",
+                    "samplingRate": 48000,
+                    "selected": true,
+                    "streamType": 2,
+                    "threshold": "threshold-c1d05190",
+                    "title": "title-f6d7236e"
+                  },
+                  {
+                    "audioChannelLayout": "5.1(side)",
+                    "bitrate": 640,
+                    "canNormalizeLoudness": true,
+                    "channels": 6,
+                    "codec": "ac3",
+                    "displayTitle": "English (AC3 5.1)",
+                    "extendedDisplayTitle": "Surround 5.1 (English AC3)",
+                    "gainOffset": "gainOffset-8843d0ae",
+                    "id": 772225,
+                    "index": 2,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "loudness": "loudness-0a206811",
+                    "loudnessAnalysisVersion": "loudnessAnalysisVersion-a7e46abf",
+                    "lra": "lra-9f8a6a18",
+                    "peak": "peak-9c2f9d4e",
+                    "samplingRate": 48000,
+                    "streamType": 2,
+                    "threshold": "threshold-636441b0",
+                    "title": "title-f6d7236e"
+                  },
+                  {
+                    "audioChannelLayout": "5.1(side)",
+                    "bitrate": 1536,
+                    "canNormalizeLoudness": true,
+                    "channels": 6,
+                    "codec": "dca",
+                    "displayTitle": "Français (DTS 5.1)",
+                    "extendedDisplayTitle": "Surround 5.1 (Français DTS)",
+                    "gainOffset": "gainOffset-64ee787d",
+                    "id": 772226,
+                    "index": 3,
+                    "language": "Français",
+                    "languageCode": "fra",
+                    "languageTag": "fr",
+                    "loudness": "loudness-f9c422c2",
+                    "loudnessAnalysisVersion": "loudnessAnalysisVersion-a7e46abf",
+                    "lra": "lra-f639b603",
+                    "peak": "peak-dc08a4e8",
+                    "profile": "dts",
+                    "samplingRate": 48000,
+                    "streamType": 2,
+                    "threshold": "threshold-9c2c6bfe",
+                    "title": "title-f6d7236e"
+                  },
+                  {
+                    "audioChannelLayout": "5.1(side)",
+                    "bitrate": 1536,
+                    "canNormalizeLoudness": true,
+                    "channels": 6,
+                    "codec": "dca",
+                    "displayTitle": "Español (DTS 5.1)",
+                    "extendedDisplayTitle": "Surround 5.1 (Español DTS)",
+                    "gainOffset": "gainOffset-004a9e08",
+                    "id": 772227,
+                    "index": 4,
+                    "language": "Español",
+                    "languageCode": "spa",
+                    "languageTag": "es",
+                    "loudness": "loudness-d89a9b8a",
+                    "loudnessAnalysisVersion": "loudnessAnalysisVersion-a7e46abf",
+                    "lra": "lra-d9c3773b",
+                    "peak": "peak-5b77c0a9",
+                    "profile": "dts",
+                    "samplingRate": 48000,
+                    "streamType": 2,
+                    "threshold": "threshold-0ba162a5",
+                    "title": "title-f6d7236e"
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "English",
+                    "extendedDisplayTitle": "English (PGS)",
+                    "id": 772228,
+                    "index": 5,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "default": true,
+                    "displayTitle": "English",
+                    "extendedDisplayTitle": "English (PGS)",
+                    "id": 772229,
+                    "index": 6,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "English",
+                    "extendedDisplayTitle": "English (PGS)",
+                    "id": 772230,
+                    "index": 7,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "العربية",
+                    "extendedDisplayTitle": "العربية (PGS)",
+                    "id": 772231,
+                    "index": 8,
+                    "language": "العربية",
+                    "languageCode": "ara",
+                    "languageTag": "ar",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Nederlands",
+                    "extendedDisplayTitle": "Nederlands (PGS)",
+                    "id": 772232,
+                    "index": 9,
+                    "language": "Nederlands",
+                    "languageCode": "nld",
+                    "languageTag": "nl",
+                    "selected": true,
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Français",
+                    "extendedDisplayTitle": "Français (PGS)",
+                    "id": 772233,
+                    "index": 10,
+                    "language": "Français",
+                    "languageCode": "fra",
+                    "languageTag": "fr",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Français",
+                    "extendedDisplayTitle": "Français (PGS)",
+                    "id": 772234,
+                    "index": 11,
+                    "language": "Français",
+                    "languageCode": "fra",
+                    "languageTag": "fr",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Español",
+                    "extendedDisplayTitle": "Español (PGS)",
+                    "id": 772235,
+                    "index": 12,
+                    "language": "Español",
+                    "languageCode": "spa",
+                    "languageTag": "es",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Español",
+                    "extendedDisplayTitle": "Español (PGS)",
+                    "id": 772236,
+                    "index": 13,
+                    "language": "Español",
+                    "languageCode": "spa",
+                    "languageTag": "es",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "English",
+                    "extendedDisplayTitle": "English (PGS)",
+                    "id": 772237,
+                    "index": 14,
+                    "language": "English",
+                    "languageCode": "eng",
+                    "languageTag": "en",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Nederlands",
+                    "extendedDisplayTitle": "Nederlands (PGS)",
+                    "id": 772238,
+                    "index": 15,
+                    "language": "Nederlands",
+                    "languageCode": "nld",
+                    "languageTag": "nl",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Français",
+                    "extendedDisplayTitle": "Français (PGS)",
+                    "id": 772239,
+                    "index": 16,
+                    "language": "Français",
+                    "languageCode": "fra",
+                    "languageTag": "fr",
+                    "streamType": 3
+                  },
+                  {
+                    "canAutoSync": false,
+                    "codec": "pgs",
+                    "displayTitle": "Español",
+                    "extendedDisplayTitle": "Español (PGS)",
+                    "id": 772240,
+                    "index": 17,
+                    "language": "Español",
+                    "languageCode": "spa",
+                    "languageTag": "es",
+                    "streamType": 3
+                  }
+                ],
+                "audioProfile": "dts",
+                "container": "mkv",
+                "duration": 6540000,
+                "file": "file-413e0e55",
+                "id": 312432,
+                "key": "/library/parts/312432/1501258420/file.bin",
+                "size": 27383000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 6,
+            "audioCodec": "dca",
+            "audioProfile": "dts",
+            "bitrate": 33396,
+            "container": "mkv",
+            "duration": 6540000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 251967,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "Producer": [
+          {
+            "filter": "filter-b48d8ed1",
+            "id": 30898,
+            "tag": "tag-7e1c3d57"
+          },
+          {
+            "filter": "filter-d4b45b9d",
+            "id": 30897,
+            "tag": "tag-e7edfea0"
+          }
+        ],
+        "Role": [
+          {
+            "filter": "filter-cfcdfa75",
+            "id": 28409,
+            "role": "role-68122d3d",
+            "tag": "tag-02c224e1",
+            "thumb": "thumb-616d11a9"
+          },
+          {
+            "filter": "filter-0467f2f7",
+            "id": 5802,
+            "role": "role-80af53e0",
+            "tag": "tag-c30aa4f6",
+            "thumb": "thumb-9929be31"
+          }
+        ],
+        "Similar": [
+          {
+            "filter": "filter-2a99b974",
+            "id": 42513,
+            "tag": "tag-505d9e67"
+          },
+          {
+            "filter": "filter-176deb33",
+            "id": 42520,
+            "tag": "tag-ba96e84b"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-8de94e2a",
+          "bottomRight": "bottomRight-47ea03ed",
+          "topLeft": "topLeft-309bf296",
+          "topRight": "topRight-6433d6e5"
+        },
+        "Writer": [
+          {
+            "filter": "filter-796aa3f0",
+            "id": 42441,
+            "tag": "tag-6dc12df4"
+          }
+        ],
+        "addedAt": 1501271308,
+        "art": "/library/metadata/147021/art/1789520846",
+        "audienceRating": 0.0,
+        "chapterSource": "chapterSource-721c9525",
+        "contentRating": "R",
+        "duration": 6540000,
+        "guid": "guid-5b453c61",
+        "key": "/library/metadata/147021",
+        "librarySectionID": 17,
+        "librarySectionKey": "/library/sections/17",
+        "librarySectionTitle": "librarySectionTitle-ef9e821a",
+        "loudnessAnalysisVersion": "loudnessAnalysisVersion-a7e46abf",
+        "originallyAvailableAt": "2020-01-02",
+        "primaryExtraKey": "/library/metadata/171469",
+        "rating": 6.5,
+        "ratingKey": "147021",
+        "studio": "studio-e17419bc",
+        "summary": "summary-46151078",
+        "tagline": "tagline-eb1d16bc",
+        "thumb": "/library/metadata/147021/thumb/1789520846",
+        "title": "title-c90c7d9b",
+        "type": "movie",
+        "updatedAt": 1789520846,
+        "year": 2013
+      }
+    ],
+    "allowSync": true,
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 17,
+    "librarySectionTitle": "librarySectionTitle-ef9e821a",
+    "librarySectionUUID": "librarySectionUUID-557d3153",
+    "size": 1
+  }
+}

@@ -1,0 +1,71 @@
+using Gtk 4.0;
+
+// Cover, title and buttons of an album; a row in the album and artist pages.
+template $album_header : Box {
+  spacing: 20;
+  margin-top: 20;
+  margin-bottom: 10;
+  margin-start: 10;
+  margin-end: 10;
+
+  Box {
+    orientation: vertical;
+    valign: start;
+    halign: start;
+    hexpand: false;
+    spacing: 6;
+
+    Overlay {
+      Image _cover_picture {
+        styles [
+          "cover_image",
+        ]
+
+        pixel-size: 150;
+      }
+
+      [overlay]
+      Image _cover_placeholder {
+        icon-name: "emblem-synchronizing-symbolic";
+        halign: center;
+        valign: center;
+      }
+    }
+
+    Box {
+      styles [
+        "linked",
+      ]
+
+      Button _play_button {
+        hexpand: true;
+
+        Image {
+          icon-name: "media-playback-start-symbolic";
+        }
+      }
+
+      MenuButton _menu_button {}
+    }
+  }
+
+  Box {
+    orientation: vertical;
+    valign: center;
+    hexpand: true;
+
+    Label _title_label {
+      styles [
+        "title-1",
+      ]
+
+      halign: start;
+      ellipsize: end;
+    }
+
+    Label _subtitle_label {
+      halign: start;
+      ellipsize: end;
+    }
+  }
+}

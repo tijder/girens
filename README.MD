@@ -37,6 +37,20 @@ flatpak-builder --user --force-clean --install-deps-from=flathub builddir nl.g4d
 flatpak-builder --run builddir nl.g4d.Girens.yaml girens
 ```
 
+### Rust port (branch `rust`)
+
+The port to Rust is in progress on this branch; the Python sources are kept in
+`legacy/` as a reference until it is complete. The manifest builds the upstream
+repository, so to build your checkout, build the dependencies first and then
+the app itself inside the build sandbox:
+
+```bash
+flatpak-builder --user --force-clean --install-deps-from=flathub --stop-at=girens builddir-rust nl.g4d.Girens.yaml
+flatpak build --share=network --filesystem=$PWD --env=PATH=/app/bin:/usr/bin:/usr/lib/sdk/rust-stable/bin builddir-rust \
+  sh -c "cd $PWD && meson setup builddir-rust-meson --prefix=/app --libdir=lib -Dbuildtype=debug -Dnetwork_tests=false && ninja -C builddir-rust-meson install"
+flatpak build --socket=wayland --socket=fallback-x11 --share=ipc --share=network --device=dri --socket=pulseaudio builddir-rust girens
+```
+
 ## Update depedencies
 
 ```bash

@@ -1,31 +1,28 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $player_view : ScrolledWindow {
-  EventControllerKey {
-    key-pressed => $on_keypress();
-  }
+template $player_view : Adw.Bin {
+  ScrolledWindow _scrolled_window {
+  vexpand: true;
+  hscrollbar-policy: never;
+  EventControllerKey _key_controller {}
   Box {
     vexpand: true;
     orientation: vertical;
     Gtk.Box _video_box {
       height-request: 500;
 
-      EventControllerMotion {
-        motion => $on_motion();
-      }
+      EventControllerMotion _motion_controller {}
 
       Overlay _overlay {
         Stack _stack {
-          GestureClick {
-	          button: 1;
-	          pressed => $on_button_press_event();
-	          exclusive: true;
+          GestureClick _click {
+            button: 1;
+            exclusive: true;
           }
 
-          GestureClick {
+          GestureClick _right_click {
             button: 3;
-            released => $on_right_click();
             exclusive: true;
           }
 
@@ -44,6 +41,9 @@ template $player_view : ScrolledWindow {
             styles [
               "media_box",
             ]
+            $media_box_video_top _media_top {
+              hexpand: true;
+            }
           }
         }
 
@@ -55,6 +55,9 @@ template $player_view : ScrolledWindow {
           styles [
             "media_box",
           ]
+          $media_box_video_bottom _media_bottom {
+            hexpand: true;
+          }
         }
       }
     }
@@ -127,13 +130,9 @@ template $player_view : ScrolledWindow {
           label: _("Ondeck");
         }
 
-        ScrolledWindow {
-          vscrollbar-policy: never;
-          $list _deck_shows_box {
-            vexpand: false;
-          }
-        }
+        $list _deck_shows_box {}
       }
     }
   }
+}
 }

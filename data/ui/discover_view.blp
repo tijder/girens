@@ -1,7 +1,9 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $discover_view : ScrolledWindow {
+template $discover_view : Adw.Bin {
+  ScrolledWindow {
+  vexpand: true;
   height-request: 300;
   hscrollbar-policy: never;
   Box {
@@ -18,12 +20,7 @@ template $discover_view : ScrolledWindow {
       label: _("Ondeck");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
-      $list _deck_shows_box {
-        vexpand: false;
-      }
-    }
+    $list _deck_shows_box {}
 
     Label {
       styles [
@@ -36,12 +33,7 @@ template $discover_view : ScrolledWindow {
       label: _("Recently added Shows");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
-      $list _seasons_shows_box {
-        vexpand: false;
-      }
-    }
+    $list _seasons_shows_box {}
 
     Label {
       styles [
@@ -54,12 +46,7 @@ template $discover_view : ScrolledWindow {
       label: _("Recently added Movies");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
-      $list _movies_shows_box {
-        vexpand: false;
-      }
-    }
+    $list _movies_shows_box {}
 
     Label {
       styles [
@@ -72,11 +59,7 @@ template $discover_view : ScrolledWindow {
       label: _("Recently added Music");
     }
 
-    ScrolledWindow {
-      vscrollbar-policy: never;
-      $list _music_shows_box {
-        vexpand: false;
-      }
-    }
+    $list _music_shows_box {}
   }
+}
 }

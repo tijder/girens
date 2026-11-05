@@ -1,0 +1,180 @@
+{
+  "MediaContainer": {
+    "Directory": [
+      {
+        "count": 1,
+        "key": "key-2b0dcdd4",
+        "title": "title-2b0dcdd4"
+      },
+      {
+        "count": 1,
+        "key": "key-624c9554",
+        "title": "title-624c9554"
+      },
+      {
+        "count": 1,
+        "key": "key-accb7fc4",
+        "title": "title-accb7fc4"
+      },
+      {
+        "count": 1,
+        "key": "key-61ffa9c8",
+        "title": "title-61ffa9c8"
+      },
+      {
+        "count": 1,
+        "key": "key-8f4d9088",
+        "title": "title-8f4d9088"
+      },
+      {
+        "count": 1,
+        "key": "key-ade15a12",
+        "title": "title-ade15a12"
+      },
+      {
+        "count": 1,
+        "key": "key-8fa78148",
+        "title": "title-8fa78148"
+      },
+      {
+        "count": 1,
+        "key": "key-a9ebfad2",
+        "title": "title-a9ebfad2"
+      },
+      {
+        "count": 1,
+        "key": "key-600df5b5",
+        "title": "title-600df5b5"
+      },
+      {
+        "count": 3,
+        "key": "key-b718f135",
+        "title": "title-b718f135"
+      },
+      {
+        "count": 3,
+        "key": "key-e6058650",
+        "title": "title-e6058650"
+      },
+      {
+        "count": 3,
+        "key": "key-721c9525",
+        "title": "title-721c9525"
+      },
+      {
+        "count": 1,
+        "key": "key-5b361dfe",
+        "title": "title-5b361dfe"
+      },
+      {
+        "count": 1,
+        "key": "key-8b64c6b5",
+        "title": "title-8b64c6b5"
+      },
+      {
+        "count": 1,
+        "key": "key-546c2801",
+        "title": "title-546c2801"
+      },
+      {
+        "count": 1,
+        "key": "key-41d311a6",
+        "title": "title-41d311a6"
+      },
+      {
+        "count": 1,
+        "key": "key-24193290",
+        "title": "title-24193290"
+      },
+      {
+        "count": 1,
+        "key": "key-b3eacd33",
+        "title": "title-b3eacd33"
+      },
+      {
+        "count": 1,
+        "key": "key-8e3dc1af",
+        "title": "title-8e3dc1af"
+      },
+      {
+        "count": 1,
+        "key": "key-9df6b026",
+        "title": "title-9df6b026"
+      },
+      {
+        "count": 1,
+        "key": "key-49d48431",
+        "title": "title-49d48431"
+      },
+      {
+        "count": 1,
+        "key": "key-bbc5e661",
+        "title": "title-bbc5e661"
+      },
+      {
+        "count": 1,
+        "key": "key-1ca959f0",
+        "title": "title-1ca959f0"
+      },
+      {
+        "count": 1,
+        "key": "key-196c2375",
+        "title": "title-196c2375"
+      },
+      {
+        "count": 1,
+        "key": "key-04f8996d",
+        "title": "title-04f8996d"
+      }
+    ],
+    "allowCameraUpload": true,
+    "allowChannelAccess": true,
+    "allowSharing": true,
+    "allowSync": true,
+    "allowTuners": true,
+    "apiVersion": "1.2.4",
+    "backgroundProcessing": true,
+    "certificate": true,
+    "companionProxy": true,
+    "countryCode": "countryCode-528d37e9",
+    "diagnostics": "diagnostics-9446788d",
+    "eventStream": true,
+    "friendlyName": "friendlyName-377f6713",
+    "hubSearch": true,
+    "itemClusters": true,
+    "livetv": 7,
+    "machineIdentifier": "machineIdentifier-04409eeb",
+    "mediaProviders": true,
+    "multiuser": true,
+    "musicAnalysis": 2,
+    "myPlex": true,
+    "myPlexMappingState": "myPlexMappingState-b23a6a84",
+    "myPlexSigninState": "myPlexSigninState-2689367b",
+    "myPlexSubscription": true,
+    "myPlexUsername": "myPlexUsername-5292c73b",
+    "offlineTranscode": 1,
+    "ownerFeatures": "ownerFeatures-35cb65d1",
+    "platform": "Linux",
+    "platformVersion": "platformVersion-764dfa30",
+    "pluginHost": true,
+    "pushNotifications": false,
+    "readOnlyLibraries": false,
+    "size": 25,
+    "streamingBrainABRVersion": 3,
+    "streamingBrainVersion": 2,
+    "sync": true,
+    "transcoderActiveVideoSessions": 0,
+    "transcoderAudio": true,
+    "transcoderLyrics": true,
+    "transcoderPhoto": true,
+    "transcoderSubtitles": true,
+    "transcoderVideo": true,
+    "transcoderVideoBitrates": "64,96,208,320,720,1500,2000,3000,4000,8000,10000,12000,20000",
+    "transcoderVideoQualities": "0,1,2,3,4,5,6,7,8,9,10,11,12",
+    "transcoderVideoResolutions": "128,128,160,240,320,480,768,720,720,1080,1080,1080,1080",
+    "updatedAt": 1793730720,
+    "updater": true,
+    "version": "1.43.6.11085-d1e52e169",
+    "voiceSearch": true
+  }
+}

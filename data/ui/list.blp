@@ -1,17 +1,15 @@
 using Gtk 4.0;
 using Adw 1;
-using Gio 2.0;
 
-template $list : Gtk.GridView {
-  vexpand: true;
-  max-columns: 1;
-	orientation: horizontal;
+// A row (or, in grid mode, a grid) of cover tiles. The model and the item
+// factory are set up in src/views/list.rs.
+template $list : Adw.Bin {
+  ScrolledWindow _scrolled_window {
+    vscrollbar-policy: never;
 
-	factory: Gtk.SignalListItemFactory factory {
-    bind => $on_bind();
-    setup => $on_setup();
-	};
-	model: Gtk.NoSelection {
-		model: Gio.ListStore liststore {};
-	};
+    GridView _grid_view {
+      max-columns: 1;
+      orientation: horizontal;
+    }
+  }
 }

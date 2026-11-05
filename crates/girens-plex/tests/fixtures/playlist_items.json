@@ -1,0 +1,238 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Genre": [
+          {
+            "tag": "tag-2d38c456"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-536ab5b1",
+            "type": "coverPoster",
+            "url": "/library/metadata/109205/thumb/1698536324"
+          },
+          {
+            "alt": "alt-536ab5b1",
+            "type": "background",
+            "url": "/library/metadata/109205/art/1698536324"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "container": "mp3",
+                "duration": 180000,
+                "file": "file-6865695d",
+                "hasThumbnail": "1",
+                "id": 195008,
+                "key": "/library/parts/195008/1472141889/file.bin",
+                "size": 8000000
+              }
+            ],
+            "audioChannels": 2,
+            "audioCodec": "mp3",
+            "bitrate": 325,
+            "container": "mp3",
+            "duration": 180000,
+            "hasVoiceActivity": false,
+            "id": 192656
+          }
+        ],
+        "addedAt": 1472154388,
+        "art": "/library/metadata/109205/art/1698536324",
+        "duration": 180000,
+        "grandparentArt": "/library/metadata/109205/art/1698536324",
+        "grandparentGuid": "grandparentGuid-1d5d8e49",
+        "grandparentKey": "/library/metadata/109205",
+        "grandparentRatingKey": "109205",
+        "grandparentThumb": "/library/metadata/109205/thumb/1698536324",
+        "grandparentTitle": "grandparentTitle-95f84534",
+        "guid": "guid-2ed8f6ff",
+        "index": 1,
+        "key": "/library/metadata/109207",
+        "lastRatedAt": 1472154388,
+        "lastViewedAt": 1752602241,
+        "librarySectionID": 22,
+        "librarySectionKey": "/library/sections/22",
+        "librarySectionTitle": "librarySectionTitle-19198073",
+        "originalTitle": "originalTitle-45a7112c",
+        "parentGuid": "parentGuid-9416abe7",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/109206",
+        "parentRatingKey": "109206",
+        "parentStudio": "parentStudio-7092e119",
+        "parentThumb": "/library/metadata/109206/thumb/1774421179",
+        "parentTitle": "parentTitle-36cf9c1b",
+        "parentYear": 2015,
+        "ratingCount": 6087,
+        "ratingKey": "109207",
+        "skipCount": 7,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/109206/thumb/1774421179",
+        "title": "title-536ab5b1",
+        "titleSort": "titleSort-1247e42b",
+        "type": "track",
+        "updatedAt": 1792654875,
+        "userRating": 10.0,
+        "viewCount": 24
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-153610ef",
+            "type": "coverPoster",
+            "url": "/library/metadata/109205/thumb/1698536324"
+          },
+          {
+            "alt": "alt-153610ef",
+            "type": "background",
+            "url": "/library/metadata/109205/art/1698536324"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "container": "mp3",
+                "duration": 240000,
+                "file": "file-857b7870",
+                "hasThumbnail": "1",
+                "id": 195009,
+                "key": "/library/parts/195009/1472141891/file.bin",
+                "size": 9000000
+              }
+            ],
+            "audioChannels": 2,
+            "audioCodec": "mp3",
+            "bitrate": 324,
+            "container": "mp3",
+            "duration": 240000,
+            "hasVoiceActivity": false,
+            "id": 192657
+          }
+        ],
+        "addedAt": 1472154388,
+        "art": "/library/metadata/109205/art/1698536324",
+        "duration": 240000,
+        "grandparentArt": "/library/metadata/109205/art/1698536324",
+        "grandparentGuid": "grandparentGuid-1d5d8e49",
+        "grandparentKey": "/library/metadata/109205",
+        "grandparentRatingKey": "109205",
+        "grandparentThumb": "/library/metadata/109205/thumb/1698536324",
+        "grandparentTitle": "grandparentTitle-95f84534",
+        "guid": "guid-ba99e846",
+        "index": 2,
+        "key": "/library/metadata/109208",
+        "lastRatedAt": 1472154388,
+        "lastViewedAt": 1762806343,
+        "librarySectionID": 22,
+        "librarySectionKey": "/library/sections/22",
+        "librarySectionTitle": "librarySectionTitle-19198073",
+        "originalTitle": "originalTitle-9f250dd1",
+        "parentGuid": "parentGuid-9416abe7",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/109206",
+        "parentRatingKey": "109206",
+        "parentStudio": "parentStudio-7092e119",
+        "parentThumb": "/library/metadata/109206/thumb/1774421179",
+        "parentTitle": "parentTitle-36cf9c1b",
+        "parentYear": 2015,
+        "ratingCount": 247995,
+        "ratingKey": "109208",
+        "skipCount": 7,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/109206/thumb/1774421179",
+        "title": "title-153610ef",
+        "type": "track",
+        "updatedAt": 1792654875,
+        "userRating": 6.0,
+        "viewCount": 8
+      },
+      {
+        "Image": [
+          {
+            "alt": "alt-d4dbe8bc",
+            "type": "coverPoster",
+            "url": "/library/metadata/109205/thumb/1698536324"
+          },
+          {
+            "alt": "alt-d4dbe8bc",
+            "type": "background",
+            "url": "/library/metadata/109205/art/1698536324"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "container": "mp3",
+                "duration": 120000,
+                "file": "file-2c1c26ae",
+                "hasThumbnail": "1",
+                "id": 195010,
+                "key": "/library/parts/195010/1472141890/file.bin",
+                "size": 5000000
+              }
+            ],
+            "audioChannels": 2,
+            "audioCodec": "mp3",
+            "bitrate": 327,
+            "container": "mp3",
+            "duration": 120000,
+            "hasVoiceActivity": false,
+            "id": 192658
+          }
+        ],
+        "addedAt": 1472154388,
+        "art": "/library/metadata/109205/art/1698536324",
+        "duration": 120000,
+        "grandparentArt": "/library/metadata/109205/art/1698536324",
+        "grandparentGuid": "grandparentGuid-1d5d8e49",
+        "grandparentKey": "/library/metadata/109205",
+        "grandparentRatingKey": "109205",
+        "grandparentThumb": "/library/metadata/109205/thumb/1698536324",
+        "grandparentTitle": "grandparentTitle-95f84534",
+        "guid": "guid-8840d538",
+        "index": 3,
+        "key": "/library/metadata/109209",
+        "lastRatedAt": 1472154388,
+        "lastViewedAt": 1720034287,
+        "librarySectionID": 22,
+        "librarySectionKey": "/library/sections/22",
+        "librarySectionTitle": "librarySectionTitle-19198073",
+        "originalTitle": "originalTitle-2fae89eb",
+        "parentGuid": "parentGuid-9416abe7",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/109206",
+        "parentRatingKey": "109206",
+        "parentStudio": "parentStudio-7092e119",
+        "parentThumb": "/library/metadata/109206/thumb/1774421179",
+        "parentTitle": "parentTitle-36cf9c1b",
+        "parentYear": 2015,
+        "ratingCount": 24965,
+        "ratingKey": "109209",
+        "skipCount": 7,
+        "summary": "summary-e3b0c442",
+        "thumb": "/library/metadata/109206/thumb/1774421179",
+        "title": "title-d4dbe8bc",
+        "type": "track",
+        "updatedAt": 1792654875,
+        "userRating": 8.0,
+        "viewCount": 16
+      }
+    ],
+    "composite": "/playlists/179347/composite/1770390141",
+    "duration": 360000,
+    "leafCount": 1779,
+    "offset": 0,
+    "playlistType": "audio",
+    "ratingKey": "179347",
+    "size": 3,
+    "smart": true,
+    "title": "title-a9c58cd9",
+    "totalSize": 1643
+  }
+}

@@ -11,14 +11,12 @@ template $cover_box : Button {
     orientation: vertical;
     margin-bottom: 5;
 
-    GestureLongPress {
-      pressed => $on_long_press();
+    GestureLongPress _long_press {
       exclusive: true;
     }
 
-    GestureClick {
+    GestureClick _right_click {
       button: 3;
-      released => $on_right_click();
       exclusive: true;
     }
 

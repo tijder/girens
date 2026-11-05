@@ -1,0 +1,71 @@
+{
+  "MediaContainer": {
+    "Directory": [
+      {
+        "default": "asc",
+        "defaultDirection": "asc",
+        "descKey": "titleSort:desc",
+        "firstCharacterKey": "/library/sections/17/firstCharacter",
+        "key": "titleSort",
+        "title": "Title"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "originallyAvailableAt:desc",
+        "key": "originallyAvailableAt",
+        "title": "Release Date"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "rating:desc",
+        "key": "rating",
+        "title": "Critic Rating"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "audienceRating:desc",
+        "key": "audienceRating",
+        "title": "Audience Rating"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "duration:desc",
+        "key": "duration",
+        "title": "Duration"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "addedAt:desc",
+        "key": "addedAt",
+        "title": "Date Added"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "lastViewedAt:desc",
+        "key": "lastViewedAt",
+        "title": "Date Viewed"
+      },
+      {
+        "defaultDirection": "asc",
+        "descKey": "mediaHeight:desc",
+        "key": "mediaHeight",
+        "title": "Resolution"
+      },
+      {
+        "defaultDirection": "desc",
+        "descKey": "random:desc",
+        "key": "random",
+        "title": "Randomly"
+      }
+    ],
+    "allowSync": false,
+    "art": "/:/resources/movie-fanart.jpg",
+    "content": "secondary",
+    "identifier": "com.plexapp.plugins.library",
+    "size": 9,
+    "thumb": "/:/resources/movie.png",
+    "title1": "title1-ef9e821a",
+    "viewGroup": "secondary",
+    "viewMode": 65592
+  }
+}

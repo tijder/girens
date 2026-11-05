@@ -1,61 +1,73 @@
 using Gtk 4.0;
+using Adw 1;
 
-template $artist_view : ScrolledWindow {
-  Box {
-    orientation: vertical;
-    Box {
-      orientation: horizontal;
-      margin-top: 20;
-      margin-bottom: 10;
-      margin-start: 10;
-      margin-end: 10;
+// One virtualised list: the artist (`_header`, below), then every album
+// with its tracks.
+template $artist_view : Adw.Bin {
+  ScrolledWindow _scrolled_window {
+    hscrollbar-policy: never;
+    vexpand: true;
 
-      Box {
-        orientation: vertical;
-        Label _title_label {
-          styles [
-            "title-1"
-          ]
-          halign: start;
-          label: "label";
-          ellipsize: end;
-        }
+    Adw.ClampScrollable {
+      maximum-size: 800;
 
-        Label _subtitle_label {
-          halign: start;
-          label: "label";
-          ellipsize: end;
-        }
-      }
-
-      Box _section_controll_box {
-        hexpand: true;
-        halign: end;
-        Button _play_button {
-          Image {
-            icon-name: "media-playback-start-symbolic";
-          }
-        }
-
-        Button _shuffle_button {
-          Image {
-            icon-name: "media-playlist-shuffle-symbolic";
-          }
-        }
+      ListView _list_view {
+        single-click-activate: true;
 
         styles [
-          "linked",
+          "page-list",
         ]
       }
     }
+  }
+}
 
-    Box _album_box {
-      orientation: vertical;
+Box _header {
+  orientation: horizontal;
+  margin-top: 20;
+  margin-bottom: 10;
+  margin-start: 10;
+  margin-end: 10;
+
+  Box {
+    orientation: vertical;
+
+    Label _title_label {
+      styles [
+        "title-1",
+      ]
+
+      halign: start;
+      label: "label";
+      ellipsize: end;
     }
 
-    Button _show_more_button {
-      label: _("Show more");
-      height-request: 75;
+    Label _subtitle_label {
+      halign: start;
+      label: "label";
+      ellipsize: end;
+    }
+  }
+
+  Box _section_controll_box {
+    hexpand: true;
+    halign: end;
+    valign: center;
+
+    styles [
+      "linked",
+    ]
+
+    Button _play_button {
+      Image {
+        icon-name: "media-playback-start-symbolic";
+      }
+    }
+
+    Button _shuffle_button {
+      Image {
+        icon-name: "media-playlist-shuffle-symbolic";
+      }
     }
   }
 }

@@ -1,0 +1,21 @@
+{
+  "MediaContainer": {
+    "allowSync": true,
+    "art": "/:/resources/show-fanart.jpg",
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 6,
+    "librarySectionTitle": "librarySectionTitle-3eac1615",
+    "librarySectionUUID": "librarySectionUUID-b948ee5c",
+    "mixedParents": true,
+    "nocache": true,
+    "offset": 0,
+    "size": 0,
+    "sortAsc": true,
+    "thumb": "/:/resources/show.png",
+    "title1": "title1-3eac1615",
+    "title2": "title2-f7db8bdf",
+    "totalSize": 0,
+    "viewGroup": "episode",
+    "viewMode": 131133
+  }
+}

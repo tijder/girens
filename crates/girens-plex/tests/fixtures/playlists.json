@@ -1,0 +1,64 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "addedAt": 1632213384,
+        "composite": "/playlists/179347/composite/1770390141",
+        "duration": 373500000,
+        "guid": "guid-c8ae9f6e",
+        "icon": "icon-bc961c71",
+        "key": "/playlists/179347/items",
+        "lastViewedAt": 1766590913,
+        "leafCount": 1779,
+        "playlistType": "audio",
+        "ratingKey": "179347",
+        "smart": true,
+        "summary": "summary-69ab738e",
+        "title": "title-a9c58cd9",
+        "titleSort": "titleSort-a3dd92dc",
+        "type": "playlist",
+        "updatedAt": 1770390141,
+        "viewCount": 21
+      },
+      {
+        "addedAt": 1494409475,
+        "composite": "/playlists/143307/composite/1785589634",
+        "duration": 21300000,
+        "guid": "guid-d554afd0",
+        "icon": "icon-bc961c71",
+        "key": "/playlists/143307/items",
+        "lastViewedAt": 1700750582,
+        "leafCount": 100,
+        "playlistType": "audio",
+        "ratingKey": "143307",
+        "smart": true,
+        "summary": "summary-e3b0c442",
+        "title": "title-20454163",
+        "type": "playlist",
+        "updatedAt": 1785589634,
+        "viewCount": 87
+      },
+      {
+        "addedAt": 1632213384,
+        "composite": "/playlists/179349/composite/1768848207",
+        "duration": 3373080000,
+        "guid": "guid-d339782f",
+        "icon": "icon-bc961c71",
+        "key": "/playlists/179349/items",
+        "lastViewedAt": 1632213384,
+        "leafCount": 15298,
+        "playlistType": "audio",
+        "ratingKey": "179349",
+        "smart": true,
+        "summary": "summary-df05787e",
+        "title": "title-95eb2928",
+        "type": "playlist",
+        "updatedAt": 1768848207,
+        "viewCount": 1
+      }
+    ],
+    "offset": 0,
+    "size": 3,
+    "totalSize": 61
+  }
+}

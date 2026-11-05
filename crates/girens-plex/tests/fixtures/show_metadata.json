@@ -1,0 +1,104 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Genre": [
+          {
+            "filter": "filter-0ac49f4f",
+            "id": 26381,
+            "tag": "tag-0a74deea"
+          },
+          {
+            "filter": "filter-b8ad19ec",
+            "id": 10,
+            "tag": "tag-1dd10f24"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-1d9cdf48",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1513884815"
+          },
+          {
+            "alt": "alt-1d9cdf48",
+            "type": "background",
+            "url": "/library/metadata/141857/art/1513884815"
+          }
+        ],
+        "Location": [
+          {
+            "path": "path-d6e6af42"
+          }
+        ],
+        "Role": [
+          {
+            "filter": "filter-006803d5",
+            "id": 49570,
+            "role": "role-5a67cbda",
+            "tag": "tag-e0ea0225",
+            "thumb": "thumb-2bb13e23"
+          },
+          {
+            "filter": "filter-3c69d95c",
+            "id": 37545,
+            "role": "role-45f5f230",
+            "tag": "tag-b68fb02b",
+            "thumb": "thumb-283a1f8c"
+          }
+        ],
+        "Similar": [
+          {
+            "filter": "filter-c6ef955f",
+            "id": 49551,
+            "tag": "tag-8d8fbef6"
+          },
+          {
+            "filter": "filter-f932d708",
+            "id": 49552,
+            "tag": "tag-7d98f506"
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "722729",
+          "bottomRight": "821515",
+          "topLeft": "topLeft-1e199fcb",
+          "topRight": "topRight-c788171a"
+        },
+        "addedAt": 1493204749,
+        "art": "/library/metadata/141857/art/1513884815",
+        "banner": "/library/metadata/141857/banner/1513884815",
+        "childCount": 1,
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "guid": "guid-f5841fe8",
+        "index": 1,
+        "key": "/library/metadata/141857/children",
+        "leafCount": 15,
+        "librarySectionID": 6,
+        "librarySectionKey": "/library/sections/6",
+        "librarySectionTitle": "librarySectionTitle-3eac1615",
+        "originallyAvailableAt": "2020-01-02",
+        "primaryExtraKey": "/library/metadata/142135",
+        "rating": 7.2,
+        "ratingKey": "141857",
+        "skipCount": 2,
+        "studio": "studio-8a3d38d0",
+        "summary": "summary-a12469be",
+        "theme": "/library/metadata/141857/theme/1513884815",
+        "thumb": "/library/metadata/141857/thumb/1513884815",
+        "title": "title-1d9cdf48",
+        "type": "show",
+        "updatedAt": 1513884815,
+        "viewedLeafCount": 0,
+        "year": 2014
+      }
+    ],
+    "allowSync": true,
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 6,
+    "librarySectionTitle": "librarySectionTitle-3eac1615",
+    "librarySectionUUID": "librarySectionUUID-b948ee5c",
+    "size": 1
+  }
+}

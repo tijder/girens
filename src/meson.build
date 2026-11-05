@@ -1,62 +1,42 @@
-pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'girens')
+cargo = find_program('cargo')
 
-configure_file(
-  input: 'girens.in',
-  output: 'girens',
-  configuration: conf_service,
-  install: true,
-  install_dir: get_option('bindir')
-)
-
-configure_file(
-  input: 'constants.py.in',
-  output: 'constants.py',
-  configuration: conf_service,
-  install: true,
-  install_dir: moduledir,
-)
-
-girens_sources = [
-  '__init__.py',
-  'album_item.py',
-  'album_view.py',
-  'artist_view.py',
-  'cover_box.py',
-  'discover_view.py',
-  'download_menu.py',
-  'download_row.py',
-  'item_bin.py',
-  'list.py',
-  'list_playqueue.py',
-  'loading_view.py',
-  'login_view.py',
-  'main.py',
-  'media_box.py',
-  'media_box_music.py',
-  'media_box_video_bottom.py',
-  'media_box_video_top.py',
-  'mpris.py',
-  'music_popover_menu.py',
-  'player.py',
-  'player_view.py',
-  'playqueue_item.py',
-  'playqueue_popover.py',
-  'plex.py',
-  'plex_compat.py',
-  'profile_dialog.py',
-  'resume_dialog.py',
-  'search_view.py',
-  'section_grid.py',
-  'section_view.py',
-  'show_view.py',
-  'show_view_item.py',
-  'sidebar_box.py',
-  'sync_dialog.py',
-  'sync_item.py',
-  'sync_settings.py',
-  'theme_switcher.py',
-  'window.py',
+cargo_options = [
+  '--manifest-path', meson.project_source_root() / 'Cargo.toml',
+  '--target-dir', meson.project_build_root() / 'target',
 ]
 
-install_data(girens_sources, install_dir: moduledir)
+if get_option('buildtype') == 'debug'
+  rust_target = 'debug'
+else
+  cargo_options += ['--release']
+  rust_target = 'release'
+endif
+
+# Read by src/config.rs through option_env!().
+cargo_env = [
+  'CARGO_HOME=' + meson.project_build_root() / 'cargo-home',
+  'GIRENS_VERSION=' + meson.project_version(),
+  'GIRENS_PKGDATADIR=' + pkgdatadir,
+  'GIRENS_LOCALEDIR=' + join_paths(get_option('prefix'), get_option('localedir')),
+  'GIRENS_BUILD_TYPE=' + get_option('buildtype'),
+]
+
+# Builds the application and the GNOME Shell search provider.
+custom_target(
+  'cargo-build',
+  build_by_default: true,
+  build_always_stale: true,
+  output: [meson.project_name(), 'girens-sp'],
+  console: true,
+  install: true,
+  install_dir: [get_option('bindir'), libexecdir],
+  command: [
+    'env', cargo_env,
+    cargo, 'build', cargo_options, '-p', 'girens', '-p', 'girens-sp',
+    '&&',
+    'cp',
+    meson.project_build_root() / 'target' / rust_target / meson.project_name(),
+    meson.project_build_root() / 'target' / rust_target / 'girens-sp',
+    '@OUTDIR@',
+  ],
+)

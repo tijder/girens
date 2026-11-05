@@ -3,7 +3,11 @@ using Gtk 4.0;
 template $sidebar_box : Box {
   orientation: vertical;
 
-  ComboBox _server_box {}
+  DropDown _server_box {
+    margin-start: 6;
+    margin-end: 6;
+    margin-bottom: 6;
+  }
 
   ListBox _section_list {
     styles ["navigation-sidebar"]

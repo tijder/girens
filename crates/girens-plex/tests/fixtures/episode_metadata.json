@@ -1,0 +1,158 @@
+{
+  "MediaContainer": {
+    "Metadata": [
+      {
+        "Director": [
+          {
+            "filter": "filter-9ab09bbb",
+            "id": 19467,
+            "tag": "tag-70f1c8f3"
+          },
+          {
+            "filter": "filter-40b22e4c",
+            "id": 49543,
+            "tag": "tag-eb2c2d16"
+          }
+        ],
+        "Image": [
+          {
+            "alt": "alt-06efb8ff",
+            "type": "coverPoster",
+            "url": "/library/metadata/141857/thumb/1513884815"
+          },
+          {
+            "alt": "alt-06efb8ff",
+            "type": "snapshot",
+            "url": "/library/metadata/141859/thumb/1789521008"
+          }
+        ],
+        "Media": [
+          {
+            "Part": [
+              {
+                "Stream": [
+                  {
+                    "bitDepth": 8,
+                    "bitrate": 3197,
+                    "chromaLocation": "left",
+                    "chromaSubsampling": "4:2:0",
+                    "codec": "h264",
+                    "codedHeight": 1088,
+                    "codedWidth": 1920,
+                    "displayTitle": "1080p",
+                    "extendedDisplayTitle": "1080p (H.264)",
+                    "frameRate": 24.417,
+                    "hasScalingMatrix": false,
+                    "height": 1080,
+                    "id": 477360,
+                    "index": 0,
+                    "level": 40,
+                    "profile": "high",
+                    "refFrames": 4,
+                    "scanType": "progressive",
+                    "streamType": 1,
+                    "width": 1920
+                  },
+                  {
+                    "audioChannelLayout": "stereo",
+                    "canNormalizeLoudness": false,
+                    "channels": 2,
+                    "codec": "aac",
+                    "displayTitle": "Unknown (AAC Stereo)",
+                    "extendedDisplayTitle": "Unknown (AAC Stereo)",
+                    "id": 477361,
+                    "index": 1,
+                    "profile": "lc",
+                    "samplingRate": 44100,
+                    "selected": true,
+                    "streamType": 2
+                  }
+                ],
+                "audioProfile": "lc",
+                "container": "flv",
+                "duration": 1440000,
+                "file": "file-817c8c9e",
+                "id": 242276,
+                "key": "/library/parts/242276/1440281526/file.bin",
+                "size": 568000000,
+                "videoProfile": "high"
+              }
+            ],
+            "aspectRatio": 1.78,
+            "audioChannels": 2,
+            "audioCodec": "aac",
+            "audioProfile": "lc",
+            "bitrate": 3197,
+            "container": "flv",
+            "duration": 1440000,
+            "hasVoiceActivity": false,
+            "height": 1080,
+            "id": 239856,
+            "videoCodec": "h264",
+            "videoFrameRate": "24p",
+            "videoProfile": "high",
+            "videoResolution": "1080",
+            "width": 1920
+          }
+        ],
+        "UltraBlurColors": {
+          "bottomLeft": "bottomLeft-c230ce51",
+          "bottomRight": "bottomRight-efbf69e7",
+          "topLeft": "topLeft-39005987",
+          "topRight": "topRight-0d730f5d"
+        },
+        "Writer": [
+          {
+            "filter": "filter-08cbbe68",
+            "id": 49541,
+            "tag": "tag-7d695e3b"
+          },
+          {
+            "filter": "filter-dfa4ed10",
+            "id": 49542,
+            "tag": "tag-4720dd00"
+          }
+        ],
+        "addedAt": 1440281991,
+        "art": "/library/metadata/141857/art/1513884815",
+        "contentRating": "TV-MA",
+        "duration": 1440000,
+        "grandparentArt": "/library/metadata/141857/art/1513884815",
+        "grandparentGuid": "grandparentGuid-f5841fe8",
+        "grandparentKey": "/library/metadata/141857",
+        "grandparentRatingKey": "141857",
+        "grandparentTheme": "/library/metadata/141857/theme/1513884815",
+        "grandparentThumb": "/library/metadata/141857/thumb/1513884815",
+        "grandparentTitle": "grandparentTitle-1d9cdf48",
+        "guid": "guid-8b9e913f",
+        "index": 10,
+        "key": "/library/metadata/141859",
+        "librarySectionID": 6,
+        "librarySectionKey": "/library/sections/6",
+        "librarySectionTitle": "librarySectionTitle-3eac1615",
+        "originallyAvailableAt": "2020-01-02",
+        "parentGuid": "parentGuid-6ca85320",
+        "parentIndex": 1,
+        "parentKey": "/library/metadata/141858",
+        "parentRatingKey": "141858",
+        "parentThumb": "/library/metadata/141858/thumb/1513884814",
+        "parentTitle": "parentTitle-c5a365e2",
+        "rating": 9.0,
+        "ratingKey": "141859",
+        "skipCount": 1,
+        "summary": "summary-df5fe401",
+        "thumb": "/library/metadata/141859/thumb/1789521008",
+        "title": "title-06efb8ff",
+        "type": "episode",
+        "updatedAt": 1789521008,
+        "year": 2014
+      }
+    ],
+    "allowSync": true,
+    "identifier": "com.plexapp.plugins.library",
+    "librarySectionID": 6,
+    "librarySectionTitle": "librarySectionTitle-3eac1615",
+    "librarySectionUUID": "librarySectionUUID-b948ee5c",
+    "size": 1
+  }
+}

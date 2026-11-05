@@ -15,11 +15,17 @@ data/ui/shortcuts.blp
 data/ui/sync_dialog.blp
 data/ui/sync_settings.blp
 data/ui/theme_switcher.blp
-src/album_view.py
-src/cover_box.py
-src/player_view.py
-src/plex.py
-src/plex.py src/plex.py
-src/section_view.py
-src/sidebar_box.py
-src/window.py
+legacy/album_view.py
+legacy/cover_box.py
+legacy/player_view.py
+legacy/plex.py
+legacy/section_view.py
+legacy/sidebar_box.py
+legacy/window.py
+src/main.rs
+src/views/album_view.rs
+src/views/cover_box.rs
+src/views/player_view.rs
+src/views/section_view.rs
+src/views/sidebar_box.rs
+src/window.rs
