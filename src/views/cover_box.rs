@@ -30,6 +30,8 @@ mod imp {
         #[template_child]
         pub popover_menu: TemplateChild<gtk::PopoverMenu>,
         #[template_child]
+        pub _downloaded_image: TemplateChild<gtk::Image>,
+        #[template_child]
         pub _menu_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _long_press: TemplateChild<gtk::GestureLongPress>,
@@ -238,9 +240,7 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
             item.rating_key,
         );
     }
-    let offline = Session::current()
-        .server()
-        .is_some_and(|server| crate::sync::downloaded(&server, item.rating_key).is_some());
+    let offline = crate::sync::Sync::current().is_downloaded(item.rating_key);
     if !offline {
         add(&gettext("Sync"), "win.sync-by-id", item.rating_key);
     }
@@ -312,16 +312,28 @@ impl CoverBox {
 
         imp._cover_image
             .set_size_request(width, presentation.image_height);
+        imp._downloaded_image
+            .set_visible(crate::sync::Sync::current().is_downloaded(item.rating_key));
+
         imp._cover_image.set_paintable(gdk::Paintable::NONE);
-        let (Some((key, thumb)), Some(server)) = (presentation.image, Session::current().server())
-        else {
+        let Some((key, thumb)) = presentation.image else {
             return;
         };
+        let session = Session::current();
+        let server = session.server();
+        let machine = session.machine_identifier();
         let task = glib::spawn_future_local(glib::clone!(
             #[weak(rename_to = cover)]
             self,
             async move {
-                if let Some(texture) = images::cover(&server, key, &thumb).await {
+                // Without a connection only covers that were seen before
+                // are available.
+                let texture = match (&server, &machine) {
+                    (Some(server), _) => images::cover(server, key, &thumb).await,
+                    (None, Some(machine)) => images::cached(machine, key).await,
+                    (None, None) => None,
+                };
+                if let Some(texture) = texture {
                     cover.imp()._cover_image.set_paintable(Some(&texture));
                 }
             }

@@ -106,6 +106,7 @@ mod imp {
         pub servers: RefCell<Vec<Resource>>,
         pub player: OnceCell<Player>,
         pub sync_dialog: OnceCell<SyncDialog>,
+        pub downloads_view: OnceCell<views::DownloadsView>,
         pub music_controls: OnceCell<MediaControls>,
         /// Cookie of the idle inhibitor that is held while video plays.
         pub inhibit_cookie: Cell<Option<u32>>,
@@ -160,6 +161,7 @@ mod imp {
                 servers: RefCell::default(),
                 player: OnceCell::new(),
                 sync_dialog: OnceCell::new(),
+                downloads_view: OnceCell::new(),
                 music_controls: OnceCell::new(),
                 inhibit_cookie: Cell::new(None),
                 video_playing: Cell::new(false),
@@ -766,6 +768,9 @@ impl PlexWindow {
         imp._section_view.set_cover_width(cover_width(30));
         imp._search_view.set_cover_width(cover_width(30));
         imp._player_view.set_window_width(width);
+        if let Some(downloads) = imp.downloads_view.get() {
+            downloads.set_cover_width(cover_width(30));
+        }
         imp._media_box_music.set_narrow(width < 550);
     }
 

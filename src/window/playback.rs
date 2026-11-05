@@ -62,8 +62,26 @@ impl PlexWindow {
     }
 
     pub(super) fn play(&self, target: PlayTarget, shuffle: bool, mode: StartMode) {
-        if let Some(player) = self.imp().player.get() {
+        let imp = self.imp();
+        let Some(player) = imp.player.get() else {
+            return;
+        };
+        if imp.session.server().is_some() {
             player.play(target, shuffle, mode);
+            return;
+        }
+        // Without a connection only offline copies can play: the chosen one
+        // and what follows it in the list.
+        let (PlayTarget::Item(key), Some(machine)) = (target, imp.session.machine_identifier())
+        else {
+            return;
+        };
+        let items = sync::offline_items(&machine);
+        match items.iter().position(|item| item.rating_key == key) {
+            Some(index) => player.play_local(items[index..].to_vec()),
+            None => crate::notify::message(&gettext(
+                "This is not available without a connection to the server",
+            )),
         }
     }
 

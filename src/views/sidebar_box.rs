@@ -16,6 +16,8 @@ pub enum Destination {
     Player,
     Home,
     Playlists,
+    /// The items with an offline copy.
+    Downloads,
     Section(LibrarySection),
 }
 
@@ -154,6 +156,11 @@ impl SidebarBox {
             "view-list-symbolic",
             Destination::Playlists,
         );
+        add(
+            &gettext("Downloads"),
+            "folder-download-symbolic",
+            Destination::Downloads,
+        );
         for section in sections {
             let icon = match section.kind {
                 ItemKind::Movie => "camera-video-symbolic",
@@ -166,6 +173,35 @@ impl SidebarBox {
 
         imp.destinations.replace(destinations);
         self.set_player_visible(false);
+        self.select_home();
+    }
+
+    /// The list for when the server cannot be reached: only what works
+    /// without it.
+    pub fn set_offline(&self) {
+        let imp = self.imp();
+        imp._section_list.remove_all();
+        let rows = [
+            (
+                gettext("Player"),
+                "media-playback-start-symbolic",
+                Destination::Player,
+            ),
+            (
+                gettext("Downloads"),
+                "folder-download-symbolic",
+                Destination::Downloads,
+            ),
+        ];
+        let mut destinations = Vec::new();
+        for (title, icon, destination) in rows {
+            imp._section_list.append(&SectionGrid::new(&title, icon));
+            destinations.push(destination);
+        }
+        imp.destinations.replace(destinations);
+        self.set_servers(&[], None);
+        self.set_player_visible(false);
+        // The second row, which is Downloads here.
         self.select_home();
     }
 
@@ -194,6 +230,7 @@ impl SidebarBox {
                 .position(|row| match (row, wanted) {
                     (Destination::Home, Destination::Home)
                     | (Destination::Playlists, Destination::Playlists)
+                    | (Destination::Downloads, Destination::Downloads)
                     | (Destination::Player, Destination::Player) => true,
                     (Destination::Section(a), Destination::Section(b)) => a.uuid == b.uuid,
                     _ => false,

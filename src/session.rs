@@ -72,6 +72,14 @@ impl Session {
         self.state.borrow().server.clone()
     }
 
+    /// Identifier of the connected server, or of the one used last when
+    /// there is no connection; its cache directory is named after it.
+    pub fn machine_identifier(&self) -> Option<String> {
+        self.server()
+            .map(|server| server.machine_identifier().to_owned())
+            .or_else(|| self.setting("server-uuid"))
+    }
+
     fn setting(&self, key: &str) -> Option<String> {
         Some(self.settings.string(key).to_string()).filter(|value| !value.is_empty())
     }

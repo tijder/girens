@@ -8,6 +8,7 @@ use girens_plex::model::LibrarySection;
 pub enum Location {
     Home,
     Playlists,
+    Downloads,
     Section(LibrarySection),
     Search(String),
     Show(u64),
@@ -22,6 +23,7 @@ impl Location {
         Some(match self {
             Location::Home => Destination::Home,
             Location::Playlists => Destination::Playlists,
+            Location::Downloads => Destination::Downloads,
             Location::Section(section) => Destination::Section(section.clone()),
             Location::Player => Destination::Player,
             _ => return None,
@@ -34,6 +36,7 @@ impl From<Destination> for Location {
         match destination {
             Destination::Home => Location::Home,
             Destination::Playlists => Location::Playlists,
+            Destination::Downloads => Location::Downloads,
             Destination::Section(section) => Location::Section(section),
             Destination::Player => Location::Player,
         }
@@ -150,6 +153,15 @@ impl PlexWindow {
                     imp._section_view.show_playlists();
                 }
                 imp._section_view.get().upcast()
+            }
+            Location::Downloads => {
+                let view = imp.downloads_view.get_or_init(|| {
+                    let view = views::DownloadsView::default();
+                    imp.page_stack.add(&view);
+                    view
+                });
+                view.refresh();
+                view.clone().upcast()
             }
             Location::Section(section) => {
                 // Does nothing when this library is already loaded.

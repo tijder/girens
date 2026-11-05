@@ -47,10 +47,13 @@ impl PlexWindow {
         match stored {
             Ok(true) => self.load_account_details().await,
             other => {
+                let unreachable = matches!(&other, Err(err) if err.is_network());
                 if let Err(err) = other {
                     eprintln!("Could not connect to the server used last: {err}");
                 }
-                if self.connect_to_account_server().await {
+                if unreachable && self.show_offline() {
+                    self.reconnect_from_offline().await;
+                } else if self.connect_to_account_server().await {
                     self.connected().await;
                 }
             }
@@ -178,6 +181,44 @@ impl PlexWindow {
         }
     }
 
+    /// Shows the offline copies when the server cannot be reached. Returns
+    /// false when there are none, so that there is nothing to show.
+    fn show_offline(&self) -> bool {
+        let imp = self.imp();
+        let Some(machine) = imp.session.machine_identifier() else {
+            return false;
+        };
+        Sync::current().rescan(&machine);
+        if sync::offline_items(&machine).is_empty() {
+            return false;
+        }
+        self.show_main();
+        imp._sidebar_box.set_offline();
+        crate::notify::message(&gettext(
+            "The server cannot be reached. Showing your downloads.",
+        ));
+        #[cfg(debug_assertions)]
+        crate::debug::after_connect(self);
+        true
+    }
+
+    /// Keeps trying to reach the server while the downloads are shown, and
+    /// switches to the normal view when it answers.
+    async fn reconnect_from_offline(&self) {
+        let session = self.imp().session.clone();
+        loop {
+            glib::timeout_future_seconds(RECONNECT_INTERVAL).await;
+            if session.stored_server_url().is_none() {
+                // Logged out in the meantime.
+                return;
+            }
+            if matches!(session.connect_stored_server().await, Ok(true)) {
+                self.connected().await;
+                return;
+            }
+        }
+    }
+
     /// Shows the server that was just connected: its libraries first, then
     /// what comes from plex.tv.
     pub(super) async fn connected(&self) {
@@ -193,6 +234,7 @@ impl PlexWindow {
             return;
         };
         self.show_main();
+        Sync::current().rescan(server.machine_identifier());
 
         let sections = {
             let server = server.clone();

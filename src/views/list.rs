@@ -170,6 +170,12 @@ glib::wrapper! {
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
 }
 
+impl Default for List {
+    fn default() -> Self {
+        glib::Object::new()
+    }
+}
+
 impl List {
     pub fn set_items(&self, items: Vec<Item>) {
         let objects: Vec<glib::BoxedAnyObject> =

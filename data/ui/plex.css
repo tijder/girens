@@ -52,3 +52,9 @@ button:hover > box > overlay > .cover-menu-button,
   font-weight: bold;
   color: @accent_color;
 }
+
+/* The mark on tiles of items with an offline copy. */
+.downloaded-badge {
+  border-radius: 9999px;
+  padding: 6px;
+}

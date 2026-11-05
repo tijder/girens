@@ -76,7 +76,26 @@ fn scale() -> u32 {
 
 /// Directory with everything cached for `server`.
 pub fn cache_dir(server: &PlexServer) -> PathBuf {
-    glib::user_cache_dir().join(server.machine_identifier())
+    cache_dir_of(server.machine_identifier())
+}
+
+/// The same directory, by the identifier of the server.
+pub fn cache_dir_of(machine_identifier: &str) -> PathBuf {
+    glib::user_cache_dir().join(machine_identifier)
+}
+
+/// A cover that was downloaded earlier, for when the server is out of reach.
+pub async fn cached(machine_identifier: &str, key: u64) -> Option<gdk::Texture> {
+    let dir = cache_dir_of(machine_identifier);
+    let file = gio::spawn_blocking(move || {
+        [2, 1]
+            .into_iter()
+            .map(|scale| dir.join(file_name(key, scale)))
+            .find(|path| path.exists())
+            .and_then(|path| gdk::Texture::from_filename(path).ok())
+    })
+    .await;
+    file.ok().flatten()
 }
 
 /// File name of a cached cover. Scale 1 keeps the name the Python version

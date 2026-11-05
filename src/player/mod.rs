@@ -346,6 +346,15 @@ impl Player {
         });
     }
 
+    /// Plays offline copies, without involving the server.
+    pub fn play_local(&self, items: Vec<Item>) {
+        if items.is_empty() {
+            return;
+        }
+        self.inner.set_queue(PlayQueue::local(items), 0);
+        self.inner.start(0, StartMode::Resume);
+    }
+
     /// Jumps to another entry of the queue.
     pub fn play_index(&self, index: usize) {
         if self.is_playing() {
@@ -412,7 +421,14 @@ impl Player {
     /// Shuffles or restores the order of the play queue on the server.
     pub fn set_shuffle(&self, shuffle: bool) {
         let inner = self.inner.clone();
-        let Some(id) = inner.state.borrow().queue.as_ref().map(|queue| queue.id) else {
+        let Some(id) = inner
+            .state
+            .borrow()
+            .queue
+            .as_ref()
+            .filter(|queue| !queue.is_local())
+            .map(|queue| queue.id)
+        else {
             return;
         };
         glib::spawn_future_local(async move {
@@ -619,55 +635,63 @@ impl Inner {
     }
 
     async fn load(&self, item: Item, mode: StartMode, generation: u64) -> Result<(), String> {
-        let server = Session::current()
-            .server()
-            .ok_or("not connected to a server")?;
+        let session_state = Session::current();
+        let server = session_state.server();
+        let machine = session_state.machine_identifier().unwrap_or_default();
         let prefer_clips = self.state.borrow().prefer_music_clips;
 
         // The play queue lists items without their streams, and a track may
-        // be replaced by its music video.
-        let key = match (prefer_clips, item.kind, item.primary_extra_key.as_deref()) {
-            (true, ItemKind::Track, Some(clip)) => {
-                crate::util::rating_key_from_path(clip).unwrap_or(item.rating_key)
+        // be replaced by its music video. Without a connection the item is
+        // used as it was stored with its offline copy.
+        let loading = match &server {
+            Some(server) => {
+                let key = match (prefer_clips, item.kind, item.primary_extra_key.as_deref()) {
+                    (true, ItemKind::Track, Some(clip)) => {
+                        crate::util::rating_key_from_path(clip).unwrap_or(item.rating_key)
+                    }
+                    _ => item.rating_key,
+                };
+                let server = server.clone();
+                runtime::run(async move { server.item(key).await })
+                    .await
+                    .map_err(|err| err.to_string())?
             }
-            _ => item.rating_key,
-        };
-        let loading = {
-            let server = server.clone();
-            runtime::run(async move { server.item(key).await })
-                .await
-                .map_err(|err| err.to_string())?
+            None => item.clone(),
         };
 
         let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
         let (session, url) = if let Some(path) =
-            crate::sync::downloaded(&server, loading.rating_key)
+            crate::sync::local_file(&machine, loading.rating_key)
         {
             // An offline copy plays without the server.
             (None, path.to_string_lossy().into_owned())
-        } else if direct {
-            let part = loading.parts().next().ok_or("the item has no media file")?;
-            (None, server.part_url(part).to_string())
         } else {
-            let request = TranscodeRequest {
-                session: glib::uuid_string_random().to_string(),
-                video_resolution: Some(
-                    self.settings
-                        .string("transcode-media-to-resolution")
-                        .to_string(),
-                ),
-                offset: 0,
-            };
-            let decision = {
-                let (server, loading, request) = (server.clone(), loading.clone(), request.clone());
-                runtime::run(async move { server.transcode_decision(&loading, &request).await })
-                    .await
-            };
-            if let Err(err) = decision {
-                eprintln!("The server did not accept the transcode request: {err}");
+            let server = server.ok_or("not connected to a server")?;
+            if direct {
+                let part = loading.parts().next().ok_or("the item has no media file")?;
+                (None, server.part_url(part).to_string())
+            } else {
+                let request = TranscodeRequest {
+                    session: glib::uuid_string_random().to_string(),
+                    video_resolution: Some(
+                        self.settings
+                            .string("transcode-media-to-resolution")
+                            .to_string(),
+                    ),
+                    offset: 0,
+                };
+                let decision = {
+                    let (server, loading, request) =
+                        (server.clone(), loading.clone(), request.clone());
+                    runtime::run(async move { server.transcode_decision(&loading, &request).await })
+                        .await
+                };
+                if let Err(err) = decision {
+                    eprintln!("The server did not accept the transcode request: {err}");
+                }
+                let url = server.transcode_url(&loading, &request).to_string();
+                (Some(request.session), url)
             }
-            let url = server.transcode_url(&loading, &request).to_string();
-            (Some(request.session), url)
         };
 
         if self.state.borrow().generation != generation {
@@ -917,7 +941,12 @@ impl Inner {
     fn refresh_queue(self: &Rc<Self>) {
         let (Some(server), Some(id)) = (
             Session::current().server(),
-            self.state.borrow().queue.as_ref().map(|queue| queue.id),
+            self.state
+                .borrow()
+                .queue
+                .as_ref()
+                .filter(|queue| !queue.is_local())
+                .map(|queue| queue.id),
         ) else {
             return;
         };

@@ -63,6 +63,23 @@ template $cover_box : Button {
         ]
       }
 
+      // Marks items that have an offline copy.
+      [overlay]
+      Image _downloaded_image {
+        visible: false;
+        halign: end;
+        valign: end;
+        margin-end: 6;
+        margin-bottom: 10;
+        icon-name: "folder-download-symbolic";
+        tooltip-text: _("Available offline");
+
+        styles [
+          "osd",
+          "downloaded-badge",
+        ]
+      }
+
       [overlay]
       ProgressBar _progress_bar {
         valign: end;

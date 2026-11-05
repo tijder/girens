@@ -410,3 +410,27 @@ async fn an_interrupted_download_is_continued() {
     assert_eq!(*reported.lock().unwrap(), (10_000, Some(10_000)));
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+#[tokio::test]
+async fn an_item_survives_being_stored_and_read_back() {
+    let (mock, server) = connect().await;
+    serve(&mock, "/library/metadata/2", "episode_metadata").await;
+    let episode = server.item(2).await.unwrap();
+
+    let stored = serde_json::to_string(&episode).unwrap();
+    let restored: girens_plex::model::Item = serde_json::from_str(&stored).unwrap();
+
+    assert_eq!(restored.rating_key, episode.rating_key);
+    assert_eq!(restored.kind, ItemKind::Episode);
+    assert_eq!(restored.title, episode.title);
+    assert_eq!(
+        restored.grandparent_rating_key,
+        episode.grandparent_rating_key
+    );
+    assert_eq!(restored.season_episode(), episode.season_episode());
+    assert_eq!(restored.parts().count(), episode.parts().count());
+    assert_eq!(
+        restored.selected_stream(StreamKind::Audio).map(|s| s.id),
+        episode.selected_stream(StreamKind::Audio).map(|s| s.id)
+    );
+}

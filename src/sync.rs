@@ -36,6 +36,9 @@ pub enum Event {
 #[derive(Default)]
 pub struct Sync {
     busy: Cell<bool>,
+    /// Rating keys of the items with an offline copy, so that tiles can
+    /// tell without touching the disk.
+    downloaded: RefCell<HashSet<u64>>,
     task: RefCell<Option<glib::JoinHandle<()>>>,
     listeners: RefCell<Vec<Rc<dyn Fn(&Event)>>>,
 }
@@ -49,6 +52,57 @@ pub fn local_path(server: &PlexServer, rating_key: u64) -> PathBuf {
     images::cache_dir(server).join(format!("item_{rating_key}"))
 }
 
+/// The offline copy of an item of the server with this identifier, if any.
+/// Works without a connection.
+pub fn local_file(machine_identifier: &str, rating_key: u64) -> Option<PathBuf> {
+    Some(images::cache_dir_of(machine_identifier).join(format!("item_{rating_key}")))
+        .filter(|path| path.exists())
+}
+
+/// The description of an offline copy, stored next to it so that it can be
+/// shown and played without the server.
+fn sidecar(dir: &std::path::Path, rating_key: u64) -> PathBuf {
+    dir.join(format!("item_{rating_key}.json"))
+}
+
+fn write_sidecar(dir: &std::path::Path, item: &Item) {
+    match serde_json::to_string(item) {
+        Ok(text) => {
+            if let Err(err) = std::fs::write(sidecar(dir, item.rating_key), text) {
+                eprintln!("Could not store the details of {}: {err}", item.rating_key);
+            }
+        }
+        Err(err) => eprintln!("Could not store the details of {}: {err}", item.rating_key),
+    }
+}
+
+/// The items with an offline copy for this server, as far as their details
+/// are known.
+pub fn offline_items(machine_identifier: &str) -> Vec<Item> {
+    let dir = images::cache_dir_of(machine_identifier);
+    let Ok(files) = std::fs::read_dir(&dir) else {
+        return Vec::new();
+    };
+    let mut items: Vec<Item> = files
+        .flatten()
+        .filter_map(|file| {
+            let name = file.file_name();
+            let key: u64 = name.to_str()?.strip_prefix("item_")?.parse().ok()?;
+            let text = std::fs::read_to_string(sidecar(&dir, key)).ok()?;
+            serde_json::from_str(&text).ok()
+        })
+        .collect();
+    items.sort_by(|a, b| {
+        (&a.grandparent_title, &a.parent_index, &a.index, &a.title).cmp(&(
+            &b.grandparent_title,
+            &b.parent_index,
+            &b.index,
+            &b.title,
+        ))
+    });
+    items
+}
+
 /// The offline copy of an item, if there is one.
 pub fn downloaded(server: &PlexServer, rating_key: u64) -> Option<PathBuf> {
     Some(local_path(server, rating_key)).filter(|path| path.exists())
@@ -57,6 +111,30 @@ pub fn downloaded(server: &PlexServer, rating_key: u64) -> Option<PathBuf> {
 impl Sync {
     pub fn current() -> Rc<Self> {
         CURRENT.with(Rc::clone)
+    }
+
+    /// Whether the item has an offline copy.
+    pub fn is_downloaded(&self, rating_key: u64) -> bool {
+        self.downloaded.borrow().contains(&rating_key)
+    }
+
+    /// Looks on the disk which items have an offline copy.
+    pub fn rescan(&self, machine_identifier: &str) {
+        let keys = std::fs::read_dir(images::cache_dir_of(machine_identifier))
+            .map(|files| {
+                files
+                    .flatten()
+                    .filter_map(|file| {
+                        file.file_name()
+                            .to_str()?
+                            .strip_prefix("item_")?
+                            .parse()
+                            .ok()
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        self.downloaded.replace(keys);
     }
 
     pub fn connect(&self, listener: impl Fn(&Event) + 'static) {
@@ -145,9 +223,19 @@ impl Sync {
                 .take(entry.max_items.map_or(usize::MAX, |max| max as usize));
             for item in selected {
                 wanted.insert(item.rating_key);
-                if downloaded(server, item.rating_key).is_none() {
+                let dir = images::cache_dir(server);
+                if downloaded(server, item.rating_key).is_some() {
+                    // Copies from before the details were stored get them now.
+                    if !sidecar(&dir, item.rating_key).exists() {
+                        write_sidecar(&dir, &item);
+                    }
+                } else {
                     self.emit(Event::Downloading(Box::new(item.clone()), true));
                     let result = self.download(server, &item, entry.converted).await;
+                    if result.is_ok() {
+                        write_sidecar(&dir, &item);
+                        self.downloaded.borrow_mut().insert(item.rating_key);
+                    }
                     self.emit(Event::Downloading(Box::new(item.clone()), false));
                     if let Err(err) = result {
                         crate::notify::failure(
@@ -168,7 +256,10 @@ impl Sync {
                 let Some(key) = name.to_str().and_then(|name| name.strip_prefix("item_")) else {
                     continue;
                 };
-                let key = key.strip_suffix(".tmp").unwrap_or(key);
+                let key = key
+                    .strip_suffix(".tmp")
+                    .or_else(|| key.strip_suffix(".json"))
+                    .unwrap_or(key);
                 if key.parse().is_ok_and(|key: u64| !wanted.contains(&key)) {
                     if let Err(err) = std::fs::remove_file(file.path()) {
                         eprintln!("Could not remove {}: {err}", file.path().display());
@@ -176,6 +267,7 @@ impl Sync {
                 }
             }
         }
+        self.rescan(server.machine_identifier());
         Ok(())
     }
 }

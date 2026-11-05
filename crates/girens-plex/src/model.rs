@@ -1,10 +1,10 @@
 //! The parts of Plex' responses that Girens uses.
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::de;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ItemKind {
     Movie,
@@ -74,7 +74,7 @@ impl ItemKind {
 ///
 /// Plex describes all of them with the same loosely filled record; `kind`
 /// tells which fields are meaningful.
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Item {
     #[serde(deserialize_with = "de::id")]
@@ -178,12 +178,12 @@ impl Item {
     }
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Tag {
     pub tag: String,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Media {
     pub id: u64,
@@ -193,7 +193,7 @@ pub struct Media {
     pub parts: Vec<Part>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Part {
     pub id: u64,
@@ -214,7 +214,7 @@ pub enum StreamKind {
     Other,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Stream {
     pub id: u64,
