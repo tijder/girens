@@ -32,6 +32,9 @@ use gtk::prelude::*;
 use gtk::{gio, glib};
 
 fn main() -> glib::ExitCode {
+    #[cfg(debug_assertions)]
+    debug::mark_start();
+
     // SAFETY: no other thread exists yet, so nothing reads the locale concurrently.
     unsafe {
         gettextrs::setlocale(LocaleCategory::LcAll, "");

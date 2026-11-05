@@ -132,9 +132,16 @@ impl PlayerView {
         if imp.player.set(player.clone()).is_err() {
             return;
         }
-        let _ = imp
-            .renderer
-            .set(VideoRenderer::attach(&imp._frame, player.mpv()));
+        player.connect_mpv_created(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |mpv| {
+                let imp = view.imp();
+                // The surface has to exist before mpv opens a video.
+                imp._frame.realize();
+                let _ = imp.renderer.set(VideoRenderer::attach(&imp._frame, mpv));
+            }
+        ));
 
         let controls = MediaControls::new(player, true);
         controls.add_video_top(&imp._media_top);
@@ -246,12 +253,6 @@ impl PlayerView {
                 }
             }
         ));
-    }
-
-    /// Makes the video surface ready before the first video starts; mpv needs
-    /// it to exist when it opens a file.
-    pub fn realize_video(&self) {
-        self.imp()._frame.realize();
     }
 
     pub fn connect_fullscreen(&self, callback: impl Fn(bool) + 'static) {

@@ -112,7 +112,6 @@ mod imp {
         pub player: OnceCell<Player>,
         pub sync_dialog: OnceCell<SyncDialog>,
         pub music_controls: OnceCell<MediaControls>,
-        pub video_realized: Cell<bool>,
         /// Cookie of the idle inhibitor that is held while video plays.
         pub inhibit_cookie: Cell<Option<u32>>,
         /// Whether a video is loaded, and whether it is paused.
@@ -168,7 +167,6 @@ mod imp {
                 player: OnceCell::new(),
                 sync_dialog: OnceCell::new(),
                 music_controls: OnceCell::new(),
-                video_realized: Cell::new(false),
                 inhibit_cookie: Cell::new(None),
                 video_playing: Cell::new(false),
                 video_paused: Cell::new(false),
@@ -224,14 +222,7 @@ mod imp {
         }
     }
 
-    impl WidgetImpl for PlexWindow {
-        fn map(&self) {
-            self.parent_map();
-            if !self.video_realized.replace(true) {
-                self._player_view.realize_video();
-            }
-        }
-    }
+    impl WidgetImpl for PlexWindow {}
 
     impl WindowImpl for PlexWindow {
         fn close_request(&self) -> glib::Propagation {
@@ -641,7 +632,22 @@ impl PlexWindow {
         let session = self.imp().session.clone();
         self.show_loading(&gettext("Starting Girens"));
 
-        match session.restore_account().await {
+        // Signing in to plex.tv and connecting to the server used last do not
+        // depend on each other, so they run at the same time, and the
+        // libraries are shown as soon as the server answers.
+        if let Some(url) = session.stored_server_url() {
+            self.show_loading(&gettext_f("Connecting to {}.", &[&url]));
+        }
+        let stored_server = async {
+            let stored = session.connect_stored_server().await;
+            if matches!(stored, Ok(true)) {
+                self.show_library().await;
+            }
+            stored
+        };
+        let (account, stored) = tokio::join!(session.restore_account(), stored_server);
+
+        match account {
             Ok(true) => {}
             Ok(false) => {
                 if session.stored_server_url().is_none() {
@@ -657,8 +663,16 @@ impl PlexWindow {
             Err(err) => eprintln!("Could not sign in to plex.tv: {err}"),
         }
 
-        if self.connect_to_server().await {
-            self.connected().await;
+        match stored {
+            Ok(true) => self.load_account_details().await,
+            other => {
+                if let Err(err) = other {
+                    eprintln!("Could not connect to the server used last: {err}");
+                }
+                if self.connect_to_account_server().await {
+                    self.connected().await;
+                }
+            }
         }
     }
 
@@ -704,6 +718,12 @@ impl PlexWindow {
             }
         }
 
+        self.connect_to_account_server().await
+    }
+
+    /// Connects to the first server of the account that answers.
+    async fn connect_to_account_server(&self) -> bool {
+        let session = self.imp().session.clone();
         if session.account().is_none() {
             return false;
         }
@@ -742,11 +762,18 @@ impl PlexWindow {
         }
     }
 
-    /// Fills the sidebar for the server that was just connected.
+    /// Shows the server that was just connected: its libraries first, then
+    /// what comes from plex.tv.
     async fn connected(&self) {
+        self.show_library().await;
+        self.load_account_details().await;
+    }
+
+    /// Opens the main view with the libraries of the connected server. This
+    /// only needs the server itself.
+    async fn show_library(&self) {
         let imp = self.imp();
-        let session = imp.session.clone();
-        let Some(server) = session.server() else {
+        let Some(server) = imp.session.server() else {
             return;
         };
         self.show_main();
@@ -762,16 +789,33 @@ impl PlexWindow {
                 imp._sidebar_box.set_sections(&[]);
             }
         }
+        // Until plex.tv has answered, this server is the only one known.
+        imp._sidebar_box
+            .set_servers(&[server.friendly_name().unwrap_or_default()], Some(0));
 
+        self.open_requested_item();
+        crate::search_data::refresh(server);
+
+        #[cfg(debug_assertions)]
+        {
+            crate::debug::mark("sidebar filled");
+            crate::debug::after_connect(self);
+        }
+    }
+
+    /// Fills in what plex.tv knows: the other servers of the account and the
+    /// avatar.
+    async fn load_account_details(&self) {
+        let imp = self.imp();
+        let session = imp.session.clone();
+        let Some(server) = session.server() else {
+            return;
+        };
         let servers = session.servers().await.unwrap_or_else(|err| {
             eprintln!("Could not list the servers of the account: {err}");
             Vec::new()
         });
-        if servers.is_empty() {
-            // Connected by address: there is only this server.
-            let name = server.friendly_name().unwrap_or_default();
-            imp._sidebar_box.set_servers(&[name], Some(0));
-        } else {
+        if !servers.is_empty() {
             let names: Vec<&str> = servers.iter().map(|s| s.name.as_str()).collect();
             let active = servers
                 .iter()
@@ -781,13 +825,12 @@ impl PlexWindow {
         }
         imp.servers.replace(servers);
 
-        self.open_requested_item();
-        crate::search_data::refresh(server.clone());
-
-        #[cfg(debug_assertions)]
-        crate::debug::after_connect(self);
-
-        self.load_avatar().await;
+        // The avatar is decoration; nothing waits for it.
+        glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            async move { window.load_avatar().await }
+        ));
     }
 
     #[cfg(debug_assertions)]
@@ -905,13 +948,7 @@ impl PlexWindow {
 
     fn setup_player(&self) {
         let imp = self.imp();
-        let player = match Player::new() {
-            Ok(player) => player,
-            Err(err) => {
-                report!("Could not start mpv, playback is unavailable: {err}");
-                return;
-            }
-        };
+        let player = Player::new();
 
         imp._player_view.set_player(&player);
         let music_controls = MediaControls::new(&player, false);

@@ -23,6 +23,13 @@ fn schema(attributes: &[&str]) -> Schema {
 async fn blocking<T: Send + 'static>(
     task: impl FnOnce() -> Result<T, glib::Error> + Send + 'static,
 ) -> Result<T, glib::Error> {
+    // libsecret registers its types on first use and that is not safe from
+    // two threads at once, so keyring calls take turns.
+    static TURN: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    let task = move || {
+        let _turn = TURN.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+        task()
+    };
     match gio::spawn_blocking(task).await {
         Ok(result) => result,
         Err(panic) => std::panic::resume_unwind(panic),

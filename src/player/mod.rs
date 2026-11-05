@@ -6,7 +6,7 @@
 
 pub mod render;
 
-use std::cell::RefCell;
+use std::cell::{OnceCell, RefCell};
 use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -134,7 +134,14 @@ struct State {
 }
 
 struct Inner {
-    mpv: Arc<Mpv>,
+    /// Created when something is played for the first time, so that only
+    /// browsing does not cost mpv's memory and threads.
+    mpv: OnceCell<Arc<Mpv>>,
+    /// Called with the new mpv core, before it opens its first file; the
+    /// video page connects its renderer here.
+    on_mpv_created: RefCell<Option<Box<dyn Fn(Arc<Mpv>)>>>,
+    /// The `--deinterlace` option, applied when mpv is created.
+    deinterlace: RefCell<Option<String>>,
     settings: gio::Settings,
     state: RefCell<State>,
     listeners: RefCell<Vec<Rc<dyn Fn(&Event)>>>,
@@ -152,43 +159,12 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new() -> Result<Self, libmpv2::Error> {
-        let mut mpv = Mpv::with_initializer(|init| {
-            init.set_property("vo", "libmpv")?;
-            init.set_property("keep-open", "yes")?;
-            init.set_property("cache", "yes")?;
-            // Decode on the GPU where that is known to work, else in software.
-            init.set_property("hwdec", "auto-safe")?;
-            // `GIRENS_MPV_LOG=v` (or any mpv message level) prints mpv's log.
-            if let Ok(level) = std::env::var("GIRENS_MPV_LOG") {
-                init.set_property("terminal", "yes")?;
-                init.set_property("msg-level", format!("all={level}").as_str())?;
-            }
-            Ok(())
-        })?;
-        mpv.disable_deprecated_events()?;
-        mpv.observe_property("time-pos", Format::Double, 1)?;
-        mpv.observe_property("pause", Format::Flag, 2)?;
-        mpv.observe_property("eof-reached", Format::Flag, 3)?;
-        mpv.observe_property("track-list/count", Format::Int64, 4)?;
-
-        let pending = Arc::new(AtomicBool::new(false));
-        mpv.set_wakeup_callback(move || {
-            if pending.swap(true, Ordering::AcqRel) {
-                return;
-            }
-            let pending = pending.clone();
-            glib::MainContext::default().invoke(move || {
-                pending.store(false, Ordering::Release);
-                if let Some(inner) = PLAYER.with_borrow(Weak::upgrade) {
-                    inner.drain_events();
-                }
-            });
-        });
-
+    pub fn new() -> Self {
         let settings = gio::Settings::new(config::APP_ID);
         let inner = Rc::new(Inner {
-            mpv: Arc::new(mpv),
+            mpv: OnceCell::new(),
+            on_mpv_created: RefCell::default(),
+            deinterlace: RefCell::default(),
             state: RefCell::new(State {
                 prefer_music_clips: settings.boolean("prefer-music-clips"),
                 ..State::default()
@@ -219,12 +195,13 @@ impl Player {
             None => glib::ControlFlow::Break,
         });
 
-        Ok(Self { inner })
+        Self { inner }
     }
 
-    /// The mpv core, for the video renderer.
-    pub fn mpv(&self) -> Arc<Mpv> {
-        self.inner.mpv.clone()
+    /// Registers what connects a video surface to mpv. It is called once,
+    /// when mpv is created for the first playback.
+    pub fn connect_mpv_created(&self, callback: impl Fn(Arc<Mpv>) + 'static) {
+        self.inner.on_mpv_created.replace(Some(Box::new(callback)));
     }
 
     /// Registers a callback for everything the player reports.
@@ -429,6 +406,7 @@ impl Player {
 
     /// `yes`, `no` or `auto`: whether mpv deinterlaces the video.
     pub fn set_deinterlace(&self, mode: &str) {
+        self.inner.deinterlace.replace(Some(mode.to_owned()));
         self.inner.set_mpv("deinterlace", mode);
     }
 
@@ -482,6 +460,23 @@ impl Player {
 }
 
 impl Inner {
+    /// The mpv core, created on first use.
+    fn ensure_mpv(&self) -> Result<&Arc<Mpv>, String> {
+        if let Some(mpv) = self.mpv.get() {
+            return Ok(mpv);
+        }
+        let mpv = Arc::new(create_mpv().map_err(|err| format!("could not start mpv: {err}"))?);
+        if let Some(mode) = self.deinterlace.borrow().as_deref() {
+            if let Err(err) = mpv.set_property("deinterlace", mode) {
+                eprintln!("Could not set deinterlacing: {err}");
+            }
+        }
+        if let Some(callback) = self.on_mpv_created.borrow().as_ref() {
+            callback(mpv.clone());
+        }
+        Ok(self.mpv.get_or_init(|| mpv))
+    }
+
     fn emit(&self, event: Event) {
         // Listeners may call back into the player, so no borrow is held.
         let listeners: Vec<_> = self.listeners.borrow().clone();
@@ -491,13 +486,14 @@ impl Inner {
     }
 
     fn command(&self, name: &str, args: &[&str]) {
-        if let Err(err) = self.mpv.command(name, args) {
+        // Without mpv nothing is playing, so there is nothing to command.
+        if let Some(Err(err)) = self.mpv.get().map(|mpv| mpv.command(name, args)) {
             eprintln!("mpv {name} failed: {err}");
         }
     }
 
     fn set_mpv<T: libmpv2::SetData>(&self, name: &str, value: T) {
-        if let Err(err) = self.mpv.set_property(name, value) {
+        if let Some(Err(err)) = self.mpv.get().map(|mpv| mpv.set_property(name, value)) {
             eprintln!("Could not set mpv property {name}: {err}");
         }
     }
@@ -674,18 +670,21 @@ impl Inner {
             end_action: EndAction::Advance,
         });
 
+        let mpv = self.ensure_mpv()?;
         self.apply_volume();
         // Stay paused until mpv is ready and the start position is set.
         self.set_pause(true);
-        self.mpv
-            .command("loadfile", &[url.as_str(), "replace"])
+        mpv.command("loadfile", &[url.as_str(), "replace"])
             .map_err(|err| format!("mpv could not open the stream: {err}"))
     }
 
     // mpv events
 
     fn drain_events(self: &Rc<Self>) {
-        while let Some(event) = self.mpv.wait_event(0.0) {
+        let Some(mpv) = self.mpv.get() else {
+            return;
+        };
+        while let Some(event) = mpv.wait_event(0.0) {
             match event {
                 Ok(MpvEvent::PropertyChange { name, change, .. }) => match (name, change) {
                     ("time-pos", PropertyData::Double(position)) => self.on_position(position),
@@ -981,18 +980,18 @@ impl Inner {
     }
 
     fn mpv_tracks(&self) -> Vec<MpvTrack> {
-        let count = self
-            .mpv
-            .get_property::<i64>("track-list/count")
-            .unwrap_or(0);
+        let Some(mpv) = self.mpv.get() else {
+            return Vec::new();
+        };
+        let count = mpv.get_property::<i64>("track-list/count").unwrap_or(0);
         (0..count)
             .filter_map(|index| {
                 let property = |name: &str| format!("track-list/{index}/{name}");
                 Some(MpvTrack {
-                    kind: self.mpv.get_property::<String>(&property("type")).ok()?,
-                    id: self.mpv.get_property::<i64>(&property("id")).ok()?,
-                    ff_index: self.mpv.get_property::<i64>(&property("ff-index")).ok(),
-                    title: self.mpv.get_property::<String>(&property("title")).ok(),
+                    kind: mpv.get_property::<String>(&property("type")).ok()?,
+                    id: mpv.get_property::<i64>(&property("id")).ok()?,
+                    ff_index: mpv.get_property::<i64>(&property("ff-index")).ok(),
+                    title: mpv.get_property::<String>(&property("title")).ok(),
                 })
             })
             .collect()
@@ -1052,6 +1051,43 @@ impl Inner {
             }
         });
     }
+}
+
+/// Creates the mpv core and makes it wake the main loop for its events.
+fn create_mpv() -> Result<Mpv, libmpv2::Error> {
+    let mut mpv = Mpv::with_initializer(|init| {
+        init.set_property("vo", "libmpv")?;
+        init.set_property("keep-open", "yes")?;
+        init.set_property("cache", "yes")?;
+        // Decode on the GPU where that is known to work, else in software.
+        init.set_property("hwdec", "auto-safe")?;
+        // `GIRENS_MPV_LOG=v` (or any mpv message level) prints mpv's log.
+        if let Ok(level) = std::env::var("GIRENS_MPV_LOG") {
+            init.set_property("terminal", "yes")?;
+            init.set_property("msg-level", format!("all={level}").as_str())?;
+        }
+        Ok(())
+    })?;
+    mpv.disable_deprecated_events()?;
+    mpv.observe_property("time-pos", Format::Double, 1)?;
+    mpv.observe_property("pause", Format::Flag, 2)?;
+    mpv.observe_property("eof-reached", Format::Flag, 3)?;
+    mpv.observe_property("track-list/count", Format::Int64, 4)?;
+
+    let pending = Arc::new(AtomicBool::new(false));
+    mpv.set_wakeup_callback(move || {
+        if pending.swap(true, Ordering::AcqRel) {
+            return;
+        }
+        let pending = pending.clone();
+        glib::MainContext::default().invoke(move || {
+            pending.store(false, Ordering::Release);
+            if let Some(inner) = PLAYER.with_borrow(Weak::upgrade) {
+                inner.drain_events();
+            }
+        });
+    });
+    Ok(mpv)
 }
 
 struct MpvTrack {

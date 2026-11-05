@@ -5,6 +5,23 @@ use std::time::Duration;
 use gtk::prelude::*;
 use gtk::{gdk, glib};
 
+/// With `GIRENS_DEBUG_TIMING=1`, prints how long after process start `what`
+/// happened. Call [`mark_start`] first thing in `main`.
+pub fn mark(what: &str) {
+    if std::env::var_os("GIRENS_DEBUG_TIMING").is_some() {
+        eprintln!("timing: {what} after {} ms", start().elapsed().as_millis());
+    }
+}
+
+pub fn mark_start() {
+    start();
+}
+
+fn start() -> &'static std::time::Instant {
+    static START: std::sync::OnceLock<std::time::Instant> = std::sync::OnceLock::new();
+    START.get_or_init(std::time::Instant::now)
+}
+
 /// With `GIRENS_DEBUG_SCREENSHOT=<file.png>` the window is rendered to that
 /// file after `GIRENS_DEBUG_SCREENSHOT_DELAY` seconds (default 5) and the
 /// application quits. Used to check the UI from scripts.
