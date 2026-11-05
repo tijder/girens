@@ -13,6 +13,12 @@ pub fn format_duration(milliseconds: u64) -> String {
     }
 }
 
+/// Joins the details that are known into one line.
+pub fn detail_line(details: impl IntoIterator<Item = Option<String>>) -> String {
+    let details: Vec<String> = details.into_iter().flatten().collect();
+    details.join(" · ")
+}
+
 /// `02 Jan 2020` (in the user's language) for a `2020-01-02` date.
 pub fn format_date(iso_date: &str) -> Option<String> {
     let mut parts = iso_date.splitn(3, '-').map(str::parse::<i32>);

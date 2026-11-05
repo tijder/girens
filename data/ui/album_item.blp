@@ -1,32 +1,57 @@
 using Gtk 4.0;
 
 template $album_item : Box {
-  height-request: 50;
-  Label _index_label {
-    width-chars: 4;
+  height-request: 44;
+  spacing: 10;
+  margin-start: 4;
+  margin-end: 4;
+
+  // The number of the track, or a mark while it is playing.
+  Stack _index_stack {
+    Label _index_label {
+      styles [
+        "numeric",
+      ]
+
+      width-chars: 3;
+      xalign: 1;
+    }
+
+    Image _playing_image {
+      styles [
+        "accent",
+      ]
+
+      halign: end;
+      icon-name: "media-playback-start-symbolic";
+    }
   }
 
   Label _title_label {
-    margin-end: 10;
-    halign: start;
+    hexpand: true;
+    xalign: 0;
     label: "title";
     ellipsize: end;
   }
 
-  Box {
-    halign: end;
-    hexpand: true;
-    Label _time_label {
-      styles["caption"]
-      label: "00:00";
-      ellipsize: end;
-      margin-end: 10;
-    }
-    Button _music_clip_button {
-      tooltip-text: _("Play music clip");
-      Image {
-        icon-name: "video-display-symbolic";
-      }
-    }
+  Button _music_clip_button {
+    styles [
+      "flat",
+    ]
+
+    valign: center;
+    icon-name: "video-display-symbolic";
+    tooltip-text: _("Play music clip");
+  }
+
+  Label _time_label {
+    styles [
+      "caption",
+      "numeric",
+      "dim-label",
+    ]
+
+    label: "00:00";
+    margin-end: 6;
   }
 }

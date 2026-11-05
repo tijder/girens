@@ -104,6 +104,10 @@ impl MediaBoxMusic {
                 to.append(&**label);
             }
         }
+        // Without the cover the buttons fit in the narrowest window.
+        if let Some(cover) = imp._cover_image.parent() {
+            cover.set_visible(!narrow);
+        }
     }
 }
 
@@ -132,6 +136,17 @@ media_box_widget!(video_bottom, MediaBoxVideoBottom, "media_box_video_bottom", "
 });
 
 impl MediaBoxVideoBottom {
+    /// In a narrow window only the buttons that are needed most remain;
+    /// skipping is still possible with the keyboard and the time bar.
+    pub fn set_narrow(&self, narrow: bool) {
+        let imp = self.imp();
+        if let Some(cover) = imp._cover_image.parent() {
+            cover.set_visible(!narrow);
+        }
+        imp._skip_backward_button.set_visible(!narrow);
+        imp._skip_forward_button.set_visible(!narrow);
+    }
+
     /// The button that opens the audio and subtitle choice.
     pub fn tracks_button(&self) -> gtk::MenuButton {
         self.imp()._tracks_button.get()

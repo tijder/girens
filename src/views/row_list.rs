@@ -100,6 +100,19 @@ pub fn replace_from<R: 'static>(store: &gio::ListStore, keep: u32, rows: Vec<R>)
     store.splice(keep, store.n_items() - keep, &objects);
 }
 
+/// Starts a page over: `first` stays the first row and `rest` follows it.
+///
+/// A first row that is already there is left alone. Its widget is shared
+/// (see [`RowWidget::shared`]), and a new row would ask for that widget
+/// while the old row still holds it, which leaves the page without it.
+pub fn restart<R: 'static>(list: &gtk::ListView, store: &gio::ListStore, first: R, rest: Vec<R>) {
+    if store.n_items() == 0 {
+        store.append(&glib::BoxedAnyObject::new(first));
+    }
+    replace_from(store, 1, rest);
+    list.scroll_to(0, gtk::ListScrollFlags::NONE, None);
+}
+
 /// A row that shows that more is being loaded.
 pub fn loading_row() -> RowWidget {
     let spinner = adw::Spinner::builder()

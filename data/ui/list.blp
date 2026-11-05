@@ -9,21 +9,16 @@ template $list : Adw.Bin {
       vscrollbar-policy: never;
 
       GridView _grid_view {
+        styles [
+          "cover-grid",
+        ]
+
         max-columns: 1;
         orientation: horizontal;
       }
     }
 
-    // Shown instead of the tiles while loading, or when there are none.
-    [overlay]
-    Adw.Spinner _spinner {
-      visible: false;
-      halign: center;
-      valign: center;
-      width-request: 48;
-      height-request: 48;
-    }
-
+    // Shown instead of the tiles when there are none.
     [overlay]
     Adw.StatusPage _empty_page {
       visible: false;

@@ -1,74 +1,116 @@
 using Gtk 4.0;
+using Adw 1;
 
 // Cover, title and buttons of an album; a row in the album and artist pages.
 template $album_header : Box {
-  spacing: 20;
-  margin-top: 20;
-  margin-bottom: 10;
+  orientation: vertical;
+  spacing: 14;
+  margin-top: 24;
+  margin-bottom: 8;
   margin-start: 10;
   margin-end: 10;
 
   Box {
-    orientation: vertical;
-    valign: start;
-    halign: start;
-    hexpand: false;
-    spacing: 6;
+    spacing: 18;
 
     Overlay {
+      valign: center;
+
       Image _cover_picture {
         styles [
-          "cover_image",
+          "album-cover",
         ]
 
-        pixel-size: 150;
+        pixel-size: 160;
+        overflow: hidden;
       }
 
       [overlay]
       Image _cover_placeholder {
-        icon-name: "emblem-synchronizing-symbolic";
+        styles [
+          "dim-label",
+        ]
+
+        icon-name: "audio-x-generic-symbolic";
+        pixel-size: 48;
         halign: center;
         valign: center;
       }
     }
 
     Box {
-      styles [
-        "linked",
-      ]
+      orientation: vertical;
+      valign: center;
+      hexpand: true;
+      spacing: 4;
 
-      Button _play_button {
-        tooltip-text: _("Play");
-        hexpand: true;
+      Label _title_label {
+        styles [
+          "title-1",
+        ]
 
-        Image {
-          icon-name: "media-playback-start-symbolic";
-        }
+        xalign: 0;
+        wrap: true;
+        wrap-mode: word_char;
+        lines: 3;
+        ellipsize: end;
       }
 
-      MenuButton _menu_button {
-        tooltip-text: _("More");
+      // The artist, as a link; only on the page of the album itself.
+      Label _artist_label {
+        styles [
+          "title-4",
+        ]
+
+        visible: false;
+        xalign: 0;
+        ellipsize: end;
+      }
+
+      // Year, number of songs and playing time.
+      Label _subtitle_label {
+        styles [
+          "dim-label",
+        ]
+
+        xalign: 0;
+        wrap: true;
       }
     }
   }
 
   Box {
-    orientation: vertical;
-    valign: center;
-    hexpand: true;
+    spacing: 8;
 
-    Label _title_label {
+    Button _play_button {
       styles [
-        "title-1",
+        "pill",
       ]
 
-      halign: start;
-      ellipsize: end;
+      child: Adw.ButtonContent {
+        icon-name: "media-playback-start-symbolic";
+        label: _("Play");
+      };
     }
 
-    Label _subtitle_label {
-      halign: start;
-      ellipsize: end;
+    Button _shuffle_button {
+      styles [
+        "circular",
+      ]
+
+      valign: center;
+      icon-name: "media-playlist-shuffle-symbolic";
+      tooltip-text: _("Shuffle");
+    }
+
+    MenuButton _menu_button {
+      styles [
+        "circular",
+      ]
+
+      valign: center;
+      icon-name: "view-more-symbolic";
+      tooltip-text: _("More");
     }
   }
 }

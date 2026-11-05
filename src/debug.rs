@@ -62,16 +62,36 @@ fn render(window: &gtk::Window) -> Option<gdk::Texture> {
     Some(window.renderer()?.render_texture(&node, None))
 }
 
+/// Seconds between the actions of `GIRENS_DEBUG_ACTIVATE`.
+const ACTIVATE_INTERVAL: u64 = 3;
+
 /// With `GIRENS_DEBUG_ACTIVATE="show-show-by-id 123"` that window action is
-/// activated once the server is connected; with `GIRENS_DEBUG_SIDEBAR_ROW=3`
+/// activated once the server is connected; several actions separated by `;`
+/// follow each other, to visit one page after another. With `GIRENS_DEBUG_SIDEBAR_ROW=3`
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
 /// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about` that
 /// dialog is opened. Lets scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {
-        let mut parts = spec.split_whitespace();
-        if let (Some(action), Some(Ok(key))) = (parts.next(), parts.next().map(str::parse::<i64>)) {
-            gtk::prelude::ActionGroupExt::activate_action(window, action, Some(&key.to_variant()));
+        for (index, step) in spec.split(';').enumerate() {
+            let mut parts = step.split_whitespace();
+            let (Some(action), Some(Ok(key))) = (
+                parts.next().map(str::to_owned),
+                parts.next().map(str::parse::<i64>),
+            ) else {
+                continue;
+            };
+            let window = window.downgrade();
+            let delay = Duration::from_secs(ACTIVATE_INTERVAL * index as u64);
+            glib::timeout_add_local_once(delay, move || {
+                if let Some(window) = window.upgrade() {
+                    gtk::prelude::ActionGroupExt::activate_action(
+                        &window,
+                        &action,
+                        Some(&key.to_variant()),
+                    );
+                }
+            });
         }
     }
     if let Ok(dialog) = std::env::var("GIRENS_DEBUG_OPEN") {

@@ -11,6 +11,22 @@ use super::CoverBox;
 
 const DEFAULT_COVER_WIDTH: i32 = 200;
 
+/// What a tile of the list stands for.
+enum Entry {
+    Item(Box<Item>),
+    /// An empty tile that keeps the place of an item that is being loaded.
+    Placeholder {
+        image_height: i32,
+    },
+}
+
+fn entries(items: Vec<Item>) -> Vec<glib::BoxedAnyObject> {
+    items
+        .into_iter()
+        .map(|item| glib::BoxedAnyObject::new(Entry::Item(Box::new(item))))
+        .collect()
+}
+
 mod imp {
     use super::*;
 
@@ -22,14 +38,14 @@ mod imp {
         #[template_child]
         pub _grid_view: TemplateChild<gtk::GridView>,
         #[template_child]
-        pub _spinner: TemplateChild<adw::Spinner>,
-        #[template_child]
         pub _empty_page: TemplateChild<adw::StatusPage>,
         #[template_child]
         pub _previous_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _next_button: TemplateChild<gtk::Button>,
         pub grid_mode: Cell<bool>,
+        /// Whether the tiles are placeholders, see `set_placeholders`.
+        pub placeholders: Cell<bool>,
         pub store: gio::ListStore,
         pub cover_width: Cell<i32>,
         pub in_show_view: Cell<bool>,
@@ -41,11 +57,11 @@ mod imp {
             Self {
                 _scrolled_window: TemplateChild::default(),
                 _grid_view: TemplateChild::default(),
-                _spinner: TemplateChild::default(),
                 _empty_page: TemplateChild::default(),
                 _previous_button: TemplateChild::default(),
                 _next_button: TemplateChild::default(),
                 grid_mode: Cell::new(false),
+                placeholders: Cell::new(false),
                 store: gio::ListStore::new::<glib::BoxedAnyObject>(),
                 cover_width: Cell::new(DEFAULT_COVER_WIDTH),
                 in_show_view: Cell::new(false),
@@ -90,14 +106,21 @@ mod imp {
                 #[weak]
                 list,
                 move |_, object| {
-                    let Some((cover, item)) = cover_and_item(object) else {
+                    let Some((cover, entry)) = cover_and_entry(object) else {
                         return;
                     };
-                    cover.set_item(&item.borrow::<Item>(), list.imp().cover_width.get());
+                    let width = list.imp().cover_width.get();
+                    let entry = entry.borrow::<Entry>();
+                    match &*entry {
+                        Entry::Item(item) => cover.set_item(item, width),
+                        Entry::Placeholder { image_height } => {
+                            cover.set_placeholder(width, *image_height)
+                        }
+                    }
                 }
             ));
             factory.connect_unbind(|_, object| {
-                if let Some((cover, _)) = cover_and_item(object) {
+                if let Some((cover, _)) = cover_and_entry(object) {
                     cover.unbind();
                 }
             });
@@ -155,7 +178,7 @@ mod imp {
     impl WidgetImpl for List {}
     impl BinImpl for List {}
 
-    fn cover_and_item(object: &glib::Object) -> Option<(CoverBox, glib::BoxedAnyObject)> {
+    fn cover_and_entry(object: &glib::Object) -> Option<(CoverBox, glib::BoxedAnyObject)> {
         let list_item = object.downcast_ref::<gtk::ListItem>()?;
         Some((
             list_item.child().and_downcast::<CoverBox>()?,
@@ -178,29 +201,31 @@ impl Default for List {
 
 impl List {
     pub fn set_items(&self, items: Vec<Item>) {
-        let objects: Vec<glib::BoxedAnyObject> =
-            items.into_iter().map(glib::BoxedAnyObject::new).collect();
-        let store = &self.imp().store;
-        store.splice(0, store.n_items(), &objects);
+        let imp = self.imp();
+        imp.placeholders.set(false);
+        imp.store.splice(0, imp.store.n_items(), &entries(items));
     }
 
     pub fn append(&self, items: Vec<Item>) {
-        let objects: Vec<glib::BoxedAnyObject> =
-            items.into_iter().map(glib::BoxedAnyObject::new).collect();
-        self.imp().store.extend_from_slice(&objects);
+        self.imp().store.extend_from_slice(&entries(items));
+    }
+
+    /// Shows `count` empty tiles with an image of `image_height`, so that the
+    /// list already takes its place while its items are loaded.
+    pub fn set_placeholders(&self, count: usize, image_height: i32) {
+        let imp = self.imp();
+        let objects: Vec<glib::BoxedAnyObject> = (0..count)
+            .map(|_| glib::BoxedAnyObject::new(Entry::Placeholder { image_height }))
+            .collect();
+        imp.placeholders.set(true);
+        imp._empty_page.set_visible(false);
+        imp.store.splice(0, imp.store.n_items(), &objects);
+        self.update_paging_buttons();
     }
 
     pub fn clear(&self) {
+        self.imp().placeholders.set(false);
         self.imp().store.remove_all();
-    }
-
-    /// Shows a spinner instead of the tiles.
-    pub fn set_loading(&self, loading: bool) {
-        let imp = self.imp();
-        imp._spinner.set_visible(loading);
-        if loading {
-            imp._empty_page.set_visible(false);
-        }
     }
 
     /// Says `message` where the tiles would be; `None` removes it.
@@ -215,7 +240,9 @@ impl List {
     fn update_paging_buttons(&self) {
         let imp = self.imp();
         let adjustment = imp._scrolled_window.hadjustment();
-        let scrollable = !imp.grid_mode.get() && adjustment.upper() > adjustment.page_size() + 1.0;
+        let scrollable = !imp.grid_mode.get()
+            && !imp.placeholders.get()
+            && adjustment.upper() > adjustment.page_size() + 1.0;
         imp._previous_button
             .set_visible(scrollable && adjustment.value() > adjustment.lower() + 1.0);
         imp._next_button.set_visible(
@@ -244,9 +271,12 @@ impl List {
             let found = store
                 .item(position)
                 .and_downcast::<glib::BoxedAnyObject>()
-                .is_some_and(|object| object.borrow::<Item>().rating_key == item.rating_key);
+                .is_some_and(|object| {
+                    matches!(&*object.borrow::<Entry>(),
+                        Entry::Item(shown) if shown.rating_key == item.rating_key)
+                });
             if found {
-                store.splice(position, 1, &[glib::BoxedAnyObject::new(item.clone())]);
+                store.splice(position, 1, &entries(vec![item.clone()]));
             }
         }
     }

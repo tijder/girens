@@ -26,85 +26,92 @@ Box _header {
   orientation: vertical;
 
   Box {
-    orientation: horizontal;
-    margin-top: 20;
-    margin-bottom: 10;
+    orientation: vertical;
+    spacing: 14;
+    margin-top: 24;
+    margin-bottom: 14;
     margin-start: 10;
     margin-end: 10;
-    spacing: 30;
 
-    Box _left_box {
-      halign: start;
-      valign: start;
-      orientation: vertical;
+    Box {
+      spacing: 18;
 
       Picture _cover_image {
         styles [
           "cover_image",
+          "album-cover",
         ]
 
-        height-request: 200;
-        width-request: 136;
-        valign: center;
+        height-request: 220;
+        width-request: 150;
+        halign: start;
+        valign: start;
+        content-fit: cover;
+        overflow: hidden;
       }
 
-      Box _section_controll_box {
-        halign: fill;
-        hexpand-set: true;
+      Box {
+        orientation: vertical;
+        valign: center;
+        hexpand: true;
+        spacing: 4;
 
-        Button _play_button {
-          tooltip-text: _("Play");
-          hexpand: true;
+        Label _title_label {
+          styles [
+            "title-1",
+          ]
 
-          Image {
-            icon-name: "media-playback-start-symbolic";
-          }
+          xalign: 0;
+          wrap: true;
+          wrap-mode: word_char;
+          lines: 2;
+          ellipsize: end;
         }
 
-        Button _shuffle_button {
-          tooltip-text: _("Shuffle");
-          Image {
-            icon-name: "media-playlist-shuffle-symbolic";
-          }
+        // Year, number of seasons and episodes.
+        Label _subtitle_label {
+          styles [
+            "dim-label",
+          ]
+
+          xalign: 0;
+          wrap: true;
         }
 
-        styles [
-          "linked",
-        ]
+        Label _description_label {
+          margin-top: 6;
+          xalign: 0;
+          lines: 6;
+          ellipsize: end;
+          wrap: true;
+        }
       }
     }
 
-    Box {
-      orientation: vertical;
-      hexpand: true;
+    Box _section_controll_box {
+      spacing: 8;
 
-      Label _title_label {
+      Button _play_button {
         styles [
-          "title-1",
+          "pill",
+          "suggested-action",
         ]
 
-        halign: start;
-        label: "label";
-        ellipsize: end;
+        child: Adw.ButtonContent {
+          icon-name: "media-playback-start-symbolic";
+          label: _("Play");
+        };
       }
 
-      Label _subtitle_label {
-        halign: start;
-        label: "label";
-        ellipsize: end;
-      }
-
-      Label _description_label {
+      Button _shuffle_button {
         styles [
-          "dim-label",
+          "pill",
         ]
 
-        halign: start;
-        label: "label";
-        lines: 9;
-        ellipsize: end;
-        single-line-mode: true;
-        wrap: true;
+        child: Adw.ButtonContent {
+          icon-name: "media-playlist-shuffle-symbolic";
+          label: _("Shuffle");
+        };
       }
     }
   }

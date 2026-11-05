@@ -20,6 +20,10 @@ mod imp {
         #[template_child]
         pub _index_label: TemplateChild<gtk::Label>,
         #[template_child]
+        pub _index_stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub _playing_image: TemplateChild<gtk::Image>,
+        #[template_child]
         pub _music_clip_button: TemplateChild<gtk::Button>,
     }
 
@@ -67,8 +71,10 @@ impl AlbumItem {
         imp._title_label.set_text(&track.title);
         if crate::player::now_playing() == Some(track.rating_key) {
             imp._title_label.add_css_class("now-playing");
+            imp._index_stack.set_visible_child(&*imp._playing_image);
         } else {
             imp._title_label.remove_css_class("now-playing");
+            imp._index_stack.set_visible_child(&*imp._index_label);
         }
         imp._index_label.set_text(
             &track

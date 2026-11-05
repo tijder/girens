@@ -23,53 +23,75 @@ template $artist_view : Adw.Bin {
 }
 
 Box _header {
-  orientation: horizontal;
-  margin-top: 20;
-  margin-bottom: 10;
+  orientation: vertical;
+  spacing: 14;
+  margin-top: 24;
+  margin-bottom: 4;
   margin-start: 10;
   margin-end: 10;
 
   Box {
-    orientation: vertical;
+    spacing: 18;
 
-    Label _title_label {
-      styles [
-        "title-1",
-      ]
-
-      halign: start;
-      label: "label";
-      ellipsize: end;
+    Adw.Avatar _avatar {
+      size: 96;
+      show-initials: true;
     }
 
-    Label _subtitle_label {
-      halign: start;
-      label: "label";
-      ellipsize: end;
+    Box {
+      orientation: vertical;
+      valign: center;
+      hexpand: true;
+      spacing: 4;
+
+      Label _title_label {
+        styles [
+          "title-1",
+        ]
+
+        xalign: 0;
+        wrap: true;
+        wrap-mode: word_char;
+        lines: 2;
+        ellipsize: end;
+      }
+
+      // Genres and how much there is of the artist.
+      Label _subtitle_label {
+        styles [
+          "dim-label",
+        ]
+
+        xalign: 0;
+        wrap: true;
+      }
     }
   }
 
   Box _section_controll_box {
-    hexpand: true;
-    halign: end;
-    valign: center;
-
-    styles [
-      "linked",
-    ]
+    spacing: 8;
 
     Button _play_button {
-      tooltip-text: _("Play");
-      Image {
+      styles [
+        "pill",
+        "suggested-action",
+      ]
+
+      child: Adw.ButtonContent {
         icon-name: "media-playback-start-symbolic";
-      }
+        label: _("Play");
+      };
     }
 
     Button _shuffle_button {
-      tooltip-text: _("Shuffle");
-      Image {
+      styles [
+        "pill",
+      ]
+
+      child: Adw.ButtonContent {
         icon-name: "media-playlist-shuffle-symbolic";
-      }
+        label: _("Shuffle");
+      };
     }
   }
 }

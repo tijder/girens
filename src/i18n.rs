@@ -3,6 +3,12 @@
 
 pub use gettextrs::gettext;
 
+/// Translates the form of a message that belongs to `count` and fills that
+/// number in for `{}`.
+pub fn ngettext_f(singular: &str, plural: &str, count: u32) -> String {
+    gettextrs::ngettext(singular, plural, count).replacen("{}", &count.to_string(), 1)
+}
+
 /// Translates `msgid` and fills in its positional placeholders: `{}` takes
 /// the first argument, `{0}`, `{1}`, … the argument with that index.
 pub fn gettext_f(msgid: &str, args: &[&str]) -> String {

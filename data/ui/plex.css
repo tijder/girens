@@ -1,5 +1,11 @@
+/* Where an image is still loading, or missing. */
 .cover_image {
-  background-color: black;
+  background-color: alpha(currentColor, 0.08);
+}
+
+/* Rows and grids of tiles lie on the page, not on a sheet of their own. */
+gridview.cover-grid {
+  background: none;
 }
 
 .media_box {
@@ -45,6 +51,12 @@ listview.page-list {
 button:hover > box > overlay > .cover-menu-button,
 .cover-menu-button:focus-visible {
   opacity: 1;
+}
+
+/* The cover in the header of an album or show, and episode stills. */
+.album-cover {
+  border-radius: 10px;
+  background-color: alpha(currentColor, 0.08);
 }
 
 /* The track that is playing, in an album. */

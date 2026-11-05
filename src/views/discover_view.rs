@@ -11,6 +11,9 @@ use super::List;
 use crate::runtime;
 use crate::session::Session;
 
+/// How many empty tiles a row shows while it is loading.
+const PLACEHOLDERS: usize = 8;
+
 mod imp {
     use super::*;
 
@@ -34,6 +37,8 @@ mod imp {
         #[template_child]
         pub _music_shows_box: TemplateChild<List>,
         pub refresh_task: RefCell<Option<glib::JoinHandle<()>>>,
+        /// The server whose items the rows show, once they were loaded.
+        pub loaded_from: RefCell<Option<String>>,
     }
 
     #[glib::object_subclass]
@@ -98,10 +103,12 @@ impl DiscoverView {
         ]
     }
 
+    /// Height of the images in each row, in the order of `rows`.
+    const IMAGE_HEIGHTS: [i32; 4] = [300, 300, 300, 200];
+
     /// Fills a row; a row without items is hidden together with its heading.
     fn fill(heading: &gtk::Label, list: &List, items: Vec<Item>) {
         let filled = !items.is_empty();
-        list.set_loading(false);
         list.set_items(items);
         heading.set_visible(filled);
         list.set_visible(filled);
@@ -113,12 +120,16 @@ impl DiscoverView {
         let Some(server) = Session::current().server() else {
             return;
         };
-        let rows = self.rows();
-        for (heading, list) in &rows {
-            list.clear();
-            heading.set_visible(true);
-            list.set_visible(true);
-            list.set_loading(true);
+        // Rows that already show this server keep their items until the new
+        // ones are in; otherwise empty tiles take their place, so that the
+        // page does not jump when the items arrive.
+        let machine = Session::current().machine_identifier();
+        if machine.is_none() || *imp.loaded_from.borrow() != machine {
+            for ((heading, list), image_height) in self.rows().iter().zip(Self::IMAGE_HEIGHTS) {
+                heading.set_visible(true);
+                list.set_visible(true);
+                list.set_placeholders(PLACEHOLDERS, image_height);
+            }
         }
 
         let task = glib::spawn_future_local(glib::clone!(
@@ -172,6 +183,7 @@ impl DiscoverView {
                 );
                 Self::fill(&movies_row.0, &movies_row.1, of(&[ItemKind::Movie]));
                 Self::fill(&music_row.0, &music_row.1, of(&[ItemKind::Album]));
+                view.imp().loaded_from.replace(machine);
             }
         ));
         if let Some(previous) = imp.refresh_task.replace(Some(task)) {

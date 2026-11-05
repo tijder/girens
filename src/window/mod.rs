@@ -382,8 +382,20 @@ impl PlexWindow {
         imp._sidebar_box.connect_destination(glib::clone!(
             #[weak(rename_to = window)]
             self,
-            move |destination| window.open_root(destination.into())
+            move |destination| {
+                // In a narrow window the sidebar lies over the page.
+                let split_view = &window.imp()._split_view;
+                if split_view.is_collapsed() {
+                    split_view.set_show_sidebar(false);
+                }
+                window.open_root(destination.into());
+            }
         ));
+        // The sidebar gets out of the way when the window becomes too narrow
+        // to show it next to the page, and returns when there is room again.
+        imp._split_view.connect_collapsed_notify(|split_view| {
+            split_view.set_show_sidebar(!split_view.is_collapsed());
+        });
 
         imp._sidebar_box.connect_server_selected(glib::clone!(
             #[weak(rename_to = window)]

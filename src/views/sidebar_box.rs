@@ -41,6 +41,8 @@ mod imp {
         pub updating_servers: Cell<bool>,
         /// Set while the selection follows the page, not the user.
         pub following: Cell<bool>,
+        /// Index of the row of the page on screen, if it has one.
+        pub shown: Cell<Option<i32>>,
         pub on_destination: RefCell<Option<Box<dyn Fn(Destination)>>>,
         pub on_server: RefCell<Option<Box<dyn Fn(u32)>>>,
     }
@@ -65,20 +67,20 @@ mod imp {
             self.parent_constructed();
             let sidebar = self.obj();
 
+            // Only activating a row (a click, Enter) leads somewhere. The
+            // list also selects a row that merely gets the focus, which
+            // happens when the sidebar appears; that selection is undone.
+            self._section_list.connect_row_activated(glib::clone!(
+                #[weak]
+                sidebar,
+                move |_, row| sidebar.go_to(row.index())
+            ));
             self._section_list.connect_row_selected(glib::clone!(
                 #[weak]
                 sidebar,
-                move |_, row| {
-                    let Some(row) = row else { return };
-                    let imp = sidebar.imp();
-                    if imp.following.get() {
-                        return;
-                    }
-                    let destination = imp.destinations.borrow().get(row.index() as usize).cloned();
-                    if let (Some(destination), Some(callback)) =
-                        (destination, imp.on_destination.borrow().as_ref())
-                    {
-                        callback(destination);
+                move |_, _| {
+                    if !sidebar.imp().following.get() {
+                        sidebar.mark(sidebar.imp().shown.get());
                     }
                 }
             ));
@@ -236,16 +238,31 @@ impl SidebarBox {
                     _ => false,
                 })
         });
+        self.mark(index.map(|index| index as i32));
+    }
+
+    /// Selects the row at `index`, or none, without going anywhere.
+    fn mark(&self, index: Option<i32>) {
+        let imp = self.imp();
+        let list = &imp._section_list;
+        imp.shown.set(index);
         imp.following.set(true);
-        match index {
-            Some(index) => self.select(index as i32),
-            None => imp._section_list.unselect_all(),
+        match index.and_then(|index| list.row_at_index(index)) {
+            Some(row) => list.select_row(Some(&row)),
+            None => list.unselect_all(),
         }
         imp.following.set(false);
     }
 
-    pub fn unselect_all(&self) {
-        self.imp()._section_list.unselect_all();
+    /// Opens the destination of the row at `index`.
+    fn go_to(&self, index: i32) {
+        let imp = self.imp();
+        let destination = imp.destinations.borrow().get(index as usize).cloned();
+        if let (Some(destination), Some(callback)) =
+            (destination, imp.on_destination.borrow().as_ref())
+        {
+            callback(destination);
+        }
     }
 
     pub fn select_home(&self) {
@@ -263,7 +280,7 @@ impl SidebarBox {
     }
 
     fn select(&self, index: i32) {
-        let list = &self.imp()._section_list;
-        list.select_row(list.row_at_index(index).as_ref());
+        self.mark(Some(index));
+        self.go_to(index);
     }
 }

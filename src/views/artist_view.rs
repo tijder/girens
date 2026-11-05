@@ -9,10 +9,11 @@ use girens_plex::model::Item;
 use gtk::prelude::*;
 use gtk::{gio, glib, CompositeTemplate};
 
-use super::album_view::{album_rows, setup_music_list, MusicRow};
+use super::album_view::{album_rows, setup_music_list, song_count, MusicRow};
 use super::row_list;
-use crate::runtime;
+use crate::i18n::ngettext_f;
 use crate::session::Session;
+use crate::{images, runtime};
 
 mod imp {
     use super::*;
@@ -24,6 +25,8 @@ mod imp {
         pub _list_view: TemplateChild<gtk::ListView>,
         #[template_child]
         pub _header: TemplateChild<gtk::Box>,
+        #[template_child]
+        pub _avatar: TemplateChild<adw::Avatar>,
         #[template_child]
         pub _title_label: TemplateChild<gtk::Label>,
         #[template_child]
@@ -86,7 +89,14 @@ impl ArtistView {
         let store = imp.store.get().expect("set in constructed").clone();
         imp._title_label.set_text("");
         imp._subtitle_label.set_text("");
-        row_list::replace_from(&store, 0, vec![self.header_row(), MusicRow::Loading]);
+        imp._avatar.set_text(None);
+        imp._avatar.set_custom_image(gtk::gdk::Paintable::NONE);
+        row_list::restart(
+            &imp._list_view,
+            &store,
+            self.header_row(),
+            vec![MusicRow::Loading],
+        );
 
         let target = (rating_key as i64).to_variant();
         imp._play_button.set_action_target_value(Some(&target));
@@ -131,8 +141,30 @@ impl ArtistView {
                 };
                 let imp = view.imp();
                 imp._title_label.set_text(&artist.title);
+                imp._avatar.set_text(Some(&artist.title));
                 let genres: Vec<&str> = artist.genres.iter().map(|g| g.tag.as_str()).collect();
-                imp._subtitle_label.set_text(&genres.join(" "));
+                imp._subtitle_label.set_text(&crate::util::detail_line([
+                    (!genres.is_empty()).then(|| genres.join(", ")),
+                    (!albums.is_empty())
+                        .then(|| ngettext_f("{} album", "{} albums", albums.len() as u32)),
+                    (!tracks.is_empty()).then(|| song_count(tracks.len() as u32)),
+                ]));
+                // The photo is decoration; the page does not wait for it.
+                if let (Some(thumb), Some(server)) =
+                    (artist.thumb.clone(), Session::current().server())
+                {
+                    glib::spawn_future_local(glib::clone!(
+                        #[weak]
+                        view,
+                        async move {
+                            let texture = images::cover(&server, rating_key, &thumb).await;
+                            // Another artist may be on show by now.
+                            if view.rating_key() == Some(rating_key) {
+                                view.imp()._avatar.set_custom_image(texture.as_ref());
+                            }
+                        }
+                    ));
+                }
 
                 let mut by_album: HashMap<u64, Vec<Item>> = HashMap::new();
                 for track in tracks {

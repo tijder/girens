@@ -278,6 +278,7 @@ impl PlayerView {
         let imp = self.imp();
         imp._deck_shows_box
             .set_cover_width(if width < 450 { width / 2 - 10 } else { 200 });
+        imp._media_bottom.set_narrow(width < 460);
         imp._card_box.set_orientation(if width < 850 {
             gtk::Orientation::Vertical
         } else {
@@ -379,7 +380,7 @@ impl PlayerView {
     fn show_item(&self, item: &Item) {
         let imp = self.imp();
         let set = |row: &adw::ActionRow, text: &str| {
-            row.set_title(text);
+            row.set_subtitle(text);
             row.set_visible(!text.is_empty());
         };
         set(&imp._title_label, &item.title);

@@ -10,9 +10,9 @@ use gtk::{gdk, gio, glib, CompositeTemplate};
 
 use super::row_list::{self, RowWidget};
 use super::AlbumItem;
-use crate::i18n::{gettext, gettext_f};
+use crate::i18n::{gettext, gettext_f, ngettext_f};
 use crate::session::Session;
-use crate::{images, runtime};
+use crate::{images, runtime, util};
 
 /// A row of an album or artist page.
 pub enum MusicRow {
@@ -20,13 +20,35 @@ pub enum MusicRow {
     Widget(gtk::Widget),
     Album {
         album: Box<Item>,
-        /// Whether to offer a link to the artist (not on the artist's page).
+        /// Whether this is the page of the album itself, which links to the
+        /// artist; the page of an artist lists several albums.
         link_to_artist: bool,
+        tracks: u32,
+        /// Playing time of all tracks, in milliseconds.
+        duration: u64,
     },
     Disc(u32),
     Track(Box<Item>),
     /// Shown while the page is fetched.
     Loading,
+}
+
+/// `12 songs`.
+pub fn song_count(count: u32) -> String {
+    ngettext_f("{} song", "{} songs", count)
+}
+
+/// A playing time in words: `52 min`, `1 h 4 min`.
+fn playing_time(milliseconds: u64) -> String {
+    let minutes = (milliseconds / 60_000).max(1);
+    if minutes < 60 {
+        gettext_f("{} min", &[&minutes.to_string()])
+    } else {
+        gettext_f(
+            "{0} h {1} min",
+            &[&(minutes / 60).to_string(), &(minutes % 60).to_string()],
+        )
+    }
 }
 
 /// The rows for `album`: header, and tracks grouped per disc when there are
@@ -41,6 +63,8 @@ pub fn album_rows(album: &Item, tracks: &[Item], link_to_artist: bool) -> Vec<Mu
     let mut rows = vec![MusicRow::Album {
         album: Box::new(album.clone()),
         link_to_artist,
+        tracks: tracks.len() as u32,
+        duration: tracks.iter().filter_map(|track| track.duration).sum(),
     }];
     let mut current_disc = None;
     for track in tracks {
@@ -78,7 +102,14 @@ fn music_store(list: &gtk::ListView) -> gio::ListStore {
             MusicRow::Album {
                 album,
                 link_to_artist,
-            } => RowWidget::inert(&AlbumHeader::new(album, *link_to_artist)),
+                tracks,
+                duration,
+            } => RowWidget::inert(&AlbumHeader::new(
+                album,
+                *link_to_artist,
+                *tracks,
+                *duration,
+            )),
             MusicRow::Disc(disc) => {
                 let label = gtk::Label::new(Some(&gettext_f("Disc {}", &[&disc.to_string()])));
                 label.add_css_class("heading");
@@ -124,6 +155,10 @@ mod header {
         #[template_child]
         pub _cover_placeholder: TemplateChild<gtk::Image>,
         #[template_child]
+        pub _artist_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _shuffle_button: TemplateChild<gtk::Button>,
+        #[template_child]
         pub _menu_button: TemplateChild<gtk::MenuButton>,
         #[template_child]
         pub _play_button: TemplateChild<gtk::Button>,
@@ -164,16 +199,40 @@ glib::wrapper! {
 }
 
 impl AlbumHeader {
-    fn new(album: &Item, link_to_artist: bool) -> Self {
+    fn new(album: &Item, link_to_artist: bool, tracks: u32, duration: u64) -> Self {
         let header: Self = glib::Object::new();
         let imp = header.imp();
 
         imp._title_label.set_text(&album.title);
-        imp._subtitle_label
-            .set_text(&album.year.map(|year| year.to_string()).unwrap_or_default());
-        imp._play_button
-            .set_action_target_value(Some(&(album.rating_key as i64).to_variant()));
+        imp._subtitle_label.set_text(&util::detail_line([
+            album.year.map(|year| year.to_string()),
+            (tracks > 0).then(|| song_count(tracks)),
+            (duration > 0).then(|| playing_time(duration)),
+        ]));
+        let target = (album.rating_key as i64).to_variant();
+        imp._play_button.set_action_target_value(Some(&target));
         imp._play_button.set_action_name(Some("win.play-item"));
+        imp._shuffle_button.set_action_target_value(Some(&target));
+        imp._shuffle_button
+            .set_action_name(Some("win.shuffle-by-id"));
+
+        // On its own page the album is what the page is about: its artist is
+        // one click away and playing it is the obvious thing to do.
+        if link_to_artist {
+            imp._play_button.add_css_class("suggested-action");
+            if let (Some(artist), Some(name)) = (album.parent_rating_key, &album.parent_title) {
+                imp._artist_label.set_markup(&format!(
+                    "<a href=\"artist\">{}</a>",
+                    glib::markup_escape_text(name)
+                ));
+                imp._artist_label.set_visible(true);
+                imp._artist_label.connect_activate_link(move |label, _| {
+                    let key = (artist as i64).to_variant();
+                    let _ = label.activate_action("win.show-artist-by-id", Some(&key));
+                    glib::Propagation::Stop
+                });
+            }
+        }
 
         let menu = gio::Menu::new();
         let add = |label: &str, action: &str, key: u64| {
@@ -189,7 +248,6 @@ impl AlbumHeader {
             );
         }
         add(&gettext("Sync"), "win.sync-by-id", album.rating_key);
-        add(&gettext("Shuffle"), "win.shuffle-by-id", album.rating_key);
         imp._menu_button.set_menu_model(Some(&menu));
 
         imp._cover_picture.set_paintable(gdk::Paintable::NONE);

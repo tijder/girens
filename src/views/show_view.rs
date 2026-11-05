@@ -11,8 +11,9 @@ use gtk::{gdk, gio, glib, CompositeTemplate};
 
 use super::row_list::{self, RowWidget};
 use super::ShowViewItem;
+use crate::i18n::ngettext_f;
 use crate::session::Session;
-use crate::{images, runtime};
+use crate::{images, runtime, util};
 
 enum Row {
     /// The details of the show; always the first row.
@@ -144,7 +145,12 @@ impl ShowView {
             imp._season_box.remove(&button);
         }
         imp._season_scrolled_window.set_visible(false);
-        row_list::replace_from(self.store(), 0, vec![Row::Header, Row::Loading]);
+        row_list::restart(
+            &imp._list_view,
+            self.store(),
+            Row::Header,
+            vec![Row::Loading],
+        );
 
         let target = (rating_key as i64).to_variant();
         imp._play_button.set_action_target_value(Some(&target));
@@ -202,8 +208,19 @@ impl ShowView {
     fn fill(&self, show: &Item, children: Vec<Item>) {
         let imp = self.imp();
         imp._title_label.set_text(&show.title);
-        imp._subtitle_label
-            .set_text(&show.year.map(|year| year.to_string()).unwrap_or_default());
+        let seasons = show
+            .child_count
+            .filter(|count| *count > 0)
+            .map(|count| ngettext_f("{} season", "{} seasons", count));
+        let episodes = show
+            .leaf_count
+            .filter(|count| *count > 0)
+            .map(|count| ngettext_f("{} episode", "{} episodes", count));
+        imp._subtitle_label.set_text(&util::detail_line([
+            show.year.map(|year| year.to_string()),
+            seasons,
+            episodes,
+        ]));
         imp._description_label
             .set_text(show.summary.as_deref().unwrap_or_default());
 

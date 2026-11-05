@@ -296,6 +296,7 @@ impl CoverBox {
     pub fn set_item(&self, item: &Item, width: i32) {
         let imp = self.imp();
         self.unbind();
+        self.set_sensitive(true);
         let in_show_view = imp.in_show_view.get();
         let presentation = present(item, in_show_view);
 
@@ -364,6 +365,28 @@ impl CoverBox {
             }
         ));
         imp.image_task.replace(Some(task));
+    }
+
+    /// Shows an empty tile of the size of a real one, for a list that is
+    /// still loading.
+    pub fn set_placeholder(&self, width: i32, image_height: i32) {
+        let imp = self.imp();
+        self.unbind();
+        self.set_sensitive(false);
+        self.set_action_name(None);
+        imp.item.replace(None);
+
+        // Empty labels keep their line, so the tile is as tall as a real one.
+        for label in [&imp._title_label, &imp._subtitle_label] {
+            label.set_text("\u{a0}");
+            label.set_tooltip_text(None);
+            label.set_visible(true);
+        }
+        imp._progress_bar.set_visible(false);
+        imp._watched_image.set_visible(false);
+        imp._downloaded_image.set_visible(false);
+        imp._cover_image.set_paintable(gdk::Paintable::NONE);
+        imp._cover_image.set_size_request(width, image_height);
     }
 
     /// Stops loading the image of the current item.
