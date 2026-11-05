@@ -61,3 +61,11 @@ pub fn load_synced_item() -> String {
 pub fn load_album() -> String {
     gettext("Could not load the album")
 }
+
+pub fn library_empty() -> String {
+    gettext("This library is empty")
+}
+
+pub fn no_playlists() -> String {
+    gettext("No playlists")
+}

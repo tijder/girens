@@ -328,7 +328,7 @@ impl SectionView {
                         imp._section_flow.append(page.items);
                         let empty = imp._section_flow.len() == 0;
                         imp._section_flow.set_empty_message(
-                            empty.then(|| gettext("This library is empty")).as_deref(),
+                            empty.then(crate::messages::library_empty).as_deref(),
                         );
                     }
                     Err(err) => {
@@ -371,8 +371,9 @@ impl SectionView {
                     Ok(playlists) => {
                         let empty = playlists.is_empty();
                         imp._section_flow.set_items(playlists);
-                        imp._section_flow
-                            .set_empty_message(empty.then(|| gettext("No playlists")).as_deref());
+                        imp._section_flow.set_empty_message(
+                            empty.then(crate::messages::no_playlists).as_deref(),
+                        );
                     }
                     Err(err) => crate::notify::failure(&crate::messages::load_playlists(), &err),
                 }

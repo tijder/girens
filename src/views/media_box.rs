@@ -490,11 +490,11 @@ impl Inner {
         for picture in &parts.cover_images {
             picture.set_paintable(gdk::Paintable::NONE);
         }
-        let (Some(thumb), Some(server)) =
-            (item.cover().map(str::to_owned), Session::current().server())
-        else {
+        let Some(thumb) = item.cover().map(str::to_owned) else {
             return;
         };
+        let session = Session::current();
+        let (server, machine) = (session.server(), session.machine_identifier());
         // The cache is keyed by the item whose image it is.
         let key = match item.kind {
             ItemKind::Episode => item.grandparent_rating_key.unwrap_or(item.rating_key),
@@ -502,7 +502,12 @@ impl Inner {
         };
         let weak = Rc::downgrade(self);
         let task = glib::spawn_future_local(async move {
-            let texture = images::cover(&server, key, &thumb).await;
+            // Without a connection only covers seen before are available.
+            let texture = match (&server, &machine) {
+                (Some(server), _) => images::cover(server, key, &thumb).await,
+                (None, Some(machine)) => images::cached(machine, key).await,
+                (None, None) => None,
+            };
             if let (Some(inner), Some(texture)) = (weak.upgrade(), texture) {
                 for picture in &inner.parts.borrow().cover_images {
                     picture.set_paintable(Some(&texture));

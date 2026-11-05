@@ -3,7 +3,9 @@ data/nl.g4d.Girens.desktop.in
 data/ui/album_header.blp
 data/ui/album_item.blp
 data/ui/artist_view.blp
+data/ui/cover_box.blp
 data/ui/discover_view.blp
+data/ui/list.blp
 data/ui/loading_view.blp
 data/ui/login_view.blp
 data/ui/main_window.blp
@@ -13,6 +15,7 @@ data/ui/media_box_video_top.blp
 data/ui/music_popover_menu.blp
 data/ui/player_view.blp
 data/ui/profile_dialog.blp
+data/ui/search_view.blp
 data/ui/section_view.blp
 data/ui/shortcuts.blp
 data/ui/show_view.blp
@@ -21,12 +24,16 @@ data/ui/sync_item.blp
 data/ui/sync_settings.blp
 data/ui/theme_switcher.blp
 src/messages.rs
+src/notify.rs
 src/player/mod.rs
 src/sync.rs
 src/views/album_view.rs
 src/views/cover_box.rs
+src/views/downloads_view.rs
 src/views/music_popover_menu.rs
 src/views/player_view.rs
+src/views/preferences.rs
+src/views/search_view.rs
 src/views/section_view.rs
 src/views/sidebar_box.rs
 src/window/connection.rs

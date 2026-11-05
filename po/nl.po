@@ -7,11 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 17:18+0100\n"
+"POT-Creation-Date: 2026-11-05 18:21+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
-">\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,29 +20,27 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:5
 msgid "Girens for Plex"
-msgstr ""
+msgstr "Girens voor Plex"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch your Plex content"
-msgstr ""
+msgstr "Bekijk je Plex-bibliotheek"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
-msgid ""
-"Girens is a Plex media player client. You can watch and listen to your "
-"music, shows and movies with this GTK app."
-msgstr ""
+msgid "Girens is a Plex media player client. You can watch and listen to your music, shows and movies with this GTK app."
+msgstr "Girens is een mediaspeler voor Plex. Met deze GTK-app bekijk en beluister je je muziek, series en films."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
-msgstr ""
+msgstr "Het startscherm"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
-msgstr ""
+msgstr "Het seriescherm"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The album screen"
-msgstr ""
+msgstr "Het albumscherm"
 
 #: ../data/nl.g4d.Girens.desktop.in:2
 msgid "Girens"
@@ -51,191 +48,175 @@ msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:3
 msgid "Play your Plex movies, shows and music"
-msgstr ""
+msgstr "Speel je films, series en muziek van Plex af"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;media;player;"
 msgstr ""
 
 #: ../data/ui/album_header.blp:41 ../data/ui/artist_view.blp:62
-#: ../data/ui/media_box_music.blp:112 ../data/ui/media_box_video_bottom.blp:95
+#: ../data/ui/media_box_music.blp:111 ../data/ui/media_box_video_bottom.blp:114
 #: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:56
 msgid "Play"
-msgstr ""
+msgstr "Afspelen"
 
-#: ../data/ui/album_header.blp:50
+#: ../data/ui/album_header.blp:50 ../data/ui/cover_box.blp:57
 msgid "More"
-msgstr ""
+msgstr "Meer"
 
 #: ../data/ui/album_item.blp:26
 msgid "Play music clip"
-msgstr ""
+msgstr "Muziekclip afspelen"
+
+#: ../data/ui/cover_box.blp:75
+msgid "Available offline"
+msgstr "Offline beschikbaar"
 
 #: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:130
-msgid "Ondeck"
-msgstr ""
+msgid "Continue watching"
+msgstr "Verder kijken"
 
 #: ../data/ui/discover_view.blp:33
 msgid "Recently added Shows"
-msgstr ""
+msgstr "Onlangs toegevoegde series"
 
 #: ../data/ui/discover_view.blp:46
 msgid "Recently added Movies"
-msgstr ""
+msgstr "Onlangs toegevoegde films"
 
 #: ../data/ui/discover_view.blp:59
 msgid "Recently added Music"
-msgstr ""
+msgstr "Onlangs toegevoegde muziek"
+
+#: ../data/ui/list.blp:45 ../data/ui/media_box_music.blp:101
+#: ../data/ui/media_box_video_bottom.blp:105
+msgid "Previous"
+msgstr "Vorige"
+
+#: ../data/ui/list.blp:60 ../data/ui/media_box_music.blp:120
+#: ../data/ui/media_box_video_bottom.blp:123
+msgid "Next"
+msgstr "Volgende"
 
 #: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
 msgid "Logout"
-msgstr ""
+msgstr "Afmelden"
 
 #: ../data/ui/login_view.blp:29
 msgid "Username and password"
-msgstr ""
+msgstr "Gebruikersnaam en wachtwoord"
 
 #: ../data/ui/login_view.blp:33
 msgid "Login to Plex with an user acount"
-msgstr ""
+msgstr "Aanmelden bij Plex met een account"
 
-#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
-msgid "Username"
-msgstr ""
+#: ../data/ui/login_view.blp:38
+msgid "Sign in on plex.tv"
+msgstr "Aanmelden op plex.tv"
+
+#: ../data/ui/login_view.blp:39
+msgid "Opens your browser; also for accounts with two-factor authentication"
+msgstr "Opent je browser; ook voor accounts met tweestapsverificatie"
 
 #: ../data/ui/login_view.blp:44
+msgid "Sign in"
+msgstr "Aanmelden"
+
+#: ../data/ui/login_view.blp:53 ../data/ui/profile_dialog.blp:12
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: ../data/ui/login_view.blp:59
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
-#: ../data/ui/login_view.blp:53
+#: ../data/ui/login_view.blp:68
 msgid "Login"
-msgstr ""
+msgstr "Aanmelden"
 
-#: ../data/ui/login_view.blp:64
+#: ../data/ui/login_view.blp:79
 msgid "URL and token"
-msgstr ""
+msgstr "URL en token"
 
-#: ../data/ui/login_view.blp:69
+#: ../data/ui/login_view.blp:84
 msgid "Go to Plex server based on an URL"
-msgstr ""
-
-#: ../data/ui/login_view.blp:74
-msgid "The URL to the Plex server with the port number"
-msgstr ""
-
-#: ../data/ui/login_view.blp:80
-msgid "Token"
-msgstr ""
+msgstr "Verbinden met een Plex-server via een URL"
 
 #: ../data/ui/login_view.blp:89
+msgid "The URL to the Plex server with the port number"
+msgstr "De URL van de Plex-server, met poortnummer"
+
+#: ../data/ui/login_view.blp:95
+msgid "Token"
+msgstr "Token"
+
+#: ../data/ui/login_view.blp:104
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 #: ../data/ui/main_window.blp:37
 msgid "Account"
-msgstr ""
+msgstr "Account"
 
 #: ../data/ui/main_window.blp:60
+msgid "Back"
+msgstr "Terug"
+
+#: ../data/ui/main_window.blp:66
 msgid "Toggle Sidebar"
-msgstr ""
+msgstr "Zijbalk tonen/verbergen"
 
-#: ../data/ui/main_window.blp:64
+#: ../data/ui/main_window.blp:70
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
-#: ../data/ui/main_window.blp:78
-msgid "Downloads"
-msgstr ""
-
-#: ../data/ui/main_window.blp:88
+#: ../data/ui/main_window.blp:94
 msgid "Main menu"
-msgstr ""
+msgstr "Hoofdmenu"
 
-#: ../data/ui/main_window.blp:164
-msgid "Settings"
-msgstr ""
-
-#: ../data/ui/main_window.blp:192
-msgid "Prefer music clips"
-msgstr ""
-
-#: ../data/ui/main_window.blp:193
-msgid ""
-"When playing music and the track has a music clip, play that instead of the "
-"audio."
-msgstr ""
-
-#: ../data/ui/main_window.blp:202
-msgid "Transcode media"
-msgstr "Media transcoderen"
-
-#: ../data/ui/main_window.blp:203
-msgid "Transcode media instead of playing directly."
-msgstr "Transcodeer media in plaats van direct af te spelen."
-
-#: ../data/ui/main_window.blp:212
-msgid "1080p"
-msgstr "1080p"
-
-#: ../data/ui/main_window.blp:219
-msgid "720p"
-msgstr "720p"
-
-#: ../data/ui/main_window.blp:228
-msgid "480p"
-msgstr "480p"
-
-#: ../data/ui/main_window.blp:237
-msgid "240p"
-msgstr "240p"
-
-#: ../data/ui/main_window.blp:250
-msgid "Info"
-msgstr "Info"
-
-#: ../data/ui/main_window.blp:256
+#: ../data/ui/main_window.blp:176
 msgid "Shortcuts"
 msgstr "Sneltoetsen"
 
-#: ../data/ui/main_window.blp:262
+#: ../data/ui/main_window.blp:182
 msgid "About Girens"
 msgstr "Over Girens"
 
-#: ../data/ui/media_box_music.blp:78 ../data/ui/media_box_video_bottom.blp:65
+#: ../data/ui/media_box_music.blp:77 ../data/ui/media_box_video_bottom.blp:64
 msgid "Play queue"
-msgstr ""
+msgstr "Wachtrij"
 
-#: ../data/ui/media_box_music.blp:102 ../data/ui/media_box_video_bottom.blp:86
-msgid "Previous"
-msgstr ""
-
-#: ../data/ui/media_box_music.blp:121 ../data/ui/media_box_video_bottom.blp:104
-msgid "Next"
-msgstr ""
-
-#: ../data/ui/media_box_music.blp:130 ../data/ui/media_box_video_top.blp:46
+#: ../data/ui/media_box_music.blp:129 ../data/ui/media_box_video_top.blp:46
 msgid "Stop"
-msgstr ""
+msgstr "Stoppen"
 
-#: ../data/ui/media_box_music.blp:141
+#: ../data/ui/media_box_music.blp:140 ../data/ui/media_box_video_bottom.blp:83
+msgid "Volume"
+msgstr "Volume"
+
+#: ../data/ui/media_box_music.blp:151
 msgid "Options"
-msgstr ""
+msgstr "Opties"
 
-#: ../data/ui/media_box_video_bottom.blp:77
+#: ../data/ui/media_box_video_bottom.blp:76
+msgid "Audio and subtitles"
+msgstr "Audio en ondertiteling"
+
+#: ../data/ui/media_box_video_bottom.blp:96
 msgid "Skip backward"
-msgstr ""
+msgstr "Terugspoelen"
 
-#: ../data/ui/media_box_video_bottom.blp:113
+#: ../data/ui/media_box_video_bottom.blp:132
 msgid "Skip forward"
-msgstr ""
+msgstr "Vooruitspoelen"
 
 #: ../data/ui/media_box_video_top.blp:11
 msgid "Fullscreen"
-msgstr ""
+msgstr "Volledig scherm"
 
 #: ../data/ui/media_box_video_top.blp:19
 msgid "Fill window"
-msgstr ""
+msgstr "Venster vullen"
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
@@ -273,51 +254,79 @@ msgstr "E-mail"
 msgid "Subscription plan"
 msgstr "Abonnements­plan"
 
+#: ../data/ui/search_view.blp:42
+msgid "No results found"
+msgstr "Geen resultaten gevonden"
+
+#: ../data/ui/search_view.blp:43
+msgid "Try a different search"
+msgstr "Probeer een andere zoekopdracht"
+
 #: ../data/ui/section_view.blp:46
 msgid "Order"
 msgstr "Sorteren"
 
-#: ../data/ui/shortcuts.blp:13
+#: ../data/ui/shortcuts.blp:6
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "Afspelen"
 
-#: ../data/ui/shortcuts.blp:17
+#: ../data/ui/shortcuts.blp:9
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "Afspelen/pauzeren"
 
-#: ../data/ui/shortcuts.blp:23
+#: ../data/ui/shortcuts.blp:14
 msgctxt "shortcut window"
 msgid "Previous"
 msgstr "Vorige"
 
-#: ../data/ui/shortcuts.blp:29
+#: ../data/ui/shortcuts.blp:19
 msgctxt "shortcut window"
 msgid "Next"
 msgstr "Volgende"
 
-#: ../data/ui/shortcuts.blp:35
+#: ../data/ui/shortcuts.blp:24
 msgctxt "shortcut window"
 msgid "Seek forwards"
 msgstr "Vooruit zoeken"
 
-#: ../data/ui/shortcuts.blp:41
+#: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Seek backwards"
 msgstr "Achteruit zoeken"
 
-#: ../data/ui/shortcuts.blp:47
+#: ../data/ui/shortcuts.blp:34
+msgctxt "shortcut window"
+msgid "Volume up"
+msgstr "Volume omhoog"
+
+#: ../data/ui/shortcuts.blp:39
+msgctxt "shortcut window"
+msgid "Volume down"
+msgstr "Volume omlaag"
+
+#: ../data/ui/shortcuts.blp:44
 msgctxt "shortcut window"
 msgid "Stop playing"
 msgstr "Stopen met afspelen"
 
-#: ../data/ui/shortcuts.blp:53
+#: ../data/ui/shortcuts.blp:49
 msgctxt "shortcut window"
 msgid "Fullscreen"
 msgstr "Volledig scherm"
 
+#: ../data/ui/shortcuts.blp:54
+msgctxt "shortcut window"
+msgid "Fill the window with the video"
+msgstr "Venster vullen met de video"
+
 #: ../data/ui/shortcuts.blp:59
+msgctxt "shortcut window"
+msgid "Show the controls"
+msgstr "Bediening tonen"
+
+#: ../data/ui/shortcuts.blp:64
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr "Muziekclips afspelen in plaats van audiotrack"
@@ -330,9 +339,9 @@ msgstr "Items synchroniseren"
 msgid "Ok"
 msgstr "Oké"
 
-#: ../data/ui/sync_item.blp:30
+#: ../data/ui/sync_item.blp:38
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
@@ -368,137 +377,218 @@ msgstr "Donkere stĳl"
 
 #: ../src/messages.rs:10
 msgid "Could not open the item"
-msgstr ""
+msgstr "Het item kon niet worden geopend"
 
 #: ../src/messages.rs:14
 msgid "Could not load the item"
-msgstr ""
+msgstr "Het item kon niet worden geladen"
 
 #: ../src/messages.rs:18
 msgid "Could not change the watched state"
-msgstr ""
+msgstr "De kijkstatus kon niet worden gewijzigd"
 
 #: ../src/messages.rs:22
 msgid "Could not load on deck"
-msgstr ""
+msgstr "‘Verder kijken’ kon niet worden geladen"
 
 #: ../src/messages.rs:26
 msgid "Could not load recently added"
-msgstr ""
+msgstr "‘Onlangs toegevoegd’ kon niet worden geladen"
 
 #: ../src/messages.rs:30
 msgid "Could not load the sort options"
-msgstr ""
+msgstr "De sorteeropties konden niet worden geladen"
 
 #: ../src/messages.rs:34
 msgid "Could not load the library"
-msgstr ""
+msgstr "De bibliotheek kon niet worden geladen"
 
 #: ../src/messages.rs:38
 msgid "Could not load the playlists"
-msgstr ""
+msgstr "De afspeellijsten konden niet worden geladen"
 
 #: ../src/messages.rs:42
 msgid "Search failed"
-msgstr ""
+msgstr "Zoeken is mislukt"
 
 #: ../src/messages.rs:46
 msgid "Could not load the show"
-msgstr ""
+msgstr "De serie kon niet worden geladen"
 
 #: ../src/messages.rs:50
 msgid "Could not load the episodes"
-msgstr ""
+msgstr "De afleveringen konden niet worden geladen"
 
 #: ../src/messages.rs:54
 msgid "Could not load the artist"
-msgstr ""
+msgstr "De artiest kon niet worden geladen"
 
 #: ../src/messages.rs:58
 msgid "Could not load a synced item"
-msgstr ""
+msgstr "Een gesynchroniseerd item kon niet worden geladen"
 
-#: ../src/player/mod.rs:311
+#: ../src/messages.rs:62
+msgid "Could not load the album"
+msgstr "Het album kon niet worden geladen"
+
+#: ../src/messages.rs:66
+msgid "This library is empty"
+msgstr "Deze bibliotheek is leeg"
+
+#: ../src/messages.rs:70
+msgid "No playlists"
+msgstr "Geen afspeellijsten"
+
+#: ../src/notify.rs:56
+msgid "Retry"
+msgstr "Opnieuw proberen"
+
+#: ../src/player/mod.rs:334
 msgid "Nothing to play"
-msgstr ""
+msgstr "Er is niets om af te spelen"
 
-#: ../src/player/mod.rs:319
+#: ../src/player/mod.rs:342
 msgid "Could not create a play queue"
-msgstr ""
+msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: ../src/player/mod.rs:408
+#: ../src/player/mod.rs:441
 msgid "Could not shuffle the play queue"
-msgstr ""
+msgstr "De wachtrij kon niet worden geschud"
 
-#: ../src/player/mod.rs:598
+#: ../src/player/mod.rs:631
 msgid "Could not start playback"
-msgstr ""
+msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1039
+#: ../src/player/mod.rs:1088
 msgid "Could not change the stream"
-msgstr ""
+msgstr "Het spoor kon niet worden gewijzigd"
 
-#: ../src/sync.rs:97
+#: ../src/sync.rs:175
 msgid "Sync failed"
-msgstr ""
+msgstr "Synchroniseren is mislukt"
 
-#: ../src/sync.rs:154
+#: ../src/sync.rs:242
 msgid "Could not download an item"
-msgstr ""
+msgstr "Een item kon niet worden gedownload"
 
-#: ../src/sync.rs:210
+#: ../src/sync.rs:302
 msgid "Not enough disk space for the download"
-msgstr ""
+msgstr "Niet genoeg schijfruimte voor de download"
 
-#: ../src/views/album_view.rs:66
+#: ../src/views/album_view.rs:83
 #, rust-format
 msgid "Disc {}"
 msgstr "Schĳf {}"
 
-#: ../src/views/album_view.rs:169 ../src/views/cover_box.rs:194
-#: ../src/views/cover_box.rs:201
+#: ../src/views/album_view.rs:186 ../src/views/cover_box.rs:203
+#: ../src/views/cover_box.rs:210
 msgid "Go to artist view"
 msgstr "Artiest­weergave"
 
-#: ../src/views/album_view.rs:174 ../src/views/cover_box.rs:238
+#: ../src/views/album_view.rs:191 ../src/views/cover_box.rs:245
 msgid "Sync"
 msgstr "Synchroniseren"
 
-#: ../src/views/album_view.rs:175 ../src/views/cover_box.rs:244
+#: ../src/views/album_view.rs:192 ../src/views/cover_box.rs:251
 msgid "Shuffle"
 msgstr "Shufflen"
 
-#: ../src/views/album_view.rs:263
-msgid "Could not load the album"
-msgstr ""
-
-#: ../src/views/cover_box.rs:187
+#: ../src/views/cover_box.rs:196
 msgid "Go to album view"
 msgstr "Album­weergave"
 
-#: ../src/views/cover_box.rs:217
+#: ../src/views/cover_box.rs:226
 msgid "Go to show view"
 msgstr "Serie­weergave"
 
-#: ../src/views/cover_box.rs:222
+#: ../src/views/cover_box.rs:231
 msgid "Mark as Played"
 msgstr "Markeren als afgespeeld"
 
-#: ../src/views/cover_box.rs:229
+#: ../src/views/cover_box.rs:238
 msgid "Mark as Unplayed"
 msgstr "Markeren als onafgespeeld"
 
-#: ../src/views/cover_box.rs:248 ../src/window/playback.rs:111
+#: ../src/views/cover_box.rs:255
 msgid "Start from the beginning"
 msgstr "Starten vanaf het begin"
 
+#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:160
+#: ../src/views/sidebar_box.rs:191
+msgid "Downloads"
+msgstr "Downloads"
+
+#: ../src/views/downloads_view.rs:75
+msgid "Nothing downloaded yet"
+msgstr "Nog niets gedownload"
+
 #: ../src/views/music_popover_menu.rs:184
 msgid "Could not rate the track"
-msgstr ""
+msgstr "Het nummer kon niet worden beoordeeld"
 
-#: ../src/views/player_view.rs:371
+#: ../src/views/player_view.rs:308
+msgid "Audio"
+msgstr "Audio"
+
+#: ../src/views/player_view.rs:309
+msgid "Subtitle"
+msgstr "Ondertiteling"
+
+#: ../src/views/player_view.rs:430
 msgid "None"
 msgstr "Geen"
+
+#: ../src/views/preferences.rs:22
+msgid "Prefer music clips"
+msgstr "Voorkeur voor muziekclips"
+
+#: ../src/views/preferences.rs:24
+msgid "When playing music and the track has a music clip, play that instead of the audio."
+msgstr "Speel bij muziek de muziekclip af in plaats van de audio, als het nummer er een heeft."
+
+#: ../src/views/preferences.rs:32
+msgid "Transcode media"
+msgstr "Media transcoderen"
+
+#: ../src/views/preferences.rs:33
+msgid "Transcode media instead of playing directly."
+msgstr "Transcodeer media in plaats van direct af te spelen."
+
+#: ../src/views/preferences.rs:42
+msgid "Resolution"
+msgstr "Resolutie"
+
+#: ../src/views/preferences.rs:70
+msgid "Playback"
+msgstr "Afspelen"
+
+#: ../src/views/preferences.rs:79
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: ../src/views/search_view.rs:20
+msgid "Movies"
+msgstr "Films"
+
+#: ../src/views/search_view.rs:21
+msgid "Shows"
+msgstr "Series"
+
+#: ../src/views/search_view.rs:22
+msgid "Seasons"
+msgstr "Seizoenen"
+
+#: ../src/views/search_view.rs:23
+msgid "Episodes"
+msgstr "Afleveringen"
+
+#: ../src/views/search_view.rs:24
+msgid "Artists"
+msgstr "Artiesten"
+
+#: ../src/views/search_view.rs:25
+msgid "Albums"
+msgstr "Albums"
 
 #: ../src/views/section_view.rs:21
 msgid "Added at"
@@ -540,39 +630,43 @@ msgstr "Media­hoogte"
 msgid "Duration"
 msgstr "Duur"
 
-#: ../src/views/section_view.rs:333 ../src/views/sidebar_box.rs:148
+#: ../src/views/section_view.rs:356 ../src/views/sidebar_box.rs:155
 msgid "Playlists"
 msgstr "Afspeel­lĳsten"
 
-#: ../src/views/sidebar_box.rs:142
+#: ../src/views/sidebar_box.rs:149 ../src/views/sidebar_box.rs:186
 msgid "Player"
 msgstr "Speler"
 
-#: ../src/views/sidebar_box.rs:146
+#: ../src/views/sidebar_box.rs:153
 msgid "Home"
 msgstr "Thuis"
 
-#: ../src/window/connection.rs:9
+#: ../src/window/connection.rs:14
 msgid "Starting Girens"
 msgstr "Girens wordt opgestart"
 
-#: ../src/window/connection.rs:15 ../src/window/connection.rs:63
-#: ../src/window/connection.rs:86
+#: ../src/window/connection.rs:20 ../src/window/connection.rs:73
+#: ../src/window/connection.rs:129
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
 
-#: ../src/window/connection.rs:92 ../src/window/connection.rs:135
-#: ../src/window/connection.rs:276
+#: ../src/window/connection.rs:102
+msgid "Waiting for you to sign in in the browser…"
+msgstr "Wachten tot je bent aangemeld in de browser…"
+
+#: ../src/window/connection.rs:135 ../src/window/connection.rs:178
+#: ../src/window/connection.rs:358
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/window/connection.rs:114
+#: ../src/window/connection.rs:157
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/window/connection.rs:128
+#: ../src/window/connection.rs:171
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -583,31 +677,50 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/window/connection.rs:164
+#: ../src/window/connection.rs:198
+msgid "The server cannot be reached. Showing your downloads."
+msgstr "De server is niet bereikbaar. Je downloads worden getoond."
+
+#: ../src/window/connection.rs:246
 msgid "Could not load the libraries"
-msgstr ""
+msgstr "De bibliotheken konden niet worden geladen"
 
-#: ../src/window/mod.rs:593
-msgid ""
-"A Plex GTK client for playing movies, TV shows and music from your Plex "
-"library."
-msgstr ""
+#: ../src/window/mod.rs:556
+msgid "A Plex GTK client for playing movies, TV shows and music from your Plex library."
+msgstr "Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek af te spelen."
 
-#: ../src/window/mod.rs:598
+#: ../src/window/mod.rs:561
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:601
+#: ../src/window/mod.rs:564
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
-#: ../src/window/playback.rs:108
-msgid "Do you want resume watching or start from the beginning?"
-msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
+#: ../src/window/playback.rs:83
+msgid "This is not available without a connection to the server"
+msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 
-#: ../src/window/playback.rs:112
-msgid "Resume"
-msgstr "Hervatten"
+#~ msgid "1080p"
+#~ msgstr "1080p"
+
+#~ msgid "720p"
+#~ msgstr "720p"
+
+#~ msgid "480p"
+#~ msgstr "480p"
+
+#~ msgid "240p"
+#~ msgstr "240p"
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "Do you want resume watching or start from the beginning?"
+#~ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
+
+#~ msgid "Resume"
+#~ msgstr "Hervatten"
 
 #~ msgid "Secure"
 #~ msgstr "Beveiligd"
@@ -706,9 +819,7 @@ msgstr "Hervatten"
 #~ msgstr "Gemigreerd naar Blueprint voor ui bestanden"
 
 #~ msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-#~ msgstr ""
-#~ "Verbeterde lijsten voor grote bibliotheken (dankzij de nieuwe Gtk4-"
-#~ "lijsten)."
+#~ msgstr "Verbeterde lijsten voor grote bibliotheken (dankzij de nieuwe Gtk4-lijsten)."
 
 #~ msgid "Redesigned the album/artist view"
 #~ msgstr "Herontwerp van de album/artiest weergave"
@@ -798,9 +909,7 @@ msgstr "Hervatten"
 #~ msgstr "Volledig scherm verlaten met escape"
 
 #~ msgid "Add feature changing subtitle and audio stream with plex remote"
-#~ msgstr ""
-#~ "Functie toegevoegd die ondertiteling en audio stream verandert met plex "
-#~ "remote"
+#~ msgstr "Functie toegevoegd die ondertiteling en audio stream verandert met plex remote"
 
 #~ msgid "Fix music not correct seeking when transcoding"
 #~ msgstr "Fix muziek niet goed tijd aan te passen bij transcodering"
@@ -860,9 +969,7 @@ msgstr "Hervatten"
 #~ msgstr "Sortering oplopend of aflopend wijzigen"
 
 #~ msgid "Hide media controlls after two seconds if new media started playing"
-#~ msgstr ""
-#~ "Mediabedieningen na twee seconden verbergen als nieuwe video item is "
-#~ "gestart"
+#~ msgstr "Mediabedieningen na twee seconden verbergen als nieuwe video item is gestart"
 
 #~ msgid "Seek to certain time when playing music"
 #~ msgstr "Zoek naar een bepaalde tijd bij het afspelen van muziek"
@@ -931,9 +1038,7 @@ msgstr "Hervatten"
 #~ msgstr "Knop afspelen en shuffle toegevoegd in sectieweergave"
 
 #~ msgid "Playqueue will be refreshed when playing next/prev item"
-#~ msgstr ""
-#~ "De afspeelwachtrij wordt ververst bij het afspelen van het volgende/"
-#~ "vorige item"
+#~ msgstr "De afspeelwachtrij wordt ververst bij het afspelen van het volgende/vorige item"
 
 #~ msgid "Keep fullscreen status"
 #~ msgstr "Behoud de status van volledig scherm"
@@ -968,12 +1073,8 @@ msgstr "Hervatten"
 #~ msgid "Watch your Plex media"
 #~ msgstr "Bekijk je Plex media"
 
-#~ msgid ""
-#~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
-#~ "your Plex library."
-#~ msgstr ""
-#~ "Girens is een Plex GTK-client voor het afspelen van films, TV-programma's "
-#~ "en muziek uit uw Plex-bibliotheek."
+#~ msgid "Girens is a Plex GTK client for playing movies, TV shows and music from your Plex library."
+#~ msgstr "Girens is een Plex GTK-client voor het afspelen van films, TV-programma's en muziek uit uw Plex-bibliotheek."
 
 #~ msgid "Gerben Droogers"
 #~ msgstr "Gerben Droogers"
@@ -1005,26 +1106,20 @@ msgstr "Hervatten"
 #~ msgid "The volume level of the audio"
 #~ msgstr "Het volumeniveau van de audio"
 
-#~ msgid ""
-#~ "Allow other devices on this network to find Girens and control this client"
+#~ msgid "Allow other devices on this network to find Girens and control this client"
 #~ msgstr "Laat andere apparaten op dit netwerk Girens vinden en bedienen"
 
 #~ msgid "Use dark GTK theme"
 #~ msgstr "Gebruik een donkere GTK thema"
 
 #~ msgid "Play media direct from server instead of transcoding it"
-#~ msgstr ""
-#~ "Speel media direct af van de server in plaats van het te transcoderen"
+#~ msgstr "Speel media direct af van de server in plaats van het te transcoderen"
 
 #~ msgid "Resolution to transcode media to"
 #~ msgstr "Resolutie om media te transcoderen naar"
 
-#~ msgid ""
-#~ "When playing music and the track has a music clip, play that instead of "
-#~ "the audio"
-#~ msgstr ""
-#~ "Als er muziek wordt afgespeeld en het nummer heeft een muziekclip, speel "
-#~ "die dan af in plaats van de audio"
+#~ msgid "When playing music and the track has a music clip, play that instead of the audio"
+#~ msgstr "Als er muziek wordt afgespeeld en het nummer heeft een muziekclip, speel die dan af in plaats van de audio"
 
 #~ msgid "The plex user uuid"
 #~ msgstr "De plex gebruiker uuid"

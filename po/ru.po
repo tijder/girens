@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 17:18+0100\n"
+"POT-Creation-Date: 2026-11-05 18:21+0100\n"
 "PO-Revision-Date: 2025-05-05 06:44+0000\n"
 "Last-Translator: Yurt Page <yurtpage@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/girens/girens/ru/"
@@ -59,12 +59,12 @@ msgid "girens;plex;media;player;"
 msgstr ""
 
 #: ../data/ui/album_header.blp:41 ../data/ui/artist_view.blp:62
-#: ../data/ui/media_box_music.blp:112 ../data/ui/media_box_video_bottom.blp:95
+#: ../data/ui/media_box_music.blp:111 ../data/ui/media_box_video_bottom.blp:114
 #: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:56
 msgid "Play"
 msgstr ""
 
-#: ../data/ui/album_header.blp:50
+#: ../data/ui/album_header.blp:50 ../data/ui/cover_box.blp:57
 msgid "More"
 msgstr ""
 
@@ -72,8 +72,12 @@ msgstr ""
 msgid "Play music clip"
 msgstr ""
 
+#: ../data/ui/cover_box.blp:75
+msgid "Available offline"
+msgstr ""
+
 #: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:130
-msgid "Ondeck"
+msgid "Continue watching"
 msgstr ""
 
 #: ../data/ui/discover_view.blp:33
@@ -88,6 +92,16 @@ msgstr ""
 msgid "Recently added Music"
 msgstr ""
 
+#: ../data/ui/list.blp:45 ../data/ui/media_box_music.blp:101
+#: ../data/ui/media_box_video_bottom.blp:105
+msgid "Previous"
+msgstr ""
+
+#: ../data/ui/list.blp:60 ../data/ui/media_box_music.blp:120
+#: ../data/ui/media_box_video_bottom.blp:123
+msgid "Next"
+msgstr ""
+
 #: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
 msgid "Logout"
 msgstr ""
@@ -100,35 +114,47 @@ msgstr ""
 msgid "Login to Plex with an user acount"
 msgstr ""
 
-#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
-msgid "Username"
+#: ../data/ui/login_view.blp:38
+msgid "Sign in on plex.tv"
+msgstr ""
+
+#: ../data/ui/login_view.blp:39
+msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr ""
 
 #: ../data/ui/login_view.blp:44
+msgid "Sign in"
+msgstr ""
+
+#: ../data/ui/login_view.blp:53 ../data/ui/profile_dialog.blp:12
+msgid "Username"
+msgstr ""
+
+#: ../data/ui/login_view.blp:59
 msgid "Password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:53
+#: ../data/ui/login_view.blp:68
 msgid "Login"
 msgstr ""
 
-#: ../data/ui/login_view.blp:64
+#: ../data/ui/login_view.blp:79
 msgid "URL and token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:69
+#: ../data/ui/login_view.blp:84
 msgid "Go to Plex server based on an URL"
 msgstr ""
 
-#: ../data/ui/login_view.blp:74
+#: ../data/ui/login_view.blp:89
 msgid "The URL to the Plex server with the port number"
 msgstr ""
 
-#: ../data/ui/login_view.blp:80
+#: ../data/ui/login_view.blp:95
 msgid "Token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:89
+#: ../data/ui/login_view.blp:104
 msgid "Connect"
 msgstr ""
 
@@ -137,98 +163,54 @@ msgid "Account"
 msgstr ""
 
 #: ../data/ui/main_window.blp:60
+msgid "Back"
+msgstr ""
+
+#: ../data/ui/main_window.blp:66
 msgid "Toggle Sidebar"
 msgstr ""
 
-#: ../data/ui/main_window.blp:64
+#: ../data/ui/main_window.blp:70
 msgid "Search"
 msgstr ""
 
-#: ../data/ui/main_window.blp:78
-msgid "Downloads"
-msgstr ""
-
-#: ../data/ui/main_window.blp:88
+#: ../data/ui/main_window.blp:94
 msgid "Main menu"
 msgstr ""
 
-#: ../data/ui/main_window.blp:164
-msgid "Settings"
-msgstr ""
-
-#: ../data/ui/main_window.blp:192
-msgid "Prefer music clips"
-msgstr "Предпочитать музыкальные клипы"
-
-#: ../data/ui/main_window.blp:193
-msgid ""
-"When playing music and the track has a music clip, play that instead of the "
-"audio."
-msgstr ""
-"При воспроизведении музыки, если к треку добавлен музыкальный клип, будет "
-"воспроизводиться он."
-
-#: ../data/ui/main_window.blp:202
-msgid "Transcode media"
-msgstr "Перекодирование контента"
-
-#: ../data/ui/main_window.blp:203
-msgid "Transcode media instead of playing directly."
-msgstr "Перекодирование контента вместо прямого воспроизведения."
-
-#: ../data/ui/main_window.blp:212
-msgid "1080p"
-msgstr "1080p"
-
-#: ../data/ui/main_window.blp:219
-msgid "720p"
-msgstr "720p"
-
-#: ../data/ui/main_window.blp:228
-msgid "480p"
-msgstr "480p"
-
-#: ../data/ui/main_window.blp:237
-msgid "240p"
-msgstr "240p"
-
-#: ../data/ui/main_window.blp:250
-msgid "Info"
-msgstr "Информация"
-
-#: ../data/ui/main_window.blp:256
+#: ../data/ui/main_window.blp:176
 msgid "Shortcuts"
 msgstr "Комбинации клавиш"
 
-#: ../data/ui/main_window.blp:262
+#: ../data/ui/main_window.blp:182
 msgid "About Girens"
 msgstr "О Girens"
 
-#: ../data/ui/media_box_music.blp:78 ../data/ui/media_box_video_bottom.blp:65
+#: ../data/ui/media_box_music.blp:77 ../data/ui/media_box_video_bottom.blp:64
 msgid "Play queue"
 msgstr ""
 
-#: ../data/ui/media_box_music.blp:102 ../data/ui/media_box_video_bottom.blp:86
-msgid "Previous"
-msgstr ""
-
-#: ../data/ui/media_box_music.blp:121 ../data/ui/media_box_video_bottom.blp:104
-msgid "Next"
-msgstr ""
-
-#: ../data/ui/media_box_music.blp:130 ../data/ui/media_box_video_top.blp:46
+#: ../data/ui/media_box_music.blp:129 ../data/ui/media_box_video_top.blp:46
 msgid "Stop"
 msgstr ""
 
-#: ../data/ui/media_box_music.blp:141
+#: ../data/ui/media_box_music.blp:140 ../data/ui/media_box_video_bottom.blp:83
+msgid "Volume"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:151
 msgid "Options"
 msgstr ""
 
-#: ../data/ui/media_box_video_bottom.blp:77
+#: ../data/ui/media_box_video_bottom.blp:76
+msgid "Audio and subtitles"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:96
 msgid "Skip backward"
 msgstr ""
 
-#: ../data/ui/media_box_video_bottom.blp:113
+#: ../data/ui/media_box_video_bottom.blp:132
 msgid "Skip forward"
 msgstr ""
 
@@ -276,51 +258,79 @@ msgstr "Email"
 msgid "Subscription plan"
 msgstr "Подписка"
 
+#: ../data/ui/search_view.blp:42
+msgid "No results found"
+msgstr ""
+
+#: ../data/ui/search_view.blp:43
+msgid "Try a different search"
+msgstr ""
+
 #: ../data/ui/section_view.blp:46
 msgid "Order"
 msgstr "Порядок"
 
-#: ../data/ui/shortcuts.blp:13
+#: ../data/ui/shortcuts.blp:6
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "Воспроизведение"
 
-#: ../data/ui/shortcuts.blp:17
+#: ../data/ui/shortcuts.blp:9
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "Воспроизведение/Пауза"
 
-#: ../data/ui/shortcuts.blp:23
+#: ../data/ui/shortcuts.blp:14
 msgctxt "shortcut window"
 msgid "Previous"
 msgstr "Назад"
 
-#: ../data/ui/shortcuts.blp:29
+#: ../data/ui/shortcuts.blp:19
 msgctxt "shortcut window"
 msgid "Next"
 msgstr "Далее"
 
-#: ../data/ui/shortcuts.blp:35
+#: ../data/ui/shortcuts.blp:24
 msgctxt "shortcut window"
 msgid "Seek forwards"
 msgstr "Перемотка вперёд"
 
-#: ../data/ui/shortcuts.blp:41
+#: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Seek backwards"
 msgstr "Перемотка назад"
 
-#: ../data/ui/shortcuts.blp:47
+#: ../data/ui/shortcuts.blp:34
+msgctxt "shortcut window"
+msgid "Volume up"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:39
+msgctxt "shortcut window"
+msgid "Volume down"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:44
 msgctxt "shortcut window"
 msgid "Stop playing"
 msgstr "Остановить воспроизведение"
 
-#: ../data/ui/shortcuts.blp:53
+#: ../data/ui/shortcuts.blp:49
 msgctxt "shortcut window"
 msgid "Fullscreen"
 msgstr "Полноэкранный режим"
 
+#: ../data/ui/shortcuts.blp:54
+msgctxt "shortcut window"
+msgid "Fill the window with the video"
+msgstr ""
+
 #: ../data/ui/shortcuts.blp:59
+msgctxt "shortcut window"
+msgid "Show the controls"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:64
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr "Воспроизведение музыкальных клипов вместо аудиодорожки"
@@ -333,7 +343,7 @@ msgstr "Синхронизация элементов"
 msgid "Ok"
 msgstr "Ок"
 
-#: ../data/ui/sync_item.blp:30
+#: ../data/ui/sync_item.blp:38
 msgid "Remove"
 msgstr ""
 
@@ -421,87 +431,172 @@ msgstr ""
 msgid "Could not load a synced item"
 msgstr ""
 
-#: ../src/player/mod.rs:311
+#: ../src/messages.rs:62
+msgid "Could not load the album"
+msgstr ""
+
+#: ../src/messages.rs:66
+msgid "This library is empty"
+msgstr ""
+
+#: ../src/messages.rs:70
+msgid "No playlists"
+msgstr ""
+
+#: ../src/notify.rs:56
+msgid "Retry"
+msgstr ""
+
+#: ../src/player/mod.rs:334
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:319
+#: ../src/player/mod.rs:342
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:408
+#: ../src/player/mod.rs:441
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:598
+#: ../src/player/mod.rs:631
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1039
+#: ../src/player/mod.rs:1088
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/sync.rs:97
+#: ../src/sync.rs:175
 msgid "Sync failed"
 msgstr ""
 
-#: ../src/sync.rs:154
+#: ../src/sync.rs:242
 msgid "Could not download an item"
 msgstr ""
 
-#: ../src/sync.rs:210
+#: ../src/sync.rs:302
 msgid "Not enough disk space for the download"
 msgstr ""
 
-#: ../src/views/album_view.rs:66
+#: ../src/views/album_view.rs:83
 #, rust-format
 msgid "Disc {}"
 msgstr "Диск {}"
 
-#: ../src/views/album_view.rs:169 ../src/views/cover_box.rs:194
-#: ../src/views/cover_box.rs:201
+#: ../src/views/album_view.rs:186 ../src/views/cover_box.rs:203
+#: ../src/views/cover_box.rs:210
 msgid "Go to artist view"
 msgstr "Перейти на страницу исполнителя"
 
-#: ../src/views/album_view.rs:174 ../src/views/cover_box.rs:238
+#: ../src/views/album_view.rs:191 ../src/views/cover_box.rs:245
 msgid "Sync"
 msgstr "Синхронизация"
 
-#: ../src/views/album_view.rs:175 ../src/views/cover_box.rs:244
+#: ../src/views/album_view.rs:192 ../src/views/cover_box.rs:251
 msgid "Shuffle"
 msgstr "Перемешать"
 
-#: ../src/views/album_view.rs:263
-msgid "Could not load the album"
-msgstr ""
-
-#: ../src/views/cover_box.rs:187
+#: ../src/views/cover_box.rs:196
 msgid "Go to album view"
 msgstr "Перейти на страницу альбома"
 
-#: ../src/views/cover_box.rs:217
+#: ../src/views/cover_box.rs:226
 msgid "Go to show view"
 msgstr "Перейти на страницу сериала"
 
-#: ../src/views/cover_box.rs:222
+#: ../src/views/cover_box.rs:231
 msgid "Mark as Played"
 msgstr "Отметить как Просмотренный"
 
-#: ../src/views/cover_box.rs:229
+#: ../src/views/cover_box.rs:238
 msgid "Mark as Unplayed"
 msgstr "Отметить как Непросмотренный"
 
-#: ../src/views/cover_box.rs:248 ../src/window/playback.rs:111
+#: ../src/views/cover_box.rs:255
 msgid "Start from the beginning"
 msgstr "Начать сначала"
+
+#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:160
+#: ../src/views/sidebar_box.rs:191
+msgid "Downloads"
+msgstr ""
+
+#: ../src/views/downloads_view.rs:75
+msgid "Nothing downloaded yet"
+msgstr ""
 
 #: ../src/views/music_popover_menu.rs:184
 msgid "Could not rate the track"
 msgstr ""
 
-#: ../src/views/player_view.rs:371
+#: ../src/views/player_view.rs:308
+msgid "Audio"
+msgstr ""
+
+#: ../src/views/player_view.rs:309
+msgid "Subtitle"
+msgstr ""
+
+#: ../src/views/player_view.rs:430
 msgid "None"
 msgstr "Нет"
+
+#: ../src/views/preferences.rs:22
+msgid "Prefer music clips"
+msgstr "Предпочитать музыкальные клипы"
+
+#: ../src/views/preferences.rs:24
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio."
+msgstr ""
+"При воспроизведении музыки, если к треку добавлен музыкальный клип, будет "
+"воспроизводиться он."
+
+#: ../src/views/preferences.rs:32
+msgid "Transcode media"
+msgstr "Перекодирование контента"
+
+#: ../src/views/preferences.rs:33
+msgid "Transcode media instead of playing directly."
+msgstr "Перекодирование контента вместо прямого воспроизведения."
+
+#: ../src/views/preferences.rs:42
+msgid "Resolution"
+msgstr ""
+
+#: ../src/views/preferences.rs:70
+msgid "Playback"
+msgstr ""
+
+#: ../src/views/preferences.rs:79
+msgid "Preferences"
+msgstr ""
+
+#: ../src/views/search_view.rs:20
+msgid "Movies"
+msgstr ""
+
+#: ../src/views/search_view.rs:21
+msgid "Shows"
+msgstr ""
+
+#: ../src/views/search_view.rs:22
+msgid "Seasons"
+msgstr ""
+
+#: ../src/views/search_view.rs:23
+msgid "Episodes"
+msgstr ""
+
+#: ../src/views/search_view.rs:24
+msgid "Artists"
+msgstr ""
+
+#: ../src/views/search_view.rs:25
+msgid "Albums"
+msgstr ""
 
 #: ../src/views/section_view.rs:21
 msgid "Added at"
@@ -543,39 +638,43 @@ msgstr "Высота контента"
 msgid "Duration"
 msgstr "Длительность"
 
-#: ../src/views/section_view.rs:333 ../src/views/sidebar_box.rs:148
+#: ../src/views/section_view.rs:356 ../src/views/sidebar_box.rs:155
 msgid "Playlists"
 msgstr "Плейлисты"
 
-#: ../src/views/sidebar_box.rs:142
+#: ../src/views/sidebar_box.rs:149 ../src/views/sidebar_box.rs:186
 msgid "Player"
 msgstr "Плеер"
 
-#: ../src/views/sidebar_box.rs:146
+#: ../src/views/sidebar_box.rs:153
 msgid "Home"
 msgstr "Главная"
 
-#: ../src/window/connection.rs:9
+#: ../src/window/connection.rs:14
 msgid "Starting Girens"
 msgstr "Запуск Girens"
 
-#: ../src/window/connection.rs:15 ../src/window/connection.rs:63
-#: ../src/window/connection.rs:86
+#: ../src/window/connection.rs:20 ../src/window/connection.rs:73
+#: ../src/window/connection.rs:129
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Подключение к {}."
 
-#: ../src/window/connection.rs:92 ../src/window/connection.rs:135
-#: ../src/window/connection.rs:276
+#: ../src/window/connection.rs:102
+msgid "Waiting for you to sign in in the browser…"
+msgstr ""
+
+#: ../src/window/connection.rs:135 ../src/window/connection.rs:178
+#: ../src/window/connection.rs:358
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Не удалось подключится к {} ."
 
-#: ../src/window/connection.rs:114
+#: ../src/window/connection.rs:157
 msgid "No servers found for this account."
 msgstr "Для этой учетной записи не найдено ни одного сервера."
 
-#: ../src/window/connection.rs:128
+#: ../src/window/connection.rs:171
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -586,31 +685,52 @@ msgstr ""
 "Есть {1} URL-адресов подключений.\n"
 "Это может занять некоторое время."
 
-#: ../src/window/connection.rs:164
+#: ../src/window/connection.rs:198
+msgid "The server cannot be reached. Showing your downloads."
+msgstr ""
+
+#: ../src/window/connection.rs:246
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/mod.rs:593
+#: ../src/window/mod.rs:556
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:598
+#: ../src/window/mod.rs:561
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:601
+#: ../src/window/mod.rs:564
 msgid "Help with translating"
 msgstr "Помочь с переводом"
 
-#: ../src/window/playback.rs:108
-msgid "Do you want resume watching or start from the beginning?"
-msgstr "Продолжить просмотр или начать с начала?"
+#: ../src/window/playback.rs:83
+msgid "This is not available without a connection to the server"
+msgstr ""
 
-#: ../src/window/playback.rs:112
-msgid "Resume"
-msgstr "Продолжить"
+#~ msgid "1080p"
+#~ msgstr "1080p"
+
+#~ msgid "720p"
+#~ msgstr "720p"
+
+#~ msgid "480p"
+#~ msgstr "480p"
+
+#~ msgid "240p"
+#~ msgstr "240p"
+
+#~ msgid "Info"
+#~ msgstr "Информация"
+
+#~ msgid "Do you want resume watching or start from the beginning?"
+#~ msgstr "Продолжить просмотр или начать с начала?"
+
+#~ msgid "Resume"
+#~ msgstr "Продолжить"
 
 #~ msgid "Secure"
 #~ msgstr "Безопасно"
