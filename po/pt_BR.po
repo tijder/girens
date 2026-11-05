@@ -1,0 +1,813 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Girens package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Girens 2.0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-05 17:18+0100\n"
+"PO-Revision-Date: 2024-05-02 22:07+0000\n"
+"Last-Translator: Fernando Lopes "
+"<118869201+plasmus777@users.noreply.github.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"girens/girens/pt_BR/>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.5.3-dev\n"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:5
+msgid "Girens for Plex"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:7
+msgid "Watch your Plex content"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:11
+msgid ""
+"Girens is a Plex media player client. You can watch and listen to your "
+"music, shows and movies with this GTK app."
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:20
+msgid "The home screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:24
+msgid "The show screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:28
+msgid "The album screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:2
+msgid "Girens"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Play your Plex movies, shows and music"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:10
+msgid "girens;plex;media;player;"
+msgstr ""
+
+#: ../data/ui/album_header.blp:41 ../data/ui/artist_view.blp:62
+#: ../data/ui/media_box_music.blp:112 ../data/ui/media_box_video_bottom.blp:95
+#: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:56
+msgid "Play"
+msgstr ""
+
+#: ../data/ui/album_header.blp:50
+msgid "More"
+msgstr ""
+
+#: ../data/ui/album_item.blp:26
+msgid "Play music clip"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:130
+msgid "Ondeck"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:33
+msgid "Recently added Shows"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:46
+msgid "Recently added Movies"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:59
+msgid "Recently added Music"
+msgstr ""
+
+#: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
+msgid "Logout"
+msgstr ""
+
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr ""
+
+#: ../data/ui/login_view.blp:33
+msgid "Login to Plex with an user acount"
+msgstr ""
+
+#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
+msgid "Username"
+msgstr ""
+
+#: ../data/ui/login_view.blp:44
+msgid "Password"
+msgstr ""
+
+#: ../data/ui/login_view.blp:53
+msgid "Login"
+msgstr ""
+
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr ""
+
+#: ../data/ui/login_view.blp:69
+msgid "Go to Plex server based on an URL"
+msgstr ""
+
+#: ../data/ui/login_view.blp:74
+msgid "The URL to the Plex server with the port number"
+msgstr ""
+
+#: ../data/ui/login_view.blp:80
+msgid "Token"
+msgstr ""
+
+#: ../data/ui/login_view.blp:89
+msgid "Connect"
+msgstr ""
+
+#: ../data/ui/main_window.blp:37
+msgid "Account"
+msgstr ""
+
+#: ../data/ui/main_window.blp:60
+msgid "Toggle Sidebar"
+msgstr ""
+
+#: ../data/ui/main_window.blp:64
+msgid "Search"
+msgstr ""
+
+#: ../data/ui/main_window.blp:78
+msgid "Downloads"
+msgstr ""
+
+#: ../data/ui/main_window.blp:88
+msgid "Main menu"
+msgstr ""
+
+#: ../data/ui/main_window.blp:164
+msgid "Settings"
+msgstr ""
+
+#: ../data/ui/main_window.blp:192
+msgid "Prefer music clips"
+msgstr ""
+
+#: ../data/ui/main_window.blp:193
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio."
+msgstr ""
+
+#: ../data/ui/main_window.blp:202
+msgid "Transcode media"
+msgstr ""
+
+#: ../data/ui/main_window.blp:203
+msgid "Transcode media instead of playing directly."
+msgstr ""
+
+#: ../data/ui/main_window.blp:212
+msgid "1080p"
+msgstr ""
+
+#: ../data/ui/main_window.blp:219
+msgid "720p"
+msgstr ""
+
+#: ../data/ui/main_window.blp:228
+msgid "480p"
+msgstr ""
+
+#: ../data/ui/main_window.blp:237
+msgid "240p"
+msgstr ""
+
+#: ../data/ui/main_window.blp:250
+msgid "Info"
+msgstr ""
+
+#: ../data/ui/main_window.blp:256
+msgid "Shortcuts"
+msgstr ""
+
+#: ../data/ui/main_window.blp:262
+msgid "About Girens"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:78 ../data/ui/media_box_video_bottom.blp:65
+msgid "Play queue"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:102 ../data/ui/media_box_video_bottom.blp:86
+msgid "Previous"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:121 ../data/ui/media_box_video_bottom.blp:104
+msgid "Next"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:130 ../data/ui/media_box_video_top.blp:46
+msgid "Stop"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:141
+msgid "Options"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:77
+msgid "Skip backward"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:113
+msgid "Skip forward"
+msgstr ""
+
+#: ../data/ui/media_box_video_top.blp:11
+msgid "Fullscreen"
+msgstr ""
+
+#: ../data/ui/media_box_video_top.blp:19
+msgid "Fill window"
+msgstr ""
+
+#: ../data/ui/music_popover_menu.blp:67
+msgid "Repeat"
+msgstr ""
+
+#: ../data/ui/player_view.blp:89
+msgid "Release date"
+msgstr ""
+
+#: ../data/ui/player_view.blp:93
+msgid "Genre"
+msgstr ""
+
+#: ../data/ui/player_view.blp:102
+msgid "Description"
+msgstr ""
+
+#: ../data/ui/player_view.blp:115
+msgid "Audio "
+msgstr ""
+
+#: ../data/ui/player_view.blp:118
+msgid "Subtitle "
+msgstr ""
+
+#: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
+msgid "Account info"
+msgstr ""
+
+#: ../data/ui/profile_dialog.blp:15
+msgid "Email"
+msgstr ""
+
+#: ../data/ui/profile_dialog.blp:18
+msgid "Subscription plan"
+msgstr ""
+
+#: ../data/ui/section_view.blp:46
+msgid "Order"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:13
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:17
+msgctxt "shortcut window"
+msgid "Play/Pause"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:23
+msgctxt "shortcut window"
+msgid "Previous"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:29
+msgctxt "shortcut window"
+msgid "Next"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:35
+msgctxt "shortcut window"
+msgid "Seek forwards"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:41
+msgctxt "shortcut window"
+msgid "Seek backwards"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:47
+msgctxt "shortcut window"
+msgid "Stop playing"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:53
+msgctxt "shortcut window"
+msgid "Fullscreen"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:59
+msgctxt "shortcut window"
+msgid "Play musicclips instead of audio track"
+msgstr ""
+
+#: ../data/ui/sync_dialog.blp:4
+msgid "Sync items"
+msgstr ""
+
+#: ../data/ui/sync_dialog.blp:34
+msgid "Ok"
+msgstr ""
+
+#: ../data/ui/sync_item.blp:30
+msgid "Remove"
+msgstr ""
+
+#: ../data/ui/sync_settings.blp:5
+msgid "Sync - settings"
+msgstr ""
+
+#: ../data/ui/sync_settings.blp:14
+msgid "Convert"
+msgstr ""
+
+#: ../data/ui/sync_settings.blp:15
+msgid "Converted sync can take a long time"
+msgstr ""
+
+#: ../data/ui/sync_settings.blp:23
+msgid "Unwatched only"
+msgstr ""
+
+#: ../data/ui/sync_settings.blp:31
+msgid "Max items"
+msgstr ""
+
+#: ../data/ui/theme_switcher.blp:25
+msgid "Follow system style"
+msgstr ""
+
+#: ../data/ui/theme_switcher.blp:39
+msgid "Light style"
+msgstr ""
+
+#: ../data/ui/theme_switcher.blp:53
+msgid "Dark style"
+msgstr ""
+
+#: ../src/messages.rs:10
+msgid "Could not open the item"
+msgstr ""
+
+#: ../src/messages.rs:14
+msgid "Could not load the item"
+msgstr ""
+
+#: ../src/messages.rs:18
+msgid "Could not change the watched state"
+msgstr ""
+
+#: ../src/messages.rs:22
+msgid "Could not load on deck"
+msgstr ""
+
+#: ../src/messages.rs:26
+msgid "Could not load recently added"
+msgstr ""
+
+#: ../src/messages.rs:30
+msgid "Could not load the sort options"
+msgstr ""
+
+#: ../src/messages.rs:34
+msgid "Could not load the library"
+msgstr ""
+
+#: ../src/messages.rs:38
+msgid "Could not load the playlists"
+msgstr ""
+
+#: ../src/messages.rs:42
+msgid "Search failed"
+msgstr ""
+
+#: ../src/messages.rs:46
+msgid "Could not load the show"
+msgstr ""
+
+#: ../src/messages.rs:50
+msgid "Could not load the episodes"
+msgstr ""
+
+#: ../src/messages.rs:54
+msgid "Could not load the artist"
+msgstr ""
+
+#: ../src/messages.rs:58
+msgid "Could not load a synced item"
+msgstr ""
+
+#: ../src/player/mod.rs:311
+msgid "Nothing to play"
+msgstr ""
+
+#: ../src/player/mod.rs:319
+msgid "Could not create a play queue"
+msgstr ""
+
+#: ../src/player/mod.rs:408
+msgid "Could not shuffle the play queue"
+msgstr ""
+
+#: ../src/player/mod.rs:598
+msgid "Could not start playback"
+msgstr ""
+
+#: ../src/player/mod.rs:1039
+msgid "Could not change the stream"
+msgstr ""
+
+#: ../src/sync.rs:97
+msgid "Sync failed"
+msgstr ""
+
+#: ../src/sync.rs:154
+msgid "Could not download an item"
+msgstr ""
+
+#: ../src/sync.rs:210
+msgid "Not enough disk space for the download"
+msgstr ""
+
+#: ../src/views/album_view.rs:66
+#, rust-format
+msgid "Disc {}"
+msgstr ""
+
+#: ../src/views/album_view.rs:169 ../src/views/cover_box.rs:194
+#: ../src/views/cover_box.rs:201
+msgid "Go to artist view"
+msgstr ""
+
+#: ../src/views/album_view.rs:174 ../src/views/cover_box.rs:238
+msgid "Sync"
+msgstr ""
+
+#: ../src/views/album_view.rs:175 ../src/views/cover_box.rs:244
+msgid "Shuffle"
+msgstr ""
+
+#: ../src/views/album_view.rs:263
+msgid "Could not load the album"
+msgstr ""
+
+#: ../src/views/cover_box.rs:187
+msgid "Go to album view"
+msgstr ""
+
+#: ../src/views/cover_box.rs:217
+msgid "Go to show view"
+msgstr ""
+
+#: ../src/views/cover_box.rs:222
+msgid "Mark as Played"
+msgstr ""
+
+#: ../src/views/cover_box.rs:229
+msgid "Mark as Unplayed"
+msgstr ""
+
+#: ../src/views/cover_box.rs:248 ../src/window/playback.rs:111
+msgid "Start from the beginning"
+msgstr ""
+
+#: ../src/views/music_popover_menu.rs:184
+msgid "Could not rate the track"
+msgstr ""
+
+#: ../src/views/player_view.rs:371
+msgid "None"
+msgstr ""
+
+#: ../src/views/section_view.rs:21
+msgid "Added at"
+msgstr ""
+
+#: ../src/views/section_view.rs:22
+msgid "Last viewed at"
+msgstr ""
+
+#: ../src/views/section_view.rs:23
+msgid "Originally available at"
+msgstr ""
+
+#: ../src/views/section_view.rs:24
+msgid "Title"
+msgstr ""
+
+#: ../src/views/section_view.rs:25
+msgid "Rating"
+msgstr ""
+
+#: ../src/views/section_view.rs:26
+msgid "Unwatched"
+msgstr ""
+
+#: ../src/views/section_view.rs:27
+msgid "View count"
+msgstr ""
+
+#: ../src/views/section_view.rs:28
+msgid "User rating"
+msgstr ""
+
+#: ../src/views/section_view.rs:29
+msgid "Media height"
+msgstr ""
+
+#: ../src/views/section_view.rs:30
+msgid "Duration"
+msgstr ""
+
+#: ../src/views/section_view.rs:333 ../src/views/sidebar_box.rs:148
+msgid "Playlists"
+msgstr ""
+
+#: ../src/views/sidebar_box.rs:142
+msgid "Player"
+msgstr ""
+
+#: ../src/views/sidebar_box.rs:146
+msgid "Home"
+msgstr ""
+
+#: ../src/window/connection.rs:9
+msgid "Starting Girens"
+msgstr ""
+
+#: ../src/window/connection.rs:15 ../src/window/connection.rs:63
+#: ../src/window/connection.rs:86
+#, rust-format
+msgid "Connecting to {}."
+msgstr ""
+
+#: ../src/window/connection.rs:92 ../src/window/connection.rs:135
+#: ../src/window/connection.rs:276
+#, rust-format
+msgid "Connecting to {} failed."
+msgstr ""
+
+#: ../src/window/connection.rs:114
+msgid "No servers found for this account."
+msgstr ""
+
+#: ../src/window/connection.rs:128
+#, rust-format
+msgid ""
+"Connecting to {0}.\n"
+"There are {1} connection urls.\n"
+"This may take a while."
+msgstr ""
+
+#: ../src/window/connection.rs:164
+msgid "Could not load the libraries"
+msgstr ""
+
+#: ../src/window/mod.rs:593
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+
+#: ../src/window/mod.rs:598
+msgid "translator-credits"
+msgstr ""
+
+#: ../src/window/mod.rs:601
+msgid "Help with translating"
+msgstr ""
+
+#: ../src/window/playback.rs:108
+msgid "Do you want resume watching or start from the beginning?"
+msgstr ""
+
+#: ../src/window/playback.rs:112
+msgid "Resume"
+msgstr ""
+
+#~ msgid "Changes:"
+#~ msgstr "Mudanças:"
+
+#~ msgid "New overlay sidebar"
+#~ msgstr "Nova barra lateral de sobreposição"
+
+#~ msgid "Fix directplay for users without download rights"
+#~ msgstr "Corrigir reprodução direta para usuários sem direitos de download"
+
+#~ msgid "Show media controls on click"
+#~ msgstr "Mostrar controles de mídia ao clicar"
+
+#~ msgid "Change summary"
+#~ msgstr "Resumo das alterações"
+
+#~ msgid "Update blp files to use blueprint syntax"
+#~ msgstr "Atualizar arquivos BLP para usar a sintaxe de blueprint"
+
+#~ msgid "Update dependencies"
+#~ msgstr "Atualizar dependências"
+
+#~ msgid "Added Portuguese translation"
+#~ msgstr "Adicionada tradução para o português"
+
+#~ msgid "Added Finnish translation"
+#~ msgstr "Adicionada tradução para o finlandês"
+
+#~ msgid "Use dash as transcode protocol"
+#~ msgstr "Usar traço como protocolo de transcodificação"
+
+#~ msgid "Fix problems with playback"
+#~ msgstr "Corrigir problemas de reprodução"
+
+#~ msgid "Show loading box in section view"
+#~ msgstr "Mostrar caixa de carregamento na visualização de seção"
+
+#~ msgid "Show icon in sidebar"
+#~ msgstr "Mostrar ícone na barra lateral"
+
+#~ msgid "Remove arrow from popover menu"
+#~ msgstr "Remover seta do menu flutuante"
+
+#~ msgid "Show view item fix background of watched tip"
+#~ msgstr "Corrigir fundo do item assistido na dica de visualização"
+
+#~ msgid "Help with translating url added in about widget"
+#~ msgstr ""
+#~ "Para o português do Brasil: \"Ajuda com a tradução do URL adicionado no "
+#~ "widget Sobre"
+
+#~ msgid "Added German translation"
+#~ msgstr "Adicionada tradução para o alemão"
+
+#~ msgid "Added Spanish translation"
+#~ msgstr "Adicionada tradução para o espanhol"
+
+#~ msgid "Added Turkish translation"
+#~ msgstr "Adicionada tradução para o turco"
+
+#~ msgid "Added Swedish translation"
+#~ msgstr "Adicionada tradução para o sueco"
+
+#~ msgid "Migrated from GTK 3 to GTK 4"
+#~ msgstr "Migrado de GTK 3 para GTK 4"
+
+#~ msgid "Migrated from Libhandy to Libadwaita"
+#~ msgstr "Migrado de Libhandy para Libadwaita"
+
+#~ msgid "Migrated to Blueprint for ui files"
+#~ msgstr "Migrado para Blueprint para arquivos ui"
+
+#~ msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
+#~ msgstr ""
+#~ "Aprimorou listas para bibliotecas extensas (graças às novas listas Gtk4)."
+
+#~ msgid "Redesigned the album/artist view"
+#~ msgstr "Redesenhada a visualização de álbuns/artistas"
+
+#~ msgid "Redesigned the show view"
+#~ msgstr "Redesenhada a visualização de séries"
+
+#~ msgid "Improved the borderless view"
+#~ msgstr "Aprimorada a visualização sem bordas"
+
+#~ msgid "A lot of bug fixes"
+#~ msgstr "Muitas correções de bugs"
+
+#~ msgid "Support to login without libsecret"
+#~ msgstr "Suporte para login sem libsecret"
+
+#~ msgid "Added French translation"
+#~ msgstr "Adicionada tradução para o francês"
+
+#~ msgid "Added Norwegian Bokmål translation"
+#~ msgstr "Adicionada tradução para o norueguês (bokmål)"
+
+#~ msgid "Use gnome SDK 40"
+#~ msgstr "Usar SDK do GNOME 40"
+
+#~ msgid "Fix build warnings"
+#~ msgstr "Corrigir avisos de compilação"
+
+#~ msgid "Update mpv to 33"
+#~ msgstr "Atualizar MPV para a versão 33"
+
+#~ msgid "Fix play buttons not updating for musicclips"
+#~ msgstr ""
+#~ "Corrigir botões de reprodução que não estão atualizando para clipes de "
+#~ "música"
+
+#~ msgid "Add option to play video fullscreen within the Window"
+#~ msgstr ""
+#~ "Adicionar opção para reproduzir vídeo em tela cheia dentro da janela"
+
+#~ msgid "Show track and disc number in album view"
+#~ msgstr "Mostrar número da faixa e do disco na visualização do álbum"
+
+#~ msgid "Select name None if no subtitle is selected"
+#~ msgstr "Selecionar Nenhum caso nenhum subtítulo seja selecionado"
+
+#~ msgid "Show hours of audio item"
+#~ msgstr "Mostrar horas do item de áudio"
+
+#~ msgid "Load only needed items of sections"
+#~ msgstr "Carregar apenas os itens necessários das seções"
+
+#~ msgid "Use readable name for sorting"
+#~ msgstr "Usar nome legível para ordenar"
+
+#~ msgid "Dutch translation added"
+#~ msgstr "Tradução para o holandês adicionada"
+
+#~ msgid "Update layout of settings menu with libhandy widgets"
+#~ msgstr "Atualizar layout do menu de configurações com widgets do libhandy"
+
+#~ msgid "Setting for changing transcoding video resolution"
+#~ msgstr "Configuração para alterar a resolução de transcodificação de vídeo"
+
+#~ msgid "Unselect sidebar item when changing section"
+#~ msgstr "Deselecionar item da barra lateral ao mudar de seção"
+
+#~ msgid "More music play options"
+#~ msgstr "Mais opções de reprodução de música"
+
+#~ msgid "New app icon"
+#~ msgstr "Novo ícone do aplicativo"
+
+#~ msgid "Double click to toggle fullscreen"
+#~ msgstr "Duplo clique para alternar para tela cheia"
+
+#~ msgid "Redesigned login view"
+#~ msgstr "Visual de login redesenhado"
+
+#~ msgid "Press k to toggle play or pause media"
+#~ msgstr "Pressione k para alternar entre reproduzir ou pausar a mídia"
+
+#~ msgid "Fix basic auth urls when downloading"
+#~ msgstr "Corrigir URLs de autenticação básica ao baixar"
+
+#~ msgid "Fix crash when latest timeline update failed"
+#~ msgstr "Corrigir falha quando a última atualização da linha do tempo falhou"
+
+#~ msgid "Exit fullscreen with escape"
+#~ msgstr "Sair do modo de tela cheia com a tecla Escape"
+
+#~ msgid "Add feature changing subtitle and audio stream with plex remote"
+#~ msgstr ""
+#~ "Adicionar recurso para alterar legenda e faixa de áudio com o controle "
+#~ "remoto do Plex"
+
+#~ msgid "Fix music not correct seeking when transcoding"
+#~ msgstr "Corrigir a busca incorreta de música ao transcodificar"
+
+#~ msgid "Fix bug with showing section after playlist is showed"
+#~ msgstr ""
+#~ "Corrigir o bug de mostrar a seção após a lista de reprodução ser mostrada"
+
+#~ msgid "Change subtitle and audio stream"
+#~ msgstr "Alterar legenda e fluxo de áudio"
+
+#~ msgid "Remove white border in fullscreen"
+#~ msgstr "Remover borda branca em tela cheia"
+
+#~ msgid "Option to change volume level"
+#~ msgstr "Opção para alterar o nível de volume"
+
+#~ msgid "Option to set dark theme"
+#~ msgstr "Opção para definir tema escuro"
+
+#~ msgid "Change progress bar for seeking bar in video player"
+#~ msgstr ""
+#~ "Alterar barra de progresso para barra de busca no reprodutor de vídeo"
+
+#~ msgid "Dont refresh allready loaded section"
+#~ msgstr "Não atualizar seção já carregada"
+
+#~ msgid "Plex token saved with Secret Service"
+#~ msgstr "Token do Plex guardado com o Secret Service"
+
+#~ msgid "Advertise as Client on the local network"
+#~ msgstr "\"Anunciar como cliente na rede local"
+
+#~ msgid "Add option to play media without transcoding"
+#~ msgstr "Adicionar opção para reproduzir mídia sem transcodificar"

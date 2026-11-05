@@ -29,5 +29,6 @@ src/views/music_popover_menu.rs
 src/views/player_view.rs
 src/views/section_view.rs
 src/views/sidebar_box.rs
-src/window.rs
-src/window.rs src/window.rs
+src/window/connection.rs
+src/window/mod.rs
+src/window/playback.rs

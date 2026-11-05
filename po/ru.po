@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 17:14+0100\n"
+"POT-Creation-Date: 2026-11-05 17:18+0100\n"
 "PO-Revision-Date: 2025-05-05 06:44+0000\n"
 "Last-Translator: Yurt Page <yurtpage@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/girens/girens/ru/"
@@ -491,7 +491,7 @@ msgstr "Отметить как Просмотренный"
 msgid "Mark as Unplayed"
 msgstr "Отметить как Непросмотренный"
 
-#: ../src/views/cover_box.rs:248 ../src/window.rs:1059
+#: ../src/views/cover_box.rs:248 ../src/window/playback.rs:111
 msgid "Start from the beginning"
 msgstr "Начать сначала"
 
@@ -555,39 +555,27 @@ msgstr "Плеер"
 msgid "Home"
 msgstr "Главная"
 
-#: ../src/window.rs:590
-msgid ""
-"A Plex GTK client for playing movies, TV shows and music from your Plex "
-"library."
-msgstr ""
-
-#: ../src/window.rs:595
-msgid "translator-credits"
-msgstr ""
-
-#: ../src/window.rs:598
-msgid "Help with translating"
-msgstr "Помочь с переводом"
-
-#: ../src/window.rs:639
+#: ../src/window/connection.rs:9
 msgid "Starting Girens"
 msgstr "Запуск Girens"
 
-#: ../src/window.rs:645 ../src/window.rs:693 ../src/window.rs:716
+#: ../src/window/connection.rs:15 ../src/window/connection.rs:63
+#: ../src/window/connection.rs:86
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Подключение к {}."
 
-#: ../src/window.rs:722 ../src/window.rs:765 ../src/window.rs:1226
+#: ../src/window/connection.rs:92 ../src/window/connection.rs:135
+#: ../src/window/connection.rs:276
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Не удалось подключится к {} ."
 
-#: ../src/window.rs:744
+#: ../src/window/connection.rs:114
 msgid "No servers found for this account."
 msgstr "Для этой учетной записи не найдено ни одного сервера."
 
-#: ../src/window.rs:758
+#: ../src/window/connection.rs:128
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -598,15 +586,29 @@ msgstr ""
 "Есть {1} URL-адресов подключений.\n"
 "Это может занять некоторое время."
 
-#: ../src/window.rs:794
+#: ../src/window/connection.rs:164
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window.rs:1056
+#: ../src/window/mod.rs:593
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+
+#: ../src/window/mod.rs:598
+msgid "translator-credits"
+msgstr ""
+
+#: ../src/window/mod.rs:601
+msgid "Help with translating"
+msgstr "Помочь с переводом"
+
+#: ../src/window/playback.rs:108
 msgid "Do you want resume watching or start from the beginning?"
 msgstr "Продолжить просмотр или начать с начала?"
 
-#: ../src/window.rs:1060
+#: ../src/window/playback.rs:112
 msgid "Resume"
 msgstr "Продолжить"
 

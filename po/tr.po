@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 17:14+0100\n"
+"POT-Creation-Date: 2026-11-05 17:18+0100\n"
 "PO-Revision-Date: 2024-05-08 12:08+0000\n"
 "Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/girens/girens/tr/"
@@ -488,7 +488,7 @@ msgstr "Oynatıldı Olarak İmle"
 msgid "Mark as Unplayed"
 msgstr "Oynatılmadı Olarak İmle"
 
-#: ../src/views/cover_box.rs:248 ../src/window.rs:1059
+#: ../src/views/cover_box.rs:248 ../src/window/playback.rs:111
 msgid "Start from the beginning"
 msgstr "Baştan başla"
 
@@ -552,39 +552,27 @@ msgstr "Oynatıcı"
 msgid "Home"
 msgstr "Başlangıç"
 
-#: ../src/window.rs:590
-msgid ""
-"A Plex GTK client for playing movies, TV shows and music from your Plex "
-"library."
-msgstr ""
-
-#: ../src/window.rs:595
-msgid "translator-credits"
-msgstr ""
-
-#: ../src/window.rs:598
-msgid "Help with translating"
-msgstr "Çeviriye yardım edin"
-
-#: ../src/window.rs:639
+#: ../src/window/connection.rs:9
 msgid "Starting Girens"
 msgstr "Girens Başlatılıyor"
 
-#: ../src/window.rs:645 ../src/window.rs:693 ../src/window.rs:716
+#: ../src/window/connection.rs:15 ../src/window/connection.rs:63
+#: ../src/window/connection.rs:86
 #, rust-format
 msgid "Connecting to {}."
 msgstr "{} sunucusuna bağlanıyor."
 
-#: ../src/window.rs:722 ../src/window.rs:765 ../src/window.rs:1226
+#: ../src/window/connection.rs:92 ../src/window/connection.rs:135
+#: ../src/window/connection.rs:276
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "{} sunucusuna bağlanılamadı."
 
-#: ../src/window.rs:744
+#: ../src/window/connection.rs:114
 msgid "No servers found for this account."
 msgstr "Bu hesap için sunucu bulunamadı."
 
-#: ../src/window.rs:758
+#: ../src/window/connection.rs:128
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -595,15 +583,29 @@ msgstr ""
 "{1} bağlantı URLʼsi var.\n"
 "Biraz zaman alabilir."
 
-#: ../src/window.rs:794
+#: ../src/window/connection.rs:164
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window.rs:1056
+#: ../src/window/mod.rs:593
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+
+#: ../src/window/mod.rs:598
+msgid "translator-credits"
+msgstr ""
+
+#: ../src/window/mod.rs:601
+msgid "Help with translating"
+msgstr "Çeviriye yardım edin"
+
+#: ../src/window/playback.rs:108
 msgid "Do you want resume watching or start from the beginning?"
 msgstr "İzlemeye devam etmek mi yoksa baştan başlamak mı istersiniz?"
 
-#: ../src/window.rs:1060
+#: ../src/window/playback.rs:112
 msgid "Resume"
 msgstr "Sürdür"
 

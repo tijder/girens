@@ -14,12 +14,11 @@ sed 's/#: //g;s/:[0-9]*//g;s/\.\.\///g' <(fgrep "#: " girens.pot) | sed s/\ /\\n
 echo "# Please keep this list alphabetically sorted" > LINGUAS
 for l in $(ls *.po); do basename $l .po >> LINGUAS; done
 
+# Bring every catalogue up to date with the template. Translations are kept;
+# msgids that changed lose theirs (-N: no guessing at similar strings).
 for lang in $(sed "s/^#.*$//g" LINGUAS); do
-    mv "${lang}.po" "${lang}.po.old"
-    msginit --no-translator --locale=$lang --input girens.pot
-    mv "${lang}.po" "${lang}.po.new"
-    msgmerge -N "${lang}.po.old" "${lang}.po.new" > ${lang}.po
-    rm "${lang}.po.old" "${lang}.po.new"
+    msgmerge --quiet -N "${lang}.po" girens.pot --output-file="${lang}.po.new" \
+        && mv "${lang}.po.new" "${lang}.po"
 done
 
 rm girens-*.pot
