@@ -7,6 +7,8 @@ use crate::{Error, PlexServer, Result};
 
 const SIGN_IN: &str = "https://plex.tv/api/v2/users/signin";
 const USER: &str = "https://plex.tv/api/v2/user";
+const PINS: &str = "https://plex.tv/api/v2/pins";
+const AUTH_PAGE: &str = "https://app.plex.tv/auth";
 const RESOURCES: &str = "https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1";
 
 #[derive(Debug, Clone, Deserialize)]
@@ -78,6 +80,31 @@ impl Resource {
     }
 }
 
+/// A pending sign-in through the browser: the user approves it on plex.tv,
+/// after which the pin yields an account token. This also works for accounts
+/// with two-factor authentication.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Pin {
+    pub id: u64,
+    pub code: String,
+    /// Set once the user has approved the sign-in.
+    pub auth_token: Option<String>,
+}
+
+impl Pin {
+    /// The page to open in the browser.
+    pub fn auth_url(&self, client: &ClientInfo) -> String {
+        // Plex expects the parameters after the `#`, not as a query string.
+        let parameters = url::form_urlencoded::Serializer::new(String::new())
+            .append_pair("clientID", &client.identifier)
+            .append_pair("code", &self.code)
+            .append_pair("context[device][product]", &client.product)
+            .finish();
+        format!("{AUTH_PAGE}#?{parameters}")
+    }
+}
+
 /// A plex.tv session.
 #[derive(Debug, Clone)]
 pub struct MyPlex {
@@ -107,6 +134,27 @@ impl MyPlex {
         )
         .await?;
         Self::with_account(account, client)
+    }
+
+    /// Starts a sign-in through the browser. Open [`Pin::auth_url`] and call
+    /// [`Self::check_pin`] until it returns a session.
+    pub async fn create_pin(client: &ClientInfo) -> Result<Pin> {
+        let http = reqwest::Client::builder()
+            .default_headers(client.headers(None))
+            .build()?;
+        send(http.post(format!("{PINS}?strong=true"))).await
+    }
+
+    /// The session, once the user has approved `pin` in the browser.
+    pub async fn check_pin(pin: &Pin, client: &ClientInfo) -> Result<Option<Self>> {
+        let http = reqwest::Client::builder()
+            .default_headers(client.headers(None))
+            .build()?;
+        let pin: Pin = send(http.get(format!("{PINS}/{}", pin.id))).await?;
+        match pin.auth_token {
+            Some(token) if !token.is_empty() => Ok(Some(Self::with_token(&token, client).await?)),
+            _ => Ok(None),
+        }
     }
 
     /// Restores a session from a stored account token.
@@ -159,5 +207,66 @@ impl MyPlex {
             Some(error) => Err(error),
             None => Err(Error::NoConnection(resource.name.clone())),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_sign_in_page_gets_its_parameters_after_the_hash() {
+        let pin = Pin {
+            id: 1,
+            code: "abc123".into(),
+            auth_token: None,
+        };
+        let client = ClientInfo {
+            identifier: "client id".into(),
+            product: "Girens".into(),
+            version: "1".into(),
+            device_name: "test".into(),
+        };
+        assert_eq!(
+            pin.auth_url(&client),
+            "https://app.plex.tv/auth#?clientID=client+id&code=abc123&context%5Bdevice%5D%5Bproduct%5D=Girens"
+        );
+    }
+
+    #[test]
+    fn servers_are_tried_local_first_then_remote_then_relay() {
+        let connection = |uri: &str, local, relay| Connection {
+            uri: uri.into(),
+            local,
+            relay,
+        };
+        let mut resource = Resource {
+            name: "server".into(),
+            client_identifier: "id".into(),
+            provides: "client,server".into(),
+            owned: true,
+            access_token: None,
+            connections: vec![
+                connection("relay", false, true),
+                connection("remote", false, false),
+                connection("local", true, false),
+            ],
+        };
+        assert!(resource.is_server());
+        let order: Vec<&str> = resource
+            .preferred_connections()
+            .iter()
+            .map(|connection| connection.uri.as_str())
+            .collect();
+        assert_eq!(order, ["local", "remote", "relay"]);
+
+        // Someone else's server is not on our network.
+        resource.owned = false;
+        let order: Vec<&str> = resource
+            .preferred_connections()
+            .iter()
+            .map(|connection| connection.uri.as_str())
+            .collect();
+        assert_eq!(order, ["remote", "relay"]);
     }
 }

@@ -64,3 +64,26 @@ async fn browse_a_real_server() {
         }
     }
 }
+
+/// Asks plex.tv for a sign-in pin, as the "sign in in the browser" flow
+/// does. Nobody approves it, so it stays pending and expires by itself.
+#[tokio::test]
+#[ignore = "talks to plex.tv"]
+async fn a_browser_sign_in_can_be_started() {
+    use girens_plex::myplex::MyPlex;
+
+    let client = ClientInfo {
+        identifier: "girens-plex-live-test".into(),
+        product: "Girens".into(),
+        version: env!("CARGO_PKG_VERSION").into(),
+        device_name: "live test".into(),
+    };
+    let pin = MyPlex::create_pin(&client).await.unwrap();
+    assert!(pin.id > 0);
+    assert!(pin.code.len() > 4, "strong pins are long");
+    assert!(pin.auth_token.is_none());
+    assert!(pin
+        .auth_url(&client)
+        .starts_with("https://app.plex.tv/auth#?clientID="));
+    assert!(MyPlex::check_pin(&pin, &client).await.unwrap().is_none());
+}

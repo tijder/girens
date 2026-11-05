@@ -129,6 +129,31 @@ impl Session {
         Ok(())
     }
 
+    /// Starts a sign-in through the browser and returns the page to open
+    /// and the pin to wait for.
+    pub async fn start_browser_login(&self) -> Result<(String, girens_plex::myplex::Pin)> {
+        let client = self.client.clone();
+        let pin = runtime::run({
+            let client = client.clone();
+            async move { MyPlex::create_pin(&client).await }
+        })
+        .await?;
+        Ok((pin.auth_url(&client), pin))
+    }
+
+    /// Whether the user has approved `pin` by now; if so the account is
+    /// signed in.
+    pub async fn finish_browser_login(&self, pin: &girens_plex::myplex::Pin) -> Result<bool> {
+        let (client, pin) = (self.client.clone(), pin.clone());
+        match runtime::run(async move { MyPlex::check_pin(&pin, &client).await }).await? {
+            Some(myplex) => {
+                self.set_account(myplex).await;
+                Ok(true)
+            }
+            None => Ok(false),
+        }
+    }
+
     async fn set_account(&self, myplex: MyPlex) {
         let account = myplex.account().clone();
         self.state.borrow_mut().account = Some(myplex);

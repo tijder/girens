@@ -34,6 +34,21 @@ template $login_view : Box {
               use-underline: true;
             }
 
+            Adw.ActionRow {
+              title: _("Sign in on plex.tv");
+              subtitle: _("Opens your browser; also for accounts with two-factor authentication");
+              activatable-widget: _browser_button;
+
+              Button _browser_button {
+                valign: center;
+                label: _("Sign in");
+
+                styles [
+                  "suggested-action",
+                ]
+              }
+            }
+
             Adw.EntryRow _username_entry {
               title: _("Username");
               input-purpose: name;

@@ -9,8 +9,16 @@ use gtk::{glib, CompositeTemplate};
 /// What the user filled in.
 #[derive(Debug, Clone)]
 pub enum LoginRequest {
-    Account { login: String, password: String },
-    Server { url: String, token: String },
+    /// Sign in on plex.tv in the browser.
+    Browser,
+    Account {
+        login: String,
+        password: String,
+    },
+    Server {
+        url: String,
+        token: String,
+    },
 }
 
 mod imp {
@@ -19,6 +27,8 @@ mod imp {
     #[derive(Default, CompositeTemplate)]
     #[template(resource = "/nl/g4d/Girens/login_view.ui")]
     pub struct LoginView {
+        #[template_child]
+        pub _browser_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _username_entry: TemplateChild<adw::EntryRow>,
         #[template_child]
@@ -61,6 +71,12 @@ mod imp {
                     move |_| view.set_error(false)
                 ));
             }
+
+            self._browser_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| view.request(LoginRequest::Browser)
+            ));
 
             let submit_account = glib::clone!(
                 #[weak]
@@ -132,6 +148,7 @@ impl LoginView {
     /// Blocks the forms while a login attempt is running.
     pub fn set_busy(&self, busy: bool) {
         let imp = self.imp();
+        imp._browser_button.set_sensitive(!busy);
         imp._connect_user_button.set_sensitive(!busy);
         imp._connect_url_button.set_sensitive(!busy);
         for entry in self.entries() {

@@ -2,6 +2,11 @@
 
 use super::*;
 
+/// Seconds between checks whether the sign-in in the browser was approved,
+/// and how often to check.
+const BROWSER_LOGIN_INTERVAL: u32 = 2;
+const BROWSER_LOGIN_ATTEMPTS: u32 = 450;
+
 impl PlexWindow {
     /// Restores the previous session, or asks the user to sign in.
     pub(super) async fn start(&self) {
@@ -57,7 +62,9 @@ impl PlexWindow {
         let session = imp.session.clone();
         imp._login_view.set_busy(true);
 
+        let in_browser = matches!(request, LoginRequest::Browser);
         let result = match request {
+            LoginRequest::Browser => self.browser_login().await,
             LoginRequest::Account { login, password } => session.login(login, password).await,
             LoginRequest::Server { url, token } => {
                 self.show_loading(&gettext_f("Connecting to {}.", &[&url]));
@@ -67,13 +74,46 @@ impl PlexWindow {
         if let Err(err) = result {
             eprintln!("Login failed: {err}");
             self.show_login();
-            imp._login_view.set_error(true);
+            // Nothing was typed that could be wrong when signing in in the
+            // browser was cancelled or timed out.
+            imp._login_view.set_error(!in_browser);
             return;
         }
 
         if session.server().is_some() || self.connect_to_server().await {
             self.connected().await;
         }
+    }
+
+    /// Signs in through the browser: opens plex.tv and waits until the user
+    /// has approved there. Logging out from the waiting page cancels it.
+    async fn browser_login(&self) -> girens_plex::Result<()> {
+        let imp = self.imp();
+        let session = imp.session.clone();
+        let (url, pin) = session.start_browser_login().await?;
+        gtk::UriLauncher::new(&url).launch(Some(self), gtk::gio::Cancellable::NONE, |result| {
+            if let Err(err) = result {
+                eprintln!("Could not open the browser: {err}");
+            }
+        });
+        self.show_loading(&gettext("Waiting for you to sign in in the browser…"));
+
+        // plex.tv keeps a sign-in request for about fifteen minutes.
+        for _ in 0..BROWSER_LOGIN_ATTEMPTS {
+            glib::timeout_future_seconds(BROWSER_LOGIN_INTERVAL).await;
+            let waiting = imp
+                .frame_stack
+                .visible_child()
+                .is_some_and(|child| child == *imp._loading_view.upcast_ref::<gtk::Widget>());
+            if !waiting {
+                // Cancelled from the waiting page.
+                return Err(Error::Unauthorized);
+            }
+            if session.finish_browser_login(&pin).await? {
+                return Ok(());
+            }
+        }
+        Err(Error::Unauthorized)
     }
 
     /// Connects to the server used last, or else to the first server of the
