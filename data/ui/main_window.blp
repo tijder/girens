@@ -151,14 +151,9 @@ template $PlexWindow : Adw.ApplicationWindow {
   };
 }
 
-Adjustment _volume_adjustment {
-  upper: 100;
-  step-increment: 1.00000000000000001;
-  page-increment: 1.00000000000000001;
-}
-
 Popover _menu_popover {
   width-request: 250;
+
   Box {
     orientation: vertical;
     margin-top: 5;
@@ -166,95 +161,14 @@ Popover _menu_popover {
     margin-end: 5;
     margin-bottom: 5;
 
-    Adw.PreferencesGroup {
-      title: _("Settings");
-
-      Adw.PreferencesRow {
-        use-underline: true;
-        $theme_switcher {}
-      }
-
-      Adw.PreferencesRow {
-        use-underline: true;
-
-        Box {
-          margin-start: 10;
-          margin-end: 10;
-
-          Image {
-            icon-name: "audio-speakers-symbolic";
-          }
-
-          Scale volume {
-            adjustment: _volume_adjustment;
-            round-digits: 1;
-            draw-value: false;
-            hexpand: true;
-          }
-        }
-      }
-
-      Adw.ActionRow {
-        title: _("Prefer music clips");
-        tooltip-text: _("When playing music and the track has a music clip, play that instead of the audio.");
-        use-underline: true;
-        activatable-widget: _prefer_music_clips_check_button;
-        Switch _prefer_music_clips_check_button {
-          valign: center;
-        }
-      }
-
-      Adw.ExpanderRow _transcode_media_switch {
-        title: _("Transcode media");
-        tooltip-text: _("Transcode media instead of playing directly.");
-        use-underline: true;
-        show-enable-switch: true;
-
-        Adw.PreferencesGroup {
-          margin-start: 10;
-          margin-end: 10;
-
-          Adw.ActionRow {
-            title: _("1080p");
-            use-underline: true;
-            activatable-widget: _res_set_1080;
-            Gtk.CheckButton _res_set_1080 {}
-          }
-
-          Adw.ActionRow {
-            title: _("720p");
-            use-underline: true;
-            activatable-widget: _res_set_720;
-            Gtk.CheckButton _res_set_720 {
-              group: _res_set_1080;
-            }
-          }
-
-          Adw.ActionRow {
-            title: _("480p");
-            use-underline: true;
-            activatable-widget: _res_set_480;
-            Gtk.CheckButton _res_set_480 {
-              group: _res_set_1080;
-            }
-          }
-
-          Adw.ActionRow {
-            title: _("240p");
-            use-underline: true;
-
-            activatable-widget: _res_set_240;
-            Gtk.CheckButton _res_set_240 {
-              group: _res_set_1080;
-            }
-          }
-        }
-      }
-    }
+    $theme_switcher {}
 
     Adw.PreferencesGroup {
-      title: _("Info");
-      margin-top: 20;
+      Adw.ActionRow _preferences_button {
+        use-underline: true;
+        activatable: true;
+        title: _("Preferences");
+      }
 
       Adw.ActionRow _shortcuts_button {
         use-underline: true;

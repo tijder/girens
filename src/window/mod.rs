@@ -27,9 +27,6 @@ const RECONNECT_INTERVAL: u32 = 10;
 /// Pause in resizing after which the layout adapts to the new width.
 const LAYOUT_DELAY: std::time::Duration = std::time::Duration::from_millis(200);
 
-/// Stored value of `transcode-media-to-resolution` for each menu entry.
-const RESOLUTIONS: [&str; 4] = ["1920x1080", "1280x720", "854x480", "427x240"];
-
 mod connection;
 mod navigation;
 mod playback;
@@ -100,19 +97,7 @@ mod imp {
         #[template_child]
         pub _shortcuts_button: TemplateChild<adw::ActionRow>,
         #[template_child]
-        pub _volume_adjustment: TemplateChild<gtk::Adjustment>,
-        #[template_child]
-        pub _prefer_music_clips_check_button: TemplateChild<gtk::Switch>,
-        #[template_child]
-        pub _transcode_media_switch: TemplateChild<adw::ExpanderRow>,
-        #[template_child]
-        pub _res_set_1080: TemplateChild<gtk::CheckButton>,
-        #[template_child]
-        pub _res_set_720: TemplateChild<gtk::CheckButton>,
-        #[template_child]
-        pub _res_set_480: TemplateChild<gtk::CheckButton>,
-        #[template_child]
-        pub _res_set_240: TemplateChild<gtk::CheckButton>,
+        pub _preferences_button: TemplateChild<adw::ActionRow>,
 
         pub settings: gio::Settings,
         pub session: Rc<Session>,
@@ -168,13 +153,7 @@ mod imp {
                 _menu_popover: TemplateChild::default(),
                 _about_button: TemplateChild::default(),
                 _shortcuts_button: TemplateChild::default(),
-                _volume_adjustment: TemplateChild::default(),
-                _prefer_music_clips_check_button: TemplateChild::default(),
-                _transcode_media_switch: TemplateChild::default(),
-                _res_set_1080: TemplateChild::default(),
-                _res_set_720: TemplateChild::default(),
-                _res_set_480: TemplateChild::default(),
-                _res_set_240: TemplateChild::default(),
+                _preferences_button: TemplateChild::default(),
                 session: Session::current(),
                 settings,
                 launch_options: RefCell::default(),
@@ -221,7 +200,6 @@ mod imp {
             window.load_css();
             window.setup_toasts();
             window.restore_size();
-            window.setup_settings();
             window.setup_callbacks();
             window.setup_player();
             window.setup_actions();
@@ -380,52 +358,6 @@ impl PlexWindow {
         }
     }
 
-    /// Connects the widgets of the main menu to GSettings.
-    fn setup_settings(&self) {
-        let imp = self.imp();
-        let settings = &imp.settings;
-
-        settings
-            .bind("volume-level", &*imp._volume_adjustment, "value")
-            .build();
-        settings
-            .bind(
-                "prefer-music-clips",
-                &*imp._prefer_music_clips_check_button,
-                "active",
-            )
-            .build();
-        settings
-            .bind(
-                "play-media-direct",
-                &*imp._transcode_media_switch,
-                "enable-expansion",
-            )
-            .invert_boolean()
-            .build();
-
-        let buttons = [
-            &imp._res_set_1080,
-            &imp._res_set_720,
-            &imp._res_set_480,
-            &imp._res_set_240,
-        ];
-        let stored = settings.string("transcode-media-to-resolution");
-        for (button, resolution) in buttons.into_iter().zip(RESOLUTIONS) {
-            button.set_active(stored == resolution);
-            let settings = settings.clone();
-            button.connect_toggled(move |button| {
-                if button.is_active() {
-                    if let Err(err) =
-                        settings.set_string("transcode-media-to-resolution", resolution)
-                    {
-                        eprintln!("Could not save the transcode resolution: {err}");
-                    }
-                }
-            });
-        }
-    }
-
     fn setup_callbacks(&self) {
         let imp = self.imp();
 
@@ -527,6 +459,14 @@ impl PlexWindow {
             move |_| window.imp()._search_toggle_button.set_active(false)
         ));
 
+        imp._preferences_button.connect_activated(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |_| {
+                window.imp()._menu_popover.popdown();
+                views::preferences::present(&window);
+            }
+        ));
         imp._about_button.connect_activated(glib::clone!(
             #[weak(rename_to = window)]
             self,
@@ -589,6 +529,16 @@ impl PlexWindow {
                 }
             }
         ));
+    }
+
+    #[cfg(debug_assertions)]
+    pub fn debug_open(&self, dialog: &str) {
+        match dialog {
+            "preferences" => views::preferences::present(self),
+            "shortcuts" => self.show_shortcuts(),
+            "about" => self.show_about(),
+            _ => {}
+        }
     }
 
     fn show_about(&self) {

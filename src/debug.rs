@@ -45,6 +45,11 @@ pub fn schedule_screenshot(window: &gtk::Window) {
             },
             None => eprintln!("Could not render the window"),
         }
+        // An open dialog keeps the window from closing, so then the process
+        // simply ends; otherwise closing exercises the normal shutdown.
+        if std::env::var_os("GIRENS_DEBUG_OPEN").is_some() {
+            std::process::exit(0);
+        }
         window.close();
     });
 }
@@ -60,13 +65,17 @@ fn render(window: &gtk::Window) -> Option<gdk::Texture> {
 /// With `GIRENS_DEBUG_ACTIVATE="show-show-by-id 123"` that window action is
 /// activated once the server is connected; with `GIRENS_DEBUG_SIDEBAR_ROW=3`
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
-/// searched for. Lets scripts open a page for a screenshot.
+/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about` that
+/// dialog is opened. Lets scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {
         let mut parts = spec.split_whitespace();
         if let (Some(action), Some(Ok(key))) = (parts.next(), parts.next().map(str::parse::<i64>)) {
             gtk::prelude::ActionGroupExt::activate_action(window, action, Some(&key.to_variant()));
         }
+    }
+    if let Ok(dialog) = std::env::var("GIRENS_DEBUG_OPEN") {
+        window.debug_open(&dialog);
     }
     if let Ok(query) = std::env::var("GIRENS_DEBUG_SEARCH") {
         window.debug_search(&query);

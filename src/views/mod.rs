@@ -18,6 +18,7 @@ mod login_view;
 mod media_box;
 mod music_popover_menu;
 mod player_view;
+pub mod preferences;
 mod profile_dialog;
 mod queue_popover;
 mod row_list;
