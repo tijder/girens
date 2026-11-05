@@ -1,7 +1,7 @@
 //! An album as one virtualised list: its header, then the tracks. The rows
 //! are shared with the artist page, which lists several albums.
 
-use std::cell::{OnceCell, RefCell};
+use std::cell::{Cell, OnceCell, RefCell};
 
 use adw::subclass::prelude::*;
 use girens_plex::model::Item;
@@ -25,6 +25,8 @@ pub enum MusicRow {
     },
     Disc(u32),
     Track(Box<Item>),
+    /// Shown while the page is fetched.
+    Loading,
 }
 
 /// The rows for `album`: header, and tracks grouped per disc when there are
@@ -54,10 +56,25 @@ pub fn album_rows(album: &Item, tracks: &[Item], link_to_artist: bool) -> Vec<Mu
 
 /// Makes `list` show [`MusicRow`]s and returns its store.
 pub fn setup_music_list(list: &gtk::ListView) -> gio::ListStore {
+    let store = music_store(list);
+    // Rebinds the visible rows so that the mark of the playing track moves.
+    crate::player::connect_now_playing(glib::clone!(
+        #[weak]
+        store,
+        move || {
+            let count = store.n_items();
+            store.items_changed(0, count, count);
+        }
+    ));
+    store
+}
+
+fn music_store(list: &gtk::ListView) -> gio::ListStore {
     row_list::setup(
         list,
         |row: &MusicRow, previous: Option<gtk::Widget>| match row {
             MusicRow::Widget(widget) => RowWidget::shared(widget),
+            MusicRow::Loading => row_list::loading_row(),
             MusicRow::Album {
                 album,
                 link_to_artist,
@@ -206,6 +223,7 @@ mod imp {
         #[template_child]
         pub _list_view: TemplateChild<gtk::ListView>,
         pub store: OnceCell<gio::ListStore>,
+        pub rating_key: Cell<Option<u64>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
@@ -242,28 +260,48 @@ glib::wrapper! {
 }
 
 impl AlbumView {
+    /// What is currently displayed.
+    pub fn rating_key(&self) -> Option<u64> {
+        self.imp().rating_key.get()
+    }
+
     /// Loads and shows the album with this rating key.
     pub fn show(&self, rating_key: u64) {
         let imp = self.imp();
+        imp.rating_key.set(Some(rating_key));
         let store = imp.store.get().expect("set in constructed").clone();
-        store.remove_all();
+        row_list::replace_from(&store, 0, vec![MusicRow::Loading]);
         let Some(server) = Session::current().server() else {
             return;
         };
-        let task = glib::spawn_future_local(async move {
-            let loaded = runtime::run(async move {
-                tokio::try_join!(server.item(rating_key), server.children(rating_key))
-            })
-            .await;
-            match loaded {
-                Ok((album, tracks)) => {
-                    row_list::replace_from(&store, 0, album_rows(&album, &tracks, true))
-                }
-                Err(err) => {
-                    crate::notify::failure(&crate::i18n::gettext("Could not load the album"), &err)
+        let task = glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            async move {
+                let loaded = runtime::run(async move {
+                    tokio::try_join!(server.item(rating_key), server.children(rating_key))
+                })
+                .await;
+                match loaded {
+                    Ok((album, tracks)) => {
+                        row_list::replace_from(&store, 0, album_rows(&album, &tracks, true))
+                    }
+                    Err(err) => {
+                        row_list::replace_from(&store, 0, Vec::<MusicRow>::new());
+                        let retry = glib::clone!(
+                            #[weak]
+                            view,
+                            move || view.show(rating_key)
+                        );
+                        crate::notify::failure_with_retry(
+                            &crate::messages::load_album(),
+                            &err,
+                            retry,
+                        );
+                    }
                 }
             }
-        });
+        ));
         if let Some(previous) = imp.task.replace(Some(task)) {
             previous.abort();
         }

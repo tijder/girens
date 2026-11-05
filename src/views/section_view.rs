@@ -66,6 +66,7 @@ mod imp {
         pub offset: Cell<u32>,
         pub total: Cell<u32>,
         pub loading: Cell<bool>,
+        pub playlists: Cell<bool>,
         pub updating_sorts: Cell<bool>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
         pub on_play: RefCell<Option<Box<dyn Fn(LibrarySection, Option<String>, bool)>>>,
@@ -165,6 +166,11 @@ impl SectionView {
         self.imp().on_play.replace(Some(Box::new(callback)));
     }
 
+    /// Whether the playlists are shown rather than a library.
+    pub fn shows_playlists(&self) -> bool {
+        self.imp().playlists.get()
+    }
+
     pub fn set_cover_width(&self, width: i32) {
         self.imp()._section_flow.set_cover_width(width);
     }
@@ -194,6 +200,7 @@ impl SectionView {
         imp.total.set(0);
         imp._title_label.set_label(title);
         imp._section_flow.clear();
+        imp._section_flow.set_empty_message(None);
     }
 
     /// Shows a library, with the sort order used last time.
@@ -209,6 +216,7 @@ impl SectionView {
         }
         self.reset(&section.title);
         imp.section.replace(Some(section.clone()));
+        imp.playlists.set(false);
         imp._section_controll_box.set_visible(true);
 
         let (sort, direction) = match store::section_sort(&section.uuid) {
@@ -318,8 +326,23 @@ impl SectionView {
                         imp.total.set(page.total);
                         imp.offset.set(offset + PAGE_SIZE);
                         imp._section_flow.append(page.items);
+                        let empty = imp._section_flow.len() == 0;
+                        imp._section_flow.set_empty_message(
+                            empty.then(|| gettext("This library is empty")).as_deref(),
+                        );
                     }
-                    Err(err) => crate::notify::failure(&crate::messages::load_library(), &err),
+                    Err(err) => {
+                        let retry = glib::clone!(
+                            #[weak]
+                            view,
+                            move || view.load_more()
+                        );
+                        crate::notify::failure_with_retry(
+                            &crate::messages::load_library(),
+                            &err,
+                            retry,
+                        );
+                    }
                 }
                 imp.loading.set(false);
                 imp._load_box.set_visible(false);
@@ -332,6 +355,7 @@ impl SectionView {
         let imp = self.imp();
         self.reset(&gettext("Playlists"));
         imp.section.replace(None);
+        imp.playlists.set(true);
         imp._section_controll_box.set_visible(false);
         let Some(server) = Session::current().server() else {
             return;
@@ -344,7 +368,12 @@ impl SectionView {
                 let playlists = runtime::run(async move { server.playlists().await }).await;
                 let imp = view.imp();
                 match playlists {
-                    Ok(playlists) => imp._section_flow.set_items(playlists),
+                    Ok(playlists) => {
+                        let empty = playlists.is_empty();
+                        imp._section_flow.set_items(playlists);
+                        imp._section_flow
+                            .set_empty_message(empty.then(|| gettext("No playlists")).as_deref());
+                    }
                     Err(err) => crate::notify::failure(&crate::messages::load_playlists(), &err),
                 }
                 imp._load_box.set_visible(false);

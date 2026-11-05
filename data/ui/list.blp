@@ -4,12 +4,65 @@ using Adw 1;
 // A row (or, in grid mode, a grid) of cover tiles. The model and the item
 // factory are set up in src/views/list.rs.
 template $list : Adw.Bin {
-  ScrolledWindow _scrolled_window {
-    vscrollbar-policy: never;
+  Overlay {
+    ScrolledWindow _scrolled_window {
+      vscrollbar-policy: never;
 
-    GridView _grid_view {
-      max-columns: 1;
-      orientation: horizontal;
+      GridView _grid_view {
+        max-columns: 1;
+        orientation: horizontal;
+      }
+    }
+
+    // Shown instead of the tiles while loading, or when there are none.
+    [overlay]
+    Adw.Spinner _spinner {
+      visible: false;
+      halign: center;
+      valign: center;
+      width-request: 48;
+      height-request: 48;
+    }
+
+    [overlay]
+    Adw.StatusPage _empty_page {
+      visible: false;
+      icon-name: "folder-symbolic";
+
+      styles [
+        "compact",
+      ]
+    }
+
+    // Paging through a horizontal row with the mouse.
+    [overlay]
+    Button _previous_button {
+      visible: false;
+      halign: start;
+      valign: center;
+      margin-start: 6;
+      icon-name: "go-previous-symbolic";
+      tooltip-text: _("Previous");
+
+      styles [
+        "osd",
+        "circular",
+      ]
+    }
+
+    [overlay]
+    Button _next_button {
+      visible: false;
+      halign: end;
+      valign: center;
+      margin-end: 6;
+      icon-name: "go-next-symbolic";
+      tooltip-text: _("Next");
+
+      styles [
+        "osd",
+        "circular",
+      ]
     }
   }
 }

@@ -35,3 +35,20 @@
 listview.page-list {
   background: none;
 }
+
+/* The menu button of a cover tile appears on hover or keyboard focus. */
+.cover-menu-button {
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+button:hover > box > overlay > .cover-menu-button,
+.cover-menu-button:focus-visible {
+  opacity: 1;
+}
+
+/* The track that is playing, in an album. */
+.now-playing {
+  font-weight: bold;
+  color: @accent_color;
+}

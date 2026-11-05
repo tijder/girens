@@ -76,7 +76,7 @@ impl PlexWindow {
                 self.update_idle_inhibit();
                 imp._sidebar_box.set_player_visible(*video);
                 if *video {
-                    imp._sidebar_box.select_player();
+                    self.open(Location::Player);
                 }
             }
             Event::Paused(paused) => {
@@ -87,13 +87,7 @@ impl PlexWindow {
                 imp.video_playing.set(false);
                 self.update_idle_inhibit();
                 imp._sidebar_box.set_player_visible(false);
-                let on_player_page = imp
-                    .page_stack
-                    .visible_child()
-                    .is_some_and(|page| page == *imp._player_view.upcast_ref::<gtk::Widget>());
-                if on_player_page {
-                    imp._sidebar_box.select_home();
-                }
+                self.leave_player();
             }
             _ => {}
         }

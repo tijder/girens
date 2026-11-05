@@ -65,6 +65,11 @@ impl AlbumItem {
             imp._index_label.remove_css_class("unplayed");
         }
         imp._title_label.set_text(&track.title);
+        if crate::player::now_playing() == Some(track.rating_key) {
+            imp._title_label.add_css_class("now-playing");
+        } else {
+            imp._title_label.remove_css_class("now-playing");
+        }
         imp._index_label.set_text(
             &track
                 .index

@@ -17,6 +17,8 @@ use crate::{images, runtime};
 enum Row {
     /// The details of the show; always the first row.
     Header,
+    /// Shown while the episodes are fetched.
+    Loading,
     Episode(Box<Item>),
 }
 
@@ -81,6 +83,7 @@ mod imp {
                 &self._list_view,
                 move |row: &Row, previous: Option<gtk::Widget>| match row {
                     Row::Header => RowWidget::shared(&header),
+                    Row::Loading => row_list::loading_row(),
                     Row::Episode(episode) => match previous.and_downcast::<ShowViewItem>() {
                         Some(item) => {
                             item.set_episode(episode);
@@ -141,7 +144,7 @@ impl ShowView {
             imp._season_box.remove(&button);
         }
         imp._season_scrolled_window.set_visible(false);
-        row_list::replace_from(self.store(), 0, vec![Row::Header]);
+        row_list::replace_from(self.store(), 0, vec![Row::Header, Row::Loading]);
 
         let target = (rating_key as i64).to_variant();
         imp._play_button.set_action_target_value(Some(&target));
@@ -167,7 +170,17 @@ impl ShowView {
                 let (show, children) = match loaded {
                     Ok(loaded) => loaded,
                     Err(err) => {
-                        crate::notify::failure(&crate::messages::load_show(), &err);
+                        row_list::replace_from(view.store(), 1, Vec::<Row>::new());
+                        let retry = glib::clone!(
+                            #[weak]
+                            view,
+                            move || view.show(rating_key)
+                        );
+                        crate::notify::failure_with_retry(
+                            &crate::messages::load_show(),
+                            &err,
+                            retry,
+                        );
                         return;
                     }
                 };
@@ -241,7 +254,7 @@ impl ShowView {
             self.show_episodes(episodes);
             return;
         }
-        row_list::replace_from(self.store(), 1, Vec::<Row>::new());
+        row_list::replace_from(self.store(), 1, vec![Row::Loading]);
         let Some(server) = Session::current().server() else {
             return;
         };
@@ -257,7 +270,19 @@ impl ShowView {
                         }
                         imp.episodes.borrow_mut().insert(season, episodes);
                     }
-                    Err(err) => crate::notify::failure(&crate::messages::load_episodes(), &err),
+                    Err(err) => {
+                        row_list::replace_from(view.store(), 1, Vec::<Row>::new());
+                        let retry = glib::clone!(
+                            #[weak]
+                            view,
+                            move || view.show_season(season)
+                        );
+                        crate::notify::failure_with_retry(
+                            &crate::messages::load_episodes(),
+                            &err,
+                            retry,
+                        );
+                    }
                 }
             }
         ));

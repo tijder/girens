@@ -1,19 +1,47 @@
 using Gtk 4.0;
+using Adw 1;
 
+// Search results, one row of tiles per kind. The rows are created in
+// src/views/search_view.rs.
 template $search_view : Box {
-  visible: true;
-  can-focus: false;
-  margin-top: 20;
-  vexpand: true;
   orientation: vertical;
+  vexpand: true;
 
-  Label _title_label {
-    visible: true;
-    can-focus: false;
-    halign: start;
-    margin-bottom: 5;
-    label: "label";
+  Stack _stack {
+    vexpand: true;
+
+    StackPage {
+      name: "results";
+
+      child: ScrolledWindow {
+        hscrollbar-policy: never;
+
+        Box _results_box {
+          orientation: vertical;
+          margin-bottom: 12;
+        }
+      };
+    }
+
+    StackPage {
+      name: "loading";
+
+      child: Adw.Spinner {
+        halign: center;
+        valign: center;
+        width-request: 48;
+        height-request: 48;
+      };
+    }
+
+    StackPage {
+      name: "empty";
+
+      child: Adw.StatusPage {
+        icon-name: "edit-find-symbolic";
+        title: _("No results found");
+        description: _("Try a different search");
+      };
+    }
   }
-
-  $list _section_flow {}
 }

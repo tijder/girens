@@ -145,6 +145,32 @@ struct Inner {
 }
 
 thread_local! {
+    /// Rating key of what is playing, and who wants to know when it changes.
+    static NOW_PLAYING: std::cell::Cell<Option<u64>> = const { std::cell::Cell::new(None) };
+    static NOW_PLAYING_LISTENERS: RefCell<Vec<Box<dyn Fn()>>> = const { RefCell::new(Vec::new()) };
+}
+
+/// Rating key of the item that is playing, for lists that mark it.
+pub fn now_playing() -> Option<u64> {
+    NOW_PLAYING.get()
+}
+
+/// Calls `listener` whenever another item starts or playback stops.
+pub fn connect_now_playing(listener: impl Fn() + 'static) {
+    NOW_PLAYING_LISTENERS.with_borrow_mut(|listeners| listeners.push(Box::new(listener)));
+}
+
+fn set_now_playing(rating_key: Option<u64>) {
+    if NOW_PLAYING.replace(rating_key) != rating_key {
+        NOW_PLAYING_LISTENERS.with_borrow(|listeners| {
+            for listener in listeners {
+                listener();
+            }
+        });
+    }
+}
+
+thread_local! {
     /// mpv's wakeup callback runs on an mpv thread and cannot carry a
     /// reference to the (main-thread only) player, so it looks it up here.
     static PLAYER: RefCell<Weak<Inner>> = const { RefCell::new(Weak::new()) };
@@ -477,6 +503,11 @@ impl Inner {
     }
 
     fn emit(&self, event: Event) {
+        match &event {
+            Event::Started { item, .. } => set_now_playing(Some(item.rating_key)),
+            Event::Stopped => set_now_playing(None),
+            _ => {}
+        }
         // Listeners may call back into the player, so no borrow is held.
         let listeners: Vec<_> = self.listeners.borrow().clone();
         for listener in listeners {

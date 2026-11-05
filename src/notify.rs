@@ -46,11 +46,30 @@ pub fn message(text: &str) {
     LAST.set(Some((text.to_owned(), Instant::now())));
 }
 
+/// Like [`failure`], with a button that calls `retry`.
+pub fn failure_with_retry(text: &str, detail: &dyn Display, retry: impl Fn() + 'static) {
+    eprintln!("{text}: {detail}");
+    OVERLAY.with_borrow(|overlay| {
+        if let Some(overlay) = overlay {
+            let toast = adw::Toast::new(text);
+            toast.set_timeout(8);
+            toast.set_button_label(Some(&crate::i18n::gettext("Retry")));
+            toast.connect_button_clicked(move |_| retry());
+            overlay.add_toast(toast);
+        }
+    });
+    notify_failure();
+}
+
 /// Reports a failure: `text` (already translated) for the user, `detail` for
 /// the terminal.
 pub fn failure(text: &str, detail: &dyn Display) {
     eprintln!("{text}: {detail}");
     message(text);
+    notify_failure();
+}
+
+fn notify_failure() {
     // Taken out while it runs, so that a failure inside it cannot recurse.
     if let Some(callback) = ON_FAILURE.take() {
         callback();

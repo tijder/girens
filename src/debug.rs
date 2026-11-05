@@ -59,13 +59,17 @@ fn render(window: &gtk::Window) -> Option<gdk::Texture> {
 
 /// With `GIRENS_DEBUG_ACTIVATE="show-show-by-id 123"` that window action is
 /// activated once the server is connected; with `GIRENS_DEBUG_SIDEBAR_ROW=3`
-/// that sidebar row is selected. Lets scripts open a page for a screenshot.
+/// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
+/// searched for. Lets scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {
         let mut parts = spec.split_whitespace();
         if let (Some(action), Some(Ok(key))) = (parts.next(), parts.next().map(str::parse::<i64>)) {
             gtk::prelude::ActionGroupExt::activate_action(window, action, Some(&key.to_variant()));
         }
+    }
+    if let Ok(query) = std::env::var("GIRENS_DEBUG_SEARCH") {
+        window.debug_search(&query);
     }
     if let Some(row) = std::env::var("GIRENS_DEBUG_SIDEBAR_ROW")
         .ok()

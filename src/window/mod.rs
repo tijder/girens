@@ -31,7 +31,10 @@ const LAYOUT_DELAY: std::time::Duration = std::time::Duration::from_millis(200);
 const RESOLUTIONS: [&str; 4] = ["1920x1080", "1280x720", "854x480", "427x240"];
 
 mod connection;
+mod navigation;
 mod playback;
+
+use navigation::Location;
 
 mod imp {
     use super::*;
@@ -51,6 +54,8 @@ mod imp {
         pub _sidebar_box: TemplateChild<views::SidebarBox>,
         #[template_child]
         pub _profile_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _back_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _avatar_image: TemplateChild<gtk::Image>,
 
@@ -125,6 +130,8 @@ mod imp {
         /// Set once playback was ended for closing the window.
         pub closing: Cell<bool>,
         pub search_timeout: RefCell<Option<glib::SourceId>>,
+        /// The pages the user came through; the last one is on screen.
+        pub history: RefCell<Vec<Location>>,
         /// Set while the connection to the server is being checked or restored.
         pub checking_connection: Cell<bool>,
         pub layout_timeout: RefCell<Option<glib::SourceId>>,
@@ -140,6 +147,7 @@ mod imp {
                 _split_view: TemplateChild::default(),
                 _sidebar_box: TemplateChild::default(),
                 _profile_button: TemplateChild::default(),
+                _back_button: TemplateChild::default(),
                 _avatar_image: TemplateChild::default(),
                 page_stack: TemplateChild::default(),
                 _discover_view: TemplateChild::default(),
@@ -179,6 +187,7 @@ mod imp {
                 video_paused: Cell::new(false),
                 closing: Cell::new(false),
                 search_timeout: RefCell::new(None),
+                history: RefCell::default(),
                 checking_connection: Cell::new(false),
                 layout_timeout: RefCell::new(None),
             }
@@ -217,6 +226,7 @@ mod imp {
             window.setup_player();
             window.setup_actions();
             window.setup_layout();
+            window.setup_navigation();
             window.setup_shortcuts();
 
             #[cfg(debug_assertions)]
@@ -438,7 +448,7 @@ impl PlexWindow {
         imp._sidebar_box.connect_destination(glib::clone!(
             #[weak(rename_to = window)]
             self,
-            move |destination| window.navigate(destination)
+            move |destination| window.open_root(destination.into())
         ));
 
         imp._sidebar_box.connect_server_selected(glib::clone!(
@@ -504,8 +514,7 @@ impl PlexWindow {
                         move || {
                             let imp = window.imp();
                             imp.search_timeout.take();
-                            imp._search_view.search(&query);
-                            imp.page_stack.set_visible_child(&*imp._search_view);
+                            window.open(Location::Search(query.to_string()));
                         }
                     ),
                 );
@@ -656,19 +665,13 @@ impl PlexWindow {
         };
 
         add("show-show-by-id", |window, key| {
-            let imp = window.imp();
-            imp._show_view.show(key);
-            window.show_page(&*imp._show_view);
+            window.open(Location::Show(key))
         });
         add("show-artist-by-id", |window, key| {
-            let imp = window.imp();
-            imp._artist_view.show(key);
-            window.show_page(&*imp._artist_view);
+            window.open(Location::Artist(key))
         });
         add("show-album-by-id", |window, key| {
-            let imp = window.imp();
-            imp._album_view.show(key);
-            window.show_page(&*imp._album_view);
+            window.open(Location::Album(key))
         });
         add("mark-as-played-by-id", |window, key| {
             window.set_watched(key, true)
@@ -712,13 +715,6 @@ impl PlexWindow {
                 }
             }
         ));
-    }
-
-    /// Opens a detail page; the sidebar no longer points at what is shown.
-    fn show_page(&self, page: &impl IsA<gtk::Widget>) {
-        let imp = self.imp();
-        imp._sidebar_box.unselect_all();
-        imp.page_stack.set_visible_child(page);
     }
 
     fn set_watched(&self, rating_key: u64, watched: bool) {
@@ -842,26 +838,5 @@ impl PlexWindow {
             }
         ));
         self.add_controller(keys);
-    }
-
-    // Navigation
-
-    fn navigate(&self, destination: Destination) {
-        let imp = self.imp();
-        match destination {
-            Destination::Home => {
-                imp.page_stack.set_visible_child(&*imp._discover_view);
-                imp._discover_view.refresh();
-            }
-            Destination::Playlists => {
-                imp._section_view.show_playlists();
-                imp.page_stack.set_visible_child(&*imp._section_view);
-            }
-            Destination::Section(section) => {
-                imp._section_view.show_section(&section);
-                imp.page_stack.set_visible_child(&*imp._section_view);
-            }
-            Destination::Player => imp.page_stack.set_visible_child(&*imp._player_view),
-        }
     }
 }

@@ -54,6 +54,12 @@ template $PlexWindow : Adw.ApplicationWindow {
       content: Adw.ToolbarView {
         [top]
         Adw.HeaderBar content_header {
+          Button _back_button {
+            visible: false;
+            icon-name: "go-previous-symbolic";
+            tooltip-text: _("Back");
+          }
+
           ToggleButton show_sidebar_button {
             visible: bind _split_view.collapsed;
             icon-name: 'sidebar-show-symbolic';

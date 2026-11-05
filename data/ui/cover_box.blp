@@ -46,6 +46,23 @@ template $cover_box : Button {
         tooltip-text: _("Unwatched");
       }
 
+      // Opens the same menu as a right click; shown while pointing at the tile.
+      [overlay]
+      Button _menu_button {
+        halign: start;
+        valign: start;
+        margin-top: 6;
+        margin-start: 6;
+        icon-name: "view-more-symbolic";
+        tooltip-text: _("More");
+
+        styles [
+          "osd",
+          "circular",
+          "cover-menu-button",
+        ]
+      }
+
       [overlay]
       ProgressBar _progress_bar {
         valign: end;

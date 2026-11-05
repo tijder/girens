@@ -99,3 +99,15 @@ pub fn replace_from<R: 'static>(store: &gio::ListStore, keep: u32, rows: Vec<R>)
     let keep = keep.min(store.n_items());
     store.splice(keep, store.n_items() - keep, &objects);
 }
+
+/// A row that shows that more is being loaded.
+pub fn loading_row() -> RowWidget {
+    let spinner = adw::Spinner::builder()
+        .halign(gtk::Align::Center)
+        .margin_top(24)
+        .margin_bottom(24)
+        .width_request(32)
+        .height_request(32)
+        .build();
+    RowWidget::inert(&spinner)
+}

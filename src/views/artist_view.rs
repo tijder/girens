@@ -1,7 +1,7 @@
 //! An artist as one virtualised list: the artist, then every album with its
 //! tracks.
 
-use std::cell::{OnceCell, RefCell};
+use std::cell::{Cell, OnceCell, RefCell};
 use std::collections::HashMap;
 
 use adw::subclass::prelude::*;
@@ -33,6 +33,7 @@ mod imp {
         #[template_child]
         pub _shuffle_button: TemplateChild<gtk::Button>,
         pub store: OnceCell<gio::ListStore>,
+        pub rating_key: Cell<Option<u64>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
@@ -69,6 +70,11 @@ glib::wrapper! {
 }
 
 impl ArtistView {
+    /// What is currently displayed.
+    pub fn rating_key(&self) -> Option<u64> {
+        self.imp().rating_key.get()
+    }
+
     fn header_row(&self) -> MusicRow {
         MusicRow::Widget(self.imp()._header.get().upcast())
     }
@@ -76,10 +82,11 @@ impl ArtistView {
     /// Loads and shows the artist with this rating key.
     pub fn show(&self, rating_key: u64) {
         let imp = self.imp();
+        imp.rating_key.set(Some(rating_key));
         let store = imp.store.get().expect("set in constructed").clone();
         imp._title_label.set_text("");
         imp._subtitle_label.set_text("");
-        row_list::replace_from(&store, 0, vec![self.header_row()]);
+        row_list::replace_from(&store, 0, vec![self.header_row(), MusicRow::Loading]);
 
         let target = (rating_key as i64).to_variant();
         imp._play_button.set_action_target_value(Some(&target));
@@ -108,7 +115,17 @@ impl ArtistView {
                 let (artist, albums, tracks) = match loaded {
                     Ok(loaded) => loaded,
                     Err(err) => {
-                        crate::notify::failure(&crate::messages::load_artist(), &err);
+                        row_list::replace_from(&store, 1, Vec::<MusicRow>::new());
+                        let retry = glib::clone!(
+                            #[weak]
+                            view,
+                            move || view.show(rating_key)
+                        );
+                        crate::notify::failure_with_retry(
+                            &crate::messages::load_artist(),
+                            &err,
+                            retry,
+                        );
                         return;
                     }
                 };

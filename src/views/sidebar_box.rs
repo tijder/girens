@@ -37,6 +37,8 @@ mod imp {
         /// Set while the server list is filled, to tell that apart from the
         /// user choosing a server.
         pub updating_servers: Cell<bool>,
+        /// Set while the selection follows the page, not the user.
+        pub following: Cell<bool>,
         pub on_destination: RefCell<Option<Box<dyn Fn(Destination)>>>,
         pub on_server: RefCell<Option<Box<dyn Fn(u32)>>>,
     }
@@ -67,6 +69,9 @@ mod imp {
                 move |_, row| {
                     let Some(row) = row else { return };
                     let imp = sidebar.imp();
+                    if imp.following.get() {
+                        return;
+                    }
                     let destination = imp.destinations.borrow().get(row.index() as usize).cloned();
                     if let (Some(destination), Some(callback)) =
                         (destination, imp.on_destination.borrow().as_ref())
@@ -176,6 +181,30 @@ impl SidebarBox {
         if let Some(row) = self.imp()._section_list.row_at_index(PLAYER_ROW) {
             row.set_visible(visible);
         }
+    }
+
+    /// Marks the row that leads to the page on screen, or none for pages
+    /// that are not in the sidebar. Does not navigate.
+    pub fn show_selected(&self, destination: Option<&Destination>) {
+        let imp = self.imp();
+        let index = destination.and_then(|wanted| {
+            imp.destinations
+                .borrow()
+                .iter()
+                .position(|row| match (row, wanted) {
+                    (Destination::Home, Destination::Home)
+                    | (Destination::Playlists, Destination::Playlists)
+                    | (Destination::Player, Destination::Player) => true,
+                    (Destination::Section(a), Destination::Section(b)) => a.uuid == b.uuid,
+                    _ => false,
+                })
+        });
+        imp.following.set(true);
+        match index {
+            Some(index) => self.select(index as i32),
+            None => imp._section_list.unselect_all(),
+        }
+        imp.following.set(false);
     }
 
     pub fn unselect_all(&self) {

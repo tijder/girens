@@ -222,6 +222,28 @@ impl MediaControls {
         self.add_close(&imp._close_button);
         self.add_queue_button(&imp._playqueue_button, &imp._cover_image);
         bind_volume(&imp._volume_button);
+        // Clicking the title or the cover opens the album of the track.
+        for widget in [
+            imp._label_box.upcast_ref::<gtk::Widget>(),
+            imp._label2_box.upcast_ref(),
+            imp._cover_image.upcast_ref(),
+        ] {
+            let click = gtk::GestureClick::new();
+            let weak = Rc::downgrade(&self.inner);
+            click.connect_released(move |gesture, _, _, _| {
+                let album = weak
+                    .upgrade()
+                    .and_then(|inner| inner.item.borrow().as_ref()?.parent_rating_key);
+                if let (Some(album), Some(widget)) = (album, gesture.widget()) {
+                    let _ = widget.activate_action(
+                        "win.show-album-by-id",
+                        Some(&(album as i64).to_variant()),
+                    );
+                }
+            });
+            widget.add_controller(click);
+            widget.set_cursor_from_name(Some("pointer"));
+        }
         imp._media_settings
             .set_popover(Some(&MusicPopoverMenu::new(&self.inner.player)));
     }

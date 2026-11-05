@@ -57,3 +57,7 @@ pub fn load_artist() -> String {
 pub fn load_synced_item() -> String {
     gettext("Could not load a synced item")
 }
+
+pub fn load_album() -> String {
+    gettext("Could not load the album")
+}

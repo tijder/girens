@@ -18,6 +18,14 @@ mod imp {
     #[template(resource = "/nl/g4d/Girens/discover_view.ui")]
     pub struct DiscoverView {
         #[template_child]
+        pub _label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _seasons_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _movies_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _music_label: TemplateChild<gtk::Label>,
+        #[template_child]
         pub _deck_shows_box: TemplateChild<List>,
         #[template_child]
         pub _movies_shows_box: TemplateChild<List>,
@@ -79,54 +87,91 @@ impl DiscoverView {
         }
     }
 
+    /// Heading and list of each row.
+    fn rows(&self) -> [(gtk::Label, List); 4] {
+        let imp = self.imp();
+        [
+            (imp._label.get(), imp._deck_shows_box.get()),
+            (imp._seasons_label.get(), imp._seasons_shows_box.get()),
+            (imp._movies_label.get(), imp._movies_shows_box.get()),
+            (imp._music_label.get(), imp._music_shows_box.get()),
+        ]
+    }
+
+    /// Fills a row; a row without items is hidden together with its heading.
+    fn fill(heading: &gtk::Label, list: &List, items: Vec<Item>) {
+        let filled = !items.is_empty();
+        list.set_loading(false);
+        list.set_items(items);
+        heading.set_visible(filled);
+        list.set_visible(filled);
+    }
+
     /// Reloads all rows from the connected server.
     pub fn refresh(&self) {
         let imp = self.imp();
         let Some(server) = Session::current().server() else {
             return;
         };
-        for list in [
-            &imp._deck_shows_box,
-            &imp._movies_shows_box,
-            &imp._seasons_shows_box,
-            &imp._music_shows_box,
-        ] {
+        let rows = self.rows();
+        for (heading, list) in &rows {
             list.clear();
+            heading.set_visible(true);
+            list.set_visible(true);
+            list.set_loading(true);
         }
 
         let task = glib::spawn_future_local(glib::clone!(
             #[weak(rename_to = view)]
             self,
             async move {
-                let imp = view.imp();
                 let (deck, latest) =
                     runtime::run(
                         async move { tokio::join!(server.on_deck(), server.recently_added()) },
                     )
                     .await;
+                let [deck_row, seasons_row, movies_row, music_row] = view.rows();
+                let retry = || {
+                    glib::clone!(
+                        #[weak]
+                        view,
+                        move || view.refresh()
+                    )
+                };
 
                 match deck {
-                    Ok(items) => imp._deck_shows_box.set_items(items),
-                    Err(err) => crate::notify::failure(&crate::messages::load_on_deck(), &err),
-                }
-                match latest {
-                    Ok(items) => {
-                        let of = |kinds: &[ItemKind]| -> Vec<Item> {
-                            items
-                                .iter()
-                                .filter(|item| kinds.contains(&item.kind))
-                                .cloned()
-                                .collect()
-                        };
-                        imp._movies_shows_box.set_items(of(&[ItemKind::Movie]));
-                        imp._seasons_shows_box
-                            .set_items(of(&[ItemKind::Episode, ItemKind::Season]));
-                        imp._music_shows_box.set_items(of(&[ItemKind::Album]));
-                    }
+                    Ok(items) => Self::fill(&deck_row.0, &deck_row.1, items),
                     Err(err) => {
-                        crate::notify::failure(&crate::messages::load_recently_added(), &err)
+                        Self::fill(&deck_row.0, &deck_row.1, Vec::new());
+                        crate::notify::failure_with_retry(
+                            &crate::messages::load_on_deck(),
+                            &err,
+                            retry(),
+                        );
                     }
                 }
+                let latest = latest.unwrap_or_else(|err| {
+                    crate::notify::failure_with_retry(
+                        &crate::messages::load_recently_added(),
+                        &err,
+                        retry(),
+                    );
+                    Vec::new()
+                });
+                let of = |kinds: &[ItemKind]| -> Vec<Item> {
+                    latest
+                        .iter()
+                        .filter(|item| kinds.contains(&item.kind))
+                        .cloned()
+                        .collect()
+                };
+                Self::fill(
+                    &seasons_row.0,
+                    &seasons_row.1,
+                    of(&[ItemKind::Episode, ItemKind::Season]),
+                );
+                Self::fill(&movies_row.0, &movies_row.1, of(&[ItemKind::Movie]));
+                Self::fill(&music_row.0, &music_row.1, of(&[ItemKind::Album]));
             }
         ));
         if let Some(previous) = imp.refresh_task.replace(Some(task)) {

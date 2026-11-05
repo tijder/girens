@@ -30,6 +30,8 @@ mod imp {
         #[template_child]
         pub popover_menu: TemplateChild<gtk::PopoverMenu>,
         #[template_child]
+        pub _menu_button: TemplateChild<gtk::Button>,
+        #[template_child]
         pub _long_press: TemplateChild<gtk::GestureLongPress>,
         #[template_child]
         pub _right_click: TemplateChild<gtk::GestureClick>,
@@ -67,6 +69,11 @@ mod imp {
                     gesture.set_state(gtk::EventSequenceState::Claimed);
                     cover.show_menu(x, y);
                 }
+            ));
+            self._menu_button.connect_clicked(glib::clone!(
+                #[weak]
+                cover,
+                move |_| cover.show_menu(16.0, 16.0)
             ));
             self._right_click.connect_released(glib::clone!(
                 #[weak]
