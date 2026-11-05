@@ -72,11 +72,36 @@ mod imp {
                     cover.show_menu(x, y);
                 }
             ));
+            // Reached from the keyboard only: the tile is a button itself and
+            // takes every click on it, so its menu button never sees one.
             self._menu_button.connect_clicked(glib::clone!(
                 #[weak]
                 cover,
                 move |_| cover.show_menu(16.0, 16.0)
             ));
+            // Claiming a press on the menu button keeps the tile from
+            // activating; the menu opens on release, like any button.
+            let menu_click = gtk::GestureClick::new();
+            menu_click.set_propagation_phase(gtk::PropagationPhase::Capture);
+            menu_click.connect_pressed(glib::clone!(
+                #[weak]
+                cover,
+                move |gesture, _, x, y| {
+                    if cover.is_on_menu_button(x, y) {
+                        gesture.set_state(gtk::EventSequenceState::Claimed);
+                    }
+                }
+            ));
+            menu_click.connect_released(glib::clone!(
+                #[weak]
+                cover,
+                move |_, _, x, y| {
+                    if cover.is_on_menu_button(x, y) {
+                        cover.show_menu(16.0, 16.0);
+                    }
+                }
+            ));
+            cover.add_controller(menu_click);
             self._right_click.connect_released(glib::clone!(
                 #[weak]
                 cover,
@@ -346,6 +371,13 @@ impl CoverBox {
         if let Some(task) = self.imp().image_task.take() {
             task.abort();
         }
+    }
+
+    /// Whether a point of the tile lies on its menu button.
+    fn is_on_menu_button(&self, x: f64, y: f64) -> bool {
+        let button = self.imp()._menu_button.upcast_ref::<gtk::Widget>();
+        self.pick(x, y, gtk::PickFlags::DEFAULT)
+            .is_some_and(|hit| &hit == button || hit.is_ancestor(button))
     }
 
     fn show_menu(&self, x: f64, y: f64) {
