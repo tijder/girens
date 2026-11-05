@@ -82,6 +82,7 @@ media_box_widget!(music, MediaBoxMusic, "media_box_music", "/nl/g4d/Girens/media
     _play_image: gtk::Image,
     _next_button: gtk::Button,
     _close_button: gtk::Button,
+    _volume_button: gtk::ScaleButton,
     _media_settings: gtk::MenuButton,
 });
 
@@ -126,7 +127,24 @@ media_box_widget!(video_bottom, MediaBoxVideoBottom, "media_box_video_bottom", "
     _play_image: gtk::Image,
     _next_button: gtk::Button,
     _skip_forward_button: gtk::Button,
+    _tracks_button: gtk::MenuButton,
+    _volume_button: gtk::ScaleButton,
 });
+
+impl MediaBoxVideoBottom {
+    /// The button that opens the audio and subtitle choice.
+    pub fn tracks_button(&self) -> gtk::MenuButton {
+        self.imp()._tracks_button.get()
+    }
+}
+
+/// Makes a volume button show and change the stored volume, which the
+/// player follows.
+fn bind_volume(button: &gtk::ScaleButton) {
+    gtk::gio::Settings::new(crate::config::APP_ID)
+        .bind("volume-level", button, "value")
+        .build();
+}
 
 /// The controls one widget offers; every part is optional.
 #[derive(Default)]
@@ -203,6 +221,7 @@ impl MediaControls {
         self.add_labels(&imp._title_label, &imp._subtitle_label);
         self.add_close(&imp._close_button);
         self.add_queue_button(&imp._playqueue_button, &imp._cover_image);
+        bind_volume(&imp._volume_button);
         imp._media_settings
             .set_popover(Some(&MusicPopoverMenu::new(&self.inner.player)));
     }
@@ -250,6 +269,7 @@ impl MediaControls {
             &imp._time_right_label,
         );
         self.add_queue_button(&imp._playqueue_button, &imp._cover_image);
+        bind_volume(&imp._volume_button);
         let player = self.inner.player.clone();
         imp._skip_backward_button
             .connect_clicked(move |_| player.seek_by(-10));
@@ -390,7 +410,7 @@ impl Inner {
         match event {
             Event::Started { item, video } => {
                 if *video == self.video {
-                    self.item.replace(Some(item.clone()));
+                    self.item.replace(Some((**item).clone()));
                     self.show_item(item);
                     self.show_paused(false);
                     self.show_position(0);
@@ -409,7 +429,6 @@ impl Inner {
             Event::Paused(paused) => self.show_paused(*paused),
             Event::Position(position) => self.show_position(*position),
             Event::QueueChanged => self.show_queue_position(),
-            Event::AskResume(_) => {}
         }
     }
 

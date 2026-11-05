@@ -125,7 +125,7 @@ impl MusicPopoverMenu {
                 let imp = menu.imp();
                 match event {
                     Event::Started { item, video: false } => {
-                        imp.item.replace(Some(item.clone()));
+                        imp.item.replace(Some((**item).clone()));
                         let stars = (item.user_rating.unwrap_or(0.0) / 2.0).round() as u8;
                         menu.show_stars(stars);
                         imp.updating.set(true);

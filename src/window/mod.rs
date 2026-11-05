@@ -481,6 +481,8 @@ impl PlexWindow {
             .sync_create()
             .build();
         imp._search_bar.connect_entry(&*imp._search_entry);
+        // Typing anywhere in the window starts a search.
+        imp._search_bar.set_key_capture_widget(Some(self));
         imp._search_entry.connect_search_changed(glib::clone!(
             #[weak(rename_to = window)]
             self,
@@ -567,7 +569,7 @@ impl PlexWindow {
                     imp._sync_image.set_icon_name(Some(if *busy {
                         "process-stop-symbolic"
                     } else {
-                        "network-transmit-symbolic"
+                        "folder-download-symbolic"
                     }));
                     let tooltip = if *busy {
                         gettext("Stop")
@@ -607,12 +609,11 @@ impl PlexWindow {
     fn show_shortcuts(&self) {
         let builder =
             gtk::Builder::from_resource(&format!("{}/shortcuts.ui", config::RESOURCE_PREFIX));
-        let Some(shortcuts) = builder.object::<gtk::Window>("shortcuts") else {
-            eprintln!("The shortcuts window is missing from the resources");
+        let Some(shortcuts) = builder.object::<adw::Dialog>("shortcuts") else {
+            eprintln!("The shortcuts dialog is missing from the resources");
             return;
         };
-        shortcuts.set_transient_for(Some(self));
-        shortcuts.present();
+        shortcuts.present(Some(self));
     }
 
     // Views of the outer stack
@@ -678,13 +679,13 @@ impl PlexWindow {
 
         add("sync-by-id", |window, key| window.sync_item(key));
         add("play-item", |window, key| {
-            window.play(PlayTarget::Item(key), false, StartMode::Ask)
+            window.play(PlayTarget::Item(key), false, StartMode::Resume)
         });
         add("play-item-from-beginning", |window, key| {
             window.play(PlayTarget::Item(key), false, StartMode::Beginning)
         });
         add("shuffle-by-id", |window, key| {
-            window.play(PlayTarget::Item(key), true, StartMode::Ask)
+            window.play(PlayTarget::Item(key), true, StartMode::Resume)
         });
     }
 

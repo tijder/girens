@@ -265,9 +265,9 @@ impl SectionView {
         let imp = self.imp();
         imp._order_image
             .set_icon_name(Some(if imp.descending.get() {
-                "go-down-symbolic"
+                "view-sort-descending-symbolic"
             } else {
-                "go-up-symbolic"
+                "view-sort-ascending-symbolic"
             }));
     }
 

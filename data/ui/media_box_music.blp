@@ -68,13 +68,12 @@ template $media_box_music : Adw.Bin {
 
         [overlay]
         Image _watched_image {
-          halign: end;
-          valign: start;
-          icon-name: "dialog-information";
+          visible: false;
         }
       }
 
       MenuButton _playqueue_button {
+        icon-name: "view-list-symbolic";
         tooltip-text: _("Play queue");
         width-request: 50;
         height-request: 50;
@@ -137,7 +136,18 @@ template $media_box_music : Adw.Bin {
           }
         }
 
+        ScaleButton _volume_button {
+          tooltip-text: _("Volume");
+          icons: ["audio-volume-muted-symbolic", "audio-volume-high-symbolic", "audio-volume-low-symbolic", "audio-volume-medium-symbolic"];
+          adjustment: Adjustment {
+            upper: 100;
+            step-increment: 5;
+            page-increment: 10;
+          };
+        }
+
         MenuButton _media_settings {
+          icon-name: "view-more-symbolic";
           tooltip-text: _("Options");
           width-request: 50;
           height-request: 50;

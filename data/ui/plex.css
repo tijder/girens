@@ -6,9 +6,13 @@
   background-color: @theme_base_color;
 }
 
+/* The dot on items that were not played yet. */
 .watched_tip {
-  background-color: @theme_selected_bg_color;
-  color: @theme_base_color;
+  background-color: @accent_bg_color;
+  border-radius: 9999px;
+  min-width: 12px;
+  min-height: 12px;
+  box-shadow: 0 0 0 2px alpha(black, 0.35);
 }
 
 .unplayed {

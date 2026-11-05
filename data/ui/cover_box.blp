@@ -36,12 +36,14 @@ template $cover_box : Button {
         styles [
           "watched_tip",
         ]
+
         halign: end;
         valign: start;
-        height-request: 33;
-        width-request: 33;
-        opacity: 0.7;
-        icon-name: "dialog-information";
+        margin-top: 6;
+        margin-end: 6;
+        width-request: 12;
+        height-request: 12;
+        tooltip-text: _("Unwatched");
       }
 
       [overlay]

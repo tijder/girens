@@ -115,7 +115,7 @@ impl SidebarBox {
         self.imp().on_server.replace(Some(Box::new(callback)));
     }
 
-    /// Fills the server chooser. It is hidden when there is nothing to choose.
+    /// Fills the server chooser. It is hidden when there is only one server.
     pub fn set_servers(&self, names: &[&str], active: Option<u32>) {
         let imp = self.imp();
         imp.updating_servers.set(true);
@@ -123,7 +123,7 @@ impl SidebarBox {
             .set_model(Some(&gtk::StringList::new(names)));
         imp._server_box
             .set_selected(active.unwrap_or(gtk::INVALID_LIST_POSITION));
-        imp._server_box.set_visible(!names.is_empty());
+        imp._server_box.set_visible(names.len() > 1);
         imp.updating_servers.set(false);
     }
 

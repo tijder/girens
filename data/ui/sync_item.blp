@@ -12,9 +12,17 @@ template $sync_item : Box {
 
     [overlay]
     Image _watched_image {
+      styles [
+        "watched_tip",
+      ]
+
       halign: end;
       valign: start;
-      icon-name: "dialog-information";
+      margin-top: 6;
+      margin-end: 6;
+      width-request: 12;
+      height-request: 12;
+      tooltip-text: _("Unwatched");
     }
   }
 

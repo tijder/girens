@@ -116,6 +116,15 @@ glib::wrapper! {
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
 }
 
+/// Changes the stored volume (0–100), which the player follows.
+fn change_volume(step: i32) {
+    let settings = gtk::gio::Settings::new(crate::config::APP_ID);
+    let volume = (settings.int("volume-level") + step).clamp(0, 100);
+    if let Err(err) = settings.set_int("volume-level", volume) {
+        eprintln!("Could not save the volume: {err}");
+    }
+}
+
 /// `1 hr 42 min`, as shown in the details.
 fn duration_text(milliseconds: u64) -> String {
     let minutes = milliseconds / 60_000;
@@ -168,6 +177,7 @@ impl PlayerView {
             }
         ));
         let _ = imp.controls.set(controls);
+        self.setup_tracks_popover();
 
         player.connect(glib::clone!(
             #[weak(rename_to = view)]
@@ -287,6 +297,55 @@ impl PlayerView {
     /// Shows the new state of an item in the on-deck row.
     pub fn update_item(&self, item: &Item) {
         self.imp()._deck_shows_box.update_item(item);
+    }
+
+    /// Audio and subtitle choice in the control bar, so that it can be
+    /// reached in fullscreen too. It mirrors the two rows below the video.
+    fn setup_tracks_popover(&self) {
+        let imp = self.imp();
+        let content = gtk::Box::new(gtk::Orientation::Vertical, 6);
+        for (title, row) in [
+            (gettext("Audio"), &imp._audio_box),
+            (gettext("Subtitle"), &imp._subtitle_box),
+        ] {
+            let label = gtk::Label::builder().label(title).xalign(0.0).build();
+            label.add_css_class("caption-heading");
+            let choice = gtk::DropDown::builder().build();
+            row.bind_property("model", &choice, "model")
+                .sync_create()
+                .build();
+            row.bind_property("selected", &choice, "selected")
+                .bidirectional()
+                .sync_create()
+                .build();
+            for widget in [label.upcast_ref::<gtk::Widget>(), choice.upcast_ref()] {
+                row.bind_property("visible", widget, "visible")
+                    .sync_create()
+                    .build();
+                content.append(widget);
+            }
+        }
+        let popover = gtk::Popover::builder().child(&content).build();
+        let button = imp._media_bottom.tracks_button();
+        button.set_popover(Some(&popover));
+        imp._options_list
+            .bind_property("visible", &button, "visible")
+            .sync_create()
+            .build();
+        // Keep the controls up while the choice is open.
+        popover.connect_show(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |_| view.stop_hide_timeout()
+        ));
+        popover.connect_closed(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |_| {
+                view.stop_hide_timeout();
+                view.start_hide_timeout();
+            }
+        ));
     }
 
     fn is_playing_video(&self) -> bool {
@@ -453,6 +512,15 @@ impl PlayerView {
             gdk::Key::period => player.next(),
             gdk::Key::bracketleft | gdk::Key::Left => player.seek_by(-10),
             gdk::Key::bracketright | gdk::Key::Right => player.seek_by(30),
+            gdk::Key::Up => change_volume(5),
+            gdk::Key::Down => change_volume(-5),
+            gdk::Key::m => {
+                let settings = gtk::gio::Settings::new(crate::config::APP_ID);
+                let prefer = !settings.boolean("prefer-music-clips");
+                if let Err(err) = settings.set_boolean("prefer-music-clips", prefer) {
+                    eprintln!("Could not save the music clip preference: {err}");
+                }
+            }
             gdk::Key::Escape if self.imp().fullscreen.get() => self.toggle_fullscreen(),
             _ => return glib::Propagation::Proceed,
         }

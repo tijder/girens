@@ -113,7 +113,6 @@ async fn report(
             service.set_playback_status(PlaybackStatus::Stopped).await?;
             service.set_metadata(Metadata::new()).await?;
         }
-        Event::AskResume(_) => {}
     }
     Ok(())
 }

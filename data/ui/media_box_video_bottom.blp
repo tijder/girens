@@ -55,13 +55,12 @@ template $media_box_video_bottom : Adw.Bin {
 
         [overlay]
         Image _watched_image {
-          halign: end;
-          valign: start;
-          icon-name: "dialog-information";
+          visible: false;
         }
       }
 
       MenuButton _playqueue_button {
+        icon-name: "view-list-symbolic";
         tooltip-text: _("Play queue");
         width-request: 50;
         height-request: 50;
@@ -70,6 +69,26 @@ template $media_box_video_bottom : Adw.Bin {
 
       Label {
         hexpand: true;
+      }
+
+      MenuButton _tracks_button {
+        icon-name: "media-view-subtitles-symbolic";
+        tooltip-text: _("Audio and subtitles");
+        width-request: 50;
+        height-request: 50;
+        direction: up;
+      }
+
+      ScaleButton _volume_button {
+        tooltip-text: _("Volume");
+        width-request: 50;
+        height-request: 50;
+        icons: ["audio-volume-muted-symbolic", "audio-volume-high-symbolic", "audio-volume-low-symbolic", "audio-volume-medium-symbolic"];
+        adjustment: Adjustment {
+          upper: 100;
+          step-increment: 5;
+          page-increment: 10;
+        };
       }
 
       Box {

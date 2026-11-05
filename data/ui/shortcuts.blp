@@ -1,64 +1,68 @@
 using Gtk 4.0;
+using Adw 1;
 
-ShortcutsWindow shortcuts {
-  modal: true;
+Adw.ShortcutsDialog shortcuts {
+  Adw.ShortcutsSection {
+    title: C_("shortcut window", "Playback");
 
-  ShortcutsSection {
-    visible: true;
-    section-name: "shortcuts";
-    max-height: 10;
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Play/Pause");
+      accelerator: "p space k";
+    }
 
-    ShortcutsGroup {
-      visible: true;
-      title: C_("shortcut window", "Playback");
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Previous");
+      accelerator: "comma";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Play/Pause");
-        accelerator: "p";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Next");
+      accelerator: "period";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Previous");
-        accelerator: "comma";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Seek forwards");
+      accelerator: "bracketright Right";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Next");
-        accelerator: "period";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Seek backwards");
+      accelerator: "bracketleft Left";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Seek forwards");
-        accelerator: "bracketright";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Volume up");
+      accelerator: "Up";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Seek backwards");
-        accelerator: "bracketleft";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Volume down");
+      accelerator: "Down";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Stop playing");
-        accelerator: "q";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Stop playing");
+      accelerator: "q";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Fullscreen");
-        accelerator: "F11";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Fullscreen");
+      accelerator: "F11 f";
+    }
 
-      ShortcutsShortcut {
-        visible: true;
-        title: C_("shortcut window", "Play musicclips instead of audio track");
-        accelerator: "m";
-      }
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Fill the window with the video");
+      accelerator: "t";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Show the controls");
+      accelerator: "o";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Play musicclips instead of audio track");
+      accelerator: "m";
     }
   }
 }
