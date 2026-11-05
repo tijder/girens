@@ -52,15 +52,25 @@ glib::wrapper! {
 impl AlbumItem {
     pub fn new(track: &Item) -> Self {
         let row: Self = glib::Object::new();
-        let imp = row.imp();
+        row.set_track(track);
+        row
+    }
 
+    /// Shows `track`; the row can be reused for another one at any time.
+    pub fn set_track(&self, track: &Item) {
+        let imp = self.imp();
         if track.view_count == 0 {
             imp._index_label.add_css_class("unplayed");
+        } else {
+            imp._index_label.remove_css_class("unplayed");
         }
         imp._title_label.set_text(&track.title);
-        if let Some(index) = track.index {
-            imp._index_label.set_text(&index.to_string());
-        }
+        imp._index_label.set_text(
+            &track
+                .index
+                .map(|index| index.to_string())
+                .unwrap_or_default(),
+        );
         imp._time_label
             .set_text(&util::format_duration(track.duration.unwrap_or(0)));
 
@@ -70,12 +80,14 @@ impl AlbumItem {
             .as_deref()
             .and_then(util::rating_key_from_path);
         imp._music_clip_button.set_visible(clip.is_some());
-        if let Some(clip) = clip {
-            imp._music_clip_button
-                .set_action_target_value(Some(&(clip as i64).to_variant()));
-            imp._music_clip_button
-                .set_action_name(Some("win.play-item"));
+        match clip {
+            Some(clip) => {
+                imp._music_clip_button
+                    .set_action_target_value(Some(&(clip as i64).to_variant()));
+                imp._music_clip_button
+                    .set_action_name(Some("win.play-item"));
+            }
+            None => imp._music_clip_button.set_action_name(None),
         }
-        row
     }
 }

@@ -8,6 +8,7 @@ template $media_box_video_top : Adw.Bin {
 
     Box {
       Button _fullscreen_button {
+        tooltip-text: _("Fullscreen");
         width-request: 50;
         height-request: 50;
         Image {
@@ -15,6 +16,7 @@ template $media_box_video_top : Adw.Bin {
         }
       }
       Button _fullscreen_windowed_button {
+        tooltip-text: _("Fill window");
         width-request: 50;
         height-request: 50;
         Image {
@@ -41,6 +43,7 @@ template $media_box_video_top : Adw.Bin {
       }
     }
     Button _close_button {
+      tooltip-text: _("Stop");
       width-request: 50;
       height-request: 50;
       Image {

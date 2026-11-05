@@ -1,13 +1,6 @@
 // Views keep their callbacks in `RefCell<Option<Box<dyn Fn(..)>>>` slots.
 #![allow(clippy::type_complexity)]
 
-/// Reports a failure to the user: like `eprintln!`, and also as a toast.
-macro_rules! report {
-    ($($arg:tt)*) => {
-        $crate::notify::failure(format!($($arg)*))
-    };
-}
-
 mod application;
 mod config;
 #[cfg(debug_assertions)]

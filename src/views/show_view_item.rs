@@ -67,7 +67,16 @@ glib::wrapper! {
 impl ShowViewItem {
     pub fn new(episode: &Item) -> Self {
         let row: Self = glib::Object::new();
-        let imp = row.imp();
+        row.set_episode(episode);
+        row
+    }
+
+    /// Shows `episode`; the row can be reused for another one at any time.
+    pub fn set_episode(&self, episode: &Item) {
+        let imp = self.imp();
+        if let Some(task) = imp.image_task.take() {
+            task.abort();
+        }
 
         let title = match episode.index {
             Some(index) => format!("{index} - {}", episode.title),
@@ -93,11 +102,12 @@ impl ShowViewItem {
         }
         imp._watched_image.set_visible(!episode.is_watched());
 
+        imp._cover_image.set_paintable(gtk::gdk::Paintable::NONE);
         if let (Some(thumb), Some(server)) = (episode.thumb.clone(), Session::current().server()) {
             let key = episode.rating_key;
             let task = glib::spawn_future_local(glib::clone!(
-                #[weak]
-                row,
+                #[weak(rename_to = row)]
+                self,
                 async move {
                     if let Some(texture) = images::cover(&server, key, &thumb).await {
                         row.imp()._cover_image.set_paintable(Some(&texture));
@@ -106,6 +116,5 @@ impl ShowViewItem {
             ));
             imp.image_task.replace(Some(task));
         }
-        row
     }
 }

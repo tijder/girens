@@ -75,6 +75,7 @@ template $media_box_music : Adw.Bin {
       }
 
       MenuButton _playqueue_button {
+        tooltip-text: _("Play queue");
         width-request: 50;
         height-request: 50;
         direction: up;
@@ -98,6 +99,7 @@ template $media_box_music : Adw.Bin {
 
       Box {
         Button _prev_button {
+          tooltip-text: _("Previous");
           width-request: 50;
           height-request: 50;
 
@@ -107,6 +109,7 @@ template $media_box_music : Adw.Bin {
         }
 
         Button _play_button {
+          tooltip-text: _("Play");
           width-request: 50;
           height-request: 50;
           Image _play_image {
@@ -115,6 +118,7 @@ template $media_box_music : Adw.Bin {
         }
 
         Button _next_button {
+          tooltip-text: _("Next");
           width-request: 50;
           height-request: 50;
           Image {
@@ -123,6 +127,7 @@ template $media_box_music : Adw.Bin {
         }
 
         Button _close_button {
+          tooltip-text: _("Stop");
           width-request: 50;
           height-request: 50;
           receives-default: true;
@@ -133,6 +138,7 @@ template $media_box_music : Adw.Bin {
         }
 
         MenuButton _media_settings {
+          tooltip-text: _("Options");
           width-request: 50;
           height-request: 50;
           direction: up;

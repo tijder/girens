@@ -307,13 +307,18 @@ impl Player {
             })
             .await;
             match queue {
-                Ok(queue) if queue.items.is_empty() => report!("Nothing to play"),
+                Ok(queue) if queue.items.is_empty() => {
+                    crate::notify::message(&crate::i18n::gettext("Nothing to play"))
+                }
                 Ok(queue) => {
                     let index = queue.selected_index().unwrap_or(0);
                     inner.set_queue(queue, index);
                     inner.start(index, mode);
                 }
-                Err(err) => report!("Could not create a play queue: {err}"),
+                Err(err) => crate::notify::failure(
+                    &crate::i18n::gettext("Could not create a play queue"),
+                    &err,
+                ),
             }
         });
     }
@@ -399,7 +404,10 @@ impl Player {
             };
             match runtime::run(async move { server.shuffle_play_queue(id, shuffle).await }).await {
                 Ok(queue) => inner.replace_queue(queue),
-                Err(err) => report!("Could not shuffle the play queue: {err}"),
+                Err(err) => crate::notify::failure(
+                    &crate::i18n::gettext("Could not shuffle the play queue"),
+                    &err,
+                ),
             }
         });
     }
@@ -587,7 +595,7 @@ impl Inner {
         let inner = self.clone();
         glib::spawn_future_local(async move {
             if let Err(err) = inner.load(item, mode, generation).await {
-                report!("Could not start playback: {err}");
+                crate::notify::failure(&crate::i18n::gettext("Could not start playback"), &err);
                 inner.emit(Event::Stopped);
             }
         });
@@ -1027,7 +1035,10 @@ impl Inner {
             let updated = match updated {
                 Ok(updated) => updated,
                 Err(err) => {
-                    report!("Could not change the stream: {err}");
+                    crate::notify::failure(
+                        &crate::i18n::gettext("Could not change the stream"),
+                        &err,
+                    );
                     return;
                 }
             };

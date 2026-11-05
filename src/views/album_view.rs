@@ -56,8 +56,8 @@ pub fn album_rows(album: &Item, tracks: &[Item], link_to_artist: bool) -> Vec<Mu
 pub fn setup_music_list(list: &gtk::ListView) -> gio::ListStore {
     row_list::setup(
         list,
-        |row: &MusicRow| match row {
-            MusicRow::Widget(widget) => RowWidget::inert(widget),
+        |row: &MusicRow, previous: Option<gtk::Widget>| match row {
+            MusicRow::Widget(widget) => RowWidget::shared(widget),
             MusicRow::Album {
                 album,
                 link_to_artist,
@@ -69,7 +69,13 @@ pub fn setup_music_list(list: &gtk::ListView) -> gio::ListStore {
                 label.set_margin_bottom(6);
                 RowWidget::inert(&label)
             }
-            MusicRow::Track(track) => RowWidget::activatable(&AlbumItem::new(track)),
+            MusicRow::Track(track) => match previous.and_downcast::<AlbumItem>() {
+                Some(item) => {
+                    item.set_track(track);
+                    RowWidget::activatable(&item)
+                }
+                None => RowWidget::activatable(&AlbumItem::new(track)),
+            },
         },
         glib::clone!(
             #[weak]
@@ -249,7 +255,9 @@ impl AlbumView {
                 Ok((album, tracks)) => {
                     row_list::replace_from(&store, 0, album_rows(&album, &tracks, true))
                 }
-                Err(err) => report!("Could not load the album: {err}"),
+                Err(err) => {
+                    crate::notify::failure(&crate::i18n::gettext("Could not load the album"), &err)
+                }
             }
         });
         if let Some(previous) = imp.task.replace(Some(task)) {

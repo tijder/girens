@@ -107,7 +107,10 @@ impl DiscoverView {
 
                 match deck {
                     Ok(items) => imp._deck_shows_box.set_items(items),
-                    Err(err) => report!("Could not load on deck: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load on deck"),
+                        &err,
+                    ),
                 }
                 match latest {
                     Ok(items) => {
@@ -123,7 +126,10 @@ impl DiscoverView {
                             .set_items(of(&[ItemKind::Episode, ItemKind::Season]));
                         imp._music_shows_box.set_items(of(&[ItemKind::Album]));
                     }
-                    Err(err) => report!("Could not load recently added: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load recently added"),
+                        &err,
+                    ),
                 }
             }
         ));

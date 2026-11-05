@@ -38,6 +38,7 @@ template $album_header : Box {
       ]
 
       Button _play_button {
+        tooltip-text: _("Play");
         hexpand: true;
 
         Image {
@@ -45,7 +46,9 @@ template $album_header : Box {
         }
       }
 
-      MenuButton _menu_button {}
+      MenuButton _menu_button {
+        tooltip-text: _("More");
+      }
     }
   }
 

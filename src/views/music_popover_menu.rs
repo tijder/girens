@@ -181,7 +181,7 @@ impl MusicPopoverMenu {
             let result =
                 runtime::run(async move { server.rate(key, f32::from(stars) * 2.0).await }).await;
             if let Err(err) = result {
-                report!("Could not rate the track: {err}");
+                crate::notify::failure(&crate::i18n::gettext("Could not rate the track"), &err);
             }
         });
     }

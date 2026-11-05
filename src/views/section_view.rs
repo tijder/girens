@@ -231,7 +231,10 @@ impl SectionView {
                 let sorts = runtime::run(async move { server.section_sorts(key).await }).await;
                 match sorts {
                     Ok(sorts) => view.set_sorts(sorts.into_iter().map(|sort| sort.key).collect()),
-                    Err(err) => report!("Could not load the sort options: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load the sort options"),
+                        &err,
+                    ),
                 }
                 view.load_more();
             }
@@ -319,7 +322,10 @@ impl SectionView {
                         imp.offset.set(offset + PAGE_SIZE);
                         imp._section_flow.append(page.items);
                     }
-                    Err(err) => report!("Could not load the library: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load the library"),
+                        &err,
+                    ),
                 }
                 imp.loading.set(false);
                 imp._load_box.set_visible(false);
@@ -345,7 +351,10 @@ impl SectionView {
                 let imp = view.imp();
                 match playlists {
                     Ok(playlists) => imp._section_flow.set_items(playlists),
-                    Err(err) => report!("Could not load the playlists: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load the playlists"),
+                        &err,
+                    ),
                 }
                 imp._load_box.set_visible(false);
             }

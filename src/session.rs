@@ -11,7 +11,7 @@ use girens_plex::{ClientInfo, Error, PlexServer, Result};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
-use crate::{config, runtime, secrets};
+use crate::{config, runtime, secrets, store};
 
 #[derive(Default)]
 struct State {
@@ -84,13 +84,20 @@ impl Session {
 
     async fn token(&self, uuid: &str) -> Option<String> {
         match secrets::lookup(uuid).await {
-            Ok(Some(token)) => Some(token),
-            Ok(None) => legacy_token(uuid),
-            Err(err) => {
-                eprintln!("Could not read from the keyring: {err}");
-                legacy_token(uuid)
-            }
+            Ok(Some(token)) => return Some(token),
+            Ok(None) => {}
+            Err(err) => eprintln!("Could not read from the keyring: {err}"),
         }
+        // The Python version wrote tokens to its config file when no Secret
+        // Service was available. Such a token moves to the keyring as soon
+        // as that works, and is then removed from the file.
+        let token = store::legacy_token(uuid)?;
+        let attributes = vec![("uuid", uuid.to_owned())];
+        match secrets::store("Girens token", attributes, token.clone()).await {
+            Ok(()) => store::remove_legacy_token(uuid),
+            Err(err) => eprintln!("Could not move a token into the keyring: {err}"),
+        }
+        Some(token)
     }
 
     /// URL of the server that was used last, for status messages.
@@ -234,12 +241,4 @@ impl Session {
 /// `$XDG_CONFIG_HOME/config`, the JSON file of the Python version.
 pub fn config_file() -> std::path::PathBuf {
     glib::user_config_dir().join("config")
-}
-
-/// The Python version wrote tokens to its config file when no Secret Service
-/// was available. They are still read, but no longer written.
-fn legacy_token(uuid: &str) -> Option<String> {
-    let text = std::fs::read_to_string(config_file()).ok()?;
-    let config: serde_json::Value = serde_json::from_str(text.lines().next()?).ok()?;
-    config.get("tokens")?.get(uuid)?.as_str().map(str::to_owned)
 }

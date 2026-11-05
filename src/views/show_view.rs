@@ -1,11 +1,11 @@
 //! A show: its details, then the episodes of the chosen season, as one
-//! virtualised list.
+//! virtualised list. Episodes are fetched per season, when it is chosen.
 
 use std::cell::{Cell, OnceCell, RefCell};
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 use adw::subclass::prelude::*;
-use girens_plex::model::Item;
+use girens_plex::model::{Item, ItemKind};
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CompositeTemplate};
 
@@ -48,9 +48,13 @@ mod imp {
         pub _season_box: TemplateChild<gtk::Box>,
         pub store: OnceCell<gio::ListStore>,
         pub rating_key: Cell<Option<u64>>,
-        /// Episodes per season number.
-        pub seasons: RefCell<BTreeMap<u32, Vec<Item>>>,
+        /// Episodes of the seasons that were looked at, by rating key of the
+        /// season.
+        pub episodes: RefCell<HashMap<u64, Vec<Item>>>,
+        /// The season whose episodes are shown or being fetched.
+        pub season: Cell<Option<u64>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
+        pub season_task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
     #[glib::object_subclass]
@@ -75,9 +79,15 @@ mod imp {
             let header = self._header.get();
             let store = row_list::setup(
                 &self._list_view,
-                move |row: &Row| match row {
-                    Row::Header => RowWidget::inert(&header),
-                    Row::Episode(episode) => RowWidget::activatable(&ShowViewItem::new(episode)),
+                move |row: &Row, previous: Option<gtk::Widget>| match row {
+                    Row::Header => RowWidget::shared(&header),
+                    Row::Episode(episode) => match previous.and_downcast::<ShowViewItem>() {
+                        Some(item) => {
+                            item.set_episode(episode);
+                            RowWidget::activatable(&item)
+                        }
+                        None => RowWidget::activatable(&ShowViewItem::new(episode)),
+                    },
                 },
                 glib::clone!(
                     #[weak]
@@ -122,7 +132,11 @@ impl ShowView {
         imp._subtitle_label.set_text("");
         imp._description_label.set_text("");
         imp._cover_image.set_paintable(gdk::Paintable::NONE);
-        imp.seasons.borrow_mut().clear();
+        imp.episodes.borrow_mut().clear();
+        imp.season.set(None);
+        if let Some(task) = imp.season_task.take() {
+            task.abort();
+        }
         while let Some(button) = imp._season_box.first_child() {
             imp._season_box.remove(&button);
         }
@@ -146,18 +160,21 @@ impl ShowView {
                 let loaded = {
                     let server = server.clone();
                     runtime::run(async move {
-                        tokio::try_join!(server.item(rating_key), server.all_leaves(rating_key))
+                        tokio::try_join!(server.item(rating_key), server.children(rating_key))
                     })
                     .await
                 };
-                let (show, episodes) = match loaded {
+                let (show, children) = match loaded {
                     Ok(loaded) => loaded,
                     Err(err) => {
-                        report!("Could not load the show: {err}");
+                        crate::notify::failure(
+                            &crate::i18n::gettext("Could not load the show"),
+                            &err,
+                        );
                         return;
                     }
                 };
-                view.fill(&show, episodes);
+                view.fill(&show, children);
                 if let Some(thumb) = show.thumb.as_deref() {
                     if let Some(texture) = images::cover(&server, show.rating_key, thumb).await {
                         view.imp()._cover_image.set_paintable(Some(&texture));
@@ -170,7 +187,9 @@ impl ShowView {
         }
     }
 
-    fn fill(&self, show: &Item, episodes: Vec<Item>) {
+    /// `children` are the seasons of the show, or directly its episodes when
+    /// the library does not use seasons.
+    fn fill(&self, show: &Item, children: Vec<Item>) {
         let imp = self.imp();
         imp._title_label.set_text(&show.title);
         imp._subtitle_label
@@ -178,59 +197,84 @@ impl ShowView {
         imp._description_label
             .set_text(show.summary.as_deref().unwrap_or_default());
 
-        let mut seasons: BTreeMap<u32, Vec<Item>> = BTreeMap::new();
-        for episode in episodes {
-            seasons
-                .entry(episode.parent_index.unwrap_or(0))
-                .or_default()
-                .push(episode);
+        if children.iter().all(|child| child.kind == ItemKind::Episode) {
+            self.show_episodes(&children);
+            return;
         }
 
         // One toggle per season, like tabs.
+        let seasons: Vec<&Item> = children
+            .iter()
+            .filter(|child| child.kind == ItemKind::Season)
+            .collect();
         let mut first: Option<gtk::ToggleButton> = None;
-        for (season, episodes) in &seasons {
-            let title = episodes
-                .first()
-                .and_then(|episode| episode.parent_title.clone())
-                .unwrap_or_else(|| season.to_string());
-            let button = gtk::ToggleButton::with_label(&title);
+        for season in &seasons {
+            let button = gtk::ToggleButton::with_label(&season.title);
             match &first {
                 Some(first) => button.set_group(Some(first)),
                 None => first = Some(button.clone()),
             }
-            let season = *season;
+            let key = season.rating_key;
             button.connect_toggled(glib::clone!(
                 #[weak(rename_to = view)]
                 self,
                 move |button| {
                     if button.is_active() {
-                        view.show_season(season);
+                        view.show_season(key);
                     }
                 }
             ));
             imp._season_box.append(&button);
         }
         imp._season_scrolled_window.set_visible(seasons.len() > 1);
-        imp.seasons.replace(seasons);
-        // Activating the first toggle shows its season.
+        // Activating the first toggle loads its season.
         if let Some(first) = first {
             first.set_active(true);
         }
     }
 
-    fn show_season(&self, season: u32) {
-        let rows = self
-            .imp()
-            .seasons
-            .borrow()
-            .get(&season)
-            .map(|episodes| {
-                episodes
-                    .iter()
-                    .map(|episode| Row::Episode(Box::new(episode.clone())))
-                    .collect()
-            })
-            .unwrap_or_default();
+    /// Shows a season, fetching its episodes the first time.
+    fn show_season(&self, season: u64) {
+        let imp = self.imp();
+        imp.season.set(Some(season));
+        if let Some(task) = imp.season_task.take() {
+            task.abort();
+        }
+        if let Some(episodes) = imp.episodes.borrow().get(&season) {
+            self.show_episodes(episodes);
+            return;
+        }
+        row_list::replace_from(self.store(), 1, Vec::<Row>::new());
+        let Some(server) = Session::current().server() else {
+            return;
+        };
+        let task = glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            async move {
+                match runtime::run(async move { server.children(season).await }).await {
+                    Ok(episodes) => {
+                        let imp = view.imp();
+                        if imp.season.get() == Some(season) {
+                            view.show_episodes(&episodes);
+                        }
+                        imp.episodes.borrow_mut().insert(season, episodes);
+                    }
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load the episodes"),
+                        &err,
+                    ),
+                }
+            }
+        ));
+        imp.season_task.replace(Some(task));
+    }
+
+    fn show_episodes(&self, episodes: &[Item]) {
+        let rows = episodes
+            .iter()
+            .map(|episode| Row::Episode(Box::new(episode.clone())))
+            .collect();
         // The header stays; only the episodes are exchanged.
         row_list::replace_from(self.store(), 1, rows);
     }

@@ -422,7 +422,10 @@ impl PlayerView {
             async move {
                 match runtime::run(async move { server.section_on_deck(section).await }).await {
                     Ok(items) => view.imp()._deck_shows_box.set_items(items),
-                    Err(err) => report!("Could not load on deck: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load on deck"),
+                        &err,
+                    ),
                 }
             }
         ));

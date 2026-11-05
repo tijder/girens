@@ -377,3 +377,36 @@ async fn a_download_is_written_completely_or_not_at_all() {
     assert!(!dir.join("item_1.tmp").exists());
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+#[tokio::test]
+async fn an_interrupted_download_is_continued() {
+    let body: Vec<u8> = (0..=255u8).cycle().take(10_000).collect();
+    let mock = MockServer::start().await;
+    Mock::given(method("GET"))
+        .and(path("/file"))
+        .and(header("range", "bytes=4000-"))
+        .respond_with(ResponseTemplate::new(206).set_body_bytes(body[4000..].to_vec()))
+        .expect(1)
+        .mount(&mock)
+        .await;
+    let dir = std::env::temp_dir().join(format!("girens-plex-resume-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let target = dir.join("item_2");
+    // What an earlier attempt left behind.
+    std::fs::write(dir.join("item_2.tmp"), &body[..4000]).unwrap();
+
+    let reported = std::sync::Arc::new(std::sync::Mutex::new((0u64, None)));
+    let seen = reported.clone();
+    girens_plex::download_to_file_with_progress(
+        &format!("{}/file", mock.uri()),
+        &target,
+        true,
+        move |received, total| *seen.lock().unwrap() = (received, total),
+    )
+    .await
+    .unwrap();
+
+    assert_eq!(std::fs::read(&target).unwrap(), body);
+    assert_eq!(*reported.lock().unwrap(), (10_000, Some(10_000)));
+    std::fs::remove_dir_all(&dir).unwrap();
+}

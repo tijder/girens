@@ -108,7 +108,10 @@ impl ArtistView {
                 let (artist, albums, tracks) = match loaded {
                     Ok(loaded) => loaded,
                     Err(err) => {
-                        report!("Could not load the artist: {err}");
+                        crate::notify::failure(
+                            &crate::i18n::gettext("Could not load the artist"),
+                            &err,
+                        );
                         return;
                     }
                 };

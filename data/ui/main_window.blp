@@ -34,6 +34,7 @@ template $PlexWindow : Adw.ApplicationWindow {
             Adw.HeaderBar sidebar_header {
               [start]
               Button _profile_button {
+                tooltip-text: _("Account");
                 Image _avatar_image {
                   icon-name: "preferences-desktop-personal-symbolic";
                 }
@@ -60,18 +61,22 @@ template $PlexWindow : Adw.ApplicationWindow {
             active: true;
           }
           ToggleButton _search_toggle_button {
+            tooltip-text: _("Search");
               visible: true;
               icon-name: "edit-find-symbolic";
             }
 
             Box {
               Button _sync_button {
+                tooltip-text: _("Sync");
                 Image _sync_image {
                   icon-name: "network-transmit-symbolic";
                 }
               }
 
-              MenuButton _download_button {}
+              MenuButton _download_button {
+                tooltip-text: _("Downloads");
+              }
 
               styles [
                 "linked",
@@ -80,6 +85,7 @@ template $PlexWindow : Adw.ApplicationWindow {
 
           [end]
           MenuButton _menu_button {
+            tooltip-text: _("Main menu");
               popover: _menu_popover;
               Image _shortcuts_image1 {
                 icon-name: "open-menu-symbolic";

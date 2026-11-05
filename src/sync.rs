@@ -94,7 +94,7 @@ impl Sync {
         let sync = self.clone();
         let task = glib::spawn_future_local(async move {
             if let Err(err) = sync.run_once(&server).await {
-                report!("Sync failed: {err}");
+                crate::notify::failure(&crate::i18n::gettext("Sync failed"), &err);
             }
             sync.task.take();
             sync.busy.set(false);
@@ -107,16 +107,15 @@ impl Sync {
         self.busy.get()
     }
 
-    /// Stops the running sync; the download in progress is discarded.
+    /// Stops the running sync. The download in progress is kept and continued
+    /// by the next run.
     pub fn cancel(&self) {
         let Some(task) = self.task.take() else {
             return;
         };
         // Dropping the task also aborts the network request it waits for.
+        // What was downloaded so far stays, to be continued next time.
         task.abort();
-        if let Some(server) = Session::current().server() {
-            remove_partial_downloads(&server);
-        }
         self.busy.set(false);
         self.emit(Event::Busy(false));
     }
@@ -151,21 +150,25 @@ impl Sync {
                     let result = self.download(server, &item, entry.converted).await;
                     self.emit(Event::Downloading(Box::new(item.clone()), false));
                     if let Err(err) = result {
-                        report!("Could not download {}: {err}", item.rating_key);
+                        crate::notify::failure(
+                            &crate::i18n::gettext("Could not download an item"),
+                            &err,
+                        );
                     }
                 }
             }
         }
 
-        // Remove what an interrupted download left behind, and copies of
-        // items that are no longer synced.
-        remove_partial_downloads(server);
+        // Remove copies, complete or partial, of items that are no longer
+        // synced. A partial copy of a wanted item stays: the next run
+        // continues it.
         if let Ok(files) = std::fs::read_dir(images::cache_dir(server)) {
             for file in files.flatten() {
                 let name = file.file_name();
                 let Some(key) = name.to_str().and_then(|name| name.strip_prefix("item_")) else {
                     continue;
                 };
+                let key = key.strip_suffix(".tmp").unwrap_or(key);
                 if key.parse().is_ok_and(|key: u64| !wanted.contains(&key)) {
                     if let Err(err) = std::fs::remove_file(file.path()) {
                         eprintln!("Could not remove {}: {err}", file.path().display());
@@ -196,8 +199,18 @@ impl Sync {
         server: &PlexServer,
         item: &Item,
         converted: bool,
-    ) -> Result<(), girens_plex::Error> {
+    ) -> Result<(), String> {
         let key = item.rating_key;
+        // An original file has a known size: refuse it when it does not fit,
+        // rather than filling the disk.
+        if let (false, Some(size)) = (converted, item.parts().next().and_then(|part| part.size)) {
+            let free = free_space(&images::cache_dir(server));
+            if free.is_some_and(|free| free < size.saturating_add(DISK_RESERVE)) {
+                return Err(crate::i18n::gettext(
+                    "Not enough disk space for the download",
+                ));
+            }
+        }
         let counters = Arc::new((AtomicU64::new(0), AtomicU64::new(0)));
         let reporter = glib::timeout_add_local(Duration::from_millis(500), {
             let counters = counters.clone();
@@ -238,9 +251,14 @@ impl Sync {
                     offset: 0,
                 };
                 let url = server.transcode_download_url(&item, &request);
-                let result =
-                    girens_plex::download_to_file_with_progress(url.as_str(), &target, progress)
-                        .await;
+                // A transcode cannot be continued, so it always starts over.
+                let result = girens_plex::download_to_file_with_progress(
+                    url.as_str(),
+                    &target,
+                    false,
+                    progress,
+                )
+                .await;
                 if let Err(err) = server.stop_transcode_session(&item, &request.session).await {
                     eprintln!("Could not end the transcode session: {err}");
                 }
@@ -251,25 +269,24 @@ impl Sync {
                     .next()
                     .ok_or(girens_plex::Error::NotFound(item.rating_key))?;
                 let url = server.download_url(&part.key);
-                girens_plex::download_to_file_with_progress(url.as_str(), &target, progress).await
+                girens_plex::download_to_file_with_progress(url.as_str(), &target, true, progress)
+                    .await
             }
         })
         .await
+        .map_err(|err: girens_plex::Error| err.to_string())
     }
 }
 
-/// Deletes `item_*.tmp` files, the remains of downloads that did not finish.
-fn remove_partial_downloads(server: &PlexServer) {
-    let Ok(files) = std::fs::read_dir(images::cache_dir(server)) else {
-        return;
-    };
-    for file in files.flatten() {
-        let name = file.file_name();
-        let partial = name
-            .to_str()
-            .is_some_and(|name| name.starts_with("item_") && name.ends_with(".tmp"));
-        if partial {
-            let _ = std::fs::remove_file(file.path());
-        }
-    }
+/// Space to leave free on the disk after a download.
+const DISK_RESERVE: u64 = 500 * 1024 * 1024;
+
+/// Free bytes on the file system that holds `dir`.
+fn free_space(dir: &std::path::Path) -> Option<u64> {
+    // The directory may not exist yet; its parent is on the same disk.
+    let existing = dir.ancestors().find(|path| path.exists())?;
+    let info = gio::File::for_path(existing)
+        .query_filesystem_info(gio::FILE_ATTRIBUTE_FILESYSTEM_FREE, gio::Cancellable::NONE)
+        .ok()?;
+    Some(info.attribute_uint64(gio::FILE_ATTRIBUTE_FILESYSTEM_FREE))
 }

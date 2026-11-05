@@ -5,6 +5,10 @@
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
+/// Name given to widgets that exist once and move between rows, such as a
+/// page header; they are released when their row scrolls out of view.
+const SHARED: &str = "girens-shared-row";
+
 /// What a row shows and whether clicking it does something.
 pub struct RowWidget {
     pub widget: gtk::Widget,
@@ -19,6 +23,12 @@ impl RowWidget {
         }
     }
 
+    /// A widget that exists only once, like the header of a page.
+    pub fn shared(widget: &impl IsA<gtk::Widget>) -> Self {
+        widget.set_widget_name(SHARED);
+        Self::inert(widget)
+    }
+
     pub fn activatable(widget: &impl IsA<gtk::Widget>) -> Self {
         Self {
             widget: widget.clone().upcast(),
@@ -28,11 +38,12 @@ impl RowWidget {
 }
 
 /// Connects `list` to a new store of rows of type `R`. `build` makes the
-/// widget of a row when it scrolls into view, `activate` handles a click on
-/// an activatable row.
+/// widget of a row when it scrolls into view; it is handed the widget the
+/// list item showed before, to reuse when it is of the right kind.
+/// `activate` handles a click on an activatable row.
 pub fn setup<R: 'static>(
     list: &gtk::ListView,
-    build: impl Fn(&R) -> RowWidget + 'static,
+    build: impl Fn(&R, Option<gtk::Widget>) -> RowWidget + 'static,
     activate: impl Fn(&R) + 'static,
 ) -> gio::ListStore {
     let store = gio::ListStore::new::<glib::BoxedAnyObject>();
@@ -45,15 +56,24 @@ pub fn setup<R: 'static>(
         let Some(row) = list_item.item().and_downcast::<glib::BoxedAnyObject>() else {
             return;
         };
-        let built = build(&row.borrow::<R>());
+        let previous = list_item.child();
+        let built = build(&row.borrow::<R>(), previous.clone());
         list_item.set_activatable(built.activatable);
         list_item.set_selectable(false);
-        list_item.set_child(Some(&built.widget));
+        if previous.as_ref() != Some(&built.widget) {
+            list_item.set_child(Some(&built.widget));
+        }
     });
     factory.connect_unbind(|_, object| {
-        if let Some(list_item) = object.downcast_ref::<gtk::ListItem>() {
-            // Releases the widget; a header widget is reused when its row
-            // scrolls back into view.
+        let Some(list_item) = object.downcast_ref::<gtk::ListItem>() else {
+            return;
+        };
+        // Ordinary rows keep their widget for the next item; a shared widget
+        // has to be free to appear in another list item.
+        let shared = list_item
+            .child()
+            .is_some_and(|child| child.widget_name() == SHARED);
+        if shared {
             list_item.set_child(gtk::Widget::NONE);
         }
     });

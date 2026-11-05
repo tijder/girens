@@ -22,6 +22,8 @@ use crate::views::{
 
 /// Pause in typing after which a search starts.
 const SEARCH_DELAY: std::time::Duration = std::time::Duration::from_millis(300);
+/// Seconds between attempts to reach a server that went away.
+const RECONNECT_INTERVAL: u32 = 10;
 /// Pause in resizing after which the layout adapts to the new width.
 const LAYOUT_DELAY: std::time::Duration = std::time::Duration::from_millis(200);
 
@@ -120,6 +122,8 @@ mod imp {
         /// Set once playback was ended for closing the window.
         pub closing: Cell<bool>,
         pub search_timeout: RefCell<Option<glib::SourceId>>,
+        /// Set while the connection to the server is being checked or restored.
+        pub checking_connection: Cell<bool>,
         pub layout_timeout: RefCell<Option<glib::SourceId>>,
     }
 
@@ -172,6 +176,7 @@ mod imp {
                 video_paused: Cell::new(false),
                 closing: Cell::new(false),
                 search_timeout: RefCell::new(None),
+                checking_connection: Cell::new(false),
                 layout_timeout: RefCell::new(None),
             }
         }
@@ -322,7 +327,10 @@ impl PlexWindow {
                         _ => return,
                     },
                     Err(err) => {
-                        report!("Could not open item {key}: {err}");
+                        crate::notify::failure(
+                            &crate::i18n::gettext("Could not open the item"),
+                            &err,
+                        );
                         return;
                     }
                 };
@@ -712,7 +720,7 @@ impl PlexWindow {
                 Ok(true) => return true,
                 Ok(false) => {}
                 Err(err) => {
-                    report!("Could not connect to {url}: {err}");
+                    eprintln!("Could not connect to {url}: {err}");
                     self.show_loading(&gettext_f("Connecting to {} failed.", &[&url]));
                 }
             }
@@ -755,7 +763,7 @@ impl PlexWindow {
         match self.imp().session.connect_resource(resource).await {
             Ok(()) => true,
             Err(err) => {
-                report!("Could not connect to {}: {err}", resource.name);
+                eprintln!("Could not connect to {}: {err}", resource.name);
                 self.show_loading(&gettext_f("Connecting to {} failed.", &[&resource.name]));
                 false
             }
@@ -785,7 +793,7 @@ impl PlexWindow {
         match sections {
             Ok(sections) => imp._sidebar_box.set_sections(&sections),
             Err(err) => {
-                report!("Could not load the libraries: {err}");
+                crate::notify::failure(&crate::i18n::gettext("Could not load the libraries"), &err);
                 imp._sidebar_box.set_sections(&[]);
             }
         }
@@ -938,7 +946,10 @@ impl PlexWindow {
                         only_unwatched: false,
                         max_items: None,
                     }),
-                    Err(err) => report!("Could not load item {rating_key}: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not load the item"),
+                        &err,
+                    ),
                 }
             }
         ));
@@ -1136,7 +1147,10 @@ impl PlexWindow {
                 .await;
                 match result {
                     Ok(item) => window.item_changed(&item),
-                    Err(err) => report!("Could not change the watched state: {err}"),
+                    Err(err) => crate::notify::failure(
+                        &crate::i18n::gettext("Could not change the watched state"),
+                        &err,
+                    ),
                 }
             }
         ));
@@ -1174,6 +1188,70 @@ impl PlexWindow {
         overlay.set_child(content.as_ref());
         self.set_content(Some(&overlay));
         crate::notify::set_overlay(&overlay);
+
+        // A failure may mean that the server is gone or the login expired.
+        crate::notify::connect_failure(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move || {
+                glib::spawn_future_local(async move { window.check_connection().await });
+            }
+        ));
+    }
+
+    /// Asks the server whether it is still there. If the login is no longer
+    /// accepted the login page is shown; if the server cannot be reached the
+    /// loading page says so and the connection is retried until it is back.
+    async fn check_connection(&self) {
+        let imp = self.imp();
+        let on_main_view = imp
+            .frame_stack
+            .visible_child()
+            .is_some_and(|child| child == *imp._split_view.upcast_ref::<gtk::Widget>());
+        if !on_main_view || imp.checking_connection.replace(true) {
+            return;
+        }
+        let mut waiting = false;
+        loop {
+            let Some(server) = imp.session.server() else {
+                break;
+            };
+            let name = server.base_url().host_str().unwrap_or_default().to_owned();
+            match runtime::run(async move { server.sections().await }).await {
+                Ok(_) => {
+                    if waiting {
+                        self.show_main();
+                    }
+                    break;
+                }
+                Err(Error::Unauthorized) => {
+                    self.show_login();
+                    break;
+                }
+                Err(err) if err.is_network() => {
+                    if !waiting {
+                        waiting = true;
+                        self.show_loading(&gettext_f("Connecting to {} failed.", &[&name]));
+                    }
+                    glib::timeout_future_seconds(RECONNECT_INTERVAL).await;
+                    // The user may have logged out from the loading page.
+                    let still_waiting = imp.frame_stack.visible_child().is_some_and(|child| {
+                        child == *imp._loading_view.upcast_ref::<gtk::Widget>()
+                    });
+                    if !still_waiting {
+                        break;
+                    }
+                }
+                // The server answers; the failure was about something else.
+                Err(_) => {
+                    if waiting {
+                        self.show_main();
+                    }
+                    break;
+                }
+            }
+        }
+        imp.checking_connection.set(false);
     }
 
     /// Adapts the pages when the window gets narrower or wider.

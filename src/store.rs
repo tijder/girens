@@ -4,7 +4,20 @@
 
 use serde_json::{json, Map, Value};
 
-use crate::session::config_file;
+#[cfg(test)]
+thread_local! {
+    /// Lets a test use its own file.
+    static TEST_FILE: std::cell::RefCell<Option<std::path::PathBuf>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+fn config_file() -> std::path::PathBuf {
+    #[cfg(test)]
+    if let Some(path) = TEST_FILE.with_borrow(Clone::clone) {
+        return path;
+    }
+    crate::session::config_file()
+}
 
 fn read() -> Map<String, Value> {
     std::fs::read_to_string(config_file())
@@ -121,5 +134,129 @@ pub fn remove_sync_entry(rating_key: u64) {
         if entries.remove(&rating_key.to_string()).is_some() {
             write(&config);
         }
+    }
+}
+
+/// A token the Python version wrote to the config file because no Secret
+/// Service was available at the time.
+pub fn legacy_token(uuid: &str) -> Option<String> {
+    read().get("tokens")?.get(uuid)?.as_str().map(str::to_owned)
+}
+
+/// Removes such a token once it is safe in the keyring.
+pub fn remove_legacy_token(uuid: &str) {
+    let mut config = read();
+    let Some(Value::Object(tokens)) = config.get_mut("tokens") else {
+        return;
+    };
+    if tokens.remove(uuid).is_none() {
+        return;
+    }
+    if tokens.is_empty() {
+        config.remove("tokens");
+    }
+    write(&config);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A config file as the Python version wrote it.
+    const PYTHON_CONFIG: &str = r#"{"tokens": {"abc": "secret-token"}, "sections": {"uuid-1": {"sort": "addedAt", "sort_value": "desc"}}, "sync": {"12": {"rating_key": "12", "converted": false, "only_unwatched": true, "max_items": 5}, "34": {"rating_key": "34", "converted": true}}}"#;
+
+    fn with_config(test: impl FnOnce()) {
+        let path = std::env::temp_dir().join(format!(
+            "girens-store-test-{}-{:?}",
+            std::process::id(),
+            std::thread::current().id()
+        ));
+        std::fs::write(&path, PYTHON_CONFIG).unwrap();
+        TEST_FILE.set(Some(path.clone()));
+        test();
+        TEST_FILE.set(None);
+        let _ = std::fs::remove_file(path);
+    }
+
+    #[test]
+    fn the_python_config_is_understood() {
+        with_config(|| {
+            assert_eq!(
+                section_sort("uuid-1"),
+                Some(("addedAt".to_owned(), "desc".to_owned()))
+            );
+            assert_eq!(section_sort("unknown"), None);
+
+            let mut entries = sync_entries();
+            entries.sort_by_key(|entry| entry.rating_key);
+            assert_eq!(
+                entries,
+                [
+                    SyncEntry {
+                        rating_key: 12,
+                        converted: false,
+                        only_unwatched: true,
+                        max_items: Some(5),
+                    },
+                    SyncEntry {
+                        rating_key: 34,
+                        converted: true,
+                        only_unwatched: false,
+                        max_items: None,
+                    },
+                ]
+            );
+            assert_eq!(legacy_token("abc").as_deref(), Some("secret-token"));
+        });
+    }
+
+    #[test]
+    fn changing_one_part_keeps_the_others() {
+        with_config(|| {
+            set_section_sort("uuid-2", "titleSort", "asc");
+            add_sync_entry(&SyncEntry {
+                rating_key: 56,
+                converted: false,
+                only_unwatched: false,
+                max_items: None,
+            });
+            remove_sync_entry(12);
+            remove_legacy_token("abc");
+
+            assert_eq!(
+                section_sort("uuid-1"),
+                Some(("addedAt".to_owned(), "desc".to_owned()))
+            );
+            assert_eq!(
+                section_sort("uuid-2"),
+                Some(("titleSort".to_owned(), "asc".to_owned()))
+            );
+            let mut keys: Vec<u64> = sync_entries().iter().map(|e| e.rating_key).collect();
+            keys.sort_unstable();
+            assert_eq!(keys, [34, 56]);
+            assert_eq!(legacy_token("abc"), None);
+            // The file stays one line of JSON, as the Python version read it.
+            let text = std::fs::read_to_string(config_file()).unwrap();
+            assert_eq!(text.lines().count(), 1);
+            assert!(!text.contains("tokens"));
+        });
+    }
+
+    #[test]
+    fn an_existing_sync_entry_is_not_overwritten() {
+        with_config(|| {
+            add_sync_entry(&SyncEntry {
+                rating_key: 12,
+                converted: true,
+                only_unwatched: false,
+                max_items: None,
+            });
+            let entry = sync_entries()
+                .into_iter()
+                .find(|entry| entry.rating_key == 12)
+                .unwrap();
+            assert!(!entry.converted);
+            assert_eq!(entry.max_items, Some(5));
+        });
     }
 }
