@@ -634,13 +634,13 @@ impl PlexWindow {
 
         add("sync-by-id", |window, key| window.sync_item(key));
         add("play-item", |window, key| {
-            window.play(PlayTarget::Item(key), false, StartMode::Resume)
+            window.play(PlayTarget::Item(key), false, StartMode::Ask)
         });
         add("play-item-from-beginning", |window, key| {
             window.play(PlayTarget::Item(key), false, StartMode::Beginning)
         });
         add("shuffle-by-id", |window, key| {
-            window.play(PlayTarget::Item(key), true, StartMode::Resume)
+            window.play(PlayTarget::Item(key), true, StartMode::Ask)
         });
     }
 

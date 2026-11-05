@@ -109,6 +109,7 @@ async fn report(
             service.set_can_go_previous(player.has_previous()).await?;
             service.set_shuffle(player.is_shuffled()).await?;
         }
+        Event::AskResume(_) => {}
         Event::Stopped => {
             service.set_playback_status(PlaybackStatus::Stopped).await?;
             service.set_metadata(Metadata::new()).await?;

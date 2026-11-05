@@ -451,6 +451,7 @@ impl Inner {
             Event::Paused(paused) => self.show_paused(*paused),
             Event::Position(position) => self.show_position(*position),
             Event::QueueChanged => self.show_queue_position(),
+            Event::AskResume(_) => {}
         }
     }
 

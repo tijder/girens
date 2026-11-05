@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 18:21+0100\n"
+"POT-Creation-Date: 2026-11-05 18:25+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
+">\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +28,12 @@ msgid "Watch your Plex content"
 msgstr "Bekijk je Plex-bibliotheek"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
-msgid "Girens is a Plex media player client. You can watch and listen to your music, shows and movies with this GTK app."
-msgstr "Girens is een mediaspeler voor Plex. Met deze GTK-app bekijk en beluister je je muziek, series en films."
+msgid ""
+"Girens is a Plex media player client. You can watch and listen to your "
+"music, shows and movies with this GTK app."
+msgstr ""
+"Girens is een mediaspeler voor Plex. Met deze GTK-app bekijk en beluister je "
+"je muziek, series en films."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
@@ -443,23 +448,23 @@ msgstr "Geen afspeellijsten"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: ../src/player/mod.rs:334
+#: ../src/player/mod.rs:338
 msgid "Nothing to play"
 msgstr "Er is niets om af te spelen"
 
-#: ../src/player/mod.rs:342
+#: ../src/player/mod.rs:346
 msgid "Could not create a play queue"
 msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: ../src/player/mod.rs:441
+#: ../src/player/mod.rs:451
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: ../src/player/mod.rs:631
+#: ../src/player/mod.rs:646
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1088
+#: ../src/player/mod.rs:1103
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
@@ -509,7 +514,7 @@ msgstr "Markeren als afgespeeld"
 msgid "Mark as Unplayed"
 msgstr "Markeren als onafgespeeld"
 
-#: ../src/views/cover_box.rs:255
+#: ../src/views/cover_box.rs:255 ../src/window/playback.rs:123
 msgid "Start from the beginning"
 msgstr "Starten vanaf het begin"
 
@@ -543,8 +548,12 @@ msgid "Prefer music clips"
 msgstr "Voorkeur voor muziekclips"
 
 #: ../src/views/preferences.rs:24
-msgid "When playing music and the track has a music clip, play that instead of the audio."
-msgstr "Speel bij muziek de muziekclip af in plaats van de audio, als het nummer er een heeft."
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio."
+msgstr ""
+"Speel bij muziek de muziekclip af in plaats van de audio, als het nummer er "
+"een heeft."
 
 #: ../src/views/preferences.rs:32
 msgid "Transcode media"
@@ -686,8 +695,12 @@ msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
 #: ../src/window/mod.rs:556
-msgid "A Plex GTK client for playing movies, TV shows and music from your Plex library."
-msgstr "Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek af te spelen."
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+"Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek "
+"af te spelen."
 
 #: ../src/window/mod.rs:561
 msgid "translator-credits"
@@ -700,6 +713,14 @@ msgstr "Help mee vertalen"
 #: ../src/window/playback.rs:83
 msgid "This is not available without a connection to the server"
 msgstr "Dit is niet beschikbaar zonder verbinding met de server"
+
+#: ../src/window/playback.rs:120
+msgid "Do you want resume watching or start from the beginning?"
+msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
+
+#: ../src/window/playback.rs:124
+msgid "Resume"
+msgstr "Hervatten"
 
 #~ msgid "1080p"
 #~ msgstr "1080p"
@@ -715,12 +736,6 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 
 #~ msgid "Info"
 #~ msgstr "Info"
-
-#~ msgid "Do you want resume watching or start from the beginning?"
-#~ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
-
-#~ msgid "Resume"
-#~ msgstr "Hervatten"
 
 #~ msgid "Secure"
 #~ msgstr "Beveiligd"
@@ -819,7 +834,9 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 #~ msgstr "Gemigreerd naar Blueprint voor ui bestanden"
 
 #~ msgid "Improved lists for large libraries (thanks to the new Gtk4 lists)."
-#~ msgstr "Verbeterde lijsten voor grote bibliotheken (dankzij de nieuwe Gtk4-lijsten)."
+#~ msgstr ""
+#~ "Verbeterde lijsten voor grote bibliotheken (dankzij de nieuwe Gtk4-"
+#~ "lijsten)."
 
 #~ msgid "Redesigned the album/artist view"
 #~ msgstr "Herontwerp van de album/artiest weergave"
@@ -909,7 +926,9 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 #~ msgstr "Volledig scherm verlaten met escape"
 
 #~ msgid "Add feature changing subtitle and audio stream with plex remote"
-#~ msgstr "Functie toegevoegd die ondertiteling en audio stream verandert met plex remote"
+#~ msgstr ""
+#~ "Functie toegevoegd die ondertiteling en audio stream verandert met plex "
+#~ "remote"
 
 #~ msgid "Fix music not correct seeking when transcoding"
 #~ msgstr "Fix muziek niet goed tijd aan te passen bij transcodering"
@@ -969,7 +988,9 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 #~ msgstr "Sortering oplopend of aflopend wijzigen"
 
 #~ msgid "Hide media controlls after two seconds if new media started playing"
-#~ msgstr "Mediabedieningen na twee seconden verbergen als nieuwe video item is gestart"
+#~ msgstr ""
+#~ "Mediabedieningen na twee seconden verbergen als nieuwe video item is "
+#~ "gestart"
 
 #~ msgid "Seek to certain time when playing music"
 #~ msgstr "Zoek naar een bepaalde tijd bij het afspelen van muziek"
@@ -1038,7 +1059,9 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 #~ msgstr "Knop afspelen en shuffle toegevoegd in sectieweergave"
 
 #~ msgid "Playqueue will be refreshed when playing next/prev item"
-#~ msgstr "De afspeelwachtrij wordt ververst bij het afspelen van het volgende/vorige item"
+#~ msgstr ""
+#~ "De afspeelwachtrij wordt ververst bij het afspelen van het volgende/"
+#~ "vorige item"
 
 #~ msgid "Keep fullscreen status"
 #~ msgstr "Behoud de status van volledig scherm"
@@ -1073,8 +1096,12 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 #~ msgid "Watch your Plex media"
 #~ msgstr "Bekijk je Plex media"
 
-#~ msgid "Girens is a Plex GTK client for playing movies, TV shows and music from your Plex library."
-#~ msgstr "Girens is een Plex GTK-client voor het afspelen van films, TV-programma's en muziek uit uw Plex-bibliotheek."
+#~ msgid ""
+#~ "Girens is a Plex GTK client for playing movies, TV shows and music from "
+#~ "your Plex library."
+#~ msgstr ""
+#~ "Girens is een Plex GTK-client voor het afspelen van films, TV-programma's "
+#~ "en muziek uit uw Plex-bibliotheek."
 
 #~ msgid "Gerben Droogers"
 #~ msgstr "Gerben Droogers"
@@ -1106,20 +1133,26 @@ msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 #~ msgid "The volume level of the audio"
 #~ msgstr "Het volumeniveau van de audio"
 
-#~ msgid "Allow other devices on this network to find Girens and control this client"
+#~ msgid ""
+#~ "Allow other devices on this network to find Girens and control this client"
 #~ msgstr "Laat andere apparaten op dit netwerk Girens vinden en bedienen"
 
 #~ msgid "Use dark GTK theme"
 #~ msgstr "Gebruik een donkere GTK thema"
 
 #~ msgid "Play media direct from server instead of transcoding it"
-#~ msgstr "Speel media direct af van de server in plaats van het te transcoderen"
+#~ msgstr ""
+#~ "Speel media direct af van de server in plaats van het te transcoderen"
 
 #~ msgid "Resolution to transcode media to"
 #~ msgstr "Resolutie om media te transcoderen naar"
 
-#~ msgid "When playing music and the track has a music clip, play that instead of the audio"
-#~ msgstr "Als er muziek wordt afgespeeld en het nummer heeft een muziekclip, speel die dan af in plaats van de audio"
+#~ msgid ""
+#~ "When playing music and the track has a music clip, play that instead of "
+#~ "the audio"
+#~ msgstr ""
+#~ "Als er muziek wordt afgespeeld en het nummer heeft een muziekclip, speel "
+#~ "die dan af in plaats van de audio"
 
 #~ msgid "The plex user uuid"
 #~ msgstr "De plex gebruiker uuid"

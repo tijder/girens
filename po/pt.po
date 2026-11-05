@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 18:21+0100\n"
+"POT-Creation-Date: 2026-11-05 18:25+0100\n"
 "PO-Revision-Date: 2024-02-15 19:02+0000\n"
 "Last-Translator: Thiago Fernandes <thiago@avila-fernandes.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/girens/girens/"
@@ -446,23 +446,23 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:334
+#: ../src/player/mod.rs:338
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:342
+#: ../src/player/mod.rs:346
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:441
+#: ../src/player/mod.rs:451
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:631
+#: ../src/player/mod.rs:646
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1088
+#: ../src/player/mod.rs:1103
 msgid "Could not change the stream"
 msgstr ""
 
@@ -512,7 +512,7 @@ msgstr ""
 msgid "Mark as Unplayed"
 msgstr ""
 
-#: ../src/views/cover_box.rs:255
+#: ../src/views/cover_box.rs:255 ../src/window/playback.rs:123
 msgid "Start from the beginning"
 msgstr ""
 
@@ -703,6 +703,14 @@ msgstr ""
 
 #: ../src/window/playback.rs:83
 msgid "This is not available without a connection to the server"
+msgstr ""
+
+#: ../src/window/playback.rs:120
+msgid "Do you want resume watching or start from the beginning?"
+msgstr ""
+
+#: ../src/window/playback.rs:124
+msgid "Resume"
 msgstr ""
 
 #~ msgid "Changes:"

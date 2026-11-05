@@ -31,6 +31,8 @@ const PING_INTERVAL: u32 = 30;
 /// Where playback of an item starts.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum StartMode {
+    /// Ask the user when the item was partly watched.
+    Ask,
     /// Where the user left off; the beginning for something new.
     Resume,
     Beginning,
@@ -52,6 +54,8 @@ pub enum PlayTarget {
 
 #[derive(Debug, Clone)]
 pub enum Event {
+    /// The item was partly watched; answer with [`Player::start_current`].
+    AskResume(Box<Item>),
     /// Playback of an item began. `video` tells whether there is a picture.
     Started {
         item: Box<Item>,
@@ -92,9 +96,9 @@ fn next_after(
     match action {
         // Do not run through the whole queue when files fail to open.
         EndAction::Advance if failed => None,
-        EndAction::Advance => (index + 1 < length).then_some((index + 1, StartMode::Resume)),
-        EndAction::Previous => index.checked_sub(1).map(|index| (index, StartMode::Resume)),
-        EndAction::Index(index) => (index < length).then_some((index, StartMode::Resume)),
+        EndAction::Advance => (index + 1 < length).then_some((index + 1, StartMode::Ask)),
+        EndAction::Previous => index.checked_sub(1).map(|index| (index, StartMode::Ask)),
+        EndAction::Index(index) => (index < length).then_some((index, StartMode::Ask)),
         EndAction::Restart(position) => Some((index, StartMode::At(position))),
         EndAction::Replace(mode) => (index < length).then_some((index, mode)),
         EndAction::Stop => None,
@@ -352,7 +356,13 @@ impl Player {
             return;
         }
         self.inner.set_queue(PlayQueue::local(items), 0);
-        self.inner.start(0, StartMode::Resume);
+        self.inner.start(0, StartMode::Ask);
+    }
+
+    /// Answers [`Event::AskResume`] for the current queue entry.
+    pub fn start_current(&self, mode: StartMode) {
+        let index = self.inner.state.borrow().index;
+        self.inner.start(index, mode);
     }
 
     /// Jumps to another entry of the queue.
@@ -360,7 +370,7 @@ impl Player {
         if self.is_playing() {
             self.inner.end_with(EndAction::Index(index));
         } else {
-            self.inner.start(index, StartMode::Resume);
+            self.inner.start(index, StartMode::Ask);
         }
     }
 
@@ -620,6 +630,11 @@ impl Inner {
             item
         };
 
+        if mode == StartMode::Ask && item.view_offset != 0 {
+            self.emit(Event::AskResume(Box::new(item)));
+            return;
+        }
+
         let generation = {
             let mut state = self.state.borrow_mut();
             state.generation += 1;
@@ -702,7 +717,7 @@ impl Inner {
         let offset = match mode {
             StartMode::At(position) => position as f64 / 1000.0,
             StartMode::Resume => loading.view_offset as f64 / 1000.0,
-            StartMode::Beginning => 0.0,
+            StartMode::Ask | StartMode::Beginning => 0.0,
         };
         self.state.borrow_mut().current = Some(Playing {
             item,
@@ -1168,7 +1183,7 @@ mod tests {
     fn a_finished_item_is_followed_by_the_next_until_the_queue_ends() {
         assert_eq!(
             next_after(EndAction::Advance, 0, 3, false),
-            Some((1, StartMode::Resume))
+            Some((1, StartMode::Ask))
         );
         assert_eq!(next_after(EndAction::Advance, 2, 3, false), None);
     }
@@ -1182,7 +1197,7 @@ mod tests {
     fn previous_stops_at_the_start() {
         assert_eq!(
             next_after(EndAction::Previous, 2, 3, false),
-            Some((1, StartMode::Resume))
+            Some((1, StartMode::Ask))
         );
         assert_eq!(next_after(EndAction::Previous, 0, 3, false), None);
     }
@@ -1191,7 +1206,7 @@ mod tests {
     fn jumping_needs_an_existing_entry() {
         assert_eq!(
             next_after(EndAction::Index(2), 0, 3, false),
-            Some((2, StartMode::Resume))
+            Some((2, StartMode::Ask))
         );
         assert_eq!(next_after(EndAction::Index(3), 0, 3, false), None);
     }

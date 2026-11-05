@@ -26,7 +26,7 @@ impl PlexWindow {
                 window.play(
                     PlayTarget::Section { section, sort },
                     shuffle,
-                    StartMode::Resume,
+                    StartMode::Ask,
                 )
             }
         ));
@@ -97,6 +97,7 @@ impl PlexWindow {
                     self.open(Location::Player);
                 }
             }
+            Event::AskResume(item) => self.ask_resume(&item.title),
             Event::Paused(paused) => {
                 imp.video_paused.set(*paused);
                 self.update_idle_inhibit();
@@ -109,6 +110,38 @@ impl PlexWindow {
             }
             _ => {}
         }
+    }
+
+    /// Asks whether to resume a partly watched item or start over.
+    pub(super) fn ask_resume(&self, title: &str) {
+        let dialog = adw::AlertDialog::new(
+            Some(title),
+            Some(&gettext(
+                "Do you want resume watching or start from the beginning?",
+            )),
+        );
+        dialog.add_response("_beginning_button", &gettext("Start from the beginning"));
+        dialog.add_response("_resume_button", &gettext("Resume"));
+        dialog.set_response_appearance("_resume_button", adw::ResponseAppearance::Suggested);
+        dialog.set_default_response(Some("_resume_button"));
+        dialog.connect_response(
+            None,
+            glib::clone!(
+                #[weak(rename_to = window)]
+                self,
+                move |_, response| {
+                    let mode = match response {
+                        "_resume_button" => StartMode::Resume,
+                        "_beginning_button" => StartMode::Beginning,
+                        _ => return,
+                    };
+                    if let Some(player) = window.imp().player.get() {
+                        player.start_current(mode);
+                    }
+                }
+            ),
+        );
+        dialog.present(Some(self));
     }
 
     /// Hides or shows everything around the video.
