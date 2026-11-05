@@ -7,6 +7,7 @@ mod config;
 mod debug;
 mod i18n;
 mod images;
+mod messages;
 mod mpris;
 mod notify;
 mod player;

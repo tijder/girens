@@ -104,9 +104,7 @@ impl SearchView {
                 for search in &mut searches {
                     match search.await {
                         Ok(items) => view.imp()._section_flow.append(items),
-                        Err(err) => {
-                            crate::notify::failure(&crate::i18n::gettext("Search failed"), &err)
-                        }
+                        Err(err) => crate::notify::failure(&crate::messages::search(), &err),
                     }
                 }
             }

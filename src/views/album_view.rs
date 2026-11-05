@@ -160,15 +160,19 @@ impl AlbumHeader {
 
         let menu = gio::Menu::new();
         let add = |label: &str, action: &str, key: u64| {
-            let entry = gio::MenuItem::new(Some(&gettext(label)), None);
+            let entry = gio::MenuItem::new(Some(label), None);
             entry.set_action_and_target_value(Some(action), Some(&(key as i64).to_variant()));
             menu.append_item(&entry);
         };
         if let (true, Some(artist)) = (link_to_artist, album.parent_rating_key) {
-            add("Go to artist view", "win.show-artist-by-id", artist);
+            add(
+                &gettext("Go to artist view"),
+                "win.show-artist-by-id",
+                artist,
+            );
         }
-        add("Sync", "win.sync-by-id", album.rating_key);
-        add("Shuffle", "win.shuffle-by-id", album.rating_key);
+        add(&gettext("Sync"), "win.sync-by-id", album.rating_key);
+        add(&gettext("Shuffle"), "win.shuffle-by-id", album.rating_key);
         imp._menu_button.set_menu_model(Some(&menu));
 
         imp._cover_picture.set_paintable(gdk::Paintable::NONE);

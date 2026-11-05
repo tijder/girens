@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-06 21:36+0200\n"
+"POT-Creation-Date: 2026-11-05 17:14+0100\n"
 "PO-Revision-Date: 2022-11-29 09:41+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
@@ -19,12 +19,147 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.15-dev\n"
 
+#: ../data/nl.g4d.Girens.appdata.xml.in:5
+msgid "Girens for Plex"
+msgstr ""
 
-#: ../data/ui/main_window.blp:194
+#: ../data/nl.g4d.Girens.appdata.xml.in:7
+msgid "Watch your Plex content"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:11
+msgid ""
+"Girens is a Plex media player client. You can watch and listen to your "
+"music, shows and movies with this GTK app."
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:20
+msgid "The home screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:24
+msgid "The show screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:28
+msgid "The album screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:2
+msgid "Girens"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Play your Plex movies, shows and music"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:10
+msgid "girens;plex;media;player;"
+msgstr ""
+
+#: ../data/ui/album_header.blp:41 ../data/ui/artist_view.blp:62
+#: ../data/ui/media_box_music.blp:112 ../data/ui/media_box_video_bottom.blp:95
+#: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:56
+msgid "Play"
+msgstr ""
+
+#: ../data/ui/album_header.blp:50
+msgid "More"
+msgstr ""
+
+#: ../data/ui/album_item.blp:26
+msgid "Play music clip"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:130
+msgid "Ondeck"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:33
+msgid "Recently added Shows"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:46
+msgid "Recently added Movies"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:59
+msgid "Recently added Music"
+msgstr ""
+
+#: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
+msgid "Logout"
+msgstr ""
+
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr ""
+
+#: ../data/ui/login_view.blp:33
+msgid "Login to Plex with an user acount"
+msgstr ""
+
+#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
+msgid "Username"
+msgstr ""
+
+#: ../data/ui/login_view.blp:44
+msgid "Password"
+msgstr ""
+
+#: ../data/ui/login_view.blp:53
+msgid "Login"
+msgstr ""
+
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr ""
+
+#: ../data/ui/login_view.blp:69
+msgid "Go to Plex server based on an URL"
+msgstr ""
+
+#: ../data/ui/login_view.blp:74
+msgid "The URL to the Plex server with the port number"
+msgstr ""
+
+#: ../data/ui/login_view.blp:80
+msgid "Token"
+msgstr ""
+
+#: ../data/ui/login_view.blp:89
+msgid "Connect"
+msgstr ""
+
+#: ../data/ui/main_window.blp:37
+msgid "Account"
+msgstr ""
+
+#: ../data/ui/main_window.blp:60
+msgid "Toggle Sidebar"
+msgstr ""
+
+#: ../data/ui/main_window.blp:64
+msgid "Search"
+msgstr ""
+
+#: ../data/ui/main_window.blp:78
+msgid "Downloads"
+msgstr ""
+
+#: ../data/ui/main_window.blp:88
+msgid "Main menu"
+msgstr ""
+
+#: ../data/ui/main_window.blp:164
+msgid "Settings"
+msgstr ""
+
+#: ../data/ui/main_window.blp:192
 msgid "Prefer music clips"
 msgstr "Préférer les clips musicaux"
 
-#: ../data/ui/main_window.blp:195
+#: ../data/ui/main_window.blp:193
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
@@ -32,63 +167,99 @@ msgstr ""
 "Lorsqu’une musique est jouée et que la piste comporte un clip musical, celui-"
 "ci est lu à la place de l’audio."
 
-#: ../data/ui/main_window.blp:204
+#: ../data/ui/main_window.blp:202
 msgid "Transcode media"
 msgstr "Transcoder les médias"
 
-#: ../data/ui/main_window.blp:205
+#: ../data/ui/main_window.blp:203
 msgid "Transcode media instead of playing directly."
 msgstr "Transcoder les médias au lieu de les lire directement."
 
-#: ../data/ui/main_window.blp:214
+#: ../data/ui/main_window.blp:212
 msgid "1080p"
 msgstr "1080p"
 
-#: ../data/ui/main_window.blp:221
+#: ../data/ui/main_window.blp:219
 msgid "720p"
 msgstr "720p"
 
-#: ../data/ui/main_window.blp:230
+#: ../data/ui/main_window.blp:228
 msgid "480p"
 msgstr "480p"
 
-#: ../data/ui/main_window.blp:239
+#: ../data/ui/main_window.blp:237
 msgid "240p"
 msgstr "240p"
 
-#: ../data/ui/main_window.blp:252
+#: ../data/ui/main_window.blp:250
 msgid "Info"
 msgstr "Informations"
 
-#: ../data/ui/main_window.blp:258
+#: ../data/ui/main_window.blp:256
 msgid "Shortcuts"
 msgstr "Raccourcis"
 
-#: ../data/ui/main_window.blp:264
+#: ../data/ui/main_window.blp:262
 msgid "About Girens"
 msgstr "À propos de Girens"
+
+#: ../data/ui/media_box_music.blp:78 ../data/ui/media_box_video_bottom.blp:65
+msgid "Play queue"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:102 ../data/ui/media_box_video_bottom.blp:86
+msgid "Previous"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:121 ../data/ui/media_box_video_bottom.blp:104
+msgid "Next"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:130 ../data/ui/media_box_video_top.blp:46
+msgid "Stop"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:141
+msgid "Options"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:77
+msgid "Skip backward"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:113
+msgid "Skip forward"
+msgstr ""
+
+#: ../data/ui/media_box_video_top.blp:11
+msgid "Fullscreen"
+msgstr ""
+
+#: ../data/ui/media_box_video_top.blp:19
+msgid "Fill window"
+msgstr ""
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
 msgstr "Répéter"
 
-#: ../data/ui/player_view.blp:80
+#: ../data/ui/player_view.blp:89
 msgid "Release date"
 msgstr "Date de sortie"
 
-#: ../data/ui/player_view.blp:84
+#: ../data/ui/player_view.blp:93
 msgid "Genre"
 msgstr "Genre"
 
-#: ../data/ui/player_view.blp:93
+#: ../data/ui/player_view.blp:102
 msgid "Description"
 msgstr "Description"
 
-#: ../data/ui/player_view.blp:106
+#: ../data/ui/player_view.blp:115
 msgid "Audio "
 msgstr "Audio "
 
-#: ../data/ui/player_view.blp:109
+#: ../data/ui/player_view.blp:118
 msgid "Subtitle "
 msgstr "Sous-titre "
 
@@ -104,19 +275,7 @@ msgstr "Courriel"
 msgid "Subscription plan"
 msgstr "Programme d’abonnement"
 
-#: ../data/ui/profile_dialog.blp:21
-msgid "Secure"
-msgstr "Sécurisé"
-
-#: ../data/ui/resume_dialog.ui:5
-msgid "Do you want resume watching or start from the beginning?"
-msgstr "Voulez-vous reprendre le visionnage ou commencer depuis le début ?"
-
-#: ../data/ui/resume_dialog.ui:11
-msgid "Resume"
-msgstr "Reprendre"
-
-#: ../data/ui/section_view.blp:41
+#: ../data/ui/section_view.blp:46
 msgid "Order"
 msgstr "Ordre"
 
@@ -169,9 +328,13 @@ msgstr "Jouer les clips musicaux à la place des pistes audio"
 msgid "Sync items"
 msgstr "Synchroniser les éléments"
 
-#: ../data/ui/sync_dialog.blp:33
+#: ../data/ui/sync_dialog.blp:34
 msgid "Ok"
 msgstr "OK"
+
+#: ../data/ui/sync_item.blp:30
+msgid "Remove"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
@@ -205,125 +368,246 @@ msgstr "Style clair"
 msgid "Dark style"
 msgstr "Style sombre"
 
-#: ../src/album_view.py:93 ../src/cover_box.py:104
-msgid "Go to artist view"
-msgstr "Aller à la vue des artistes"
+#: ../src/messages.rs:10
+msgid "Could not open the item"
+msgstr ""
 
-#: ../src/album_view.py:96 ../src/cover_box.py:131
-msgid "Sync"
-msgstr "Synchroniser"
+#: ../src/messages.rs:14
+msgid "Could not load the item"
+msgstr ""
 
-#: ../src/album_view.py:99 ../src/cover_box.py:136
-msgid "Shuffle"
-msgstr "Mélanger"
+#: ../src/messages.rs:18
+msgid "Could not change the watched state"
+msgstr ""
 
-#: ../src/album_view.py:138
+#: ../src/messages.rs:22
+msgid "Could not load on deck"
+msgstr ""
+
+#: ../src/messages.rs:26
+msgid "Could not load recently added"
+msgstr ""
+
+#: ../src/messages.rs:30
+msgid "Could not load the sort options"
+msgstr ""
+
+#: ../src/messages.rs:34
+msgid "Could not load the library"
+msgstr ""
+
+#: ../src/messages.rs:38
+msgid "Could not load the playlists"
+msgstr ""
+
+#: ../src/messages.rs:42
+msgid "Search failed"
+msgstr ""
+
+#: ../src/messages.rs:46
+msgid "Could not load the show"
+msgstr ""
+
+#: ../src/messages.rs:50
+msgid "Could not load the episodes"
+msgstr ""
+
+#: ../src/messages.rs:54
+msgid "Could not load the artist"
+msgstr ""
+
+#: ../src/messages.rs:58
+msgid "Could not load a synced item"
+msgstr ""
+
+#: ../src/player/mod.rs:311
+msgid "Nothing to play"
+msgstr ""
+
+#: ../src/player/mod.rs:319
+msgid "Could not create a play queue"
+msgstr ""
+
+#: ../src/player/mod.rs:408
+msgid "Could not shuffle the play queue"
+msgstr ""
+
+#: ../src/player/mod.rs:598
+msgid "Could not start playback"
+msgstr ""
+
+#: ../src/player/mod.rs:1039
+msgid "Could not change the stream"
+msgstr ""
+
+#: ../src/sync.rs:97
+msgid "Sync failed"
+msgstr ""
+
+#: ../src/sync.rs:154
+msgid "Could not download an item"
+msgstr ""
+
+#: ../src/sync.rs:210
+msgid "Not enough disk space for the download"
+msgstr ""
+
+#: ../src/views/album_view.rs:66
+#, rust-format
 msgid "Disc {}"
 msgstr ""
 
-#: ../src/cover_box.py:95
+#: ../src/views/album_view.rs:169 ../src/views/cover_box.rs:194
+#: ../src/views/cover_box.rs:201
+msgid "Go to artist view"
+msgstr "Aller à la vue des artistes"
+
+#: ../src/views/album_view.rs:174 ../src/views/cover_box.rs:238
+msgid "Sync"
+msgstr "Synchroniser"
+
+#: ../src/views/album_view.rs:175 ../src/views/cover_box.rs:244
+msgid "Shuffle"
+msgstr "Mélanger"
+
+#: ../src/views/album_view.rs:263
+msgid "Could not load the album"
+msgstr ""
+
+#: ../src/views/cover_box.rs:187
 msgid "Go to album view"
 msgstr "Aller à la vue des albums"
 
-#: ../src/cover_box.py:116
+#: ../src/views/cover_box.rs:217
 msgid "Go to show view"
 msgstr "Aller à la vue des émissions"
 
-#: ../src/cover_box.py:121
+#: ../src/views/cover_box.rs:222
 msgid "Mark as Played"
 msgstr "Marquer comme joué"
 
-#: ../src/cover_box.py:126
+#: ../src/views/cover_box.rs:229
 msgid "Mark as Unplayed"
 msgstr "Marquer comme non joué"
 
-#: ../src/cover_box.py:141
+#: ../src/views/cover_box.rs:248 ../src/window.rs:1059
 msgid "Start from the beginning"
 msgstr "Commencer depuis le début"
 
-#: ../src/player_view.py:302 ../src/player_view.py:303
+#: ../src/views/music_popover_menu.rs:184
+msgid "Could not rate the track"
+msgstr ""
+
+#: ../src/views/player_view.rs:371
 msgid "None"
 msgstr "Aucun"
 
-#: ../src/plex.py:135 ../src/plex.py:464
+#: ../src/views/section_view.rs:21
+msgid "Added at"
+msgstr "Ajouté le"
+
+#: ../src/views/section_view.rs:22
+msgid "Last viewed at"
+msgstr "Dernière vue le"
+
+#: ../src/views/section_view.rs:23
+msgid "Originally available at"
+msgstr "Disponible à l’origine le"
+
+#: ../src/views/section_view.rs:24
+msgid "Title"
+msgstr "Titre"
+
+#: ../src/views/section_view.rs:25
+msgid "Rating"
+msgstr "Évaluation"
+
+#: ../src/views/section_view.rs:26
+msgid "Unwatched"
+msgstr "Non vu"
+
+#: ../src/views/section_view.rs:27
+msgid "View count"
+msgstr "Voir le compte"
+
+#: ../src/views/section_view.rs:28
+msgid "User rating"
+msgstr "Évaluation utilisateur"
+
+#: ../src/views/section_view.rs:29
+msgid "Media height"
+msgstr "Hauteur des médias"
+
+#: ../src/views/section_view.rs:30
+msgid "Duration"
+msgstr "Durée"
+
+#: ../src/views/section_view.rs:333 ../src/views/sidebar_box.rs:148
+msgid "Playlists"
+msgstr "Listes de lecture"
+
+#: ../src/views/sidebar_box.rs:142
+msgid "Player"
+msgstr "Lecteur"
+
+#: ../src/views/sidebar_box.rs:146
+msgid "Home"
+msgstr "Accueil"
+
+#: ../src/window.rs:590
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+
+#: ../src/window.rs:595
+msgid "translator-credits"
+msgstr ""
+
+#: ../src/window.rs:598
+msgid "Help with translating"
+msgstr "Contribuer aux traductions"
+
+#: ../src/window.rs:639
+msgid "Starting Girens"
+msgstr "Démarrage de Girens"
+
+#: ../src/window.rs:645 ../src/window.rs:693 ../src/window.rs:716
+#, rust-format
 msgid "Connecting to {}."
 msgstr ""
 
-#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
+#: ../src/window.rs:722 ../src/window.rs:765 ../src/window.rs:1226
+#, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: ../src/plex.py:483
+#: ../src/window.rs:744
 msgid "No servers found for this account."
 msgstr "Aucun serveur trouvé pour ce compte."
 
-#: ../src/plex.py:487
-#, python-brace-format
+#: ../src/window.rs:758
+#, rust-format
 msgid ""
 "Connecting to {0}.\n"
 "There are {1} connection urls.\n"
 "This may take a while."
 msgstr ""
 
-#: ../src/section_view.py:33
-msgid "Added at"
-msgstr "Ajouté le"
+#: ../src/window.rs:794
+msgid "Could not load the libraries"
+msgstr ""
 
-#: ../src/section_view.py:34
-msgid "Last viewed at"
-msgstr "Dernière vue le"
+#: ../src/window.rs:1056
+msgid "Do you want resume watching or start from the beginning?"
+msgstr "Voulez-vous reprendre le visionnage ou commencer depuis le début ?"
 
-#: ../src/section_view.py:35
-msgid "Originally available at"
-msgstr "Disponible à l’origine le"
+#: ../src/window.rs:1060
+msgid "Resume"
+msgstr "Reprendre"
 
-#: ../src/section_view.py:36
-msgid "Title"
-msgstr "Titre"
-
-#: ../src/section_view.py:37
-msgid "Rating"
-msgstr "Évaluation"
-
-#: ../src/section_view.py:38
-msgid "Unwatched"
-msgstr "Non vu"
-
-#: ../src/section_view.py:39
-msgid "View count"
-msgstr "Voir le compte"
-
-#: ../src/section_view.py:40
-msgid "User rating"
-msgstr "Évaluation utilisateur"
-
-#: ../src/section_view.py:41
-msgid "Media height"
-msgstr "Hauteur des médias"
-
-#: ../src/section_view.py:42
-msgid "Duration"
-msgstr "Durée"
-
-#: ../src/section_view.py:144 ../src/sidebar_box.py:111
-msgid "Playlists"
-msgstr "Listes de lecture"
-
-#: ../src/sidebar_box.py:100
-msgid "Player"
-msgstr "Lecteur"
-
-#: ../src/sidebar_box.py:106
-msgid "Home"
-msgstr "Accueil"
-
-#: ../src/window.py:347
-msgid "Starting Girens"
-msgstr "Démarrage de Girens"
-
-#: ../src/window.py:523
-msgid "Help with translating"
-msgstr "Contribuer aux traductions"
+#~ msgid "Secure"
+#~ msgstr "Sécurisé"
 
 #~ msgid "Go to Plex server based on an url"
 #~ msgstr "Aller au serveur Plex à partir d’une URL"

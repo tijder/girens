@@ -37,12 +37,11 @@ flatpak-builder --user --force-clean --install-deps-from=flathub builddir nl.g4d
 flatpak-builder --run builddir nl.g4d.Girens.yaml girens
 ```
 
-### Rust port (branch `rust`)
+### Building your checkout
 
-The port to Rust is in progress on this branch; the Python sources are kept in
-`legacy/` as a reference until it is complete. The manifest builds the upstream
-repository, so to build your checkout, build the dependencies first and then
-the app itself inside the build sandbox:
+Girens is written in Rust. The manifest builds the upstream repository, so to
+build your own checkout, build the dependencies first and then the app itself
+inside the build sandbox:
 
 ```bash
 flatpak-builder --user --force-clean --install-deps-from=flathub --stop-at=girens builddir-rust nl.g4d.Girens.yaml
@@ -57,15 +56,9 @@ flatpak build --socket=wayland --socket=fallback-x11 --share=ipc --share=network
 flatpak run org.flathub.flatpak-external-data-checker nl.g4d.Girens.yaml --edit-only
 ```
 
-## Screenshots
+After changing Rust dependencies (`Cargo.lock`), regenerate the list of crates
+the Flatpak build downloads:
 
-![Screenshot of Girens Home](data/screenshots/Homescreen.jpg)
-![Screenshot of Girens Show](data/screenshots/Showscreen.jpg)
-![Screenshot of Girens Album](data/screenshots/Albumscreen.jpg)
-
-## Translations
-<a href="https://hosted.weblate.org/engage/girens/">
-<img src="https://hosted.weblate.org/widgets/girens/-/girens/multi-auto.svg" alt="Translation status" />
-</a>
-
-Help with translations is always welcome! The simplest way is via [__Weblate__](https://hosted.weblate.org/projects/girens/), which provides a very intuitive website.
+```bash
+python3 build-aux/cargo-sources.py
+```

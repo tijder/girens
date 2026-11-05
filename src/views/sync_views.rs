@@ -122,10 +122,9 @@ impl SyncItem {
                             imp._watched_image.set_visible(video && !item.is_watched());
                             load_cover(&imp._cover_image, &item);
                         }
-                        Err(err) => crate::notify::failure(
-                            &crate::i18n::gettext("Could not load a synced item"),
-                            &err,
-                        ),
+                        Err(err) => {
+                            crate::notify::failure(&crate::messages::load_synced_item(), &err)
+                        }
                     }
                 }
             ));

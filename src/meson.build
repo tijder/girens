@@ -12,9 +12,16 @@ else
   rust_target = 'release'
 endif
 
-# Read by src/config.rs through option_env!().
+# The Flatpak build points CARGO_HOME at the vendored crates (see
+# cargo-sources.json); otherwise Cargo keeps its files in the build directory.
+cargo_home = run_command('printenv', 'CARGO_HOME', check: false).stdout().strip()
+if cargo_home == ''
+  cargo_home = meson.project_build_root() / 'cargo-home'
+endif
+
+# The GIRENS_* values are read by src/config.rs through option_env!().
 cargo_env = [
-  'CARGO_HOME=' + meson.project_build_root() / 'cargo-home',
+  'CARGO_HOME=' + cargo_home,
   'GIRENS_VERSION=' + meson.project_version(),
   'GIRENS_PKGDATADIR=' + pkgdatadir,
   'GIRENS_LOCALEDIR=' + join_paths(get_option('prefix'), get_option('localedir')),

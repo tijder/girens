@@ -16,20 +16,20 @@ const PAGE_SIZE: u32 = 100;
 
 /// Translated name of a sort key; unknown keys are shown as they are.
 fn sort_label(key: &str) -> String {
-    let msgid = match key {
-        "addedAt" => "Added at",
-        "lastViewedAt" => "Last viewed at",
-        "originallyAvailableAt" => "Originally available at",
-        "titleSort" => "Title",
-        "rating" => "Rating",
-        "unwatched" => "Unwatched",
-        "viewCount" => "View count",
-        "userRating" => "User rating",
-        "mediaHeight" => "Media height",
-        "duration" => "Duration",
-        other => return other.to_owned(),
-    };
-    gettext(msgid)
+    // Each name is a literal `gettext` call so that it is extracted.
+    match key {
+        "addedAt" => gettext("Added at"),
+        "lastViewedAt" => gettext("Last viewed at"),
+        "originallyAvailableAt" => gettext("Originally available at"),
+        "titleSort" => gettext("Title"),
+        "rating" => gettext("Rating"),
+        "unwatched" => gettext("Unwatched"),
+        "viewCount" => gettext("View count"),
+        "userRating" => gettext("User rating"),
+        "mediaHeight" => gettext("Media height"),
+        "duration" => gettext("Duration"),
+        other => other.to_owned(),
+    }
 }
 
 mod imp {
@@ -231,10 +231,7 @@ impl SectionView {
                 let sorts = runtime::run(async move { server.section_sorts(key).await }).await;
                 match sorts {
                     Ok(sorts) => view.set_sorts(sorts.into_iter().map(|sort| sort.key).collect()),
-                    Err(err) => crate::notify::failure(
-                        &crate::i18n::gettext("Could not load the sort options"),
-                        &err,
-                    ),
+                    Err(err) => crate::notify::failure(&crate::messages::load_sorts(), &err),
                 }
                 view.load_more();
             }
@@ -322,10 +319,7 @@ impl SectionView {
                         imp.offset.set(offset + PAGE_SIZE);
                         imp._section_flow.append(page.items);
                     }
-                    Err(err) => crate::notify::failure(
-                        &crate::i18n::gettext("Could not load the library"),
-                        &err,
-                    ),
+                    Err(err) => crate::notify::failure(&crate::messages::load_library(), &err),
                 }
                 imp.loading.set(false);
                 imp._load_box.set_visible(false);
@@ -351,10 +345,7 @@ impl SectionView {
                 let imp = view.imp();
                 match playlists {
                     Ok(playlists) => imp._section_flow.set_items(playlists),
-                    Err(err) => crate::notify::failure(
-                        &crate::i18n::gettext("Could not load the playlists"),
-                        &err,
-                    ),
+                    Err(err) => crate::notify::failure(&crate::messages::load_playlists(), &err),
                 }
                 imp._load_box.set_visible(false);
             }

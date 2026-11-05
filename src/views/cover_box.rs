@@ -168,8 +168,10 @@ fn present(item: &Item, in_show_view: bool) -> Presentation {
 
 fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
     let menu = gio::Menu::new();
+    // Labels are passed translated: xgettext only finds literal
+    // `gettext("…")` calls.
     let add = |label: &str, action: &str, key: u64| {
-        let entry = gio::MenuItem::new(Some(&gettext(label)), None);
+        let entry = gio::MenuItem::new(Some(label), None);
         entry.set_action_and_target_value(Some(action), Some(&(key as i64).to_variant()));
         menu.append_item(&entry);
     };
@@ -181,17 +183,25 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
     let started = item.view_offset != 0;
 
     if item.kind == ItemKind::Album {
-        add("Go to album view", "win.show-album-by-id", item.rating_key);
+        add(
+            &gettext("Go to album view"),
+            "win.show-album-by-id",
+            item.rating_key,
+        );
     }
     match item.kind {
         ItemKind::Artist => add(
-            "Go to artist view",
+            &gettext("Go to artist view"),
             "win.show-artist-by-id",
             item.rating_key,
         ),
         ItemKind::Album => {
             if let Some(artist) = item.parent_rating_key {
-                add("Go to artist view", "win.show-artist-by-id", artist);
+                add(
+                    &gettext("Go to artist view"),
+                    "win.show-artist-by-id",
+                    artist,
+                );
             }
         }
         _ => {}
@@ -204,19 +214,19 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
             _ => None,
         };
         if let Some(show) = show {
-            add("Go to show view", "win.show-show-by-id", show);
+            add(&gettext("Go to show view"), "win.show-show-by-id", show);
         }
     }
     if video && (!watched || started) {
         add(
-            "Mark as Played",
+            &gettext("Mark as Played"),
             "win.mark-as-played-by-id",
             item.rating_key,
         );
     }
     if video && (watched || started) {
         add(
-            "Mark as Unplayed",
+            &gettext("Mark as Unplayed"),
             "win.mark-as-unplayed-by-id",
             item.rating_key,
         );
@@ -225,17 +235,17 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
         .server()
         .is_some_and(|server| crate::sync::downloaded(&server, item.rating_key).is_some());
     if !offline {
-        add("Sync", "win.sync-by-id", item.rating_key);
+        add(&gettext("Sync"), "win.sync-by-id", item.rating_key);
     }
     if matches!(
         item.kind,
         ItemKind::Album | ItemKind::Artist | ItemKind::Show | ItemKind::Playlist
     ) {
-        add("Shuffle", "win.shuffle-by-id", item.rating_key);
+        add(&gettext("Shuffle"), "win.shuffle-by-id", item.rating_key);
     }
     if matches!(item.kind, ItemKind::Episode | ItemKind::Movie) && started {
         add(
-            "Start from the beginning",
+            &gettext("Start from the beginning"),
             "win.play-item-from-beginning",
             item.rating_key,
         );

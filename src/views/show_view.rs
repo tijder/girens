@@ -167,10 +167,7 @@ impl ShowView {
                 let (show, children) = match loaded {
                     Ok(loaded) => loaded,
                     Err(err) => {
-                        crate::notify::failure(
-                            &crate::i18n::gettext("Could not load the show"),
-                            &err,
-                        );
+                        crate::notify::failure(&crate::messages::load_show(), &err);
                         return;
                     }
                 };
@@ -260,10 +257,7 @@ impl ShowView {
                         }
                         imp.episodes.borrow_mut().insert(season, episodes);
                     }
-                    Err(err) => crate::notify::failure(
-                        &crate::i18n::gettext("Could not load the episodes"),
-                        &err,
-                    ),
+                    Err(err) => crate::notify::failure(&crate::messages::load_episodes(), &err),
                 }
             }
         ));

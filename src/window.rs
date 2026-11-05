@@ -327,10 +327,7 @@ impl PlexWindow {
                         _ => return,
                     },
                     Err(err) => {
-                        crate::notify::failure(
-                            &crate::i18n::gettext("Could not open the item"),
-                            &err,
-                        );
+                        crate::notify::failure(&crate::messages::open_item(), &err);
                         return;
                     }
                 };
@@ -569,11 +566,12 @@ impl PlexWindow {
                     } else {
                         "network-transmit-symbolic"
                     }));
-                    imp._sync_button.set_tooltip_text(Some(&gettext(if *busy {
-                        "Stop"
+                    let tooltip = if *busy {
+                        gettext("Stop")
                     } else {
-                        "Sync"
-                    })));
+                        gettext("Sync")
+                    };
+                    imp._sync_button.set_tooltip_text(Some(&tooltip));
                 }
             }
         ));
@@ -946,10 +944,7 @@ impl PlexWindow {
                         only_unwatched: false,
                         max_items: None,
                     }),
-                    Err(err) => crate::notify::failure(
-                        &crate::i18n::gettext("Could not load the item"),
-                        &err,
-                    ),
+                    Err(err) => crate::notify::failure(&crate::messages::load_item(), &err),
                 }
             }
         ));
@@ -1147,10 +1142,7 @@ impl PlexWindow {
                 .await;
                 match result {
                     Ok(item) => window.item_changed(&item),
-                    Err(err) => crate::notify::failure(
-                        &crate::i18n::gettext("Could not change the watched state"),
-                        &err,
-                    ),
+                    Err(err) => crate::notify::failure(&crate::messages::change_watched(), &err),
                 }
             }
         ));

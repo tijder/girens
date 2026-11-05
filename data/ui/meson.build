@@ -9,7 +9,6 @@ blueprints = custom_target('blueprints',
     'download_menu.blp',
     'download_row.blp',
     'list.blp',
-    'list_playqueue.blp',
     'loading_view.blp',
     'login_view.blp',
     'main_window.blp',
@@ -18,8 +17,6 @@ blueprints = custom_target('blueprints',
     'media_box_video_top.blp',
     'music_popover_menu.blp',
     'player_view.blp',
-    'playqueue_item.blp',
-    'playqueue_popover.blp',
     'profile_dialog.blp',
     'search_view.blp',
     'section_grid.blp',
@@ -37,16 +34,10 @@ blueprints = custom_target('blueprints',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
 )
 
-aboutdialog = configure_file(
-    input: 'about_dialog.ui.in',
-    output: 'about_dialog.ui',
-    configuration: conf_service
-  )
-
 gnome.compile_resources('girens',
   '../nl.g4d.Girens.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
-  dependencies: [blueprints, aboutdialog]
+  dependencies: [blueprints]
 )

@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-06 21:36+0200\n"
+"POT-Creation-Date: 2026-11-05 17:14+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/>"
-"\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
+">\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,64 +19,245 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.5.4\n"
 
+#: ../data/nl.g4d.Girens.appdata.xml.in:5
+msgid "Girens for Plex"
+msgstr ""
 
-#: ../data/ui/main_window.blp:204
+#: ../data/nl.g4d.Girens.appdata.xml.in:7
+msgid "Watch your Plex content"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:11
+msgid ""
+"Girens is a Plex media player client. You can watch and listen to your "
+"music, shows and movies with this GTK app."
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:20
+msgid "The home screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:24
+msgid "The show screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:28
+msgid "The album screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:2
+msgid "Girens"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:3
+msgid "Play your Plex movies, shows and music"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.desktop.in:10
+msgid "girens;plex;media;player;"
+msgstr ""
+
+#: ../data/ui/album_header.blp:41 ../data/ui/artist_view.blp:62
+#: ../data/ui/media_box_music.blp:112 ../data/ui/media_box_video_bottom.blp:95
+#: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:56
+msgid "Play"
+msgstr ""
+
+#: ../data/ui/album_header.blp:50
+msgid "More"
+msgstr ""
+
+#: ../data/ui/album_item.blp:26
+msgid "Play music clip"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:130
+msgid "Ondeck"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:33
+msgid "Recently added Shows"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:46
+msgid "Recently added Movies"
+msgstr ""
+
+#: ../data/ui/discover_view.blp:59
+msgid "Recently added Music"
+msgstr ""
+
+#: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
+msgid "Logout"
+msgstr ""
+
+#: ../data/ui/login_view.blp:29
+msgid "Username and password"
+msgstr ""
+
+#: ../data/ui/login_view.blp:33
+msgid "Login to Plex with an user acount"
+msgstr ""
+
+#: ../data/ui/login_view.blp:38 ../data/ui/profile_dialog.blp:12
+msgid "Username"
+msgstr ""
+
+#: ../data/ui/login_view.blp:44
+msgid "Password"
+msgstr ""
+
+#: ../data/ui/login_view.blp:53
+msgid "Login"
+msgstr ""
+
+#: ../data/ui/login_view.blp:64
+msgid "URL and token"
+msgstr ""
+
+#: ../data/ui/login_view.blp:69
+msgid "Go to Plex server based on an URL"
+msgstr ""
+
+#: ../data/ui/login_view.blp:74
+msgid "The URL to the Plex server with the port number"
+msgstr ""
+
+#: ../data/ui/login_view.blp:80
+msgid "Token"
+msgstr ""
+
+#: ../data/ui/login_view.blp:89
+msgid "Connect"
+msgstr ""
+
+#: ../data/ui/main_window.blp:37
+msgid "Account"
+msgstr ""
+
+#: ../data/ui/main_window.blp:60
+msgid "Toggle Sidebar"
+msgstr ""
+
+#: ../data/ui/main_window.blp:64
+msgid "Search"
+msgstr ""
+
+#: ../data/ui/main_window.blp:78
+msgid "Downloads"
+msgstr ""
+
+#: ../data/ui/main_window.blp:88
+msgid "Main menu"
+msgstr ""
+
+#: ../data/ui/main_window.blp:164
+msgid "Settings"
+msgstr ""
+
+#: ../data/ui/main_window.blp:192
+msgid "Prefer music clips"
+msgstr ""
+
+#: ../data/ui/main_window.blp:193
+msgid ""
+"When playing music and the track has a music clip, play that instead of the "
+"audio."
+msgstr ""
+
+#: ../data/ui/main_window.blp:202
 msgid "Transcode media"
 msgstr "Media transcoderen"
 
-#: ../data/ui/main_window.blp:205
+#: ../data/ui/main_window.blp:203
 msgid "Transcode media instead of playing directly."
 msgstr "Transcodeer media in plaats van direct af te spelen."
 
-#: ../data/ui/main_window.blp:214
+#: ../data/ui/main_window.blp:212
 msgid "1080p"
 msgstr "1080p"
 
-#: ../data/ui/main_window.blp:221
+#: ../data/ui/main_window.blp:219
 msgid "720p"
 msgstr "720p"
 
-#: ../data/ui/main_window.blp:230
+#: ../data/ui/main_window.blp:228
 msgid "480p"
 msgstr "480p"
 
-#: ../data/ui/main_window.blp:239
+#: ../data/ui/main_window.blp:237
 msgid "240p"
 msgstr "240p"
 
-#: ../data/ui/main_window.blp:252
+#: ../data/ui/main_window.blp:250
 msgid "Info"
 msgstr "Info"
 
-#: ../data/ui/main_window.blp:258
+#: ../data/ui/main_window.blp:256
 msgid "Shortcuts"
 msgstr "Sneltoetsen"
 
-#: ../data/ui/main_window.blp:264
+#: ../data/ui/main_window.blp:262
 msgid "About Girens"
 msgstr "Over Girens"
+
+#: ../data/ui/media_box_music.blp:78 ../data/ui/media_box_video_bottom.blp:65
+msgid "Play queue"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:102 ../data/ui/media_box_video_bottom.blp:86
+msgid "Previous"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:121 ../data/ui/media_box_video_bottom.blp:104
+msgid "Next"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:130 ../data/ui/media_box_video_top.blp:46
+msgid "Stop"
+msgstr ""
+
+#: ../data/ui/media_box_music.blp:141
+msgid "Options"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:77
+msgid "Skip backward"
+msgstr ""
+
+#: ../data/ui/media_box_video_bottom.blp:113
+msgid "Skip forward"
+msgstr ""
+
+#: ../data/ui/media_box_video_top.blp:11
+msgid "Fullscreen"
+msgstr ""
+
+#: ../data/ui/media_box_video_top.blp:19
+msgid "Fill window"
+msgstr ""
 
 #: ../data/ui/music_popover_menu.blp:67
 msgid "Repeat"
 msgstr "Herhalen"
 
-#: ../data/ui/player_view.blp:80
+#: ../data/ui/player_view.blp:89
 msgid "Release date"
 msgstr "Uitgave­datum"
 
-#: ../data/ui/player_view.blp:84
+#: ../data/ui/player_view.blp:93
 msgid "Genre"
 msgstr "Genre"
 
-#: ../data/ui/player_view.blp:93
+#: ../data/ui/player_view.blp:102
 msgid "Description"
 msgstr "Beschrĳving"
 
-#: ../data/ui/player_view.blp:106
+#: ../data/ui/player_view.blp:115
 msgid "Audio "
 msgstr "Audio "
 
-#: ../data/ui/player_view.blp:109
+#: ../data/ui/player_view.blp:118
 msgid "Subtitle "
 msgstr "Ondertitel "
 
@@ -92,19 +273,7 @@ msgstr "E-mail"
 msgid "Subscription plan"
 msgstr "Abonnements­plan"
 
-#: ../data/ui/profile_dialog.blp:21
-msgid "Secure"
-msgstr "Beveiligd"
-
-#: ../data/ui/resume_dialog.ui:5
-msgid "Do you want resume watching or start from the beginning?"
-msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
-
-#: ../data/ui/resume_dialog.ui:11
-msgid "Resume"
-msgstr "Hervatten"
-
-#: ../data/ui/section_view.blp:41
+#: ../data/ui/section_view.blp:46
 msgid "Order"
 msgstr "Sorteren"
 
@@ -157,9 +326,13 @@ msgstr "Muziekclips afspelen in plaats van audiotrack"
 msgid "Sync items"
 msgstr "Items synchroniseren"
 
-#: ../data/ui/sync_dialog.blp:33
+#: ../data/ui/sync_dialog.blp:34
 msgid "Ok"
 msgstr "Oké"
+
+#: ../data/ui/sync_item.blp:30
+msgid "Remove"
+msgstr ""
 
 #: ../data/ui/sync_settings.blp:5
 msgid "Sync - settings"
@@ -193,60 +366,226 @@ msgstr "Lichte stĳl"
 msgid "Dark style"
 msgstr "Donkere stĳl"
 
-#: ../src/album_view.py:93 ../src/cover_box.py:104
-msgid "Go to artist view"
-msgstr "Artiest­weergave"
+#: ../src/messages.rs:10
+msgid "Could not open the item"
+msgstr ""
 
-#: ../src/album_view.py:96 ../src/cover_box.py:131
-msgid "Sync"
-msgstr "Synchroniseren"
+#: ../src/messages.rs:14
+msgid "Could not load the item"
+msgstr ""
 
-#: ../src/album_view.py:99 ../src/cover_box.py:136
-msgid "Shuffle"
-msgstr "Shufflen"
+#: ../src/messages.rs:18
+msgid "Could not change the watched state"
+msgstr ""
 
-#: ../src/album_view.py:138
+#: ../src/messages.rs:22
+msgid "Could not load on deck"
+msgstr ""
+
+#: ../src/messages.rs:26
+msgid "Could not load recently added"
+msgstr ""
+
+#: ../src/messages.rs:30
+msgid "Could not load the sort options"
+msgstr ""
+
+#: ../src/messages.rs:34
+msgid "Could not load the library"
+msgstr ""
+
+#: ../src/messages.rs:38
+msgid "Could not load the playlists"
+msgstr ""
+
+#: ../src/messages.rs:42
+msgid "Search failed"
+msgstr ""
+
+#: ../src/messages.rs:46
+msgid "Could not load the show"
+msgstr ""
+
+#: ../src/messages.rs:50
+msgid "Could not load the episodes"
+msgstr ""
+
+#: ../src/messages.rs:54
+msgid "Could not load the artist"
+msgstr ""
+
+#: ../src/messages.rs:58
+msgid "Could not load a synced item"
+msgstr ""
+
+#: ../src/player/mod.rs:311
+msgid "Nothing to play"
+msgstr ""
+
+#: ../src/player/mod.rs:319
+msgid "Could not create a play queue"
+msgstr ""
+
+#: ../src/player/mod.rs:408
+msgid "Could not shuffle the play queue"
+msgstr ""
+
+#: ../src/player/mod.rs:598
+msgid "Could not start playback"
+msgstr ""
+
+#: ../src/player/mod.rs:1039
+msgid "Could not change the stream"
+msgstr ""
+
+#: ../src/sync.rs:97
+msgid "Sync failed"
+msgstr ""
+
+#: ../src/sync.rs:154
+msgid "Could not download an item"
+msgstr ""
+
+#: ../src/sync.rs:210
+msgid "Not enough disk space for the download"
+msgstr ""
+
+#: ../src/views/album_view.rs:66
+#, rust-format
 msgid "Disc {}"
 msgstr "Schĳf {}"
 
-#: ../src/cover_box.py:95
+#: ../src/views/album_view.rs:169 ../src/views/cover_box.rs:194
+#: ../src/views/cover_box.rs:201
+msgid "Go to artist view"
+msgstr "Artiest­weergave"
+
+#: ../src/views/album_view.rs:174 ../src/views/cover_box.rs:238
+msgid "Sync"
+msgstr "Synchroniseren"
+
+#: ../src/views/album_view.rs:175 ../src/views/cover_box.rs:244
+msgid "Shuffle"
+msgstr "Shufflen"
+
+#: ../src/views/album_view.rs:263
+msgid "Could not load the album"
+msgstr ""
+
+#: ../src/views/cover_box.rs:187
 msgid "Go to album view"
 msgstr "Album­weergave"
 
-#: ../src/cover_box.py:116
+#: ../src/views/cover_box.rs:217
 msgid "Go to show view"
 msgstr "Serie­weergave"
 
-#: ../src/cover_box.py:121
+#: ../src/views/cover_box.rs:222
 msgid "Mark as Played"
 msgstr "Markeren als afgespeeld"
 
-#: ../src/cover_box.py:126
+#: ../src/views/cover_box.rs:229
 msgid "Mark as Unplayed"
 msgstr "Markeren als onafgespeeld"
 
-#: ../src/cover_box.py:141
+#: ../src/views/cover_box.rs:248 ../src/window.rs:1059
 msgid "Start from the beginning"
 msgstr "Starten vanaf het begin"
 
-#: ../src/player_view.py:302 ../src/player_view.py:303
+#: ../src/views/music_popover_menu.rs:184
+msgid "Could not rate the track"
+msgstr ""
+
+#: ../src/views/player_view.rs:371
 msgid "None"
 msgstr "Geen"
 
-#: ../src/plex.py:135 ../src/plex.py:464
+#: ../src/views/section_view.rs:21
+msgid "Added at"
+msgstr "Toegevoegd op"
+
+#: ../src/views/section_view.rs:22
+msgid "Last viewed at"
+msgstr "Laatst bekeken op"
+
+#: ../src/views/section_view.rs:23
+msgid "Originally available at"
+msgstr "Oorspronkelĳk beschikbaar op"
+
+#: ../src/views/section_view.rs:24
+msgid "Title"
+msgstr "Titel"
+
+#: ../src/views/section_view.rs:25
+msgid "Rating"
+msgstr "Beoordeling"
+
+#: ../src/views/section_view.rs:26
+msgid "Unwatched"
+msgstr "Onbekeken"
+
+#: ../src/views/section_view.rs:27
+msgid "View count"
+msgstr "Weergaven"
+
+#: ../src/views/section_view.rs:28
+msgid "User rating"
+msgstr "Gebruikers­beoordeling"
+
+#: ../src/views/section_view.rs:29
+msgid "Media height"
+msgstr "Media­hoogte"
+
+#: ../src/views/section_view.rs:30
+msgid "Duration"
+msgstr "Duur"
+
+#: ../src/views/section_view.rs:333 ../src/views/sidebar_box.rs:148
+msgid "Playlists"
+msgstr "Afspeel­lĳsten"
+
+#: ../src/views/sidebar_box.rs:142
+msgid "Player"
+msgstr "Speler"
+
+#: ../src/views/sidebar_box.rs:146
+msgid "Home"
+msgstr "Thuis"
+
+#: ../src/window.rs:590
+msgid ""
+"A Plex GTK client for playing movies, TV shows and music from your Plex "
+"library."
+msgstr ""
+
+#: ../src/window.rs:595
+msgid "translator-credits"
+msgstr ""
+
+#: ../src/window.rs:598
+msgid "Help with translating"
+msgstr "Help mee vertalen"
+
+#: ../src/window.rs:639
+msgid "Starting Girens"
+msgstr "Girens wordt opgestart"
+
+#: ../src/window.rs:645 ../src/window.rs:693 ../src/window.rs:716
+#, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
 
-#: ../src/plex.py:147 ../src/plex.py:472 ../src/plex.py:497
+#: ../src/window.rs:722 ../src/window.rs:765 ../src/window.rs:1226
+#, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/plex.py:483
+#: ../src/window.rs:744
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/plex.py:487
-#, python-brace-format
+#: ../src/window.rs:758
+#, rust-format
 msgid ""
 "Connecting to {0}.\n"
 "There are {1} connection urls.\n"
@@ -256,65 +595,20 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/section_view.py:33
-msgid "Added at"
-msgstr "Toegevoegd op"
+#: ../src/window.rs:794
+msgid "Could not load the libraries"
+msgstr ""
 
-#: ../src/section_view.py:34
-msgid "Last viewed at"
-msgstr "Laatst bekeken op"
+#: ../src/window.rs:1056
+msgid "Do you want resume watching or start from the beginning?"
+msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 
-#: ../src/section_view.py:35
-msgid "Originally available at"
-msgstr "Oorspronkelĳk beschikbaar op"
+#: ../src/window.rs:1060
+msgid "Resume"
+msgstr "Hervatten"
 
-#: ../src/section_view.py:36
-msgid "Title"
-msgstr "Titel"
-
-#: ../src/section_view.py:37
-msgid "Rating"
-msgstr "Beoordeling"
-
-#: ../src/section_view.py:38
-msgid "Unwatched"
-msgstr "Onbekeken"
-
-#: ../src/section_view.py:39
-msgid "View count"
-msgstr "Weergaven"
-
-#: ../src/section_view.py:40
-msgid "User rating"
-msgstr "Gebruikers­beoordeling"
-
-#: ../src/section_view.py:41
-msgid "Media height"
-msgstr "Media­hoogte"
-
-#: ../src/section_view.py:42
-msgid "Duration"
-msgstr "Duur"
-
-#: ../src/section_view.py:144 ../src/sidebar_box.py:111
-msgid "Playlists"
-msgstr "Afspeel­lĳsten"
-
-#: ../src/sidebar_box.py:100
-msgid "Player"
-msgstr "Speler"
-
-#: ../src/sidebar_box.py:106
-msgid "Home"
-msgstr "Thuis"
-
-#: ../src/window.py:347
-msgid "Starting Girens"
-msgstr "Girens wordt opgestart"
-
-#: ../src/window.py:523
-msgid "Help with translating"
-msgstr "Help mee vertalen"
+#~ msgid "Secure"
+#~ msgstr "Beveiligd"
 
 #~ msgid "Go to Plex server based on an url"
 #~ msgstr "Ga naar een Plex-server op basis van een URL"

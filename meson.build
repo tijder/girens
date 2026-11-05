@@ -20,15 +20,6 @@ conf_service.set('VERSION', meson.project_version())
 conf_service.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf_service.set('BUILD_TYPE', get_option('buildtype'))
 conf_service.set('pkgdatadir', pkgdatadir)
-conf_service.set('PRETTYNAME', 'Girens')
-conf_service.set('PACKAGE_URL', 'https://gitlab.gnome.org/tijder/girens')
-conf_service.set('CONTRIBUTORS', '\n'.join([
-    'Gerben Droogers'
-])
-)
-conf_service.set('APPID', project_id)
-
-#error(LIBEXEC_DIR)
 
 
 subdir('data')

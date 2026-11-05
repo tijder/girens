@@ -153,8 +153,11 @@ modules:
       - -Dnetwork_tests=false
     builddir: true
     build-options:
-      build-args:
-        - --share=network
+      env:
+        # The crates of cargo-sources.json are unpacked here; see
+        # build-aux/cargo-sources.py.
+        CARGO_HOME: /run/build/girens/cargo
     sources:
       - type: git
         url: https://gitlab.gnome.org/tijder/girens
+      - cargo-sources.json
