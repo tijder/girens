@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:07+0100\n"
+"POT-Creation-Date: 2026-11-06 15:13+0100\n"
 "PO-Revision-Date: 2022-10-30 10:32+0000\n"
 "Last-Translator: Sebin Nyshkim <sebin.nyshkim@icloud.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/girens/girens/de/"
@@ -30,15 +30,15 @@ msgid ""
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
-msgid "The home screen"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
 msgstr ""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:28
+#: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The album screen"
+msgstr ""
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:28
+msgid "The artist screen"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:2
@@ -857,8 +857,8 @@ msgstr "Startseite"
 msgid "Starting Girens"
 msgstr "Girens wird gestartet"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:154
-#: ../src/window/connection.rs:218 ../src/window/connection.rs:270
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:117
+#: ../src/window/connection.rs:182 ../src/window/connection.rs:234
 #, rust-format
 msgid "Connecting to {}."
 msgstr ""
@@ -872,40 +872,17 @@ msgstr ""
 msgid "Sign in again"
 msgstr ""
 
-#: ../src/window/connection.rs:118 ../src/window/connection.rs:123
-#, rust-format
-msgid "Could not reach plex.tv: {}"
-msgstr ""
-
-#: ../src/window/connection.rs:122
-msgid "The username or password is not right."
-msgstr ""
-
-#: ../src/window/connection.rs:130
-msgid "The server does not accept this token."
-msgstr ""
-
-#: ../src/window/connection.rs:131 ../src/window/connection.rs:140
-#, rust-format
-msgid "Could not connect to {}."
-msgstr ""
-
-#: ../src/window/connection.rs:143
-#, rust-format
-msgid "No Ister server was found at {}."
-msgstr ""
-
-#: ../src/window/connection.rs:278 ../src/window/connection.rs:326
-#: ../src/window/connection.rs:795
+#: ../src/window/connection.rs:242 ../src/window/connection.rs:290
+#: ../src/window/connection.rs:759
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: ../src/window/connection.rs:305
+#: ../src/window/connection.rs:269
 msgid "No servers found for this account."
 msgstr "Keine Server für dieses Konto gefunden."
 
-#: ../src/window/connection.rs:319
+#: ../src/window/connection.rs:283
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -913,75 +890,98 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: ../src/window/connection.rs:365
+#: ../src/window/connection.rs:329
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:425
+#: ../src/window/connection.rs:389
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/connection.rs:521
+#: ../src/window/connection.rs:485
 msgid "Who is watching?"
 msgstr ""
 
-#: ../src/window/connection.rs:623
+#: ../src/window/connection.rs:587
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: ../src/window/connection.rs:625
+#: ../src/window/connection.rs:589
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: ../src/window/connection.rs:637
+#: ../src/window/connection.rs:601
 msgid "PIN"
 msgstr ""
 
-#: ../src/window/connection.rs:642 ../src/window/connection.rs:726
+#: ../src/window/connection.rs:606 ../src/window/connection.rs:690
 msgid "Cancel"
 msgstr ""
 
-#: ../src/window/connection.rs:643
+#: ../src/window/connection.rs:607
 msgid "Continue"
 msgstr ""
 
-#: ../src/window/connection.rs:674
+#: ../src/window/connection.rs:638
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: ../src/window/connection.rs:721
+#: ../src/window/connection.rs:685
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: ../src/window/connection.rs:723
+#: ../src/window/connection.rs:687
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: ../src/window/connection.rs:727
+#: ../src/window/connection.rs:691
 msgid "Sign out"
+msgstr ""
+
+#: ../src/window/connection.rs:791
+msgid "The username or password is not right."
+msgstr ""
+
+#: ../src/window/connection.rs:794
+#, rust-format
+msgid "Could not reach plex.tv: {}"
+msgstr ""
+
+#: ../src/window/connection.rs:797
+msgid "The server does not accept this token."
+msgstr ""
+
+#: ../src/window/connection.rs:800 ../src/window/connection.rs:803
+#, rust-format
+msgid "Could not connect to {}."
+msgstr ""
+
+#: ../src/window/connection.rs:808
+#, rust-format
+msgid "No Ister server was found at {}."
 msgstr ""
 
 #: ../src/window/mod.rs:343
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: ../src/window/mod.rs:760
+#: ../src/window/mod.rs:761
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:765
+#: ../src/window/mod.rs:766
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:768
+#: ../src/window/mod.rs:769
 msgid "Help with translating"
 msgstr ""
 
-#: ../src/window/mod.rs:799
+#: ../src/window/mod.rs:800
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 

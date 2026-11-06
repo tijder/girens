@@ -17,16 +17,16 @@
   </content_rating>
   <screenshots>
     <screenshot type="default">
-      <caption>The home screen</caption>
-      <image type="source" height="744" width="1304">https://gitlab.gnome.org/tijder/girens/-/raw/master/data/screenshots/Homescreen.jpg</image>
-    </screenshot>
-    <screenshot>
       <caption>The show screen</caption>
-      <image type="source" height="744" width="1304">https://gitlab.gnome.org/tijder/girens/-/raw/master/data/screenshots/Showscreen.jpg</image>
+      <image type="source" height="912" width="1125">https://gitlab.gnome.org/tijder/girens/-/raw/master/data/screenshots/Showscreen.jpg</image>
     </screenshot>
     <screenshot>
       <caption>The album screen</caption>
-      <image type="source" height="744" width="1304">https://gitlab.gnome.org/tijder/girens/-/raw/master/data/screenshots/Albumscreen.jpg</image>
+      <image type="source" height="912" width="1125">https://gitlab.gnome.org/tijder/girens/-/raw/master/data/screenshots/Albumscreen.jpg</image>
+    </screenshot>
+    <screenshot>
+      <caption>The artist screen</caption>
+      <image type="source" height="912" width="1125">https://gitlab.gnome.org/tijder/girens/-/raw/master/data/screenshots/Artistscreen.jpg</image>
     </screenshot>
   </screenshots>
   <releases>

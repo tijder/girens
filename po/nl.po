@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:07+0100\n"
+"POT-Creation-Date: 2026-11-06 15:13+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -32,16 +32,16 @@ msgstr ""
 "je je muziek, series en films bekijken en beluisteren."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
-msgid "The home screen"
-msgstr "Het startscherm"
-
-#: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The show screen"
 msgstr "Het seriescherm"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:28
+#: ../data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The album screen"
 msgstr "Het albumscherm"
+
+#: ../data/nl.g4d.Girens.appdata.xml.in:28
+msgid "The artist screen"
+msgstr "Het artiestenscherm"
 
 #: ../data/nl.g4d.Girens.desktop.in:2
 msgid "Girens"
@@ -864,8 +864,8 @@ msgstr "Thuis"
 msgid "Starting Girens"
 msgstr "Girens wordt opgestart"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:154
-#: ../src/window/connection.rs:218 ../src/window/connection.rs:270
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:117
+#: ../src/window/connection.rs:182 ../src/window/connection.rs:234
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
@@ -879,40 +879,17 @@ msgstr "Je sessie bij {} is verlopen."
 msgid "Sign in again"
 msgstr "Opnieuw aanmelden"
 
-#: ../src/window/connection.rs:118 ../src/window/connection.rs:123
-#, rust-format
-msgid "Could not reach plex.tv: {}"
-msgstr "Kan plex.tv niet bereiken: {}"
-
-#: ../src/window/connection.rs:122
-msgid "The username or password is not right."
-msgstr "De gebruikersnaam of het wachtwoord klopt niet."
-
-#: ../src/window/connection.rs:130
-msgid "The server does not accept this token."
-msgstr "De server accepteert dit token niet."
-
-#: ../src/window/connection.rs:131 ../src/window/connection.rs:140
-#, rust-format
-msgid "Could not connect to {}."
-msgstr "Kan geen verbinding maken met {}."
-
-#: ../src/window/connection.rs:143
-#, rust-format
-msgid "No Ister server was found at {}."
-msgstr "Er is geen Ister-server gevonden op {}."
-
-#: ../src/window/connection.rs:278 ../src/window/connection.rs:326
-#: ../src/window/connection.rs:795
+#: ../src/window/connection.rs:242 ../src/window/connection.rs:290
+#: ../src/window/connection.rs:759
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/window/connection.rs:305
+#: ../src/window/connection.rs:269
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/window/connection.rs:319
+#: ../src/window/connection.rs:283
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -923,63 +900,86 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/window/connection.rs:365
+#: ../src/window/connection.rs:329
 msgid "The server cannot be reached. Showing your downloads."
 msgstr "De server is niet bereikbaar. Je downloads worden getoond."
 
-#: ../src/window/connection.rs:425
+#: ../src/window/connection.rs:389
 msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
-#: ../src/window/connection.rs:521
+#: ../src/window/connection.rs:485
 msgid "Who is watching?"
 msgstr "Wie kijkt er?"
 
-#: ../src/window/connection.rs:623
+#: ../src/window/connection.rs:587
 msgid "That PIN is not correct. Try again."
 msgstr "Die pincode klopt niet. Probeer het opnieuw."
 
-#: ../src/window/connection.rs:625
+#: ../src/window/connection.rs:589
 msgid "Enter the PIN of this profile."
 msgstr "Voer de pincode van dit profiel in."
 
-#: ../src/window/connection.rs:637
+#: ../src/window/connection.rs:601
 msgid "PIN"
 msgstr "Pincode"
 
-#: ../src/window/connection.rs:642 ../src/window/connection.rs:726
+#: ../src/window/connection.rs:606 ../src/window/connection.rs:690
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../src/window/connection.rs:643
+#: ../src/window/connection.rs:607
 msgid "Continue"
 msgstr "Doorgaan"
 
-#: ../src/window/connection.rs:674
+#: ../src/window/connection.rs:638
 msgid "Could not switch to this profile"
 msgstr "Kon niet naar dit profiel wisselen"
 
-#: ../src/window/connection.rs:721
+#: ../src/window/connection.rs:685
 #, rust-format
 msgid "Sign out {}?"
 msgstr "{} afmelden?"
 
-#: ../src/window/connection.rs:723
+#: ../src/window/connection.rs:687
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 "De downloads en voorkeuren van dit account worden van dit apparaat "
 "verwijderd."
 
-#: ../src/window/connection.rs:727
+#: ../src/window/connection.rs:691
 msgid "Sign out"
 msgstr "Afmelden"
+
+#: ../src/window/connection.rs:791
+msgid "The username or password is not right."
+msgstr "De gebruikersnaam of het wachtwoord klopt niet."
+
+#: ../src/window/connection.rs:794
+#, rust-format
+msgid "Could not reach plex.tv: {}"
+msgstr "Kan plex.tv niet bereiken: {}"
+
+#: ../src/window/connection.rs:797
+msgid "The server does not accept this token."
+msgstr "De server accepteert dit token niet."
+
+#: ../src/window/connection.rs:800 ../src/window/connection.rs:803
+#, rust-format
+msgid "Could not connect to {}."
+msgstr "Kan geen verbinding maken met {}."
+
+#: ../src/window/connection.rs:808
+#, rust-format
+msgid "No Ister server was found at {}."
+msgstr "Er is geen Ister-server gevonden op {}."
 
 #: ../src/window/mod.rs:343
 msgid "This item is on a server that is not in use"
 msgstr "Dit item staat op een server die niet in gebruik is"
 
-#: ../src/window/mod.rs:760
+#: ../src/window/mod.rs:761
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -987,15 +987,15 @@ msgstr ""
 "Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek "
 "af te spelen."
 
-#: ../src/window/mod.rs:765
+#: ../src/window/mod.rs:766
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:768
+#: ../src/window/mod.rs:769
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
-#: ../src/window/mod.rs:799
+#: ../src/window/mod.rs:800
 msgid "Waiting for you to sign in in the browser…"
 msgstr "Wachten tot je bent aangemeld in de browser…"
 
@@ -1010,6 +1010,9 @@ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 #: ../src/window/playback.rs:120
 msgid "Resume"
 msgstr "Hervatten"
+
+#~ msgid "The home screen"
+#~ msgstr "Het startscherm"
 
 #~ msgid "Login to Plex with an user acount"
 #~ msgstr "Aanmelden bij Plex met een account"

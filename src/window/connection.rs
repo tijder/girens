@@ -108,44 +108,7 @@ impl PlexWindow {
         let session = imp.session.clone();
         imp._login_view.set_busy(true);
 
-        // What to say when it does not work, which depends on what was
-        // tried.
-        let explain: Box<dyn Fn(&Error) -> Option<String>> = match &request {
-            // Nothing was typed that could be wrong when signing in in the
-            // browser was cancelled or timed out.
-            LoginRequest::Browser => Box::new(|err| match err {
-                Error::Unauthorized => None,
-                err => Some(gettext_f("Could not reach plex.tv: {}", &[&err.to_string()])),
-            }),
-            LoginRequest::Account { .. } => Box::new(|err| {
-                Some(match err {
-                    Error::Unauthorized => gettext("The username or password is not right."),
-                    err => gettext_f("Could not reach plex.tv: {}", &[&err.to_string()]),
-                })
-            }),
-            LoginRequest::Server { url, .. } => {
-                let url = url.clone();
-                Box::new(move |err| {
-                    Some(match err {
-                        Error::Unauthorized => gettext("The server does not accept this token."),
-                        _ => gettext_f("Could not connect to {}.", &[&url]),
-                    })
-                })
-            }
-            LoginRequest::Ister { address } => {
-                let address = address.clone();
-                Box::new(move |err| match err {
-                    Error::Unauthorized => None,
-                    err if err.is_network() => {
-                        Some(gettext_f("Could not connect to {}.", &[&address]))
-                    }
-                    Error::Server(_) | Error::Status { .. } | Error::Decode { .. } => {
-                        Some(gettext_f("No Ister server was found at {}.", &[&address]))
-                    }
-                    err => Some(err.to_string()),
-                })
-            }
-        };
+        let attempt = request.clone();
         let result = match request {
             LoginRequest::Browser => self.browser_login().await,
             LoginRequest::Ister { address } => self.ister_login(address).await,
@@ -158,7 +121,8 @@ impl PlexWindow {
         if let Err(err) = result {
             eprintln!("Login failed: {err}");
             self.show_login();
-            imp._login_view.set_error(explain(&err).as_deref());
+            imp._login_view
+                .set_error(explain_failed_login(&attempt, &err).as_deref());
             return;
         }
         // Whoever was signed in before makes way.
@@ -813,5 +777,80 @@ impl PlexWindow {
             }
         }
         imp.checking_connection.set(false);
+    }
+}
+
+/// What to tell the user when signing in did not work, which depends on
+/// what was tried. `None` when there is nothing to tell: a sign-in in the
+/// browser that was cancelled or timed out, where nothing was typed that
+/// could be wrong.
+fn explain_failed_login(request: &LoginRequest, err: &Error) -> Option<String> {
+    match (request, err) {
+        (LoginRequest::Browser | LoginRequest::Ister { .. }, Error::Unauthorized) => None,
+        (LoginRequest::Account { .. }, Error::Unauthorized) => {
+            Some(gettext("The username or password is not right."))
+        }
+        (LoginRequest::Browser | LoginRequest::Account { .. }, err) => {
+            Some(gettext_f("Could not reach plex.tv: {}", &[&err.to_string()]))
+        }
+        (LoginRequest::Server { .. }, Error::Unauthorized) => {
+            Some(gettext("The server does not accept this token."))
+        }
+        (LoginRequest::Server { url, .. }, _) => {
+            Some(gettext_f("Could not connect to {}.", &[url]))
+        }
+        (LoginRequest::Ister { address }, err) if err.is_network() => {
+            Some(gettext_f("Could not connect to {}.", &[address]))
+        }
+        (
+            LoginRequest::Ister { address },
+            Error::Server(_) | Error::Status { .. } | Error::Decode { .. },
+        ) => Some(gettext_f("No Ister server was found at {}.", &[address])),
+        (LoginRequest::Ister { .. }, err) => Some(err.to_string()),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_failed_sign_in_is_explained_by_what_was_tried() {
+        let browser = LoginRequest::Browser;
+        let account = LoginRequest::Account {
+            login: "me".into(),
+            password: "secret".into(),
+        };
+        let server = LoginRequest::Server {
+            url: "http://nas:32400".into(),
+            token: "token".into(),
+        };
+        let ister = LoginRequest::Ister {
+            address: "media.example.org".into(),
+        };
+        let not_ister = Error::Server("not an Ister server".into());
+
+        // Cancelled in the browser: nothing to say.
+        assert_eq!(explain_failed_login(&browser, &Error::Unauthorized), None);
+        assert_eq!(explain_failed_login(&ister, &Error::Unauthorized), None);
+        assert_eq!(
+            explain_failed_login(&account, &Error::Unauthorized).as_deref(),
+            Some("The username or password is not right.")
+        );
+        assert_eq!(
+            explain_failed_login(&server, &Error::Unauthorized).as_deref(),
+            Some("The server does not accept this token.")
+        );
+        assert_eq!(
+            explain_failed_login(&server, &not_ister).as_deref(),
+            Some("Could not connect to http://nas:32400.")
+        );
+        assert_eq!(
+            explain_failed_login(&ister, &not_ister).as_deref(),
+            Some("No Ister server was found at media.example.org.")
+        );
+        // The password never ends up in what is shown.
+        let shown = explain_failed_login(&account, &not_ister).unwrap();
+        assert!(shown.starts_with("Could not reach plex.tv") && !shown.contains("secret"));
     }
 }

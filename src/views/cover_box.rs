@@ -438,3 +438,89 @@ impl CoverBox {
         popover.popup();
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn item(kind: ItemKind) -> Item {
+        Item {
+            rating_key: "1".into(),
+            kind,
+            title: "Title".into(),
+            year: Some(2020),
+            thumb: Some("/own".into()),
+            ..Item::default()
+        }
+    }
+
+    #[test]
+    fn a_movie_plays_and_shows_its_year() {
+        let tile = present(&item(ItemKind::Movie), false);
+        assert_eq!((tile.title.as_str(), tile.subtitle.as_deref()), ("Title", Some("2020")));
+        assert_eq!(tile.action, Some(("win.play-item", "1".into())));
+        assert_eq!(tile.image, Some(("1".into(), "/own".into())));
+    }
+
+    #[test]
+    fn an_episode_is_named_after_its_show_and_pictured_by_it() {
+        let episode = Item {
+            grandparent_title: Some("Show".into()),
+            grandparent_rating_key: Some("9".into()),
+            grandparent_thumb: Some("/show".into()),
+            parent_index: Some(2),
+            index: Some(5),
+            ..item(ItemKind::Episode)
+        };
+        let tile = present(&episode, false);
+        assert_eq!(tile.title, "Show");
+        assert_eq!(tile.subtitle.as_deref(), Some("s02e05 - Title"));
+        // Cached under the show, so that all its episodes share one file.
+        assert_eq!(tile.image, Some(("9".into(), "/show".into())));
+        assert_eq!(tile.action, Some(("win.play-item", "1".into())));
+        // On the page of the show itself, its own still, and smaller.
+        let in_show = present(&episode, true);
+        assert_eq!(in_show.image, Some(("1".into(), "/own".into())));
+        assert!(in_show.image_height < tile.image_height);
+        // Without a poster of the show, its own picture after all.
+        let alone = Item {
+            grandparent_thumb: None,
+            ..episode
+        };
+        assert_eq!(present(&alone, false).image, Some(("1".into(), "/own".into())));
+    }
+
+    #[test]
+    fn what_holds_other_things_opens_its_page() {
+        let opens = |kind| present(&item(kind), false).action.map(|(action, _)| action);
+        assert_eq!(opens(ItemKind::Show), Some("win.show-show-by-id"));
+        assert_eq!(opens(ItemKind::Artist), Some("win.show-artist-by-id"));
+        assert_eq!(opens(ItemKind::Album), Some("win.show-album-by-id"));
+        assert_eq!(opens(ItemKind::Playlist), Some("win.show-playlist-by-id"));
+        assert_eq!(opens(ItemKind::Track), None);
+        // A season opens its show, when it knows which that is.
+        let season = Item {
+            parent_rating_key: Some("7".into()),
+            parent_title: Some("Show".into()),
+            ..item(ItemKind::Season)
+        };
+        let tile = present(&season, false);
+        assert_eq!(tile.action, Some(("win.show-show-by-id", "7".into())));
+        assert_eq!((tile.title.as_str(), tile.subtitle.as_deref()), ("Show", Some("Title")));
+        assert_eq!(opens(ItemKind::Season), None);
+    }
+
+    #[test]
+    fn a_playlist_is_pictured_by_what_is_in_it() {
+        let playlist = Item {
+            composite: Some("/composite".into()),
+            ..item(ItemKind::Playlist)
+        };
+        assert_eq!(present(&playlist, false).image, Some(("1".into(), "/composite".into())));
+        // A photo that holds no file is an album of photos.
+        assert_eq!(
+            present(&item(ItemKind::Photo), false).action,
+            Some(("win.show-photo-album-by-id", "1".into()))
+        );
+    }
+}

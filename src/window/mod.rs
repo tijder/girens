@@ -696,6 +696,7 @@ impl PlexWindow {
         match (command, argument) {
             (Some("skip"), _) => player.skip_segment(),
             (Some("next"), _) => player.next(),
+            (Some("previous"), _) => player.previous(),
             (Some("seek"), Some(seconds)) => player.seek_to(seconds * 1000),
             (Some("subtitle"), Some(nth)) => {
                 let stream = player.loaded_item().and_then(|item| {
