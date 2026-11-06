@@ -82,9 +82,50 @@ pub struct Selection {
     pub subtitle: Option<Option<ItemId>>,
 }
 
+/// The words for what the server only knows by number or code, in the
+/// language of the user. `{}` stands for the number or the name.
+#[derive(Clone)]
+pub struct Labels {
+    pub season: String,
+    pub episode: String,
+    pub track: String,
+    /// A stream without language or title.
+    pub unknown: String,
+    /// Subtitles that are pictures, after their name.
+    pub pictures: String,
+    /// The name of a language for its three-letter code.
+    pub language: std::sync::Arc<dyn Fn(&str) -> String + Send + Sync>,
+}
+
+impl Default for Labels {
+    fn default() -> Self {
+        Self {
+            season: "Season {}".into(),
+            episode: "Episode {}".into(),
+            track: "Track {}".into(),
+            unknown: "Unknown".into(),
+            pictures: "{} (pictures)".into(),
+            language: std::sync::Arc::new(str::to_owned),
+        }
+    }
+}
+
+impl std::fmt::Debug for Labels {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Labels").field("season", &self.season).finish_non_exhaustive()
+    }
+}
+
+impl Labels {
+    fn numbered(template: &str, number: u32) -> String {
+        template.replacen("{}", &number.to_string(), 1)
+    }
+}
+
 /// What mapping depends on besides the answer itself.
 #[derive(Debug, Clone, Default)]
 pub struct Context {
+    pub labels: Labels,
     /// Languages for titles and descriptions, most wanted first.
     pub languages: Vec<String>,
     pub settings: wire::UserSettings,
@@ -201,20 +242,25 @@ impl Context {
                 _ => continue,
             };
             let codec = stream.codec_name.to_ascii_uppercase();
-            // "eng · Surround 5.1": the language and what the file calls it.
-            let named: Vec<&str> = [stream.language.as_deref(), stream.title.as_deref()]
-                .into_iter()
-                .flatten()
-                .filter(|part| !part.is_empty() && *part != "und")
-                .collect();
+            // "English · Surround 5.1": the language and what the file
+            // calls the stream.
+            let language = stream
+                .language
+                .as_deref()
+                .filter(|language| !language.is_empty() && *language != "und")
+                .map(|language| (self.labels.language)(&language_code(language)));
+            let title = stream.title.clone().filter(|title| !title.is_empty());
+            let named: Vec<String> = [language, title].into_iter().flatten().collect();
             let name = if named.is_empty() {
-                "Unknown".to_owned()
+                self.labels.unknown.clone()
             } else {
                 named.join(" · ")
             };
             let display = match stream_type {
                 // Told apart from the same subtitles read to text.
-                3 if picture_streams.contains(&stream.id) => format!("{name} (pictures)"),
+                3 if picture_streams.contains(&stream.id) => {
+                    self.labels.pictures.replacen("{}", &name, 1)
+                }
                 3 => name,
                 _ => format!("{name} ({codec})"),
             };
@@ -385,7 +431,14 @@ impl Context {
                     .iter()
                     .filter(|episode| episode.watch_status.iter().any(|status| status.watched))
                     .count();
-                season_item(&parent, &season.id, season.number, season.episodes.len(), watched)
+                season_item(
+                    &self.labels.season,
+                    &parent,
+                    &season.id,
+                    season.number,
+                    season.episodes.len(),
+                    watched,
+                )
             })
             .collect()
     }
@@ -397,7 +450,14 @@ impl Context {
             .iter()
             .filter(|episode| episode.watch_status.iter().any(|status| status.watched))
             .count();
-        season_item(&parent, &season.id, season.number, season.episodes.len(), watched)
+        season_item(
+                    &self.labels.season,
+                    &parent,
+                    &season.id,
+                    season.number,
+                    season.episodes.len(),
+                    watched,
+                )
     }
 
     pub fn episode(&self, episode: &wire::Episode) -> Item {
@@ -406,7 +466,7 @@ impl Context {
             rating_key,
             key: rating_key.to_string(),
             kind: ItemKind::Episode,
-            title: format!("Episode {}", episode.number),
+            title: Labels::numbered(&self.labels.episode, episode.number),
             index: Some(episode.number),
             parent_index: episode.season.as_ref().map(|season| season.number),
             parent_rating_key: episode
@@ -416,7 +476,7 @@ impl Context {
             parent_title: episode
                 .season
                 .as_ref()
-                .map(|season| format!("Season {}", season.number)),
+                .map(|season| Labels::numbered(&self.labels.season, season.number)),
             grandparent_rating_key: episode
                 .show
                 .as_ref()
@@ -496,7 +556,7 @@ impl Context {
             rating_key,
             key: rating_key.to_string(),
             kind: ItemKind::Track,
-            title: format!("Track {}", track.number),
+            title: Labels::numbered(&self.labels.track, track.number),
             index: Some(track.number),
             parent_index: Some(track.disc_number.max(1)),
             parent_title: Some(track.album.name.clone()),
@@ -560,13 +620,20 @@ impl Context {
     }
 }
 
-fn season_item(show: &Item, uuid: &str, number: u32, episodes: usize, watched: usize) -> Item {
+fn season_item(
+    season: &str,
+    show: &Item,
+    uuid: &str,
+    number: u32,
+    episodes: usize,
+    watched: usize,
+) -> Item {
     let rating_key = id(ItemKind::Season, uuid);
     Item {
         rating_key,
         key: rating_key.to_string(),
         kind: ItemKind::Season,
-        title: format!("Season {number}"),
+        title: Labels::numbered(season, number),
         index: Some(number),
         parent_rating_key: Some(show.rating_key),
         parent_title: Some(show.title.clone()),

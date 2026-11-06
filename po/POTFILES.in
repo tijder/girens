@@ -26,6 +26,7 @@ data/ui/theme_switcher.blp
 src/messages.rs
 src/notify.rs
 src/player/mod.rs
+src/session.rs
 src/sync.rs
 src/views/album_view.rs
 src/views/cover_box.rs

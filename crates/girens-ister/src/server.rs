@@ -12,7 +12,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 
 use crate::auth::{self, Provider, Tokens, WellKnown};
-use crate::map::{self, Context, Selection};
+use crate::map::{self, Context, Labels, Selection};
 use crate::{queries, wire};
 
 /// A token for media and images lasts a day; it is replaced well before.
@@ -26,6 +26,17 @@ pub const SUBTITLE_DELAY: f64 = -1.48;
 
 /// Called with the new refresh token whenever the provider replaces it.
 pub type TokenKeeper = Arc<dyn Fn(&str) + Send + Sync>;
+
+/// What the server and its answers are fitted to.
+#[derive(Debug, Clone, Default)]
+pub struct Player {
+    /// The languages to show titles in, most wanted first.
+    pub languages: Vec<String>,
+    /// The words for what has no title.
+    pub labels: Labels,
+    /// Names this player to the server; a UUID.
+    pub device: String,
+}
 
 /// Who is signed in.
 #[derive(Debug, Clone)]
@@ -109,17 +120,20 @@ fn locked<T>(mutex: &Mutex<T>) -> std::sync::MutexGuard<'_, T> {
 
 impl IsterServer {
     /// Connects with tokens from a sign-in or from an earlier session
-    /// (see [`auth::refresh`]). `languages` are those to show titles in,
-    /// most wanted first; `device` names this player to the server.
+    /// (see [`auth::refresh`]).
     pub async fn connect(
         http: reqwest::Client,
         well_known: WellKnown,
         provider: Provider,
         tokens: Tokens,
-        languages: Vec<String>,
-        device: String,
+        player: Player,
         keeper: TokenKeeper,
     ) -> Result<Self> {
+        let Player {
+            languages,
+            labels,
+            device,
+        } = player;
         let mut server = Self {
             inner: Arc::new(Inner {
                 http,
@@ -138,6 +152,7 @@ impl IsterServer {
                 stream_token_refresh: tokio::sync::Mutex::new(()),
                 context: RwLock::new(Context {
                     languages,
+                    labels,
                     ..Context::default()
                 }),
                 queues: Mutex::new(HashMap::new()),

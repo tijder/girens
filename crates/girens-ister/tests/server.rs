@@ -104,8 +104,11 @@ async fn connect(mock: &MockServer) -> (IsterServer, Kept) {
         well_known,
         provider,
         tokens,
-        vec!["nld".into()],
-        "6f1c2a0e-0000-4000-8000-00000000abcd".into(),
+        girens_ister::Player {
+            languages: vec!["nld".into()],
+            labels: girens_ister::Labels::default(),
+            device: "6f1c2a0e-0000-4000-8000-00000000abcd".into(),
+        },
         keeper,
     )
     .await

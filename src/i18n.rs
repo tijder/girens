@@ -21,3 +21,39 @@ pub fn gettext_f(msgid: &str, args: &[&str]) -> String {
     }
     text
 }
+
+/// The name of a language in the language of the user, for its three-letter
+/// code; the code itself for one that is not known here.
+///
+/// The names are translated by iso-codes, which every desktop ships.
+pub fn language_name(code: &str) -> String {
+    let english = match code {
+        "eng" => "English",
+        "nld" => "Dutch",
+        "deu" => "German",
+        "fra" => "French",
+        "spa" => "Spanish",
+        "ita" => "Italian",
+        "por" => "Portuguese",
+        "swe" => "Swedish",
+        "dan" => "Danish",
+        "nor" => "Norwegian",
+        "fin" => "Finnish",
+        "pol" => "Polish",
+        "rus" => "Russian",
+        "tur" => "Turkish",
+        "jpn" => "Japanese",
+        "kor" => "Korean",
+        "zho" => "Chinese",
+        "ces" => "Czech",
+        "ell" => "Modern Greek (1453-)",
+        "hun" => "Hungarian",
+        "ron" => "Romanian",
+        "ukr" => "Ukrainian",
+        "ara" => "Arabic",
+        "heb" => "Hebrew",
+        "hin" => "Hindi",
+        other => return other.to_owned(),
+    };
+    gettextrs::dgettext("iso_639-3", english)
+}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 11:58+0100\n"
+"POT-Creation-Date: 2026-11-06 12:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Available offline"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:135
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:155
 msgid "Continue watching"
 msgstr ""
 
@@ -241,23 +241,23 @@ msgstr ""
 msgid "Repeat"
 msgstr ""
 
-#: ../data/ui/player_view.blp:92
+#: ../data/ui/player_view.blp:112
 msgid "Release date"
 msgstr ""
 
-#: ../data/ui/player_view.blp:97
+#: ../data/ui/player_view.blp:117
 msgid "Genre"
 msgstr ""
 
-#: ../data/ui/player_view.blp:107
+#: ../data/ui/player_view.blp:127
 msgid "Description"
 msgstr ""
 
-#: ../data/ui/player_view.blp:120
+#: ../data/ui/player_view.blp:140
 msgid "Audio "
 msgstr ""
 
-#: ../data/ui/player_view.blp:123
+#: ../data/ui/player_view.blp:143
 msgid "Subtitle "
 msgstr ""
 
@@ -311,45 +311,50 @@ msgstr ""
 
 #: ../data/ui/shortcuts.blp:24
 msgctxt "shortcut window"
-msgid "Seek forwards"
+msgid "Skip intro or credits"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
-msgid "Seek backwards"
+msgid "Seek forwards"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:34
 msgctxt "shortcut window"
-msgid "Volume up"
+msgid "Seek backwards"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:39
 msgctxt "shortcut window"
-msgid "Volume down"
+msgid "Volume up"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:44
 msgctxt "shortcut window"
-msgid "Stop playing"
+msgid "Volume down"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:49
 msgctxt "shortcut window"
-msgid "Fullscreen"
+msgid "Stop playing"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:54
 msgctxt "shortcut window"
-msgid "Fill the window with the video"
+msgid "Fullscreen"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
-msgid "Show the controls"
+msgid "Fill the window with the video"
 msgstr ""
 
 #: ../data/ui/shortcuts.blp:64
+msgctxt "shortcut window"
+msgid "Show the controls"
+msgstr ""
+
+#: ../data/ui/shortcuts.blp:69
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr ""
@@ -470,24 +475,52 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:352
+#: ../src/player/mod.rs:386
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:360
+#: ../src/player/mod.rs:394
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:469
+#: ../src/player/mod.rs:529
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:664
+#: ../src/player/mod.rs:724
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1175
+#: ../src/player/mod.rs:1287
+msgid "Could not load the subtitles"
+msgstr ""
+
+#: ../src/player/mod.rs:1399
 msgid "Could not change the stream"
+msgstr ""
+
+#: ../src/session.rs:560
+#, rust-format
+msgid "Season {}"
+msgstr ""
+
+#: ../src/session.rs:561
+#, rust-format
+msgid "Episode {}"
+msgstr ""
+
+#: ../src/session.rs:562
+#, rust-format
+msgid "Track {}"
+msgstr ""
+
+#: ../src/session.rs:563
+msgid "Unknown"
+msgstr ""
+
+#: ../src/session.rs:565
+#, rust-format
+msgid "{} (pictures)"
 msgstr ""
 
 #: ../src/sync.rs:509
@@ -597,15 +630,23 @@ msgstr ""
 msgid "The photo has no picture"
 msgstr ""
 
-#: ../src/views/player_view.rs:310
+#: ../src/views/player_view.rs:325
 msgid "Audio"
 msgstr ""
 
-#: ../src/views/player_view.rs:311
+#: ../src/views/player_view.rs:326
 msgid "Subtitle"
 msgstr ""
 
-#: ../src/views/player_view.rs:432
+#: ../src/views/player_view.rs:381
+msgid "Skip intro"
+msgstr ""
+
+#: ../src/views/player_view.rs:382
+msgid "Next episode"
+msgstr ""
+
+#: ../src/views/player_view.rs:561
 msgid "None"
 msgstr ""
 
@@ -858,17 +899,17 @@ msgstr ""
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: ../src/window/mod.rs:668
+#: ../src/window/mod.rs:700
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:673
+#: ../src/window/mod.rs:705
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:676
+#: ../src/window/mod.rs:708
 msgid "Help with translating"
 msgstr ""
 

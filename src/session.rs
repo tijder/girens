@@ -15,6 +15,7 @@ use girens_model::{Error, Result};
 use girens_plex::{ClientInfo, PlexServer};
 
 use crate::backend::Server;
+use crate::i18n::gettext;
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
@@ -555,6 +556,15 @@ impl Session {
                 }
                 seen
             });
+        let labels = girens_ister::Labels {
+            season: gettext("Season {}"),
+            episode: gettext("Episode {}"),
+            track: gettext("Track {}"),
+            unknown: gettext("Unknown"),
+            // Subtitles that are pictures rather than text; {} is their name.
+            pictures: gettext("{} (pictures)"),
+            language: std::sync::Arc::new(crate::i18n::language_name),
+        };
         let device = self.client.identifier.clone();
         runtime::run(async move {
             IsterServer::connect(
@@ -562,8 +572,11 @@ impl Session {
                 well_known,
                 provider,
                 tokens,
-                languages,
-                device,
+                girens_ister::Player {
+                    languages,
+                    labels,
+                    device,
+                },
                 keeper,
             )
             .await
