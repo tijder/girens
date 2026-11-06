@@ -13,7 +13,7 @@ use gtk::{gdk, glib, CompositeTemplate};
 use super::{List, MediaBoxVideoBottom, MediaBoxVideoTop, MediaControls};
 use crate::i18n::gettext;
 use crate::player::render::VideoRenderer;
-use crate::player::{Event, Player, CONTROLS_HIDE_DELAY};
+use crate::player::{Event, Player, SubtitlePictures, CONTROLS_HIDE_DELAY};
 use crate::session::Session;
 use crate::{runtime, util};
 
@@ -44,6 +44,14 @@ mod imp {
         pub _media_bottom: TemplateChild<MediaBoxVideoBottom>,
         #[template_child]
         pub _skip_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _subtitle_picture: TemplateChild<gtk::Picture>,
+        /// The sheets subtitle pictures are cut out of, by where they
+        /// come from.
+        pub subtitle_sheets: RefCell<std::collections::HashMap<String, gdk::Texture>>,
+        /// The subtitles that should be on screen, also while their sheet
+        /// is still on its way.
+        pub subtitles: RefCell<Option<SubtitlePictures>>,
         #[template_child]
         pub _video_box: TemplateChild<gtk::Box>,
         #[template_child]
@@ -380,6 +388,99 @@ impl PlayerView {
         imp._skip_button.set_visible(label.is_some());
     }
 
+    /// Draws subtitles that are pictures over the video, fetching the
+    /// sheets they are cut out of when those are not there yet.
+    fn show_subtitles(&self, subtitles: Option<SubtitlePictures>) {
+        let imp = self.imp();
+        imp.subtitles.replace(subtitles.clone());
+        let Some(subtitles) = subtitles else {
+            imp._subtitle_picture.set_paintable(gdk::Paintable::NONE);
+            return;
+        };
+        let missing: Vec<String> = subtitles
+            .cues
+            .iter()
+            .map(|(sheet, _)| sheet.clone())
+            .filter(|sheet| !imp.subtitle_sheets.borrow().contains_key(sheet))
+            .collect();
+        if missing.is_empty() {
+            self.draw_subtitles(&subtitles);
+            return;
+        }
+        // Nothing rather than the previous line while the sheet loads.
+        imp._subtitle_picture.set_paintable(gdk::Paintable::NONE);
+        let Some(server) = Session::current().server() else {
+            return;
+        };
+        glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            async move {
+                for sheet in missing {
+                    let url = server.download_url(&sheet);
+                    let bytes =
+                        runtime::run(async move { girens_model::net::download(&url).await }).await;
+                    let texture = bytes
+                        .map_err(|err| err.to_string())
+                        .and_then(|bytes| {
+                            gdk::Texture::from_bytes(&glib::Bytes::from_owned(bytes))
+                                .map_err(|err| err.to_string())
+                        });
+                    match texture {
+                        Ok(texture) => {
+                            view.imp().subtitle_sheets.borrow_mut().insert(sheet, texture);
+                        }
+                        Err(err) => {
+                            eprintln!("Could not load the subtitles: {err}");
+                            return;
+                        }
+                    }
+                }
+                // Unless other subtitles are due by now.
+                let current = view.imp().subtitles.borrow().clone();
+                if current.as_ref() == Some(&subtitles) {
+                    view.draw_subtitles(&subtitles);
+                }
+            }
+        ));
+    }
+
+    fn draw_subtitles(&self, subtitles: &SubtitlePictures) {
+        let imp = self.imp();
+        let sheets = imp.subtitle_sheets.borrow();
+        // A frame as wide as the video is shown, so that the picture fits
+        // over the video however the window is sized.
+        let (canvas_width, height) = subtitles.canvas;
+        let width = (f64::from(height) * subtitles.aspect) as f32;
+        let stretch = width / canvas_width.max(1.0);
+        let snapshot = gtk::Snapshot::new();
+        for (sheet, cue) in &subtitles.cues {
+            let Some(texture) = sheets.get(sheet) else {
+                continue;
+            };
+            let place = gtk::graphene::Rect::new(
+                cue.x * stretch,
+                cue.y,
+                cue.width * stretch,
+                cue.height,
+            );
+            // The whole sheet, moved so that the part for this cue lands in
+            // its place, with the rest cut off.
+            let sheet_place = gtk::graphene::Rect::new(
+                place.x() - cue.sheet_x * stretch,
+                place.y() - cue.sheet_y,
+                texture.width() as f32 * stretch,
+                texture.height() as f32,
+            );
+            snapshot.push_clip(&place);
+            snapshot.append_texture(texture, &sheet_place);
+            snapshot.pop();
+        }
+        let size = gtk::graphene::Size::new(width, height);
+        imp._subtitle_picture
+            .set_paintable(snapshot.to_paintable(Some(&size)).as_ref());
+    }
+
     // Player events
 
     fn on_player_event(&self, event: &Event) {
@@ -391,8 +492,11 @@ impl PlayerView {
                 self.show_controls();
             }
             Event::Segment(segment) => self.offer_skip(*segment),
+            Event::Subtitles(subtitles) => self.show_subtitles(subtitles.clone()),
             Event::Stopped => {
                 self.offer_skip(None);
+                self.show_subtitles(None);
+                self.imp().subtitle_sheets.borrow_mut().clear();
                 if self.imp().fullscreen.get() {
                     self.toggle_fullscreen();
                 } else if self.imp().windowed.get() {

@@ -14,6 +14,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use girens_model::model::{Item, ItemKind, LibrarySection, Segment, SegmentKind, StreamKind};
+use girens_model::subtitles::{Cue, PictureSubtitles};
 use girens_model::{PlayQueue, PlaybackState};
 use gtk::prelude::*;
 use gtk::{gio, glib};
@@ -76,10 +77,25 @@ pub enum Event {
     QueueChanged,
     /// Playback entered the intro or the credits, or left them.
     Segment(Option<SegmentKind>),
+    /// The subtitles to draw over the video changed; `None` when there
+    /// are none to draw.
+    Subtitles(Option<SubtitlePictures>),
     /// Whether the item that is playing starts over when it ends.
     RepeatChanged(bool),
     /// Nothing is playing any more.
     Stopped,
+}
+
+/// Subtitles that are pictures, as they are on screen at one moment.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SubtitlePictures {
+    /// The size of the frame the cues are placed on.
+    pub canvas: (f32, f32),
+    /// Width over height of the video as it is shown, which need not be
+    /// that of the canvas (a DVD has pixels that are not square).
+    pub aspect: f64,
+    /// Each picture with where to get the sheet it is cut out of.
+    pub cues: Vec<(String, Cue)>,
 }
 
 /// What to do when mpv reports that the current file ended.
@@ -132,6 +148,10 @@ struct Playing {
     segment: Option<Segment>,
     /// Whether the intro was skipped for the user already.
     intro_skipped: bool,
+    /// The subtitles the player draws itself, of the stream with this id.
+    pictures: Option<(ItemId, Rc<PictureSubtitles>)>,
+    /// Those on screen now.
+    shown: Vec<Cue>,
     last_ui_update: f64,
     last_timeline_update: f64,
     paused: bool,
@@ -787,6 +807,8 @@ impl Inner {
             base,
             segment: None,
             intro_skipped: false,
+            pictures: None,
+            shown: Vec::new(),
             last_ui_update: 0.0,
             last_timeline_update: 0.0,
             paused: true,
@@ -891,6 +913,7 @@ impl Inner {
             });
             (position, slice_end, changed, auto_skip)
         };
+        self.show_pictures(time);
         if let Some(segment) = segment {
             self.emit(Event::Segment(segment.map(|segment| segment.kind)));
         }
@@ -1131,7 +1154,7 @@ impl Inner {
 
     // Audio and subtitle streams
 
-    fn on_tracks_available(&self) {
+    fn on_tracks_available(self: &Rc<Self>) {
         let apply = {
             let mut state = self.state.borrow_mut();
             match state.current.as_mut() {
@@ -1153,7 +1176,7 @@ impl Inner {
     }
 
     /// Makes mpv use the streams that are selected on the server.
-    fn apply_streams(&self) {
+    fn apply_streams(self: &Rc<Self>) {
         let (Some(server), Some(loading)) = (
             Session::current().server(),
             self.state
@@ -1194,8 +1217,13 @@ impl Inner {
             }
         }
 
-        match loading.selected_stream(StreamKind::Subtitle) {
+        let subtitle = loading.selected_stream(StreamKind::Subtitle);
+        let pictures = subtitle.filter(|stream| stream.pictures);
+        self.use_pictures(&server, loading.rating_key, pictures);
+        match subtitle {
             None => self.set_mpv("sid", "no"),
+            // Drawn by the player itself, over the video.
+            Some(stream) if stream.pictures => self.set_mpv("sid", "no"),
             Some(stream) => match stream.key.as_deref() {
                 // A sidecar file: mpv loads it from the server, titled with
                 // the stream id so that it is recognised next time.
@@ -1219,6 +1247,104 @@ impl Inner {
                 }
             },
         }
+    }
+
+    /// Fetches the pictures of `stream` to draw them while playing, or
+    /// stops drawing any when another kind of subtitles was chosen.
+    fn use_pictures(
+        self: &Rc<Self>,
+        server: &crate::backend::Server,
+        item: ItemId,
+        stream: Option<&girens_model::model::Stream>,
+    ) {
+        let wanted = stream.and_then(|stream| Some((stream.id, stream.key.clone()?)));
+        let had_any = {
+            let mut state = self.state.borrow_mut();
+            let Some(playing) = state.current.as_mut() else {
+                return;
+            };
+            let loaded = playing.pictures.as_ref().map(|(id, _)| *id);
+            if loaded.is_some() && loaded == wanted.as_ref().map(|(id, _)| *id) {
+                return;
+            }
+            playing.pictures = None;
+            !std::mem::take(&mut playing.shown).is_empty()
+        };
+        if had_any {
+            self.emit(Event::Subtitles(None));
+        }
+        let Some((id, key)) = wanted else {
+            return;
+        };
+        let (inner, server) = (self.clone(), server.clone());
+        glib::spawn_future_local(async move {
+            let fetched =
+                runtime::run(async move { server.picture_subtitles(&key).await }).await;
+            let pictures = match fetched {
+                Ok(pictures) => Rc::new(pictures),
+                Err(err) => {
+                    crate::notify::failure(
+                        &crate::i18n::gettext("Could not load the subtitles"),
+                        &err,
+                    );
+                    return;
+                }
+            };
+            let mut state = inner.state.borrow_mut();
+            // Unless something else plays by now, or other subtitles were
+            // chosen.
+            let still_wanted = state.current.as_ref().is_some_and(|playing| {
+                playing.loading.rating_key == item
+                    && playing
+                        .loading
+                        .selected_stream(StreamKind::Subtitle)
+                        .is_some_and(|stream| stream.id == id)
+            });
+            if let (true, Some(playing)) = (still_wanted, state.current.as_mut()) {
+                playing.pictures = Some((id, pictures));
+            }
+        });
+    }
+
+    /// Tells which subtitle pictures are on screen at `time`, in seconds
+    /// into the file, when that changed.
+    fn show_pictures(&self, time: f64) {
+        let changed = {
+            let mut state = self.state.borrow_mut();
+            let Some(playing) = state.current.as_mut() else {
+                return;
+            };
+            let Some((_, pictures)) = playing.pictures.clone() else {
+                return;
+            };
+            let active = pictures.active_at((time.max(0.0) * 1000.0) as u64);
+            if active == playing.shown {
+                return;
+            }
+            playing.shown.clone_from(&active);
+            (!active.is_empty()).then(|| {
+                let cues = active
+                    .into_iter()
+                    .filter_map(|cue| Some((pictures.sheets.get(cue.sheet)?.clone(), cue)))
+                    .collect();
+                (pictures, cues)
+            })
+        };
+        let subtitles = changed.map(|(pictures, cues)| {
+            let canvas = (pictures.width, pictures.height);
+            let aspect = self
+                .mpv
+                .get()
+                .and_then(|mpv| mpv.get_property::<f64>("video-params/aspect").ok())
+                .filter(|aspect| *aspect > 0.0)
+                .unwrap_or(f64::from(canvas.0) / f64::from(canvas.1.max(1.0)));
+            SubtitlePictures {
+                canvas,
+                aspect,
+                cues,
+            }
+        });
+        self.emit(Event::Subtitles(subtitles));
     }
 
     fn mpv_tracks(&self) -> Vec<MpvTrack> {

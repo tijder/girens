@@ -6,6 +6,7 @@
 
 use girens_ister::IsterServer;
 use girens_model::model::{Item, ItemKind, LibrarySection, Part, SortOption};
+use girens_model::subtitles::PictureSubtitles;
 use girens_model::{ItemId, Page, PlayQueue, PlaybackState, Result};
 use girens_plex::playback::TranscodeRequest;
 use girens_plex::PlexServer;
@@ -238,6 +239,16 @@ impl Server {
     /// beside the video (the `key` of the stream).
     pub fn download_url(&self, key: &str) -> String {
         each!(self, server => server.download_url(key).to_string())
+    }
+
+    /// The pictures of a subtitle stream that is made of them.
+    pub async fn picture_subtitles(&self, key: &str) -> Result<PictureSubtitles> {
+        match self {
+            Server::Plex(_) => Err(girens_model::Error::Server(
+                "this server has no subtitles as pictures".into(),
+            )),
+            Server::Ister(server) => server.picture_subtitles(key).await,
+        }
     }
 
     // Playing

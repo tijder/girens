@@ -5,6 +5,7 @@ use std::sync::{Arc, Mutex, RwLock};
 use std::time::{Duration, Instant};
 
 use girens_model::model::{Item, ItemKind, LibrarySection, Part, SortOption};
+use girens_model::subtitles::PictureSubtitles;
 use girens_model::{Error, ItemId, Page, PlayQueue, PlaybackState, Result};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
@@ -854,6 +855,74 @@ impl IsterServer {
     /// stream).
     pub fn download_url(&self, key: &str) -> String {
         format!("{key}?token={}", self.stream_token())
+    }
+
+    /// The pictures of a subtitle stream that has them (the `key` of the
+    /// stream). The server may have to make them first, which takes a while.
+    pub async fn picture_subtitles(&self, key: &str) -> Result<PictureSubtitles> {
+        #[derive(Deserialize)]
+        struct Cue {
+            s: f64,
+            e: f64,
+            x: f32,
+            y: f32,
+            w: f32,
+            h: f32,
+            sheet: usize,
+            sx: f32,
+            sy: f32,
+        }
+        #[derive(Deserialize)]
+        struct Index {
+            width: f32,
+            height: f32,
+            #[serde(default)]
+            sheets: Vec<String>,
+            #[serde(default)]
+            cues: Vec<Cue>,
+        }
+        let response = self
+            .inner
+            .http
+            .get(self.download_url(key))
+            .timeout(Duration::from_secs(300))
+            .send()
+            .await?;
+        let status = response.status();
+        if !status.is_success() {
+            return Err(Error::Status {
+                status,
+                url: key.to_owned(),
+            });
+        }
+        let text = response.text().await?;
+        let index: Index = serde_json::from_str(&text).map_err(|source| Error::Decode {
+            url: key.to_owned(),
+            source,
+        })?;
+        // The sheets are beside the index.
+        let folder = key.rsplit_once('/').map_or("", |(folder, _)| folder);
+        let sheets = index
+            .sheets
+            .iter()
+            .map(|sheet| format!("{folder}/{sheet}"))
+            .collect();
+        let cues = index
+            .cues
+            .iter()
+            .map(|cue| girens_model::subtitles::Cue {
+                start: cue.s.max(0.0) as u64,
+                end: cue.e.max(0.0) as u64,
+                x: cue.x,
+                y: cue.y,
+                width: cue.w,
+                height: cue.h,
+                sheet: cue.sheet,
+                sheet_x: cue.sx,
+                sheet_y: cue.sy,
+            })
+            .collect();
+        Ok(PictureSubtitles::new(index.width, index.height, sheets, cues))
     }
 
     // Playing

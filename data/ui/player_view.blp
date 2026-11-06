@@ -48,6 +48,12 @@ template $player_view : Adw.Bin {
         }
 
         [overlay]
+        Picture _subtitle_picture {
+          can-target: false;
+          content-fit: contain;
+        }
+
+        [overlay]
         Button _skip_button {
           visible: false;
           halign: end;

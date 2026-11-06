@@ -466,3 +466,40 @@ async fn what_the_server_refuses_is_told_apart() {
     // An id that is not one of this server is not asked for at all.
     assert!(matches!(server.item("42".into()).await, Err(Error::NotFound(_))));
 }
+
+#[tokio::test]
+async fn subtitles_that_are_pictures_come_with_their_sheets() {
+    let mock = serve(300).await;
+    let (server, _) = connect(&mock).await;
+    Mock::given(method("GET"))
+        .and(path("/hls/file/bsub_stream.json"))
+        .and(wiremock::matchers::query_param("token", "stream-token"))
+        .respond_with(ResponseTemplate::new(200).set_body_json(json!({
+            "version": 1, "width": 720, "height": 576,
+            "sheets": ["bsub_stream_00.png", "bsub_stream_01.png"],
+            "cues": [
+                {"s": 7560, "e": 10438, "x": 132, "y": 85, "w": 457, "h": 28, "sheet": 1, "sx": 0, "sy": 67, "forced": false},
+                {"s": 3440, "e": 7399, "x": 135, "y": 430, "w": 450, "h": 65, "sheet": 0, "sx": 0, "sy": 0, "forced": false},
+            ],
+        })))
+        .mount(&mock)
+        .await;
+    let key = format!("{}/hls/file/bsub_stream.json", mock.uri());
+    let subtitles = server.picture_subtitles(&key).await.unwrap();
+    assert_eq!((subtitles.width, subtitles.height), (720.0, 576.0));
+    // The sheets are beside the list, to fetch like any file of the server.
+    assert_eq!(subtitles.sheets[1], format!("{}/hls/file/bsub_stream_01.png", mock.uri()));
+    let first = subtitles.active_at(4_000);
+    assert_eq!(first.len(), 1);
+    assert_eq!((first[0].y, first[0].sheet), (430.0, 0));
+    assert!(subtitles.active_at(7_450).is_empty());
+    let second = subtitles.active_at(8_000);
+    assert_eq!((second[0].sheet, second[0].sheet_y), (1, 67.0));
+
+    // A stream the server has no pictures for.
+    let missing = format!("{}/hls/file/bsub_other.json", mock.uri());
+    assert!(matches!(
+        server.picture_subtitles(&missing).await,
+        Err(Error::Status { .. })
+    ));
+}

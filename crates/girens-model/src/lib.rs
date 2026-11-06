@@ -6,6 +6,7 @@ mod id;
 pub mod model;
 pub mod net;
 mod queue;
+pub mod subtitles;
 
 pub use error::{Error, Result};
 pub use id::ItemId;

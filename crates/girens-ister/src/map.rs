@@ -172,14 +172,18 @@ impl Context {
                 "VIDEO" => (1, None),
                 "AUDIO" => (2, None),
                 "SUBTITLE" | "EXTERNAL_SUBTITLE" => {
-                    // Pictures instead of text come as a list of them.
-                    let pictures = matches!(
-                        stream.codec_name.as_str(),
-                        "hdmv_pgs_subtitle" | "pgssub" | "dvd_subtitle" | "dvdsub" | "dvb_subtitle" | "xsub"
-                    );
+                    // Pictures instead of text come as a list of them, for
+                    // the formats the server can read.
+                    let codec = stream.codec_name.as_str();
+                    let pictures =
+                        matches!(codec, "hdmv_pgs_subtitle" | "pgssub" | "dvd_subtitle" | "dvdsub");
+                    if matches!(codec, "dvb_subtitle" | "xsub") {
+                        continue;
+                    }
                     // A file beside the video replaces the same subtitles
                     // inside it.
-                    let replaced = stream.codec_type == "SUBTITLE"
+                    let replaced = !pictures
+                        && stream.codec_type == "SUBTITLE"
                         && all.iter().any(|other| {
                             other.codec_type == "EXTERNAL_SUBTITLE"
                                 && other.stream_index == stream.stream_index
@@ -188,14 +192,6 @@ impl Context {
                         continue;
                     }
                     if pictures {
-                        // Unless the same subtitles were also read to text.
-                        let read = all.iter().any(|other| {
-                            other.codec_type == "EXTERNAL_SUBTITLE"
-                                && other.stream_index == stream.stream_index
-                        });
-                        if read {
-                            continue;
-                        }
                         picture_streams.push(stream.id.clone());
                         (3, Some(format!("{base}/bsub_{}.json", stream.id)))
                     } else {
@@ -217,6 +213,8 @@ impl Context {
                 named.join(" · ")
             };
             let display = match stream_type {
+                // Told apart from the same subtitles read to text.
+                3 if picture_streams.contains(&stream.id) => format!("{name} (pictures)"),
                 3 => name,
                 _ => format!("{name} ({codec})"),
             };
@@ -239,15 +237,18 @@ impl Context {
         let selection = self.selections.get(&file_id).copied().unwrap_or_default();
         let preferred = |streams: &[Stream], stream_type: u32, languages: &[String]| {
             languages.iter().find_map(|wanted| {
+                let in_language = |stream: &&Stream| {
+                    stream.stream_type == stream_type
+                        && stream
+                            .language
+                            .as_deref()
+                            .is_some_and(|language| same_language(language, wanted))
+                };
+                // Text before pictures: it is sharper at any size.
                 streams
                     .iter()
-                    .find(|stream| {
-                        stream.stream_type == stream_type
-                            && stream
-                                .language
-                                .as_deref()
-                                .is_some_and(|language| same_language(language, wanted))
-                    })
+                    .filter(in_language)
+                    .min_by_key(|stream| stream.pictures)
                     .map(|stream| stream.id)
             })
         };
@@ -712,6 +713,8 @@ mod tests {
             [
                 ("text", false, "http://node/hls/file/sub_text.srt"),
                 ("pictures", true, "http://node/hls/file/bsub_pictures.json"),
+                // The pictures of a disc and what the server read in them.
+                ("read", true, "http://node/hls/file/bsub_read.json"),
                 ("reading", false, "http://node/hls/file/sub_reading.srt"),
             ]
         );
