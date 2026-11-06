@@ -28,6 +28,28 @@ async fn server() -> PlexServer {
     PlexServer::connect(&url, &token, &client()).await.unwrap()
 }
 
+/// Lists the Plex Home profiles and switches to the own one, which needs no
+/// PIN and changes nothing. Uses the device id of the tests, so that the
+/// installed Girens keeps its own session.
+#[tokio::test]
+#[ignore = "needs PLEX_ACCOUNT_TOKEN"]
+async fn plex_home_profiles() {
+    let token = std::env::var("PLEX_ACCOUNT_TOKEN").expect("PLEX_ACCOUNT_TOKEN");
+    let myplex = MyPlex::with_token(&token, &client()).await.unwrap();
+    let users = myplex.home_users().await.unwrap();
+    println!("{} profile(s)", users.len());
+    let own = users
+        .iter()
+        .find(|user| user.uuid == myplex.account().uuid)
+        .expect("the account is one of its profiles");
+    let again = myplex.switch_user(own, None).await.unwrap();
+    assert_eq!(again.account().uuid, myplex.account().uuid);
+    assert!(!again.account().auth_token.is_empty());
+    // Both sessions work.
+    again.servers().await.unwrap();
+    myplex.servers().await.unwrap();
+}
+
 async fn movies(server: &PlexServer) -> Vec<Item> {
     let sections = server.sections().await.unwrap();
     let section = sections

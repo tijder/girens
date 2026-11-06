@@ -1,0 +1,21 @@
+{
+ "id": 1001,
+ "uuid": "uuid-1",
+ "username": "username-1",
+ "title": "title-1",
+ "email": "user1@example.org",
+ "friendlyName": null,
+ "thumb": "https://plex.tv/users/uuid-1/avatar?c=1",
+ "protected": false,
+ "restricted": false,
+ "home": true,
+ "guest": false,
+ "homeAdmin": true,
+ "authToken": "account-token",
+ "homeSize": 3,
+ "subscription": {
+  "active": true,
+  "status": "Active",
+  "plan": "lifetime"
+ }
+}

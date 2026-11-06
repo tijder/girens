@@ -28,6 +28,9 @@ pub enum Error {
         #[source]
         source: std::io::Error,
     },
+    /// The PIN of a Plex Home profile was refused.
+    #[error("the PIN is not correct")]
+    WrongPin,
     /// None of the connections plex.tv lists for a server could be used.
     #[error("could not connect to {0}")]
     NoConnection(String),

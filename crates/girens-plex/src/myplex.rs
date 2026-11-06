@@ -1,15 +1,19 @@
-//! plex.tv: signing in and finding the servers of an account.
+//! plex.tv: signing in, the profiles of a Plex Home and the servers of an
+//! account.
 
+use reqwest::StatusCode;
 use serde::Deserialize;
 
 use crate::server::{send, ClientInfo};
 use crate::{Error, PlexServer, Result};
 
+const PLEX_TV: &str = "https://plex.tv";
 const SIGN_IN: &str = "https://plex.tv/api/v2/users/signin";
-const USER: &str = "https://plex.tv/api/v2/user";
+const USER: &str = "/api/v2/user";
 const PINS: &str = "https://plex.tv/api/v2/pins";
 const AUTH_PAGE: &str = "https://app.plex.tv/auth";
-const RESOURCES: &str = "https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1";
+const RESOURCES: &str = "/api/v2/resources?includeHttps=1&includeRelay=1";
+const HOME_USERS: &str = "/api/v2/home/users";
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -28,6 +32,32 @@ pub struct Subscription {
     #[serde(default)]
     pub active: bool,
     pub plan: Option<String>,
+}
+
+/// A profile of the Plex Home the account belongs to. An account without a
+/// Home has one: itself.
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+pub struct HomeUser {
+    pub uuid: String,
+    /// The name to show.
+    #[serde(default)]
+    pub title: String,
+    /// Avatar URL.
+    pub thumb: Option<String>,
+    /// Switching to this profile takes a PIN.
+    #[serde(default)]
+    pub protected: bool,
+    /// A managed profile, e.g. of a child: it sees part of the libraries.
+    #[serde(default)]
+    pub restricted: bool,
+    #[serde(default)]
+    pub admin: bool,
+}
+
+#[derive(Deserialize)]
+struct Home {
+    #[serde(default)]
+    users: Vec<HomeUser>,
 }
 
 /// A device registered with the account; servers have `provides == "server"`.
@@ -111,6 +141,8 @@ pub struct MyPlex {
     http: reqwest::Client,
     client: ClientInfo,
     account: Account,
+    /// `https://plex.tv`, or a stand-in under test.
+    plex_tv: String,
 }
 
 impl MyPlex {
@@ -133,7 +165,7 @@ impl MyPlex {
                 .body(body),
         )
         .await?;
-        Self::with_account(account, client)
+        Self::with_account(account, client, PLEX_TV)
     }
 
     /// Starts a sign-in through the browser. Open [`Pin::auth_url`] and call
@@ -159,14 +191,20 @@ impl MyPlex {
 
     /// Restores a session from a stored account token.
     pub async fn with_token(token: &str, client: &ClientInfo) -> Result<Self> {
+        Self::with_token_at(PLEX_TV, token, client).await
+    }
+
+    /// [`Self::with_token`] against another address than plex.tv, for tests.
+    #[doc(hidden)]
+    pub async fn with_token_at(plex_tv: &str, token: &str, client: &ClientInfo) -> Result<Self> {
         let http = reqwest::Client::builder()
             .default_headers(client.headers(Some(token)))
             .build()?;
-        let account: Account = send(http.get(USER)).await?;
-        Self::with_account(account, client)
+        let account: Account = send(http.get(format!("{plex_tv}{USER}"))).await?;
+        Self::with_account(account, client, plex_tv)
     }
 
-    fn with_account(account: Account, client: &ClientInfo) -> Result<Self> {
+    fn with_account(account: Account, client: &ClientInfo, plex_tv: &str) -> Result<Self> {
         let http = reqwest::Client::builder()
             .default_headers(client.headers(Some(&account.auth_token)))
             .build()?;
@@ -174,6 +212,7 @@ impl MyPlex {
             http,
             client: client.clone(),
             account,
+            plex_tv: plex_tv.to_owned(),
         })
     }
 
@@ -183,8 +222,53 @@ impl MyPlex {
 
     /// The servers this account can use.
     pub async fn servers(&self) -> Result<Vec<Resource>> {
-        let resources: Vec<Resource> = send(self.http.get(RESOURCES)).await?;
+        let url = format!("{}{RESOURCES}", self.plex_tv);
+        let resources: Vec<Resource> = send(self.http.get(url)).await?;
         Ok(resources.into_iter().filter(Resource::is_server).collect())
+    }
+
+    /// The profiles of the Plex Home of this account.
+    pub async fn home_users(&self) -> Result<Vec<HomeUser>> {
+        let url = format!("{}{HOME_USERS}", self.plex_tv);
+        let home: Home = send(self.http.get(url)).await?;
+        Ok(home.users)
+    }
+
+    /// A session as another profile of the Home. `pin` is needed when the
+    /// profile is [protected](HomeUser::protected); a wrong one gives
+    /// [`Error::WrongPin`]. This session stays valid.
+    pub async fn switch_user(&self, user: &HomeUser, pin: Option<&str>) -> Result<Self> {
+        let mut url = url::Url::parse(&format!(
+            "{}{HOME_USERS}/{}/switch",
+            self.plex_tv, user.uuid
+        ))?;
+        if let Some(pin) = pin {
+            url.query_pairs_mut().append_pair("pin", pin);
+        }
+        let response = self.http.post(url).send().await?;
+        let status = response.status();
+        // plex.tv refuses a wrong PIN with one of these; none of them means
+        // that the session itself is no longer valid, which is found out
+        // when the account is restored.
+        let refused = [
+            StatusCode::UNAUTHORIZED,
+            StatusCode::FORBIDDEN,
+            StatusCode::BAD_REQUEST,
+            StatusCode::UNPROCESSABLE_ENTITY,
+        ];
+        if refused.contains(&status) {
+            return Err(Error::WrongPin);
+        }
+        if !status.is_success() {
+            // The address holds the PIN; it does not belong in a log.
+            let url = format!("{}{HOME_USERS}/{}/switch", self.plex_tv, user.uuid);
+            return Err(Error::Status { status, url });
+        }
+        let url = response.url().path().to_owned();
+        let body = response.bytes().await?;
+        let account: Account =
+            serde_json::from_slice(&body).map_err(|source| Error::Decode { url, source })?;
+        Self::with_account(account, &self.client, &self.plex_tv)
     }
 
     /// Tries the connections of `resource` in order of preference and returns

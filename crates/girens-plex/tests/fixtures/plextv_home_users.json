@@ -1,0 +1,58 @@
+{
+ "id": 1,
+ "name": "name-1",
+ "guestUserID": null,
+ "guestUserUUID": null,
+ "guestEnabled": false,
+ "subscription": true,
+ "users": [
+  {
+   "id": 1001,
+   "uuid": "uuid-1",
+   "title": "title-1",
+   "username": "username-1",
+   "email": "user1@example.org",
+   "friendlyName": null,
+   "thumb": "https://plex.tv/users/uuid-1/avatar?c=1",
+   "hasPassword": true,
+   "restricted": false,
+   "updatedAt": 1700000000,
+   "restrictionProfile": null,
+   "admin": true,
+   "guest": false,
+   "protected": false
+  },
+  {
+   "id": 1002,
+   "uuid": "uuid-2",
+   "title": "title-2",
+   "username": "username-2",
+   "email": "user2@example.org",
+   "friendlyName": null,
+   "thumb": "https://plex.tv/users/uuid-2/avatar?c=1",
+   "hasPassword": true,
+   "restricted": false,
+   "updatedAt": 1700000000,
+   "restrictionProfile": null,
+   "admin": false,
+   "guest": false,
+   "protected": true
+  },
+  {
+   "id": 1003,
+   "uuid": "uuid-3",
+   "title": "title-3",
+   "username": null,
+   "email": null,
+   "friendlyName": null,
+   "thumb": "https://plex.tv/users/uuid-3/avatar?c=1",
+   "hasPassword": false,
+   "restricted": true,
+   "updatedAt": 1700000000,
+   "restrictionProfile": "little_kid",
+   "admin": false,
+   "guest": false,
+   "protected": false
+  }
+ ]
+}

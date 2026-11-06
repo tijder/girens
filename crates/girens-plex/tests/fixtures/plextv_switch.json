@@ -1,0 +1,20 @@
+{
+ "id": 1003,
+ "uuid": "uuid-3",
+ "username": null,
+ "title": "title-3",
+ "email": null,
+ "friendlyName": null,
+ "thumb": "https://plex.tv/users/uuid-3/avatar?c=1",
+ "protected": false,
+ "restricted": true,
+ "home": true,
+ "guest": false,
+ "homeAdmin": false,
+ "authToken": "profile-token",
+ "subscription": {
+  "active": true,
+  "status": "Active",
+  "plan": "lifetime"
+ }
+}
