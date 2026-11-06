@@ -29,6 +29,10 @@ use crate::{config, runtime};
 const UI_INTERVAL: f64 = 0.5;
 const TIMELINE_INTERVAL: f64 = 5.0;
 const PING_INTERVAL: u32 = 30;
+/// Has FFmpeg connect again when a stream breaks off, instead of ending
+/// playback as if the file were over.
+const RECONNECT: &str =
+    "reconnect=1,reconnect_streamed=1,reconnect_on_network_error=1,reconnect_delay_max=30";
 /// Seconds an intro plays before it is skipped for a user who wants that.
 const AUTO_SKIP_DELAY: f64 = 5.0;
 /// A file has to go on for this long after an episode, in seconds, for the
@@ -762,6 +766,7 @@ impl Inner {
                 url: path.to_string_lossy().into_owned(),
                 session: None,
                 subtitle_delay: 0.0,
+                segmented: false,
             }
         } else {
             let server = server.ok_or("not connected to a server")?;
@@ -785,6 +790,7 @@ impl Inner {
             url,
             session,
             subtitle_delay,
+            segmented,
         } = opened;
 
         if self.state.borrow().generation != generation {
@@ -821,6 +827,15 @@ impl Inner {
 
         let mpv = self.ensure_mpv()?;
         self.set_mpv("sub-delay", subtitle_delay);
+        // A stream in many short files asks again for a file that failed,
+        // over a new connection each time: a kept one that went stale would
+        // fail them all.
+        let demuxer = if segmented {
+            format!("{RECONNECT},seg_max_retry=5,http_persistent=0")
+        } else {
+            RECONNECT.to_owned()
+        };
+        self.set_mpv("demuxer-lavf-o", demuxer.as_str());
         self.apply_volume();
         // Stay paused until mpv is ready and the start position is set.
         self.set_pause(true);
@@ -1446,6 +1461,10 @@ fn create_mpv() -> Result<Mpv, libmpv2::Error> {
         init.set_property("cache", "yes")?;
         // Decode on the GPU where that is known to work, else in software.
         init.set_property("hwdec", "auto-safe")?;
+        // Give a server that went quiet half a minute, then try again.
+        init.set_property("network-timeout", 30i64)?;
+        init.set_property("stream-lavf-o", RECONNECT)?;
+        init.set_property("demuxer-lavf-o", RECONNECT)?;
         // `GIRENS_MPV_LOG=v` (or any mpv message level) prints mpv's log.
         if let Ok(level) = std::env::var("GIRENS_MPV_LOG") {
             init.set_property("terminal", "yes")?;

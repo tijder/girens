@@ -39,6 +39,8 @@ pub struct Opened {
     pub session: Option<String>,
     /// Seconds to shift the subtitles that are loaded beside the stream.
     pub subtitle_delay: f64,
+    /// Whether the stream comes as a list of many short files.
+    pub segmented: bool,
 }
 
 /// Where a copy of an item comes from.
@@ -267,6 +269,7 @@ impl Server {
                         url: server.part_url(part).to_string(),
                         session: None,
                         subtitle_delay: 0.0,
+                        segmented: false,
                     });
                 }
                 let request = TranscodeRequest {
@@ -281,6 +284,7 @@ impl Server {
                     url: server.transcode_url(item, &request).to_string(),
                     session: Some(request.session),
                     subtitle_delay: 0.0,
+                    segmented: true,
                 })
             }
             // The server converts by itself, without a session to look after.
@@ -288,6 +292,7 @@ impl Server {
                 url: server.stream_url(item, options.direct)?,
                 session: None,
                 subtitle_delay: girens_ister::SUBTITLE_DELAY,
+                segmented: true,
             }),
         }
     }
