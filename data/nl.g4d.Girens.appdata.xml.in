@@ -2,13 +2,13 @@
 <!-- Copyright 2018 Gerben Droogers -->
 <component type="desktop-application">
   <id>nl.g4d.Girens</id>
-  <name>Girens for Plex</name>
+  <name>Girens</name>
   <developer_name translate="no">Gerben Droogers</developer_name>
-  <summary>Watch your Plex content</summary>
+  <summary>Watch what is on your Plex or Ister server</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <description>
-    <p>Girens is a Plex media player client. You can watch and listen to your music, shows and movies with this GTK app.</p>
+    <p>Girens is a media player for Plex and Ister servers. You can watch and listen to your music, shows and movies with this GTK app.</p>
   </description>
   <launchable type="desktop-id">nl.g4d.Girens.desktop</launchable>
   <content_rating type="oars-1.1">
@@ -37,6 +37,7 @@
           <li>Several accounts can be signed in, and you can switch between the profiles of a Plex Home</li>
           <li>Sign in through the browser, also with two-factor authentication</li>
           <li>Ister servers: sign in to one next to your Plex accounts to browse and play its movies, shows and music</li>
+          <li>With an Ister server: skip the intro, go on to the next episode during the credits, and subtitles of DVDs and Blu-rays</li>
           <li>Downloads are shown and played without a connection to the server, and resume where you stopped</li>
           <li>Photo libraries, and a page for each playlist</li>
           <li>Back navigation, search results grouped by kind and a preferences dialog</li>

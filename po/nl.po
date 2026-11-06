@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:51+0100\n"
+"POT-Creation-Date: 2026-11-06 12:56+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -19,21 +19,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.5.4\n"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:5
-msgid "Girens for Plex"
-msgstr "Girens voor Plex"
-
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
-msgid "Watch your Plex content"
-msgstr "Bekijk je Plex-bibliotheek"
+msgid "Watch what is on your Plex or Ister server"
+msgstr "Bekijk wat er op je Plex- of Ister-server staat"
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
-"Girens is a Plex media player client. You can watch and listen to your "
-"music, shows and movies with this GTK app."
+"Girens is a media player for Plex and Ister servers. You can watch and "
+"listen to your music, shows and movies with this GTK app."
 msgstr ""
-"Girens is een mediaspeler voor Plex. Met deze GTK-app bekijk en beluister je "
-"je muziek, series en films."
+"Girens is een mediaspeler voor Plex- en Ister-servers. Met deze GTK-app kun "
+"je je muziek, series en films bekijken en beluisteren."
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The home screen"
@@ -52,12 +48,12 @@ msgid "Girens"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:3
-msgid "Play your Plex movies, shows and music"
-msgstr "Speel je films, series en muziek van Plex af"
+msgid "Play the movies, shows and music of your Plex or Ister server"
+msgstr "Speel de films, series en muziek van je Plex- of Ister-server af"
 
 #: ../data/nl.g4d.Girens.desktop.in:10
-msgid "girens;plex;media;player;"
-msgstr ""
+msgid "girens;plex;ister;media;player;"
+msgstr "girens;plex;ister;media;speler;"
 
 #: ../data/ui/album_header.blp:92 ../data/ui/artist_view.blp:82
 #: ../data/ui/media_box_music.blp:111 ../data/ui/media_box_video_bottom.blp:114
@@ -478,27 +474,27 @@ msgstr "Geen afspeellijsten"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: ../src/player/mod.rs:386
+#: ../src/player/mod.rs:390
 msgid "Nothing to play"
 msgstr "Er is niets om af te spelen"
 
-#: ../src/player/mod.rs:394
+#: ../src/player/mod.rs:398
 msgid "Could not create a play queue"
 msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: ../src/player/mod.rs:529
+#: ../src/player/mod.rs:533
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: ../src/player/mod.rs:724
+#: ../src/player/mod.rs:728
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1287
+#: ../src/player/mod.rs:1302
 msgid "Could not load the subtitles"
 msgstr "Kan de ondertitels niet laden"
 
-#: ../src/player/mod.rs:1399
+#: ../src/player/mod.rs:1414
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
@@ -938,6 +934,22 @@ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 #: ../src/window/playback.rs:120
 msgid "Resume"
 msgstr "Hervatten"
+
+#~ msgid "Girens for Plex"
+#~ msgstr "Girens voor Plex"
+
+#~ msgid "Watch your Plex content"
+#~ msgstr "Bekijk je Plex-bibliotheek"
+
+#~ msgid ""
+#~ "Girens is a Plex media player client. You can watch and listen to your "
+#~ "music, shows and movies with this GTK app."
+#~ msgstr ""
+#~ "Girens is een mediaspeler voor Plex. Met deze GTK-app bekijk en beluister "
+#~ "je je muziek, series en films."
+
+#~ msgid "Play your Plex movies, shows and music"
+#~ msgstr "Speel je films, series en muziek van Plex af"
 
 #~ msgid "Ok"
 #~ msgstr "Oké"

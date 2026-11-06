@@ -14,7 +14,7 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Plex client for GNOME"
+description = "Plex and Ister client for GNOME"
 
 [dependencies]
 girens-ister = { path = "crates/girens-ister" }

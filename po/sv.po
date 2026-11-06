@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:51+0100\n"
+"POT-Creation-Date: 2026-11-06 12:56+0100\n"
 "PO-Revision-Date: 2022-10-31 11:06+0000\n"
 "Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/girens/girens/sv/"
@@ -19,18 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.14.2-dev\n"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:5
-msgid "Girens for Plex"
-msgstr ""
-
 #: ../data/nl.g4d.Girens.appdata.xml.in:7
-msgid "Watch your Plex content"
+msgid "Watch what is on your Plex or Ister server"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
-"Girens is a Plex media player client. You can watch and listen to your "
-"music, shows and movies with this GTK app."
+"Girens is a media player for Plex and Ister servers. You can watch and "
+"listen to your music, shows and movies with this GTK app."
 msgstr ""
 
 #: ../data/nl.g4d.Girens.appdata.xml.in:20
@@ -50,11 +46,11 @@ msgid "Girens"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:3
-msgid "Play your Plex movies, shows and music"
+msgid "Play the movies, shows and music of your Plex or Ister server"
 msgstr ""
 
 #: ../data/nl.g4d.Girens.desktop.in:10
-msgid "girens;plex;media;player;"
+msgid "girens;plex;ister;media;player;"
 msgstr ""
 
 #: ../data/ui/album_header.blp:92 ../data/ui/artist_view.blp:82
@@ -476,27 +472,27 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:386
+#: ../src/player/mod.rs:390
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:394
+#: ../src/player/mod.rs:398
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:529
+#: ../src/player/mod.rs:533
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:724
+#: ../src/player/mod.rs:728
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1287
+#: ../src/player/mod.rs:1302
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: ../src/player/mod.rs:1399
+#: ../src/player/mod.rs:1414
 msgid "Could not change the stream"
 msgstr ""
 

@@ -1,8 +1,8 @@
-# Girens for Plex
+# Girens
 
-Girens is a [Plex](https://www.plex.tv/) media player client. You can watch and listen to your music, shows and movies with this GTK app.
+Girens is a media player for [Plex](https://www.plex.tv/) and [Ister](https://github.com/ister-app) servers. You can watch and listen to your music, shows and movies with this GTK app, with accounts of both kinds signed in next to each other.
 
-Besides Plex, Girens can sign in to an [Ister](https://github.com/ister-app) server: movies, shows, music and playlists are browsed and played in the same way. Downloads are for Plex only, as an Ister server only streams.
+Downloads for watching offline are for Plex only, as an Ister server only streams.
 
 ## Why this app
 
