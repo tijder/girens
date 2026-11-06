@@ -200,6 +200,7 @@ impl ProfileDialog {
             let kind = match account.kind {
                 AccountKind::Plex => gettext("Plex account"),
                 AccountKind::Server => gettext("Server"),
+                AccountKind::Ister => gettext("Ister account"),
             };
             let row = adw::ActionRow::new();
             if account.name.is_empty() {

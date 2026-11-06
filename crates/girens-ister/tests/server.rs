@@ -381,8 +381,14 @@ async fn a_queue_is_made_played_and_reported() {
     assert_eq!(queue_id, queue.id.as_str());
 
     let loaded = server.item(playing.rating_key).await.unwrap();
+    // The episodes of the test data are MPEG-4 video, which the stream
+    // cannot carry as it is: asking for that still gets a conversion.
     let url = server.stream_url(&loaded, true).unwrap();
-    assert!(url.contains("/master.m3u8?direct=true&transcode=false&subtitleFormat=SRT&token=stream-token"));
+    assert!(url.contains("/master.m3u8?direct=false&transcode=true&subtitleFormat=SRT&token=stream-token"));
+    // A movie in HEVC plays as it is, or converted when asked.
+    let movie = server.item("movie-any".into()).await.unwrap();
+    assert!(server.stream_url(&movie, true).unwrap().contains("direct=true&transcode=false"));
+    assert!(server.stream_url(&movie, false).unwrap().contains("direct=false&transcode=true"));
 
     Mock::given(method("POST"))
         .and(path("/api/graphql"))
@@ -391,7 +397,7 @@ async fn a_queue_is_made_played_and_reported() {
         .and(body_partial_json(json!({"variables": {
             "id": queue_id, "item": entry, "progress": 61000, "state": "PLAYING",
             "device": "6f1c2a0e-0000-4000-8000-00000000abcd",
-            "settings": {"direct": true, "transcode": false, "subtitleFormat": "SRT"},
+            "settings": {"direct": false, "transcode": true, "subtitleFormat": "SRT"},
         }})))
         .respond_with(
             ResponseTemplate::new(200).set_body_raw(fixture("UpdatePlayQueue"), "application/json"),

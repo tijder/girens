@@ -304,8 +304,11 @@ impl AlbumHeader {
                 artist,
             );
         }
-        add(&gettext("Sync"), "win.sync-by-id", album.rating_key);
+        if crate::session::Session::current().can_download() {
+            add(&gettext("Sync"), "win.sync-by-id", album.rating_key);
+        }
         imp._menu_button.set_menu_model(Some(&menu));
+        imp._menu_button.set_visible(menu.n_items() > 0);
 
         header.load_cover(album.rating_key, album.thumb.clone());
         header
@@ -325,11 +328,14 @@ impl AlbumHeader {
         imp._play_button.add_css_class("suggested-action");
 
         let menu = gio::Menu::new();
-        let entry = gio::MenuItem::new(Some(&gettext("Sync")), None);
-        let key = playlist.rating_key.as_str().to_variant();
-        entry.set_action_and_target_value(Some("win.sync-by-id"), Some(&key));
-        menu.append_item(&entry);
+        if crate::session::Session::current().can_download() {
+            let entry = gio::MenuItem::new(Some(&gettext("Sync")), None);
+            let key = playlist.rating_key.as_str().to_variant();
+            entry.set_action_and_target_value(Some("win.sync-by-id"), Some(&key));
+            menu.append_item(&entry);
+        }
         imp._menu_button.set_menu_model(Some(&menu));
+        imp._menu_button.set_visible(menu.n_items() > 0);
 
         // A playlist is pictured by the covers of what is in it.
         let image = playlist.composite.clone().or_else(|| playlist.thumb.clone());

@@ -610,6 +610,14 @@ impl PlexWindow {
                     window.login(LoginRequest::Server { url, token }).await;
                 });
             }
+            (Some("add-ister"), _) => {
+                let Some(address) = first else {
+                    return;
+                };
+                glib::spawn_future_local(async move {
+                    window.login(LoginRequest::Ister { address }).await;
+                });
+            }
             (Some("switch"), Some(id)) => {
                 glib::spawn_future_local(async move { window.switch_account(&id).await });
             }

@@ -104,9 +104,37 @@ template $login_view : Box {
 
             Adw.ActionRow {
               use-underline: true;
-              activatable-widget: _connect_user_button;
+              activatable-widget: _connect_url_button;
               Button _connect_url_button {
                 label: _("Connect");
+                styles [
+                  "suggested-action",
+                ]
+              }
+            }
+          };
+        }
+
+        StackPage {
+        name: 'ister';
+        title: _("Ister");
+        child: Adw.PreferencesGroup {
+            margin-top: 10;
+
+            Adw.ActionRow {
+              title: _("Sign in to an Ister server");
+              subtitle: _("Opens your browser to sign in");
+            }
+
+            Adw.EntryRow _ister_address_entry {
+              title: _("The address of the Ister server");
+              input-purpose: url;
+            }
+
+            Adw.ActionRow {
+              activatable-widget: _connect_ister_button;
+              Button _connect_ister_button {
+                label: _("Sign in");
                 styles [
                   "suggested-action",
                 ]

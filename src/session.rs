@@ -9,6 +9,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use girens_plex::myplex::{Account, MyPlex, Resource};
+use girens_ister::auth::{Provider, Tokens, WellKnown};
+use girens_ister::IsterServer;
 use girens_model::{Error, Result};
 use girens_plex::{ClientInfo, PlexServer};
 
@@ -31,6 +33,16 @@ struct State {
     /// member of its Plex Home.
     profile: Option<MyPlex>,
     server: Option<Server>,
+}
+
+/// A sign-in to an Ister server that waits for the browser.
+pub struct IsterLogin {
+    /// The page to sign in at.
+    pub url: String,
+    address: String,
+    well_known: WellKnown,
+    provider: Provider,
+    login: girens_ister::auth::Login,
 }
 
 pub struct Session {
@@ -150,6 +162,17 @@ impl Session {
         self.state.borrow().server.clone()
     }
 
+    /// Whether the account in use can keep copies for watching offline.
+    pub fn can_download(&self) -> bool {
+        match self.server() {
+            Some(server) => server.supports(crate::backend::Feature::Downloads),
+            // Without a connection: by what kind of account it is.
+            None => self
+                .stored_account()
+                .is_some_and(|stored| stored.kind != AccountKind::Ister),
+        }
+    }
+
     /// Identifier of the connected server, or of the one used last when
     /// there is no connection; its cache directory is named after it.
     pub fn machine_identifier(&self) -> Option<String> {
@@ -192,7 +215,6 @@ impl Session {
     /// Puts a token of the account `account_id` in the keyring under `key`
     /// and notes that it is there, for when the account signs out.
     async fn keep_token(
-        &self,
         account_id: &str,
         label: &'static str,
         mut attributes: Vec<(&'static str, String)>,
@@ -226,7 +248,7 @@ impl Session {
                 Ok(Some(token)) => {
                     let key = server_secret(machine, &migration.user);
                     let attributes = vec![("name", String::new()), ("url", String::new())];
-                    self.keep_token(
+                    Self::keep_token(
                         &migration.account,
                         "Girens server token",
                         attributes,
@@ -437,13 +459,196 @@ impl Session {
             ("username", details.username.unwrap_or_default()),
             ("email", details.email.unwrap_or_default()),
         ];
-        self.keep_token(&id, "Girens token", attributes, id.clone(), details.auth_token)
+        Self::keep_token(&id, "Girens token", attributes, id.clone(), details.auth_token)
             .await;
+    }
+
+    // Ister
+
+    fn http() -> reqwest::Client {
+        static CLIENT: std::sync::OnceLock<reqwest::Client> = std::sync::OnceLock::new();
+        CLIENT.get_or_init(reqwest::Client::new).clone()
+    }
+
+    /// Finds the Ister server at `address` and prepares signing in to it in
+    /// the browser. When someone is signed in already, the provider is told
+    /// to ask who it is this time, so that another user can be added.
+    pub async fn start_ister_login(&self, address: String) -> Result<IsterLogin> {
+        let ask_again = self.account_id().is_some();
+        runtime::run(async move {
+            let http = Self::http();
+            let well_known = girens_ister::auth::discover(&http, &address).await?;
+            let provider = Provider::fetch(&http, &well_known.openid_url).await?;
+            let login = girens_ister::auth::Login::start(provider.clone(), ask_again).await?;
+            Ok(IsterLogin {
+                url: login.url.clone(),
+                address,
+                well_known,
+                provider,
+                login,
+            })
+        })
+        .await
+    }
+
+    /// Waits until the user has signed in in the browser, then connects and
+    /// remembers the account. Dropping the future gives up the sign-in.
+    pub async fn finish_ister_login(&self, pending: IsterLogin) -> Result<()> {
+        let IsterLogin {
+            address,
+            well_known,
+            provider,
+            login,
+            ..
+        } = pending;
+        let tokens = runtime::run(async move { login.finish(&Self::http()).await }).await?;
+        let server = self.open_ister(well_known, provider, tokens, None).await?;
+
+        let user = server.user().clone();
+        let id = store::ister_account_id(server.machine_identifier(), &user.id);
+        let mut stored = store::account(&id).unwrap_or_default();
+        stored.id.clone_from(&id);
+        stored.kind = AccountKind::Ister;
+        stored.name = user.name;
+        stored.profile = None;
+        stored.server = Some(StoredServer {
+            uuid: server.machine_identifier().to_owned(),
+            url: address,
+        });
+        store::save_account(&stored);
+        self.use_account(&id);
+        self.set_ister_server(&id, server).await;
+        Ok(())
+    }
+
+    /// Connects to an Ister server. `account` is whose refresh token to
+    /// replace in the keyring when the provider hands out a new one; a
+    /// sign-in does not know that yet and keeps the token itself.
+    async fn open_ister(
+        &self,
+        well_known: WellKnown,
+        provider: Provider,
+        tokens: Tokens,
+        account: Option<String>,
+    ) -> Result<IsterServer> {
+        let keeper: girens_ister::TokenKeeper = std::sync::Arc::new(move |token: &str| {
+            let (Some(account), token) = (account.clone(), token.to_owned()) else {
+                return;
+            };
+            // Called from the network threads; the keyring is used from the
+            // main loop.
+            glib::MainContext::default().invoke(move || {
+                glib::spawn_future_local(async move {
+                    Self::keep_ister_token(&account, token).await;
+                });
+            });
+        });
+        // Titles in the languages of the desktop, most wanted first.
+        let languages = glib::language_names()
+            .iter()
+            .filter_map(|name| name.split(['_', '.', '@']).next())
+            .filter(|language| language.len() == 2 || language.len() == 3)
+            .map(str::to_owned)
+            .fold(Vec::new(), |mut seen: Vec<String>, language| {
+                if !seen.contains(&language) {
+                    seen.push(language);
+                }
+                seen
+            });
+        let device = self.client.identifier.clone();
+        runtime::run(async move {
+            IsterServer::connect(
+                Self::http(),
+                well_known,
+                provider,
+                tokens,
+                languages,
+                device,
+                keeper,
+            )
+            .await
+        })
+        .await
+    }
+
+    async fn keep_ister_token(account_id: &str, token: String) {
+        let attributes = vec![("kind", "ister".to_owned())];
+        Self::keep_token(
+            account_id,
+            "Girens Ister token",
+            attributes,
+            account_id.to_owned(),
+            token,
+        )
+        .await;
+    }
+
+    async fn set_ister_server(&self, account_id: &str, server: IsterServer) {
+        let token = runtime::run({
+            let server = server.clone();
+            async move { server.refresh_token().await }
+        })
+        .await;
+        self.state.borrow_mut().server = Some(server.into());
+        Self::keep_ister_token(account_id, token).await;
+    }
+
+    /// Continues the session of an Ister account with the token kept from
+    /// last time. [`Error::Unauthorized`] means it ran out: sign in again.
+    async fn connect_stored_ister(&self, stored: store::Account) -> Result<bool> {
+        let Some(server) = stored.server.clone() else {
+            return Ok(false);
+        };
+        let Some(refresh) = self.token(&stored.id).await else {
+            return Err(Error::Unauthorized);
+        };
+        let (well_known, provider, tokens) = runtime::run(async move {
+            let http = Self::http();
+            let well_known = girens_ister::auth::discover(&http, &server.url).await?;
+            let provider = Provider::fetch(&http, &well_known.openid_url).await?;
+            let tokens = girens_ister::auth::refresh(&http, &provider, &refresh).await?;
+            Ok::<_, Error>((well_known, provider, tokens))
+        })
+        .await?;
+        let connected = self
+            .open_ister(well_known, provider, tokens, Some(stored.id.clone()))
+            .await?;
+        // Someone else may have become active while this was under way.
+        if self.account_id().as_deref() != Some(&stored.id) {
+            return Ok(false);
+        }
+        self.set_ister_server(&stored.id, connected).await;
+        Ok(true)
+    }
+
+    /// Signs the Ister session of `stored` out at its provider, as far as
+    /// that can be reached.
+    async fn end_ister_session(&self, stored: &store::Account) {
+        let (Some(server), Some(refresh)) = (stored.server.clone(), self.token(&stored.id).await)
+        else {
+            return;
+        };
+        let ended = runtime::run(async move {
+            let http = Self::http();
+            let well_known = girens_ister::auth::discover(&http, &server.url).await?;
+            let provider = Provider::fetch(&http, &well_known.openid_url).await?;
+            girens_ister::auth::revoke(&http, &provider, &refresh).await
+        })
+        .await;
+        if let Err(err) = ended {
+            eprintln!("Could not sign out at the provider: {err}");
+        }
     }
 
     /// Connects to the server the account in use used last. `Ok(false)`
     /// means there is none, or the active user has no token for it.
     pub async fn connect_stored_server(&self) -> Result<bool> {
+        if let Some(stored) = self
+            .stored_account()
+            .filter(|stored| stored.kind == AccountKind::Ister)
+        {
+            return self.connect_stored_ister(stored).await;
+        }
         let (Some(server), Some(user)) = (
             self.stored_account().and_then(|stored| stored.server),
             self.user_key(),
@@ -526,7 +731,7 @@ impl Session {
         let token = server.token().to_owned();
         self.state.borrow_mut().server = Some(server.into());
         let key = server_secret(&machine, &user);
-        self.keep_token(&account_id, "Girens server token", attributes, key, token)
+        Self::keep_token(&account_id, "Girens server token", attributes, key, token)
             .await;
     }
 
@@ -592,7 +797,7 @@ impl Session {
         }
         if !own {
             let key = profile_secret(&id, &profile.uuid);
-            self.keep_token(&id, "Girens profile token", Vec::new(), key, token)
+            Self::keep_token(&id, "Girens profile token", Vec::new(), key, token)
                 .await;
         }
         Ok(())
@@ -611,6 +816,9 @@ impl Session {
         let Some(stored) = store::account(id) else {
             return;
         };
+        if stored.kind == AccountKind::Ister {
+            self.end_ister_session(&stored).await;
+        }
         let mut keys = stored.secrets.clone();
         // Also when the list of tokens was never written.
         keys.push(stored.id.clone());

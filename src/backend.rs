@@ -4,6 +4,7 @@
 //! cannot do is told by [`Server::supports`], so that the interface can
 //! leave it out.
 
+use girens_ister::IsterServer;
 use girens_model::model::{Item, ItemKind, LibrarySection, Part, SortOption};
 use girens_model::{ItemId, Page, PlayQueue, PlaybackState, Result};
 use girens_plex::playback::TranscodeRequest;
@@ -50,6 +51,7 @@ pub struct Download {
 #[derive(Clone)]
 pub enum Server {
     Plex(PlexServer),
+    Ister(IsterServer),
 }
 
 /// Calls the same method on whichever server this is.
@@ -57,6 +59,7 @@ macro_rules! each {
     ($self:ident, $server:ident => $call:expr) => {
         match $self {
             Server::Plex($server) => $call,
+            Server::Ister($server) => $call,
         }
     };
 }
@@ -67,17 +70,38 @@ impl From<PlexServer> for Server {
     }
 }
 
+impl From<IsterServer> for Server {
+    fn from(server: IsterServer) -> Self {
+        Server::Ister(server)
+    }
+}
+
 impl Server {
-    pub fn as_plex(&self) -> Option<&PlexServer> {
+    pub fn as_ister(&self) -> Option<&IsterServer> {
         match self {
-            Server::Plex(server) => Some(server),
+            Server::Ister(server) => Some(server),
+            Server::Plex(_) => None,
         }
     }
 
     pub fn supports(&self, feature: Feature) -> bool {
         match (self, feature) {
             (Server::Plex(_), _) => true,
+            // Ister only hands out streams, and decides their sizes itself.
+            (Server::Ister(_), Feature::Downloads | Feature::TranscodeResolution) => false,
         }
+    }
+
+    /// Whether the tracks mpv finds in a stream are those of the file in the
+    /// same order, rather than numbered as in the file.
+    pub fn streams_in_order(&self) -> bool {
+        matches!(self, Server::Ister(_))
+    }
+
+    /// Whether the server forgets a player that does not report, also while
+    /// it is paused.
+    pub fn wants_reports_when_paused(&self) -> bool {
+        matches!(self, Server::Ister(_))
     }
 
     /// What tells this server from others; also names its folder in the
@@ -94,6 +118,10 @@ impl Server {
     pub fn host(&self) -> String {
         match self {
             Server::Plex(server) => server.base_url().host_str().unwrap_or_default().to_owned(),
+            Server::Ister(server) => reqwest::Url::parse(server.api_url())
+                .ok()
+                .and_then(|url| url.host_str().map(str::to_owned))
+                .unwrap_or_default(),
         }
     }
 
@@ -236,6 +264,12 @@ impl Server {
                     subtitle_delay: 0.0,
                 })
             }
+            // The server converts by itself, without a session to look after.
+            Server::Ister(server) => Ok(Opened {
+                url: server.stream_url(item, options.direct)?,
+                session: None,
+                subtitle_delay: girens_ister::SUBTITLE_DELAY,
+            }),
         }
     }
 
@@ -266,17 +300,26 @@ impl Server {
                     })
                 }
             },
+            Server::Ister(_) => Err(girens_model::Error::Server(
+                "this server has no files to download".into(),
+            )),
         }
     }
 
     /// Keeps the conversion of what is playing going.
     pub async fn keep_stream(&self, item: &Item, session: &str) -> Result<()> {
-        each!(self, server => server.ping_transcode_session(item, session).await)
+        match self {
+            Server::Plex(server) => server.ping_transcode_session(item, session).await,
+            Server::Ister(_) => Ok(()),
+        }
     }
 
     /// Lets the server stop converting.
     pub async fn end_stream(&self, item: &Item, session: &str) -> Result<()> {
-        each!(self, server => server.stop_transcode_session(item, session).await)
+        match self {
+            Server::Plex(server) => server.stop_transcode_session(item, session).await,
+            Server::Ister(_) => Ok(()),
+        }
     }
 
     /// Reports where playback of `item`, an entry of a play queue, is.

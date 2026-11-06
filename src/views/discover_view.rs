@@ -179,7 +179,8 @@ impl DiscoverView {
                 Self::fill(
                     &seasons_row.0,
                     &seasons_row.1,
-                    of(&[ItemKind::Episode, ItemKind::Season]),
+                    // Plex lists the new seasons and episodes, Ister the shows.
+                    of(&[ItemKind::Episode, ItemKind::Season, ItemKind::Show]),
                 );
                 Self::fill(&movies_row.0, &movies_row.1, of(&[ItemKind::Movie]));
                 Self::fill(&music_row.0, &music_row.1, of(&[ItemKind::Album]));

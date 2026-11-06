@@ -667,6 +667,7 @@ name = "girens"
 version = "3.0.0"
 dependencies = [
  "gettext-rs",
+ "girens-ister",
  "girens-model",
  "girens-plex",
  "gtk4",
@@ -676,6 +677,7 @@ dependencies = [
  "libsecret",
  "mpris-server",
  "pkg-config",
+ "reqwest",
  "serde",
  "serde_json",
  "tokio",

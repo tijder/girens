@@ -273,7 +273,8 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
     }
     let offline = crate::sync::Sync::current().is_downloaded(item.rating_key);
     // Photos are looked at, not kept offline.
-    if !offline && item.kind != ItemKind::Photo {
+    let can_download = crate::session::Session::current().can_download();
+    if !offline && can_download && item.kind != ItemKind::Photo {
         add(&gettext("Sync"), "win.sync-by-id", item.rating_key);
     }
     if matches!(

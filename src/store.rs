@@ -99,6 +99,8 @@ pub enum AccountKind {
     Plex,
     /// A server entered by address and token.
     Server,
+    /// Signed in to an Ister server, at the provider it names.
+    Ister,
 }
 
 /// A profile of a Plex Home, as far as needed to offer it without plex.tv.
@@ -123,7 +125,8 @@ pub struct StoredServer {
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Account {
-    /// The uuid on plex.tv, or `server:<machine id>`.
+    /// The uuid on plex.tv, `server:<machine id>` or
+    /// `ister:<machine id>:<user id>`.
     #[serde(skip)]
     pub id: String,
     pub kind: AccountKind,
@@ -159,6 +162,11 @@ impl Account {
 /// Id of the account of a server that was entered by address.
 pub fn server_account_id(machine_identifier: &str) -> String {
     format!("server:{machine_identifier}")
+}
+
+/// Id of the account of a user of an Ister server.
+pub fn ister_account_id(machine_identifier: &str, user: &str) -> String {
+    format!("ister:{machine_identifier}:{user}")
 }
 
 fn accounts_in(config: &Map<String, Value>) -> Vec<Account> {

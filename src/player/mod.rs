@@ -223,6 +223,7 @@ impl Player {
         glib::timeout_add_seconds_local(PING_INTERVAL, move || match weak.upgrade() {
             Some(inner) => {
                 inner.ping_session();
+                inner.report_when_paused();
                 glib::ControlFlow::Continue
             }
             None => glib::ControlFlow::Break,
@@ -968,6 +969,23 @@ impl Inner {
         });
     }
 
+    /// Tells a server that would otherwise think the player gone that it
+    /// is only paused.
+    fn report_when_paused(&self) {
+        let wanted = Session::current()
+            .server()
+            .is_some_and(|server| server.wants_reports_when_paused());
+        let paused = self
+            .state
+            .borrow()
+            .current
+            .as_ref()
+            .is_some_and(|playing| playing.started && playing.paused);
+        if wanted && paused {
+            self.report_timeline(PlaybackState::Paused);
+        }
+    }
+
     fn ping_session(&self) {
         let (Some(server), Some((loading, session))) = (
             Session::current().server(),
@@ -1057,8 +1075,23 @@ impl Inner {
         };
 
         if let Some(stream) = loading.selected_stream(StreamKind::Audio) {
-            let index = stream.index.map(i64::from);
-            if let Some(id) = find("audio", &|track| index.is_some() && track.ff_index == index) {
+            let id = if server.streams_in_order() {
+                // The stream offers the audio of the file one by one.
+                loading
+                    .streams(StreamKind::Audio)
+                    .position(|other| other.id == stream.id)
+                    .and_then(|position| {
+                        tracks
+                            .iter()
+                            .filter(|track| track.kind == "audio")
+                            .nth(position)
+                    })
+                    .map(|track| track.id)
+            } else {
+                let index = stream.index.map(i64::from);
+                find("audio", &|track| index.is_some() && track.ff_index == index)
+            };
+            if let Some(id) = id {
                 self.set_mpv("aid", id);
             }
         }

@@ -58,6 +58,8 @@ impl PlexWindow {
             // Unless the connection was dropped again because the profile
             // it was made for could not be continued.
             Ok(true) if session.server().is_some() => self.load_account_details().await,
+            // The session at an Ister server ran out: sign in again there.
+            Err(Error::Unauthorized) if self.offer_ister_login() => {}
             other => {
                 let unreachable = matches!(&other, Err(err) if err.is_network());
                 if let Err(err) = other {
@@ -72,6 +74,21 @@ impl PlexWindow {
         }
     }
 
+    /// Shows the sign-in page for the Ister server of the account in use,
+    /// when that is what it is.
+    fn offer_ister_login(&self) -> bool {
+        let stored = self.imp().session.stored_account();
+        let Some(server) = stored
+            .filter(|stored| stored.kind == crate::store::AccountKind::Ister)
+            .and_then(|stored| stored.server)
+        else {
+            return false;
+        };
+        self.show_login();
+        self.imp()._login_view.offer_ister(&server.url);
+        true
+    }
+
     pub(super) async fn login(&self, request: LoginRequest) {
         let imp = self.imp();
         let session = imp.session.clone();
@@ -80,6 +97,7 @@ impl PlexWindow {
         let in_browser = matches!(request, LoginRequest::Browser);
         let result = match request {
             LoginRequest::Browser => self.browser_login().await,
+            LoginRequest::Ister { address } => self.ister_login(address).await,
             LoginRequest::Account { login, password } => session.login(login, password).await,
             LoginRequest::Server { url, token } => {
                 self.show_loading(&gettext_f("Connecting to {}.", &[&url]));
@@ -140,6 +158,52 @@ impl PlexWindow {
         Err(Error::Unauthorized)
     }
 
+    /// Signs in to an Ister server: opens the page of its provider in the
+    /// browser and waits until the user is done there. Leaving the waiting
+    /// page cancels it.
+    async fn ister_login(&self, address: String) -> girens_model::Result<()> {
+        let imp = self.imp();
+        let session = imp.session.clone();
+        self.show_loading(&gettext_f("Connecting to {}.", &[&address]));
+        let pending = session.start_ister_login(address).await?;
+        #[cfg(debug_assertions)]
+        let opened = crate::debug::take_login_url(&pending.url);
+        #[cfg(not(debug_assertions))]
+        let opened = false;
+        if !opened {
+            gtk::UriLauncher::new(&pending.url).launch(
+                Some(self),
+                gtk::gio::Cancellable::NONE,
+                |result| {
+                    if let Err(err) = result {
+                        eprintln!("Could not open the browser: {err}");
+                    }
+                },
+            );
+        }
+        self.show_loading(&gettext("Waiting for you to sign in in the browser…"));
+
+        let signed_in = session.account_id();
+        let cancelled = async {
+            loop {
+                glib::timeout_future_seconds(1).await;
+                let waiting = imp
+                    .frame_stack
+                    .visible_child()
+                    .is_some_and(|child| child == *imp._loading_view.upcast_ref::<gtk::Widget>());
+                // Cancelled from the waiting page, or another account was
+                // chosen meanwhile.
+                if !waiting || session.account_id() != signed_in {
+                    return;
+                }
+            }
+        };
+        tokio::select! {
+            result = session.finish_ister_login(pending) => result,
+            () = cancelled => Err(Error::Unauthorized),
+        }
+    }
+
     /// Connects to the server used last, or else to the first server of the
     /// account that answers. On failure the loading page explains why and
     /// offers to log out.
@@ -151,6 +215,8 @@ impl PlexWindow {
             match session.connect_stored_server().await {
                 Ok(true) => return true,
                 Ok(false) => {}
+                // The session at an Ister server ran out: sign in again.
+                Err(Error::Unauthorized) if self.offer_ister_login() => return false,
                 Err(err) => {
                     eprintln!("Could not connect to {url}: {err}");
                     self.show_loading(&gettext_f("Connecting to {} failed.", &[&url]));
@@ -291,15 +357,17 @@ impl PlexWindow {
             async move { sync::push_progress(&server, &user).await }
         });
 
+        let downloads = server.supports(crate::backend::Feature::Downloads);
+        imp._sync_button.set_visible(downloads);
         let sections = {
             let server = server.clone();
             runtime::run(async move { server.sections().await }).await
         };
         match sections {
-            Ok(sections) => imp._sidebar_box.set_sections(&sections),
+            Ok(sections) => imp._sidebar_box.set_sections(&sections, downloads),
             Err(err) => {
                 crate::notify::failure(&crate::i18n::gettext("Could not load the libraries"), &err);
-                imp._sidebar_box.set_sections(&[]);
+                imp._sidebar_box.set_sections(&[], downloads);
             }
         }
         // Until plex.tv has answered, this server is the only one known.

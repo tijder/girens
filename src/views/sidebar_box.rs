@@ -137,8 +137,9 @@ impl SidebarBox {
     }
 
     /// Rebuilds the list: Player (hidden until a video plays), Home,
-    /// Playlists and one row per movie, show and music library.
-    pub fn set_sections(&self, sections: &[LibrarySection]) {
+    /// Playlists, Downloads (with `downloads`, for a server that has any)
+    /// and one row per movie, show and music library.
+    pub fn set_sections(&self, sections: &[LibrarySection], downloads: bool) {
         let imp = self.imp();
         imp._section_list.remove_all();
         let mut destinations = Vec::new();
@@ -158,11 +159,13 @@ impl SidebarBox {
             "view-list-symbolic",
             Destination::Playlists,
         );
-        add(
-            &gettext("Downloads"),
-            "folder-download-symbolic",
-            Destination::Downloads,
-        );
+        if downloads {
+            add(
+                &gettext("Downloads"),
+                "folder-download-symbolic",
+                Destination::Downloads,
+            );
+        }
         for section in sections {
             let icon = match section.kind {
                 ItemKind::Movie => "camera-video-symbolic",

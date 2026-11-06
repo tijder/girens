@@ -62,6 +62,18 @@ fn render(window: &gtk::Window) -> Option<gdk::Texture> {
     Some(window.renderer()?.render_texture(&node, None))
 }
 
+/// With `GIRENS_DEBUG_LOGIN_URL=<file>` the page to sign in at is written to
+/// that file instead of opened in the browser, for a script to sign in.
+pub fn take_login_url(url: &str) -> bool {
+    let Ok(file) = std::env::var("GIRENS_DEBUG_LOGIN_URL") else {
+        return false;
+    };
+    if let Err(err) = std::fs::write(&file, url) {
+        eprintln!("Could not write {file}: {err}");
+    }
+    true
+}
+
 /// Seconds between the actions of `GIRENS_DEBUG_ACTIVATE`.
 const ACTIVATE_INTERVAL: u64 = 3;
 
@@ -71,7 +83,7 @@ const ACTIVATE_INTERVAL: u64 = 3;
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
 /// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync|accounts|pin|wrong-pin` that
 /// dialog is opened; with `GIRENS_DEBUG_ACCOUNT="switch 1"` (or `sign-out 1`,
-/// `add-server <url> <token>`) that is done with the accounts, once. Lets
+/// `add-server <url> <token>`, `add-ister <address>`) that is done with the accounts, once. Lets
 /// scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {

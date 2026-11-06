@@ -857,6 +857,14 @@ impl IsterServer {
             .parts()
             .next()
             .ok_or(Error::NotFound(item.rating_key))?;
+        // The stream carries a video as it is only in these formats;
+        // anything else has to be converted to be seen at all.
+        let fits = part
+            .streams
+            .iter()
+            .filter(|stream| stream.stream_type == 1)
+            .all(|stream| matches!(stream.codec.as_deref(), Some("h264" | "hevc")));
+        let direct = direct && fits;
         locked(&self.inner.opened).insert(
             item.rating_key,
             Opened {

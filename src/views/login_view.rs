@@ -1,4 +1,5 @@
-//! The sign-in page: plex.tv account, or server address and token.
+//! The sign-in page: plex.tv account, Plex server address and token, or
+//! the address of an Ister server.
 
 use std::cell::RefCell;
 
@@ -18,6 +19,10 @@ pub enum LoginRequest {
     Server {
         url: String,
         token: String,
+    },
+    /// Sign in to the Ister server at `address`, in the browser.
+    Ister {
+        address: String,
     },
 }
 
@@ -43,6 +48,12 @@ mod imp {
         pub _server_token_entry: TemplateChild<adw::EntryRow>,
         #[template_child]
         pub _connect_url_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _ister_address_entry: TemplateChild<adw::EntryRow>,
+        #[template_child]
+        pub _connect_ister_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub stack: TemplateChild<gtk::Stack>,
         pub on_request: RefCell<Option<Box<dyn Fn(LoginRequest)>>>,
         pub on_cancel: RefCell<Option<Box<dyn Fn()>>>,
     }
@@ -123,6 +134,21 @@ mod imp {
             self._connect_url_button.connect_clicked(move |_| submit());
             self._server_token_entry
                 .connect_entry_activated(move |_| submit_server());
+
+            let submit_ister = glib::clone!(
+                #[weak]
+                view,
+                move || {
+                    let address = view.imp()._ister_address_entry.text().trim().to_owned();
+                    if !address.is_empty() {
+                        view.request(LoginRequest::Ister { address });
+                    }
+                }
+            );
+            let submit = submit_ister.clone();
+            self._connect_ister_button.connect_clicked(move |_| submit());
+            self._ister_address_entry
+                .connect_entry_activated(move |_| submit_ister());
         }
     }
 
@@ -137,13 +163,14 @@ glib::wrapper! {
 }
 
 impl LoginView {
-    fn entries(&self) -> [adw::EntryRow; 4] {
+    fn entries(&self) -> [adw::EntryRow; 5] {
         let imp = self.imp();
         [
             imp._username_entry.get(),
             imp._password_entry.get().upcast(),
             imp._server_url_entry.get(),
             imp._server_token_entry.get(),
+            imp._ister_address_entry.get(),
         ]
     }
 
@@ -174,9 +201,18 @@ impl LoginView {
         imp._browser_button.set_sensitive(!busy);
         imp._connect_user_button.set_sensitive(!busy);
         imp._connect_url_button.set_sensitive(!busy);
+        imp._connect_ister_button.set_sensitive(!busy);
         for entry in self.entries() {
             entry.set_sensitive(!busy);
         }
+    }
+
+    /// Opens the form for an Ister server with its address filled in, to
+    /// sign in again where a session ran out.
+    pub fn offer_ister(&self, address: &str) {
+        let imp = self.imp();
+        imp._ister_address_entry.set_text(address);
+        imp.stack.set_visible_child_name("ister");
     }
 
     /// Marks the fields after a failed attempt.
