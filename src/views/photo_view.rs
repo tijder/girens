@@ -1,12 +1,12 @@
 //! One photo, as large as the window allows, with the others of its album
 //! one step away.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::{gdk, gio, glib};
 
 use crate::i18n::gettext;
@@ -179,7 +179,7 @@ impl PhotoView {
                         }
                         (None, None) => Vec::new(),
                     };
-                    Ok::<_, girens_plex::Error>((photo, album))
+                    Ok::<_, girens_model::Error>((photo, album))
                 })
                 .await;
                 let (photo, album) = match loaded {
@@ -289,10 +289,8 @@ impl PhotoView {
         let scale = self.scale_factor().clamp(1, 2) as u32;
         let mut texture = Err(gettext("The photo has no picture"));
         for source in sources {
-            let url = server
-                .image_url(&source, WIDTH * scale, HEIGHT * scale)
-                .to_string();
-            texture = match runtime::run(async move { girens_plex::download(&url).await }).await {
+            let url = server.image_url(&source, WIDTH * scale, HEIGHT * scale);
+            texture = match runtime::run(async move { girens_model::net::download(&url).await }).await {
                 // Decoding a large photo takes a moment; not on the main
                 // thread.
                 Ok(bytes) => gio::spawn_blocking(move || {

@@ -3,7 +3,7 @@
 use std::cell::RefCell;
 
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::prelude::*;
 use gtk::{glib, CompositeTemplate};
 
@@ -86,7 +86,7 @@ impl DiscoverView {
     }
 
     /// Shows the new state of an item, e.g. after it was marked as played.
-    pub fn update_item(&self, item: &girens_plex::model::Item) {
+    pub fn update_item(&self, item: &girens_model::model::Item) {
         for list in self.lists() {
             list.update_item(item);
         }

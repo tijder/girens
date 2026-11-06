@@ -1,7 +1,7 @@
 //! Moving between pages, with a history to go back through.
 
 use super::*;
-use girens_plex::model::LibrarySection;
+use girens_model::model::LibrarySection;
 
 /// A page of the main view and what it shows.
 #[derive(Debug, Clone)]

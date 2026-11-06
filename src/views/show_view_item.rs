@@ -3,7 +3,7 @@
 use std::cell::RefCell;
 
 use adw::subclass::prelude::*;
-use girens_plex::model::Item;
+use girens_model::model::Item;
 use gtk::prelude::*;
 use gtk::{glib, CompositeTemplate};
 

@@ -1,10 +1,10 @@
 //! The grid of one library, of the playlists, or of an album of photos.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::subclass::prelude::*;
-use girens_plex::model::{ItemKind, LibrarySection};
+use girens_model::model::{ItemKind, LibrarySection};
 use gtk::prelude::*;
 use gtk::{glib, CompositeTemplate};
 
@@ -216,7 +216,7 @@ impl SectionView {
     }
 
     /// Shows the new state of an item, e.g. after it was marked as played.
-    pub fn update_item(&self, item: &girens_plex::model::Item) {
+    pub fn update_item(&self, item: &girens_model::model::Item) {
         self.imp()._section_flow.update_item(item);
     }
 

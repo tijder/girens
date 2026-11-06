@@ -1,12 +1,12 @@
 //! Offline sync: the dialog with synced items, the options for syncing a
 //! show, and the popover that lists running downloads.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::{glib, CompositeTemplate};
 
 use crate::session::Session;

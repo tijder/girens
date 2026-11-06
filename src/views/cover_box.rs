@@ -1,10 +1,10 @@
 //! A cover tile: poster, title, watched badge, progress and context menu.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CompositeTemplate};
 

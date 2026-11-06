@@ -1,7 +1,7 @@
 //! The play queue: a list of what is coming, to jump to another entry.
 
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::prelude::*;
 use gtk::{glib, pango};
 

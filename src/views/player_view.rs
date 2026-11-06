@@ -1,13 +1,13 @@
 //! The video page: the picture with its overlay controls, details of what is
 //! playing, audio and subtitle choice and what is on deck in the library.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::time::Instant;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind, StreamKind};
+use girens_model::model::{Item, ItemKind, StreamKind};
 use gtk::{gdk, glib, CompositeTemplate};
 
 use super::{List, MediaBoxVideoBottom, MediaBoxVideoTop, MediaControls};
@@ -410,7 +410,7 @@ impl PlayerView {
 
     fn show_streams(&self, item: &Item) {
         let imp = self.imp();
-        let title = |stream: &girens_plex::model::Stream| {
+        let title = |stream: &girens_model::model::Stream| {
             stream
                 .display_title
                 .clone()

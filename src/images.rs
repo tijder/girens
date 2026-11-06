@@ -2,13 +2,13 @@
 //! used (`$XDG_CACHE_HOME/<server id>/thumb_<key>`), decoded off the main
 //! thread and kept in a small in-memory cache.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::RefCell;
 use std::collections::{HashMap, VecDeque};
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
-use girens_plex::PlexServer;
+use crate::backend::Server;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib};
 use tokio::sync::Semaphore;
@@ -76,7 +76,7 @@ fn scale() -> u32 {
 }
 
 /// Directory with everything cached for `server`.
-pub fn cache_dir(server: &PlexServer) -> PathBuf {
+pub fn cache_dir(server: &Server) -> PathBuf {
     cache_dir_of(server.machine_identifier())
 }
 
@@ -110,7 +110,7 @@ fn file_name(key: ItemId, scale: u32) -> String {
 
 /// A cached cover of the item, whatever its resolution; for other programs
 /// such as the desktop's media controls.
-pub fn cached_cover(server: &PlexServer, key: ItemId) -> Option<PathBuf> {
+pub fn cached_cover(server: &Server, key: ItemId) -> Option<PathBuf> {
     let dir = cache_dir(server);
     [2, 1]
         .into_iter()
@@ -120,7 +120,7 @@ pub fn cached_cover(server: &PlexServer, key: ItemId) -> Option<PathBuf> {
 
 /// The image `thumb` (an item's `thumb`, `composite`, …), cached under `key`.
 /// Returns `None` when it cannot be loaded; the reason is logged.
-pub async fn cover(server: &PlexServer, key: ItemId, thumb: &str) -> Option<gdk::Texture> {
+pub async fn cover(server: &Server, key: ItemId, thumb: &str) -> Option<gdk::Texture> {
     let scale = scale();
     let path = cache_dir(server).join(file_name(key, scale));
     if let Some(texture) = MEMORY.with_borrow(|cache| cache.textures.get(&path).cloned()) {
@@ -141,7 +141,7 @@ pub async fn cover(server: &PlexServer, key: ItemId, thumb: &str) -> Option<gdk:
                 .acquire()
                 .await
                 .map_err(|err| err.to_string())?;
-            let bytes = girens_plex::download(&url)
+            let bytes = girens_model::net::download(&url)
                 .await
                 .map_err(|err| err.to_string())?;
             // Write next to the target and rename, so that a partial download

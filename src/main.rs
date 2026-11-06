@@ -2,6 +2,7 @@
 #![allow(clippy::type_complexity)]
 
 mod application;
+mod backend;
 mod config;
 #[cfg(debug_assertions)]
 mod debug;

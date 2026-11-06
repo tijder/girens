@@ -106,7 +106,7 @@ impl PlexWindow {
 
     /// Signs in through the browser: opens plex.tv and waits until the user
     /// has approved there. Logging out from the waiting page cancels it.
-    async fn browser_login(&self) -> girens_plex::Result<()> {
+    async fn browser_login(&self) -> girens_model::Result<()> {
         let imp = self.imp();
         let session = imp.session.clone();
         let signed_in = session.account_id();
@@ -362,7 +362,7 @@ impl PlexWindow {
                 .set_icon_name(Some("avatar-default-symbolic"));
             return;
         };
-        match runtime::run(async move { girens_plex::download(&url).await }).await {
+        match runtime::run(async move { girens_model::net::download(&url).await }).await {
             Ok(bytes) => match gdk::Texture::from_bytes(&glib::Bytes::from_owned(bytes)) {
                 Ok(texture) => imp._avatar_image.set_paintable(Some(&texture)),
                 Err(err) => eprintln!("Could not decode the avatar: {err}"),
@@ -647,7 +647,7 @@ impl PlexWindow {
             let Some(server) = imp.session.server() else {
                 break;
             };
-            let name = server.base_url().host_str().unwrap_or_default().to_owned();
+            let name = server.host();
             match runtime::run(async move { server.sections().await }).await {
                 Ok(_) => {
                     if waiting {

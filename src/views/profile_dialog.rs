@@ -89,7 +89,7 @@ fn avatar(name: &str, thumb: Option<&str>) -> adw::Avatar {
             #[weak]
             avatar,
             async move {
-                let Ok(bytes) = runtime::run(async move { girens_plex::download(&url).await }).await
+                let Ok(bytes) = runtime::run(async move { girens_model::net::download(&url).await }).await
                 else {
                     return;
                 };

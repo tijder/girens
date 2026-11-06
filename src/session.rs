@@ -9,7 +9,10 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use girens_plex::myplex::{Account, MyPlex, Resource};
-use girens_plex::{ClientInfo, Error, PlexServer, Result};
+use girens_model::{Error, Result};
+use girens_plex::{ClientInfo, PlexServer};
+
+use crate::backend::Server;
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
@@ -27,7 +30,7 @@ struct State {
     /// The plex.tv session of the active profile: `account` itself, or a
     /// member of its Plex Home.
     profile: Option<MyPlex>,
-    server: Option<PlexServer>,
+    server: Option<Server>,
 }
 
 pub struct Session {
@@ -143,7 +146,7 @@ impl Session {
         self.state.borrow().user.clone()
     }
 
-    pub fn server(&self) -> Option<PlexServer> {
+    pub fn server(&self) -> Option<Server> {
         self.state.borrow().server.clone()
     }
 
@@ -521,7 +524,7 @@ impl Session {
             ("url", url),
         ];
         let token = server.token().to_owned();
-        self.state.borrow_mut().server = Some(server);
+        self.state.borrow_mut().server = Some(server.into());
         let key = server_secret(&machine, &user);
         self.keep_token(&account_id, "Girens server token", attributes, key, token)
             .await;

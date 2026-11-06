@@ -3,7 +3,7 @@
 
 use std::rc::Rc;
 
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 use mpris_server::{LoopStatus, Metadata, PlaybackStatus, Time, TrackId};

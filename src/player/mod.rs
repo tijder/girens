@@ -6,21 +6,21 @@
 
 pub mod render;
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{OnceCell, RefCell};
 use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use girens_plex::model::{Item, ItemKind, LibrarySection, StreamKind};
-use girens_plex::playback::{PlaybackState, TranscodeRequest};
-use girens_plex::playqueue::PlayQueue;
+use girens_model::model::{Item, ItemKind, LibrarySection, StreamKind};
+use girens_model::{PlayQueue, PlaybackState};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 use libmpv2::events::{Event as MpvEvent, PropertyData};
 use libmpv2::{Format, Mpv};
 
+use crate::backend::{Opened, StreamOptions};
 use crate::session::Session;
 use crate::{config, runtime};
 
@@ -502,7 +502,7 @@ impl Player {
                     eprintln!("Could not report the playback position: {err}");
                 }
                 if let Some(session) = &session {
-                    if let Err(err) = server.stop_transcode_session(&loading, session).await {
+                    if let Err(err) = server.end_stream(&loading, session).await {
                         eprintln!("Could not end the transcode session: {err}");
                     }
                 }
@@ -693,39 +693,38 @@ impl Inner {
         };
 
         let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
-        let (session, url) = if let Some(path) =
+        let opened = if let Some(path) =
             crate::sync::local_file(&machine, &user, loading.rating_key)
         {
             // An offline copy plays without the server.
-            (None, path.to_string_lossy().into_owned())
+            Opened {
+                url: path.to_string_lossy().into_owned(),
+                session: None,
+                subtitle_delay: 0.0,
+            }
         } else {
             let server = server.ok_or("not connected to a server")?;
-            if direct {
-                let part = loading.parts().next().ok_or("the item has no media file")?;
-                (None, server.part_url(part).to_string())
-            } else {
-                let request = TranscodeRequest {
-                    session: glib::uuid_string_random().to_string(),
-                    video_resolution: Some(
-                        self.settings
-                            .string("transcode-media-to-resolution")
-                            .to_string(),
-                    ),
-                    offset: 0,
-                };
-                let decision = {
-                    let (server, loading, request) =
-                        (server.clone(), loading.clone(), request.clone());
-                    runtime::run(async move { server.transcode_decision(&loading, &request).await })
-                        .await
-                };
-                if let Err(err) = decision {
-                    eprintln!("The server did not accept the transcode request: {err}");
-                }
-                let url = server.transcode_url(&loading, &request).to_string();
-                (Some(request.session), url)
-            }
+            let options = StreamOptions {
+                direct,
+                resolution: Some(
+                    self.settings
+                        .string("transcode-media-to-resolution")
+                        .to_string(),
+                ),
+            };
+            let loading = loading.clone();
+            runtime::run(async move { server.open_stream(&loading, &options).await })
+                .await
+                .map_err(|err| match err {
+                    girens_model::Error::NotFound(_) => "the item has no media file".to_owned(),
+                    err => err.to_string(),
+                })?
         };
+        let Opened {
+            url,
+            session,
+            subtitle_delay,
+        } = opened;
 
         if self.state.borrow().generation != generation {
             // Another start overtook this one.
@@ -753,6 +752,7 @@ impl Inner {
         });
 
         let mpv = self.ensure_mpv()?;
+        self.set_mpv("sub-delay", subtitle_delay);
         self.apply_volume();
         // Stay paused until mpv is ready and the start position is set.
         self.set_pause(true);
@@ -959,7 +959,7 @@ impl Inner {
         glib::spawn_future_local(async move {
             let result =
                 runtime::run(
-                    async move { server.stop_transcode_session(&loading, &session).await },
+                    async move { server.end_stream(&loading, &session).await },
                 )
                 .await;
             if let Err(err) = result {
@@ -983,7 +983,7 @@ impl Inner {
         glib::spawn_future_local(async move {
             let result =
                 runtime::run(
-                    async move { server.ping_transcode_session(&loading, &session).await },
+                    async move { server.keep_stream(&loading, &session).await },
                 )
                 .await;
             if let Err(err) = result {
@@ -1074,7 +1074,7 @@ impl Inner {
                         Some(id) => self.set_mpv("sid", id),
                         None => self.command(
                             "sub-add",
-                            &[server.download_url(key).as_str(), "select", &title],
+                            &[&server.download_url(key), "select", &title],
                         ),
                     }
                 }

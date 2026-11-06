@@ -1,6 +1,6 @@
 //! Small formatting helpers shared by the views.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use gtk::glib;
 
 /// `3:07` or `1:02:03` for a duration in milliseconds.

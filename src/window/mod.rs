@@ -1,11 +1,11 @@
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::rc::Rc;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use girens_plex::myplex::Resource;
-use girens_plex::Error;
+use girens_model::Error;
 use gtk::{gdk, gio, glib, CompositeTemplate};
 
 use crate::application::{Application, LaunchOptions};
@@ -355,7 +355,7 @@ impl PlexWindow {
             #[weak(rename_to = window)]
             self,
             async move {
-                use girens_plex::model::ItemKind;
+                use girens_model::model::ItemKind;
                 let action = match runtime::run(async move { server.item(key).await }).await {
                     Ok(item) => match item.kind {
                         ItemKind::Artist => "show-artist-by-id",
@@ -787,7 +787,7 @@ impl PlexWindow {
             self,
             async move {
                 match runtime::run(async move { server.item(rating_key).await }).await {
-                    Ok(item) if item.kind == girens_plex::model::ItemKind::Show => {
+                    Ok(item) if item.kind == girens_model::model::ItemKind::Show => {
                         SyncSettings::new(rating_key).present(Some(&window));
                     }
                     Ok(_) => Sync::current().add(SyncEntry {
@@ -828,8 +828,8 @@ impl PlexWindow {
     }
 
     /// Shows the new state of an item wherever it is on screen.
-    fn item_changed(&self, item: &girens_plex::model::Item) {
-        use girens_plex::model::ItemKind;
+    fn item_changed(&self, item: &girens_model::model::Item) {
+        use girens_model::model::ItemKind;
         let imp = self.imp();
         imp._section_view.update_item(item);
         imp._search_view.update_item(item);

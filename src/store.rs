@@ -17,7 +17,7 @@
 //! user, kept `sections` and `sync` at the top; [`migrate`] hands those to
 //! the user who was signed in.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 

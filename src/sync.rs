@@ -8,7 +8,7 @@
 //! far the user has watched them, in `<cache>/<server>/user_<user>.json`. A
 //! user sees only the own copies, and a file goes when nobody wants it.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, RefCell};
 use std::collections::{BTreeMap, HashSet};
 use std::path::{Path, PathBuf};
@@ -17,9 +17,8 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use girens_plex::model::{Item, ItemKind};
-use girens_plex::playback::TranscodeRequest;
-use girens_plex::PlexServer;
+use girens_model::model::{Item, ItemKind};
+use crate::backend::{Feature, Server};
 use gtk::prelude::*;
 use gtk::{gio, glib};
 use serde::{Deserialize, Serialize};
@@ -56,7 +55,7 @@ thread_local! {
 }
 
 /// Where the offline copy of an item is, or would be, stored.
-pub fn local_path(server: &PlexServer, rating_key: ItemId) -> PathBuf {
+pub fn local_path(server: &Server, rating_key: ItemId) -> PathBuf {
     images::cache_dir(server).join(format!("item_{rating_key}"))
 }
 
@@ -385,7 +384,7 @@ fn unsent_progress(dir: &Path, user: &str) -> Vec<(Item, Watched)> {
 
 /// Tells the server what `user` watched from offline copies while it was
 /// out of reach.
-pub async fn push_progress(server: &PlexServer, user: &str) {
+pub async fn push_progress(server: &Server, user: &str) {
     let dir = images::cache_dir(server);
     for (item, watched) in unsent_progress(&dir, user) {
         let key = item.rating_key;
@@ -393,7 +392,7 @@ pub async fn push_progress(server: &PlexServer, user: &str) {
             let server = server.clone();
             runtime::run(async move {
                 if watched.view_offset > 0 {
-                    let stopped = girens_plex::playback::PlaybackState::Stopped;
+                    let stopped = girens_model::PlaybackState::Stopped;
                     server
                         .update_timeline(&item, watched.view_offset, stopped, None)
                         .await
@@ -417,7 +416,7 @@ pub async fn push_progress(server: &PlexServer, user: &str) {
 }
 
 /// The offline copy of an item, if there is one, whoever asked for it.
-fn downloaded(server: &PlexServer, rating_key: ItemId) -> Option<PathBuf> {
+fn downloaded(server: &Server, rating_key: ItemId) -> Option<PathBuf> {
     Some(local_path(server, rating_key)).filter(|path| path.exists())
 }
 
@@ -498,7 +497,7 @@ impl Sync {
         let (Some(server), Some(user)) = (session.server(), session.user_key()) else {
             return;
         };
-        if self.busy.replace(true) {
+        if !server.supports(Feature::Downloads) || self.busy.replace(true) {
             return;
         }
         self.emit(Event::Busy(true));
@@ -533,7 +532,7 @@ impl Sync {
         self.emit(Event::Busy(false));
     }
 
-    async fn run_once(&self, server: &PlexServer, user: &str) -> Result<(), girens_plex::Error> {
+    async fn run_once(&self, server: &Server, user: &str) -> Result<(), girens_model::Error> {
         let dir = images::cache_dir(server);
         let mut wanted = HashSet::new();
         // What the user has a copy of when this run is over.
@@ -552,7 +551,7 @@ impl Sync {
             };
             let items = match items {
                 Ok(items) => items,
-                Err(girens_plex::Error::NotFound(key)) => {
+                Err(girens_model::Error::NotFound(key)) => {
                     eprintln!("Synced item {key} no longer exists on the server");
                     continue;
                 }
@@ -614,7 +613,7 @@ impl Sync {
 }
 
 /// The playable items behind a synced item.
-async fn expand(server: &PlexServer, rating_key: ItemId) -> Result<Vec<Item>, girens_plex::Error> {
+async fn expand(server: &Server, rating_key: ItemId) -> Result<Vec<Item>, girens_model::Error> {
     let item = server.item(rating_key).await?;
     match item.kind {
         ItemKind::Movie | ItemKind::Episode => Ok(vec![item]),
@@ -629,7 +628,7 @@ impl Sync {
     /// Downloads one item, reporting progress twice a second.
     async fn download(
         &self,
-        server: &PlexServer,
+        server: &Server,
         item: &Item,
         converted: bool,
     ) -> Result<(), String> {
@@ -671,43 +670,30 @@ impl Sync {
         let resolution = gio::Settings::new(config::APP_ID)
             .string("transcode-media-to-resolution")
             .to_string();
-        let session = glib::uuid_string_random().to_string();
+        let resolution = (converted && !item.kind.is_audio()).then_some(resolution);
         runtime::run(async move {
             let progress = move |received: u64, total: Option<u64>| {
                 counters.0.store(received, Ordering::Relaxed);
                 counters.1.store(total.unwrap_or(0), Ordering::Relaxed);
             };
-            if converted && !item.kind.is_audio() {
-                let request = TranscodeRequest {
-                    session,
-                    video_resolution: Some(resolution),
-                    offset: 0,
-                };
-                let url = server.transcode_download_url(&item, &request);
-                // A transcode cannot be continued, so it always starts over.
-                let result = girens_plex::download_to_file_with_progress(
-                    url.as_str(),
-                    &target,
-                    false,
-                    progress,
-                )
-                .await;
-                if let Err(err) = server.stop_transcode_session(&item, &request.session).await {
+            let source = server.download_source(&item, resolution.as_deref())?;
+            // A conversion cannot be continued, so it always starts over.
+            let result = girens_model::net::download_to_file_with_progress(
+                &source.url,
+                &target,
+                source.session.is_none(),
+                progress,
+            )
+            .await;
+            if let Some(session) = &source.session {
+                if let Err(err) = server.end_stream(&item, session).await {
                     eprintln!("Could not end the transcode session: {err}");
                 }
-                result
-            } else {
-                let part = item
-                    .parts()
-                    .next()
-                    .ok_or(girens_plex::Error::NotFound(item.rating_key))?;
-                let url = server.download_url(&part.key);
-                girens_plex::download_to_file_with_progress(url.as_str(), &target, true, progress)
-                    .await
             }
+            result
         })
         .await
-        .map_err(|err: girens_plex::Error| err.to_string())
+        .map_err(|err: girens_model::Error| err.to_string())
     }
 }
 

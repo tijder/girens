@@ -2,8 +2,8 @@
 //! provider (`search-provider/`) searches. The format is the one the Python
 //! version used.
 
-use girens_plex::model::{Item, ItemKind};
-use girens_plex::PlexServer;
+use girens_model::model::{Item, ItemKind};
+use crate::backend::Server;
 use gtk::glib;
 use serde_json::{json, Map, Value};
 
@@ -25,7 +25,7 @@ fn entry(item: &Item) -> Value {
     })
 }
 
-async fn collect(server: &PlexServer, user: &str) -> girens_plex::Result<Value> {
+async fn collect(server: &Server, user: &str) -> girens_model::Result<Value> {
     let mut sections = Map::new();
     for section in server.sections().await? {
         // Movies are not offered: opening one would start playing it.
@@ -65,7 +65,7 @@ const MAX_AGE: std::time::Duration = std::time::Duration::from_secs(6 * 60 * 60)
 
 /// Whether the file was written recently for this user of this server.
 /// What one profile may see is not offered to the next.
-async fn is_fresh(server: &PlexServer, user: &str) -> bool {
+async fn is_fresh(server: &Server, user: &str) -> bool {
     let path = data_file();
     let recent = tokio::fs::metadata(&path)
         .await
@@ -90,7 +90,7 @@ pub fn clear() {
 
 /// Rebuilds the file for `user` of `server` in the background, unless it is
 /// recent.
-pub fn refresh(server: PlexServer, user: String) {
+pub fn refresh(server: Server, user: String) {
     glib::spawn_future_local(async move {
         let written = runtime::run(async move {
             if is_fresh(&server, &user).await {

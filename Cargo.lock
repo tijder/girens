@@ -619,6 +619,7 @@ name = "girens"
 version = "3.0.0"
 dependencies = [
  "gettext-rs",
+ "girens-model",
  "girens-plex",
  "gtk4",
  "libadwaita",
@@ -641,6 +642,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
+ "tokio",
  "url",
 ]
 

@@ -1,12 +1,12 @@
 //! A show: its details, then the episodes of the chosen season, as one
 //! virtualised list. Episodes are fetched per season, when it is chosen.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::collections::HashMap;
 
 use adw::subclass::prelude::*;
-use girens_plex::model::{Item, ItemKind};
+use girens_model::model::{Item, ItemKind};
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CompositeTemplate};
 

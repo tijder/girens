@@ -2,11 +2,11 @@
 //! tracks. The rows are shared with the artist page, which lists several
 //! albums.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 
 use adw::subclass::prelude::*;
-use girens_plex::model::Item;
+use girens_model::model::Item;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CompositeTemplate};
 
@@ -438,7 +438,7 @@ impl AlbumView {
             #[weak(rename_to = view)]
             self,
             async move {
-                let failed = |err: girens_plex::Error| {
+                let failed = |err: girens_model::Error| {
                     let retry = glib::clone!(
                         #[weak]
                         view,

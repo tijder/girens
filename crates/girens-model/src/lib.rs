@@ -4,6 +4,7 @@ mod de;
 mod error;
 mod id;
 pub mod model;
+pub mod net;
 mod queue;
 
 pub use error::{Error, Result};

@@ -1,12 +1,12 @@
 //! An artist as one virtualised list: the artist, then every album with its
 //! tracks.
 
-use girens_plex::ItemId;
+use girens_model::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::collections::HashMap;
 
 use adw::subclass::prelude::*;
-use girens_plex::model::Item;
+use girens_model::model::Item;
 use gtk::prelude::*;
 use gtk::{gio, glib, CompositeTemplate};
 
