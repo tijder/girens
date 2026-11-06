@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 07:38+0100\n"
+"POT-Creation-Date: 2026-11-06 08:08+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -248,10 +248,6 @@ msgstr "Audio "
 msgid "Subtitle "
 msgstr "Ondertitel "
 
-#: ../data/ui/profile_dialog.blp:9
-msgid "Who is watching?"
-msgstr "Wie kijkt er?"
-
 #: ../data/ui/profile_dialog.blp:17
 msgid "Add account…"
 msgstr "Account toevoegen…"
@@ -349,10 +345,6 @@ msgstr "Muziekclips afspelen in plaats van audiotrack"
 msgid "Sync items"
 msgstr "Items synchroniseren"
 
-#: ../data/ui/sync_dialog.blp:47
-msgid "Ok"
-msgstr "Oké"
-
 #: ../data/ui/sync_item.blp:38
 msgid "Remove"
 msgstr "Verwijderen"
@@ -446,10 +438,18 @@ msgid "Could not load the album"
 msgstr "Het album kon niet worden geladen"
 
 #: ../src/messages.rs:66
+msgid "Could not load the photo"
+msgstr "Kon de foto niet laden"
+
+#: ../src/messages.rs:70
+msgid "Could not load the playlist"
+msgstr "Kon de afspeellijst niet laden"
+
+#: ../src/messages.rs:74
 msgid "This library is empty"
 msgstr "Deze bibliotheek is leeg"
 
-#: ../src/messages.rs:70
+#: ../src/messages.rs:78
 msgid "No playlists"
 msgstr "Geen afspeellijsten"
 
@@ -457,102 +457,110 @@ msgstr "Geen afspeellijsten"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: ../src/player/mod.rs:341
+#: ../src/player/mod.rs:350
 msgid "Nothing to play"
 msgstr "Er is niets om af te spelen"
 
-#: ../src/player/mod.rs:349
+#: ../src/player/mod.rs:358
 msgid "Could not create a play queue"
 msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: ../src/player/mod.rs:458
+#: ../src/player/mod.rs:467
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: ../src/player/mod.rs:653
+#: ../src/player/mod.rs:662
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1111
+#: ../src/player/mod.rs:1141
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
-#: ../src/sync.rs:394
+#: ../src/sync.rs:510
 msgid "Sync failed"
 msgstr "Synchroniseren is mislukt"
 
-#: ../src/sync.rs:473
+#: ../src/sync.rs:596
 msgid "Could not download an item"
 msgstr "Een item kon niet worden gedownload"
 
-#: ../src/sync.rs:520
+#: ../src/sync.rs:643
 msgid "Not enough disk space for the download"
 msgstr "Niet genoeg schijfruimte voor de download"
 
-#: ../src/views/album_view.rs:38
+#: ../src/views/album_view.rs:52
 #, rust-format
 msgid "{} song"
 msgid_plural "{} songs"
 msgstr[0] "{} nummer"
 msgstr[1] "{} nummers"
 
-#: ../src/views/album_view.rs:43
+#: ../src/views/album_view.rs:57
 #, rust-format
 msgid "{} album"
 msgid_plural "{} albums"
 msgstr[0] "{} album"
 msgstr[1] "{} albums"
 
-#: ../src/views/album_view.rs:50
+#: ../src/views/album_view.rs:62
+#, rust-format
+msgid "{} item"
+msgid_plural "{} items"
+msgstr[0] "{} item"
+msgstr[1] "{} items"
+
+#: ../src/views/album_view.rs:69
 #, rust-format
 msgid "{} min"
 msgstr "{} min"
 
-#: ../src/views/album_view.rs:53
+#: ../src/views/album_view.rs:72
 #, rust-format
 msgid "{0} h {1} min"
 msgstr "{0} u {1} min"
 
-#: ../src/views/album_view.rs:119
+#: ../src/views/album_view.rs:162
 #, rust-format
 msgid "Disc {}"
 msgstr "Schĳf {}"
 
-#: ../src/views/album_view.rs:250 ../src/views/cover_box.rs:228
-#: ../src/views/cover_box.rs:235
+#: ../src/views/album_view.rs:301 ../src/views/cover_box.rs:233
+#: ../src/views/cover_box.rs:240
 msgid "Go to artist view"
 msgstr "Artiest­weergave"
 
-#: ../src/views/album_view.rs:255 ../src/views/cover_box.rs:270
+#: ../src/views/album_view.rs:306 ../src/views/album_view.rs:327
+#: ../src/views/cover_box.rs:276
 msgid "Sync"
 msgstr "Synchroniseren"
 
-#: ../src/views/cover_box.rs:221
+#: ../src/views/cover_box.rs:226
 msgid "Go to album view"
 msgstr "Album­weergave"
 
-#: ../src/views/cover_box.rs:251
+#: ../src/views/cover_box.rs:256
 msgid "Go to show view"
 msgstr "Serie­weergave"
 
-#: ../src/views/cover_box.rs:256
+#: ../src/views/cover_box.rs:261
 msgid "Mark as Played"
 msgstr "Markeren als afgespeeld"
 
-#: ../src/views/cover_box.rs:263
+#: ../src/views/cover_box.rs:268
 msgid "Mark as Unplayed"
 msgstr "Markeren als onafgespeeld"
 
-#: ../src/views/cover_box.rs:276
+#: ../src/views/cover_box.rs:282
 msgid "Shuffle"
 msgstr "Shufflen"
 
-#: ../src/views/cover_box.rs:280 ../src/window/playback.rs:119
+#: ../src/views/cover_box.rs:286 ../src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr "Starten vanaf het begin"
 
 #: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:162
-#: ../src/views/sidebar_box.rs:193
+#: ../src/views/sidebar_box.rs:194
 msgid "Downloads"
 msgstr "Downloads"
 
@@ -563,6 +571,18 @@ msgstr "Nog niets gedownload"
 #: ../src/views/music_popover_menu.rs:190
 msgid "Could not rate the track"
 msgstr "Het nummer kon niet worden beoordeeld"
+
+#: ../src/views/photo_view.rs:72
+msgid "Previous photo"
+msgstr "Vorige foto"
+
+#: ../src/views/photo_view.rs:75
+msgid "Next photo"
+msgstr "Volgende foto"
+
+#: ../src/views/photo_view.rs:289
+msgid "The photo has no picture"
+msgstr "De foto heeft geen afbeelding"
 
 #: ../src/views/player_view.rs:309
 msgid "Audio"
@@ -604,7 +624,23 @@ msgstr "Resolutie"
 msgid "Playback"
 msgstr "Afspelen"
 
+#: ../src/views/preferences.rs:77
+msgid "Ask who is watching"
+msgstr "Vragen wie er kijkt"
+
 #: ../src/views/preferences.rs:79
+msgid ""
+"Choose the profile of the Plex Home at every start, instead of continuing as "
+"the one used last."
+msgstr ""
+"Kies bij elke start het profiel van de Plex Home, in plaats van verder te gaan "
+"als het laatst gebruikte."
+
+#: ../src/views/preferences.rs:86
+msgid "Profiles"
+msgstr "Profielen"
+
+#: ../src/views/preferences.rs:94
 msgid "Preferences"
 msgstr "Voorkeuren"
 
@@ -697,7 +733,7 @@ msgstr "Media­hoogte"
 msgid "Duration"
 msgstr "Duur"
 
-#: ../src/views/section_view.rs:366 ../src/views/sidebar_box.rs:157
+#: ../src/views/section_view.rs:421 ../src/views/sidebar_box.rs:157
 msgid "Playlists"
 msgstr "Afspeel­lĳsten"
 
@@ -715,7 +751,7 @@ msgid_plural "{} episodes"
 msgstr[0] "{} aflevering"
 msgstr[1] "{} afleveringen"
 
-#: ../src/views/sidebar_box.rs:151 ../src/views/sidebar_box.rs:188
+#: ../src/views/sidebar_box.rs:151 ../src/views/sidebar_box.rs:189
 msgid "Player"
 msgstr "Speler"
 
@@ -727,27 +763,27 @@ msgstr "Thuis"
 msgid "Starting Girens"
 msgstr "Girens wordt opgestart"
 
-#: ../src/window/connection.rs:27 ../src/window/connection.rs:82
-#: ../src/window/connection.rs:147
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:85
+#: ../src/window/connection.rs:150
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
 
-#: ../src/window/connection.rs:116
+#: ../src/window/connection.rs:119
 msgid "Waiting for you to sign in in the browser…"
 msgstr "Wachten tot je bent aangemeld in de browser…"
 
-#: ../src/window/connection.rs:153 ../src/window/connection.rs:201
-#: ../src/window/connection.rs:595
+#: ../src/window/connection.rs:156 ../src/window/connection.rs:204
+#: ../src/window/connection.rs:665
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/window/connection.rs:180
+#: ../src/window/connection.rs:183
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/window/connection.rs:194
+#: ../src/window/connection.rs:197
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -758,54 +794,63 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/window/connection.rs:223
+#: ../src/window/connection.rs:243
 msgid "The server cannot be reached. Showing your downloads."
 msgstr "De server is niet bereikbaar. Je downloads worden getoond."
 
-#: ../src/window/connection.rs:276
+#: ../src/window/connection.rs:301
 msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
-#: ../src/window/connection.rs:423
+#: ../src/window/connection.rs:391
+msgid "Who is watching?"
+msgstr "Wie kijkt er?"
+
+#: ../src/window/connection.rs:493
 msgid "That PIN is not correct. Try again."
 msgstr "Die pincode klopt niet. Probeer het opnieuw."
 
-#: ../src/window/connection.rs:425
+#: ../src/window/connection.rs:495
 msgid "Enter the PIN of this profile."
 msgstr "Voer de pincode van dit profiel in."
 
-#: ../src/window/connection.rs:437
+#: ../src/window/connection.rs:507
 msgid "PIN"
 msgstr "Pincode"
 
-#: ../src/window/connection.rs:442 ../src/window/connection.rs:526
+#: ../src/window/connection.rs:512 ../src/window/connection.rs:596
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../src/window/connection.rs:443
+#: ../src/window/connection.rs:513
 msgid "Continue"
 msgstr "Doorgaan"
 
-#: ../src/window/connection.rs:474
+#: ../src/window/connection.rs:544
 msgid "Could not switch to this profile"
 msgstr "Kon niet naar dit profiel wisselen"
 
-#: ../src/window/connection.rs:521
+#: ../src/window/connection.rs:591
 #, rust-format
 msgid "Sign out {}?"
 msgstr "{} afmelden?"
 
-#: ../src/window/connection.rs:523
+#: ../src/window/connection.rs:593
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
-"De downloads en voorkeuren van dit account worden van dit apparaat verwijderd."
+"De downloads en voorkeuren van dit account worden van dit apparaat "
+"verwijderd."
 
-#: ../src/window/connection.rs:527
+#: ../src/window/connection.rs:597
 msgid "Logout"
 msgstr "Afmelden"
 
-#: ../src/window/mod.rs:632
+#: ../src/window/mod.rs:342
+msgid "This item is on a server that is not in use"
+msgstr "Dit item staat op een server die niet in gebruik is"
+
+#: ../src/window/mod.rs:659
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -813,11 +858,11 @@ msgstr ""
 "Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek "
 "af te spelen."
 
-#: ../src/window/mod.rs:637
+#: ../src/window/mod.rs:664
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:640
+#: ../src/window/mod.rs:667
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
@@ -832,6 +877,9 @@ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 #: ../src/window/playback.rs:120
 msgid "Resume"
 msgstr "Hervatten"
+
+#~ msgid "Ok"
+#~ msgstr "Oké"
 
 #~ msgid "1080p"
 #~ msgstr "1080p"

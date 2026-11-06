@@ -31,6 +31,7 @@ src/views/album_view.rs
 src/views/cover_box.rs
 src/views/downloads_view.rs
 src/views/music_popover_menu.rs
+src/views/photo_view.rs
 src/views/player_view.rs
 src/views/preferences.rs
 src/views/profile_dialog.rs

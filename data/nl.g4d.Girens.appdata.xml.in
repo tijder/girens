@@ -30,6 +30,19 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release date="2026-11-06" version="3.0.0">
+      <description translate="no">
+        <p>Girens is rewritten in Rust. It starts faster, uses less memory and no longer needs Python.</p>
+        <ul>
+          <li>Several accounts can be signed in, and you can switch between the profiles of a Plex Home</li>
+          <li>Sign in through the browser, also with two-factor authentication</li>
+          <li>Downloads are shown and played without a connection to the server, and resume where you stopped</li>
+          <li>Photo libraries, and a page for each playlist</li>
+          <li>Back navigation, search results grouped by kind and a preferences dialog</li>
+          <li>The desktop's media controls can repeat, change the volume and quit Girens</li>
+        </ul>
+      </description>
+    </release>
     <release date="2026-08-29" version="2.0.10">
       <description translate="no">
         <p>Changes:</p>

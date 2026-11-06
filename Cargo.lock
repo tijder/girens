@@ -616,7 +616,7 @@ dependencies = [
 
 [[package]]
 name = "girens"
-version = "2.0.10"
+version = "3.0.0"
 dependencies = [
  "gettext-rs",
  "girens-plex",
@@ -635,7 +635,7 @@ dependencies = [
 
 [[package]]
 name = "girens-plex"
-version = "2.0.10"
+version = "3.0.0"
 dependencies = [
  "reqwest",
  "serde",
@@ -648,7 +648,7 @@ dependencies = [
 
 [[package]]
 name = "girens-sp"
-version = "2.0.10"
+version = "3.0.0"
 dependencies = [
  "serde_json",
  "zbus",

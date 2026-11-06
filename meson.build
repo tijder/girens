@@ -1,6 +1,6 @@
 project(
   'girens',
-  version: '2.0.10',
+  version: '3.0.0',
   meson_version: '>= 0.59.0',
 )
 gnome = import('gnome')
