@@ -70,6 +70,23 @@ pub fn account_step(window: &crate::window::PlexWindow) {
     if let Ok(step) = std::env::var("GIRENS_DEBUG_ACCOUNT") {
         ACCOUNT_STEP.call_once(|| window.debug_account(&step));
     }
+    // `GIRENS_DEBUG_WAITING=cancel@8`: presses that button of the page that
+    // waits for the browser (`cancel` or `copy`), after so many seconds.
+    static WAITING_STEP: std::sync::Once = std::sync::Once::new();
+    if let Ok(step) = std::env::var("GIRENS_DEBUG_WAITING") {
+        WAITING_STEP.call_once(|| {
+            let Some((button, at)) = step.rsplit_once('@') else {
+                return;
+            };
+            let (button, at) = (button.to_owned(), at.parse().unwrap_or(0));
+            let window = window.downgrade();
+            glib::timeout_add_local_once(Duration::from_secs(at), move || {
+                if let Some(window) = window.upgrade() {
+                    window.debug_waiting(&button);
+                }
+            });
+        });
+    }
 }
 
 /// With `GIRENS_DEBUG_LOGIN_URL=<file>` the page to sign in at is written to

@@ -415,11 +415,45 @@ impl PlexWindow {
             }
         ));
 
+        imp._login_view.connect_ister_address(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |address| {
+                glib::spawn_future_local(async move {
+                    let imp = window.imp();
+                    let found = imp.session.find_ister(address.clone()).await;
+                    // Unless the user typed on in the meantime.
+                    if imp._login_view.ister_address() == address {
+                        let found = found.as_deref().map_err(|_| ());
+                        imp._login_view.set_ister_found(Some(found));
+                    }
+                });
+            }
+        ));
         imp._login_view.connect_cancel(glib::clone!(
             #[weak(rename_to = window)]
             self,
             move || {
                 glib::spawn_future_local(async move { window.cancel_login().await });
+            }
+        ));
+        // The one thing the loading page offers: signing in again where a
+        // session ran out.
+        imp._loading_view.connect_action(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move || {
+                let server = window
+                    .imp()
+                    .session
+                    .stored_account()
+                    .and_then(|stored| stored.server);
+                if let Some(server) = server {
+                    let request = LoginRequest::Ister {
+                        address: server.url,
+                    };
+                    glib::spawn_future_local(async move { window.login(request).await });
+                }
             }
         ));
         // The sign-in that waits notices that its page was left.
@@ -635,6 +669,24 @@ impl PlexWindow {
     }
 
     #[cfg(debug_assertions)]
+    pub fn debug_waiting(&self, button: &str) {
+        let imp = self.imp();
+        imp._loading_view.debug_press(button);
+        let page = if imp.frame_stack.visible_child()
+            == Some(imp._login_view.get().upcast::<gtk::Widget>())
+        {
+            "the sign-in page"
+        } else {
+            "another page"
+        };
+        eprintln!(
+            "waiting: pressed {button}, now on {page}, in use: {:?}, clipboard: {:?}",
+            imp.session.stored_account().map(|stored| stored.kind),
+            self.clipboard().content().is_some()
+        );
+    }
+
+    #[cfg(debug_assertions)]
     pub fn debug_player(&self, command: &str) {
         let Some(player) = self.imp().player.get() else {
             return;
@@ -671,7 +723,9 @@ impl PlexWindow {
             "accounts" => self.show_accounts(),
             "login" => {
                 self.show_login();
-                self.imp()._login_view.offer_ister("media.example.org");
+                let address = std::env::var("GIRENS_DEBUG_LOGIN_ADDRESS")
+                    .unwrap_or_else(|_| "media.example.org".into());
+                self.imp()._login_view.offer_ister(&address);
             }
             "pin" | "wrong-pin" => {
                 let (window, wrong) = (self.clone(), dialog == "wrong-pin");
@@ -733,6 +787,7 @@ impl PlexWindow {
         let imp = self.imp();
         imp._loading_view.set_text(text);
         imp._loading_view.set_waiting(None);
+        imp._loading_view.set_action(None);
         imp._loading_view
             .set_accounts_visible(imp.session.accounts().len() > 1);
         imp.frame_stack.set_visible_child(&*imp._loading_view);

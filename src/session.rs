@@ -471,16 +471,30 @@ impl Session {
         CLIENT.get_or_init(reqwest::Client::new).clone()
     }
 
+    /// The name of the Ister server at `address`, to tell the user what was
+    /// found there before signing in.
+    pub async fn find_ister(&self, address: String) -> Result<String> {
+        runtime::run(async move {
+            let found = girens_ister::auth::discover(&Self::http(), &address).await?;
+            Ok(found.name)
+        })
+        .await
+    }
+
     /// Finds the Ister server at `address` and prepares signing in to it in
     /// the browser. When someone is signed in already, the provider is told
     /// to ask who it is this time, so that another user can be added.
     pub async fn start_ister_login(&self, address: String) -> Result<IsterLogin> {
         let ask_again = self.account_id().is_some();
+        let pages = girens_ister::auth::Pages {
+            signed_in: gettext("You are signed in. You can close this page and return to Girens."),
+            failed: gettext("Signing in did not work. Return to Girens to try again."),
+        };
         runtime::run(async move {
             let http = Self::http();
             let well_known = girens_ister::auth::discover(&http, &address).await?;
             let provider = Provider::fetch(&http, &well_known.openid_url).await?;
-            let login = girens_ister::auth::Login::start(provider.clone(), ask_again).await?;
+            let login = girens_ister::auth::Login::start(provider.clone(), ask_again, pages).await?;
             Ok(IsterLogin {
                 url: login.url.clone(),
                 address,

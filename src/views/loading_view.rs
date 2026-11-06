@@ -19,6 +19,11 @@ mod imp {
         #[template_child]
         pub _accounts_button: TemplateChild<gtk::Button>,
         #[template_child]
+        pub _spinner: TemplateChild<adw::Spinner>,
+        #[template_child]
+        pub _action_button: TemplateChild<gtk::Button>,
+        pub on_action: RefCell<Option<Box<dyn Fn()>>>,
+        #[template_child]
         pub _waiting_box: TemplateChild<gtk::Box>,
         #[template_child]
         pub _open_button: TemplateChild<gtk::Button>,
@@ -57,6 +62,15 @@ mod imp {
                 view,
                 move |_| {
                     if let Some(callback) = view.imp().on_logout.borrow().as_ref() {
+                        callback();
+                    }
+                }
+            ));
+            self._action_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    if let Some(callback) = view.imp().on_action.borrow().as_ref() {
                         callback();
                     }
                 }
@@ -133,6 +147,32 @@ impl LoadingView {
         imp.waiting_for.replace(url.map(str::to_owned));
         imp._waiting_box.set_visible(url.is_some());
         imp._logout_button.set_visible(url.is_none());
+    }
+
+    /// Instead of being busy, offers the one thing to do next, as a button
+    /// called `label`. `None` is the usual page again.
+    pub fn set_action(&self, label: Option<&str>) {
+        let imp = self.imp();
+        if let Some(label) = label {
+            imp._action_button.set_label(label);
+        }
+        imp._action_button.set_visible(label.is_some());
+        imp._spinner.set_visible(label.is_none());
+    }
+
+    /// Doing what [`Self::set_action`] offers.
+    pub fn connect_action(&self, callback: impl Fn() + 'static) {
+        self.imp().on_action.replace(Some(Box::new(callback)));
+    }
+
+    #[cfg(debug_assertions)]
+    pub fn debug_press(&self, button: &str) {
+        let imp = self.imp();
+        match button {
+            "cancel" => imp._cancel_button.emit_clicked(),
+            "copy" => imp._copy_button.emit_clicked(),
+            _ => eprintln!("GIRENS_DEBUG_WAITING: no button {button:?}"),
+        }
     }
 
     /// Giving up the sign-in that is being waited for.

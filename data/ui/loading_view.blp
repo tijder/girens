@@ -13,7 +13,7 @@ template $loading_view : Box {
     vexpand: true;
     orientation: vertical;
 
-    Adw.Spinner {
+    Adw.Spinner _spinner {
       height-request: 50;
       width-request: 50;
     }
@@ -24,6 +24,15 @@ template $loading_view : Box {
       wrap: true;
       justify: center;
       max-width-chars: 40;
+    }
+
+    Gtk.Button _action_button {
+      visible: false;
+      margin-top: 20;
+
+      styles [
+        "suggested-action",
+      ]
     }
 
     Box _waiting_box {

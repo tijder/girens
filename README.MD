@@ -4,6 +4,8 @@ Girens is a media player for [Plex](https://www.plex.tv/) and [Ister](https://gi
 
 Downloads for watching offline are for Plex only, as an Ister server only streams.
 
+To stay signed in to an Ister server after the session in the browser has ended, Girens asks its OpenID Connect provider for the `offline_access` scope. A provider that does not grant that to the `ister` client still works: Girens then asks to sign in again when the session has ended.
+
 ## Why this app
 
 There are more Plex clients that can be used on Linux. For example the Plex website and the [Plex media Player](https://www.plex.tv/apps-devices/#modal-devices-plex-media-player). Those Plex clients are lacking functions which I like to have. For example: a responsive layout (so you can use it on a small screen), function to download media items to the device and GTK+ is awesome.

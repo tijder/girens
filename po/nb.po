@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:56+0100\n"
+"POT-Creation-Date: 2026-11-06 13:40+0100\n"
 "PO-Revision-Date: 2026-01-21 23:01+0000\n"
 "Last-Translator: marius <marius+weblate@vaagan.eu>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
@@ -97,15 +97,15 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:36
+#: ../data/ui/loading_view.blp:45
 msgid "Open the page again"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:40
+#: ../data/ui/loading_view.blp:49
 msgid "Copy the link"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:54 ../data/ui/profile_dialog.blp:5
+#: ../data/ui/loading_view.blp:63 ../data/ui/profile_dialog.blp:5
 #: ../data/ui/profile_dialog.blp:14
 msgid "Accounts"
 msgstr ""
@@ -164,10 +164,6 @@ msgstr ""
 
 #: ../data/ui/login_view.blp:114
 msgid "Sign in to an Ister server"
-msgstr ""
-
-#: ../data/ui/login_view.blp:115
-msgid "Opens your browser to sign in"
 msgstr ""
 
 #: ../data/ui/main_window.blp:37
@@ -501,26 +497,34 @@ msgstr ""
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/session.rs:560
+#: ../src/session.rs:490
+msgid "You are signed in. You can close this page and return to Girens."
+msgstr ""
+
+#: ../src/session.rs:491
+msgid "Signing in did not work. Return to Girens to try again."
+msgstr ""
+
+#: ../src/session.rs:574
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: ../src/session.rs:561
+#: ../src/session.rs:575
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: ../src/session.rs:562
+#: ../src/session.rs:576
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: ../src/session.rs:563
+#: ../src/session.rs:577
 msgid "Unknown"
 msgstr ""
 
-#: ../src/session.rs:565
+#: ../src/session.rs:579
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
@@ -618,12 +622,25 @@ msgstr ""
 msgid "Nothing downloaded yet"
 msgstr ""
 
-#: ../src/views/login_view.rs:203
+#: ../src/views/login_view.rs:216
 msgid "Add an account"
 msgstr ""
 
-#: ../src/views/login_view.rs:205
+#: ../src/views/login_view.rs:218
 msgid "Sign in"
+msgstr ""
+
+#: ../src/views/login_view.rs:291
+#, rust-format
+msgid "Found {}. Opens your browser to sign in"
+msgstr ""
+
+#: ../src/views/login_view.rs:295
+msgid "No Ister server answers at this address"
+msgstr ""
+
+#: ../src/views/login_view.rs:297
+msgid "Opens your browser to sign in"
 msgstr ""
 
 #: ../src/views/music_popover_menu.rs:190
@@ -832,46 +849,55 @@ msgstr "Hjem"
 msgid "Starting Girens"
 msgstr "Starter Girens …"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:140
-#: ../src/window/connection.rs:202 ../src/window/connection.rs:249
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:149
+#: ../src/window/connection.rs:213 ../src/window/connection.rs:265
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Kobler til {}."
 
-#: ../src/window/connection.rs:104 ../src/window/connection.rs:109
+#: ../src/window/connection.rs:90
+#, rust-format
+msgid "Your session at {} has ended."
+msgstr ""
+
+#: ../src/window/connection.rs:95
+msgid "Sign in again"
+msgstr ""
+
+#: ../src/window/connection.rs:113 ../src/window/connection.rs:118
 #, rust-format
 msgid "Could not reach plex.tv: {}"
 msgstr ""
 
-#: ../src/window/connection.rs:108
+#: ../src/window/connection.rs:117
 msgid "The username or password is not right."
 msgstr ""
 
-#: ../src/window/connection.rs:116
+#: ../src/window/connection.rs:125
 msgid "The server does not accept this token."
 msgstr ""
 
-#: ../src/window/connection.rs:117 ../src/window/connection.rs:126
+#: ../src/window/connection.rs:126 ../src/window/connection.rs:135
 #, rust-format
 msgid "Could not connect to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:129
+#: ../src/window/connection.rs:138
 #, rust-format
 msgid "No Ister server was found at {}."
 msgstr ""
 
-#: ../src/window/connection.rs:257 ../src/window/connection.rs:305
-#: ../src/window/connection.rs:774
+#: ../src/window/connection.rs:273 ../src/window/connection.rs:321
+#: ../src/window/connection.rs:790
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Kobling til {} mislyktes."
 
-#: ../src/window/connection.rs:284
+#: ../src/window/connection.rs:300
 msgid "No servers found for this account."
 msgstr "Fant ingen tjenere for denne kontoen."
 
-#: ../src/window/connection.rs:298
+#: ../src/window/connection.rs:314
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -879,53 +905,53 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: ../src/window/connection.rs:344
+#: ../src/window/connection.rs:360
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:404
+#: ../src/window/connection.rs:420
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/connection.rs:500
+#: ../src/window/connection.rs:516
 msgid "Who is watching?"
 msgstr ""
 
-#: ../src/window/connection.rs:602
+#: ../src/window/connection.rs:618
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: ../src/window/connection.rs:604
+#: ../src/window/connection.rs:620
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: ../src/window/connection.rs:616
+#: ../src/window/connection.rs:632
 msgid "PIN"
 msgstr ""
 
-#: ../src/window/connection.rs:621 ../src/window/connection.rs:705
+#: ../src/window/connection.rs:637 ../src/window/connection.rs:721
 msgid "Cancel"
 msgstr ""
 
-#: ../src/window/connection.rs:622
+#: ../src/window/connection.rs:638
 msgid "Continue"
 msgstr ""
 
-#: ../src/window/connection.rs:653
+#: ../src/window/connection.rs:669
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: ../src/window/connection.rs:700
+#: ../src/window/connection.rs:716
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: ../src/window/connection.rs:702
+#: ../src/window/connection.rs:718
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: ../src/window/connection.rs:706
+#: ../src/window/connection.rs:722
 msgid "Logout"
 msgstr ""
 
@@ -933,22 +959,22 @@ msgstr ""
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: ../src/window/mod.rs:706
+#: ../src/window/mod.rs:760
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:711
+#: ../src/window/mod.rs:765
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:714
+#: ../src/window/mod.rs:768
 #, fuzzy
 msgid "Help with translating"
 msgstr "Bistå oversettelsen"
 
-#: ../src/window/mod.rs:744
+#: ../src/window/mod.rs:799
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 

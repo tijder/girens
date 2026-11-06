@@ -7,7 +7,10 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{glib, CompositeTemplate};
 
-use crate::i18n::gettext;
+use crate::i18n::{gettext, gettext_f};
+
+/// How long the user has to stop typing before an address is looked up.
+const LOOKUP_DELAY: std::time::Duration = std::time::Duration::from_millis(700);
 
 /// What the user filled in.
 #[derive(Debug, Clone)]
@@ -54,6 +57,11 @@ mod imp {
         pub _ister_address_entry: TemplateChild<adw::EntryRow>,
         #[template_child]
         pub _connect_ister_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _ister_row: TemplateChild<adw::ActionRow>,
+        /// Waits for the user to stop typing before the address is looked up.
+        pub ister_lookup: RefCell<Option<glib::SourceId>>,
+        pub on_ister_address: RefCell<Option<Box<dyn Fn(String)>>>,
         #[template_child]
         pub _error_banner: TemplateChild<adw::Banner>,
         #[template_child]
@@ -151,6 +159,11 @@ mod imp {
             );
             let submit = submit_ister.clone();
             self._connect_ister_button.connect_clicked(move |_| submit());
+            self._ister_address_entry.connect_changed(glib::clone!(
+                #[weak]
+                view,
+                move |_| view.look_up_ister_soon()
+            ));
             self._ister_address_entry
                 .connect_entry_activated(move |_| submit_ister());
         }
@@ -224,6 +237,66 @@ impl LoginView {
         let imp = self.imp();
         imp._ister_address_entry.set_text(address);
         imp._ister_address_entry.grab_focus();
+    }
+
+    /// Has the address of the Ister server looked up once the user has
+    /// stopped typing for a moment.
+    fn look_up_ister_soon(&self) {
+        let imp = self.imp();
+        if let Some(pending) = imp.ister_lookup.take() {
+            pending.remove();
+        }
+        self.set_ister_found(None);
+        let address = imp._ister_address_entry.text().trim().to_owned();
+        if address.len() < 4 {
+            return;
+        }
+        let lookup = glib::timeout_add_local_once(
+            LOOKUP_DELAY,
+            glib::clone!(
+                #[weak(rename_to = view)]
+                self,
+                move || {
+                    view.imp().ister_lookup.take();
+                    if let Some(callback) = view.imp().on_ister_address.borrow().as_ref() {
+                        callback(address);
+                    }
+                }
+            ),
+        );
+        imp.ister_lookup.replace(Some(lookup));
+    }
+
+    /// Called with the address of an Ister server once it was typed, to
+    /// look it up and answer with [`Self::set_ister_found`].
+    pub fn connect_ister_address(&self, callback: impl Fn(String) + 'static) {
+        self.imp().on_ister_address.replace(Some(Box::new(callback)));
+    }
+
+    /// What is typed as the address of an Ister server now.
+    pub fn ister_address(&self) -> String {
+        self.imp()._ister_address_entry.text().trim().to_owned()
+    }
+
+    /// Tells what was found at the address: `Some(Ok(name))` for a server,
+    /// `Some(Err(()))` for none, `None` while that is not known.
+    pub fn set_ister_found(&self, found: Option<Result<&str, ()>>) {
+        let imp = self.imp();
+        let entry = &imp._ister_address_entry;
+        entry.remove_css_class("success");
+        entry.remove_css_class("warning");
+        let subtitle = match found {
+            Some(Ok(name)) => {
+                entry.add_css_class("success");
+                gettext_f("Found {}. Opens your browser to sign in", &[name])
+            }
+            Some(Err(())) => {
+                entry.add_css_class("warning");
+                gettext("No Ister server answers at this address")
+            }
+            None => gettext("Opens your browser to sign in"),
+        };
+        imp._ister_row.set_subtitle(&glib::markup_escape_text(&subtitle));
     }
 
     /// Tells why signing in did not work, or takes that away again.

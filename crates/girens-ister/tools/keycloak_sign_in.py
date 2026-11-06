@@ -19,7 +19,18 @@ url = open(path).read().strip(); os.remove(path)
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *a, **k): return None
 opener = urllib.request.build_opener(NoRedirect())
-first = opener.open(url)
+# The provider may send the browser back to Girens first, to be sent on to
+# ask for less; follow until the form to sign in at shows.
+for _ in range(5):
+    try:
+        first = opener.open(url)
+        break
+    except urllib.error.HTTPError as redirect:
+        url = redirect.headers.get("Location")
+        if not url: sys.exit(f"no sign-in page: {redirect.code}")
+        print("sent on to", url.split("?")[0], "scope" in url and urllib.parse.parse_qs(urllib.parse.urlsplit(url).query).get("scope"))
+else:
+    sys.exit("sent around in circles")
 # Keycloak marks its cookies Secure, which a cookie jar would hold back over http.
 cookies = "; ".join(c.split(";")[0] for c in first.headers.get_all("Set-Cookie") or [])
 page = first.read().decode()

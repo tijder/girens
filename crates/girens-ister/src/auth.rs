@@ -196,12 +196,52 @@ pub struct Login {
     redirect: String,
     state: String,
     verifier: String,
+    /// The same sign-in without the wish for a session that lasts; where
+    /// the browser is sent when the provider refuses that wish.
+    plain_url: String,
+    /// Whether the browser was sent there already.
+    asked_plainly: std::sync::atomic::AtomicBool,
+    pages: Pages,
+}
+
+/// What the browser shows when it comes back from the provider, in the
+/// language of the user.
+#[derive(Debug, Clone)]
+pub struct Pages {
+    pub signed_in: String,
+    pub failed: String,
+}
+
+impl Default for Pages {
+    fn default() -> Self {
+        Self {
+            signed_in: "You are signed in. You can close this page and return to Girens.".into(),
+            failed: "Signing in did not work. Return to Girens to try again.".into(),
+        }
+    }
+}
+
+/// What a request of the browser turned out to be.
+enum Answer {
+    Code(String),
+    Failed(Error),
+    /// The provider does not hand out sessions that last: ask without.
+    AskPlainly,
+}
+
+fn escape(text: &str) -> String {
+    text.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
 }
 
 impl Login {
     /// Prepares a sign-in. With `ask_again` the provider asks who it is
     /// even when the browser is still signed in, to add another user.
-    pub async fn start(provider: Provider, ask_again: bool) -> Result<Self> {
+    ///
+    /// The provider is asked for a session that outlasts the one of the
+    /// browser (`offline_access`), so that the user stays signed in. Not
+    /// every provider grants that to this client; one that refuses sends
+    /// the browser back, and it is then sent on to ask without.
+    pub async fn start(provider: Provider, ask_again: bool, pages: Pages) -> Result<Self> {
         let io = |source| Error::Io {
             path: "localhost".into(),
             source,
@@ -215,25 +255,32 @@ impl Login {
         let verifier = random_text(48)?;
         let challenge = URL_SAFE_NO_PAD.encode(Sha256::digest(verifier.as_bytes()));
 
-        let mut url = Url::parse(&provider.authorization_endpoint)?;
-        {
-            let mut query = url.query_pairs_mut();
-            query
-                .append_pair("response_type", "code")
-                .append_pair("client_id", CLIENT_ID)
-                .append_pair("redirect_uri", &redirect)
-                // As the other players ask: what a provider set up for Ister
-                // is sure to grant.
-                .append_pair("scope", "openid")
-                .append_pair("state", &state)
-                .append_pair("code_challenge", &challenge)
-                .append_pair("code_challenge_method", "S256");
-            if ask_again {
-                query.append_pair("prompt", "login");
+        let page = |scope: &str| -> Result<String> {
+            let mut url = Url::parse(&provider.authorization_endpoint)?;
+            {
+                let mut query = url.query_pairs_mut();
+                query
+                    .append_pair("response_type", "code")
+                    .append_pair("client_id", CLIENT_ID)
+                    .append_pair("redirect_uri", &redirect)
+                    .append_pair("scope", scope)
+                    .append_pair("state", &state)
+                    .append_pair("code_challenge", &challenge)
+                    .append_pair("code_challenge_method", "S256");
+                if ask_again {
+                    query.append_pair("prompt", "login");
+                }
             }
-        }
+            Ok(url.into())
+        };
+        // `openid` alone is what the other players ask, and what a provider
+        // set up for Ister is sure to grant.
+        let (url, plain_url) = (page("openid offline_access")?, page("openid")?);
         Ok(Self {
-            url: url.into(),
+            url,
+            plain_url,
+            asked_plainly: std::sync::atomic::AtomicBool::new(false),
+            pages,
             provider,
             listener,
             redirect,
@@ -261,7 +308,8 @@ impl Login {
     }
 
     /// Handles one request of the browser. `None` when it was not the
-    /// answer of the provider (browsers also ask for an icon).
+    /// answer of the provider (browsers also ask for an icon), or when the
+    /// browser was sent back to the provider to ask again.
     async fn next_answer(&self) -> Result<Option<Result<String>>> {
         let io = |source| Error::Io {
             path: self.redirect.clone(),
@@ -282,41 +330,68 @@ impl Login {
         let answer = Url::parse(&format!("{}{target}", self.redirect))
             .ok()
             .and_then(|url| self.read_answer(&url));
-        let (status, text) = match &answer {
-            Some(Ok(_)) => ("200 OK", "You are signed in. You can close this page and return to Girens."),
-            Some(Err(_)) => ("400 Bad Request", "Signing in did not work. Return to Girens to try again."),
-            None => ("404 Not Found", ""),
+        let response = match &answer {
+            Some(Answer::AskPlainly) => format!(
+                "HTTP/1.1 302 Found\r\nLocation: {}\r\nContent-Length: 0\r\n\
+                 Connection: close\r\n\r\n",
+                self.plain_url
+            ),
+            other => {
+                let (status, text) = match other {
+                    Some(Answer::Code(_)) => ("200 OK", self.pages.signed_in.as_str()),
+                    Some(_) => ("400 Bad Request", self.pages.failed.as_str()),
+                    None => ("404 Not Found", ""),
+                };
+                let body = format!(
+                    "<!doctype html><meta charset=utf-8>\
+                     <meta name=viewport content=\"width=device-width\"><title>Girens</title>\
+                     <style>body{{font:1.1rem system-ui,sans-serif;display:grid;place-items:center;\
+                     min-height:90vh;margin:0;background:#fafafa;color:#222}}\
+                     main{{max-width:28rem;padding:2rem;text-align:center}}h1{{font-size:1.6rem}}\
+                     @media(prefers-color-scheme:dark){{body{{background:#222;color:#eee}}}}</style>\
+                     <main><h1>Girens</h1><p>{}</p></main>",
+                    escape(text)
+                );
+                format!(
+                    "HTTP/1.1 {status}\r\nContent-Type: text/html; charset=utf-8\r\n\
+                     Content-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+            }
         };
-        let body = format!(
-            "<!doctype html><meta charset=utf-8><title>Girens</title>\
-             <body style=\"font-family:sans-serif;text-align:center;margin-top:20vh\">{text}"
-        );
-        let response = format!(
-            "HTTP/1.1 {status}\r\nContent-Type: text/html; charset=utf-8\r\n\
-             Content-Length: {}\r\nConnection: close\r\n\r\n{body}",
-            body.len()
-        );
         let _ = stream.write_all(response.as_bytes()).await;
         let _ = stream.shutdown().await;
-        Ok(answer)
+        Ok(match answer {
+            Some(Answer::Code(code)) => Some(Ok(code)),
+            Some(Answer::Failed(err)) => Some(Err(err)),
+            Some(Answer::AskPlainly) | None => None,
+        })
     }
 
-    fn read_answer(&self, url: &Url) -> Option<Result<String>> {
+    fn read_answer(&self, url: &Url) -> Option<Answer> {
         let value = |name: &str| {
             url.query_pairs()
                 .find(|(key, _)| key == name)
                 .map(|(_, value)| value.into_owned())
         };
         if let Some(error) = value("error") {
+            // Once: a provider that also refuses the plain question has
+            // another reason.
+            let first = !self
+                .asked_plainly
+                .swap(true, std::sync::atomic::Ordering::AcqRel);
+            if error == "invalid_scope" && first {
+                return Some(Answer::AskPlainly);
+            }
             let detail = value("error_description").unwrap_or(error);
-            return Some(Err(Error::Server(detail)));
+            return Some(Answer::Failed(Error::Server(detail)));
         }
         let code = value("code")?;
         // Only the answer to the question that was asked counts.
         if value("state").as_deref() != Some(&self.state) {
-            return Some(Err(Error::Unauthorized));
+            return Some(Answer::Failed(Error::Unauthorized));
         }
-        Some(Ok(code))
+        Some(Answer::Code(code))
     }
 }
 

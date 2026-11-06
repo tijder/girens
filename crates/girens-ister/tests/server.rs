@@ -176,7 +176,7 @@ async fn the_browser_brings_the_sign_in_back() {
     let http = reqwest::Client::new();
     let well_known = auth::discover(&http, &mock.uri()).await.unwrap();
     let provider = Provider::fetch(&http, &well_known.openid_url).await.unwrap();
-    let login = Login::start(provider, true).await.unwrap();
+    let login = Login::start(provider, true, Default::default()).await.unwrap();
 
     let page = url::Url::parse(&login.url).unwrap();
     let asked: std::collections::HashMap<String, String> = page.query_pairs().into_owned().collect();
@@ -226,7 +226,7 @@ async fn an_answer_to_another_question_is_refused() {
     let http = reqwest::Client::new();
     let well_known = auth::discover(&http, &mock.uri()).await.unwrap();
     let provider = Provider::fetch(&http, &well_known.openid_url).await.unwrap();
-    let login = Login::start(provider, false).await.unwrap();
+    let login = Login::start(provider, false, Default::default()).await.unwrap();
     assert!(!login.url.contains("prompt="));
     let redirect = url::Url::parse(&login.url)
         .unwrap()
@@ -505,4 +505,79 @@ async fn subtitles_that_are_pictures_come_with_their_sheets() {
         server.picture_subtitles(&missing).await,
         Err(Error::Status { .. })
     ));
+}
+
+#[tokio::test]
+async fn a_provider_that_gives_no_lasting_session_is_asked_without() {
+    let mock = serve(300).await;
+    let http = reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::none())
+        .build()
+        .unwrap();
+    let well_known = auth::discover(&http, &mock.uri()).await.unwrap();
+    let provider = Provider::fetch(&http, &well_known.openid_url).await.unwrap();
+    let pages = auth::Pages {
+        signed_in: "Je bent <aangemeld>".into(),
+        failed: "Mislukt".into(),
+    };
+    let login = Login::start(provider, false, pages).await.unwrap();
+    let page = url::Url::parse(&login.url).unwrap();
+    let asked: std::collections::HashMap<String, String> = page.query_pairs().into_owned().collect();
+    // First with the wish to stay signed in.
+    assert_eq!(asked["scope"], "openid offline_access");
+    let redirect = asked["redirect_uri"].replace("localhost", "127.0.0.1");
+    let state = asked["state"].clone();
+
+    let browser = async {
+        // The provider refuses the wish; the browser is sent to ask again.
+        let refused = http
+            .get(format!("{redirect}/?error=invalid_scope&state={state}"))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(refused.status(), 302);
+        let again = url::Url::parse(refused.headers()["location"].to_str().unwrap()).unwrap();
+        let asked: std::collections::HashMap<String, String> =
+            again.query_pairs().into_owned().collect();
+        assert_eq!(asked["scope"], "openid");
+        assert_eq!(asked["state"], state);
+        // That works, and the page says so in the words it was given.
+        let done = http
+            .get(format!("{redirect}/?code=the-code&state={state}"))
+            .send()
+            .await
+            .unwrap();
+        assert!(done.text().await.unwrap().contains("Je bent &lt;aangemeld&gt;"));
+    };
+    let (tokens, ()) = tokio::join!(login.finish(&http), browser);
+    assert_eq!(tokens.unwrap().refresh, "refresh-from-code");
+}
+
+#[tokio::test]
+async fn a_provider_that_refuses_twice_has_another_reason() {
+    let mock = serve(300).await;
+    let http = reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::none())
+        .build()
+        .unwrap();
+    let well_known = auth::discover(&http, &mock.uri()).await.unwrap();
+    let provider = Provider::fetch(&http, &well_known.openid_url).await.unwrap();
+    let login = Login::start(provider, false, Default::default()).await.unwrap();
+    let redirect = url::Url::parse(&login.url)
+        .unwrap()
+        .query_pairs()
+        .find(|(key, _)| key == "redirect_uri")
+        .unwrap()
+        .1
+        .replace("localhost", "127.0.0.1");
+    let browser = async {
+        for _ in 0..2 {
+            let _ = http
+                .get(format!("{redirect}/?error=invalid_scope&error_description=no"))
+                .send()
+                .await;
+        }
+    };
+    let (tokens, ()) = tokio::join!(login.finish(&http), browser);
+    assert!(matches!(tokens, Err(Error::Server(reason)) if reason == "no"));
 }

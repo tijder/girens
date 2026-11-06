@@ -74,7 +74,7 @@ impl PlexWindow {
         }
     }
 
-    /// Shows the sign-in page for the Ister server of the account in use,
+    /// Offers to sign in again to the Ister server of the account in use,
     /// when that is what it is.
     fn offer_ister_login(&self) -> bool {
         let stored = self.imp().session.stored_account();
@@ -84,8 +84,17 @@ impl PlexWindow {
         else {
             return false;
         };
-        self.show_login();
-        self.imp()._login_view.offer_ister(&server.url);
+        // Nothing to fill in: the address is known, only the browser is
+        // needed again.
+        self.show_loading(&gettext_f(
+            "Your session at {} has ended.",
+            &[&server.url],
+        ));
+        self.imp()
+            ._loading_view
+            .set_action(Some(&gettext("Sign in again")));
+        #[cfg(debug_assertions)]
+        crate::debug::account_step(self);
         true
     }
 
@@ -187,6 +196,8 @@ impl PlexWindow {
                 return Err(Error::Unauthorized);
             }
             if session.finish_browser_login(&pin).await? {
+                // The user is still looking at the browser.
+                self.present();
                 return Ok(());
             }
         }
@@ -233,10 +244,15 @@ impl PlexWindow {
                 }
             }
         };
-        tokio::select! {
+        let result = tokio::select! {
             result = session.finish_ister_login(pending) => result,
             () = cancelled => Err(Error::Unauthorized),
+        };
+        if result.is_ok() {
+            // The user is still looking at the browser.
+            self.present();
         }
+        result
     }
 
     /// Connects to the server used last, or else to the first server of the
