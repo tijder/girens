@@ -2,7 +2,9 @@
 
 use std::collections::HashMap;
 
-use girens_model::model::{Item, ItemKind, LibrarySection, Media, Part, Stream, Tag};
+use girens_model::model::{
+    Item, ItemKind, LibrarySection, Media, Part, Segment, SegmentKind, Stream, Tag,
+};
 use girens_model::ItemId;
 
 use crate::wire;
@@ -164,12 +166,13 @@ impl Context {
         let file_id = ItemId::new(&file.id);
         let all: Vec<&wire::MediaFileStream> = file.media_file_streams.iter().flatten().collect();
         let mut streams: Vec<Stream> = Vec::new();
+        let mut picture_streams: Vec<String> = Vec::new();
         for stream in &all {
             let (stream_type, key) = match stream.codec_type.as_str() {
                 "VIDEO" => (1, None),
                 "AUDIO" => (2, None),
                 "SUBTITLE" | "EXTERNAL_SUBTITLE" => {
-                    // Pictures instead of text cannot be had as a file.
+                    // Pictures instead of text come as a list of them.
                     let pictures = matches!(
                         stream.codec_name.as_str(),
                         "hdmv_pgs_subtitle" | "pgssub" | "dvd_subtitle" | "dvdsub" | "dvb_subtitle" | "xsub"
@@ -181,10 +184,23 @@ impl Context {
                             other.codec_type == "EXTERNAL_SUBTITLE"
                                 && other.stream_index == stream.stream_index
                         });
-                    if pictures || replaced {
+                    if replaced {
                         continue;
                     }
-                    (3, Some(format!("{base}/sub_{}.srt", stream.id)))
+                    if pictures {
+                        // Unless the same subtitles were also read to text.
+                        let read = all.iter().any(|other| {
+                            other.codec_type == "EXTERNAL_SUBTITLE"
+                                && other.stream_index == stream.stream_index
+                        });
+                        if read {
+                            continue;
+                        }
+                        picture_streams.push(stream.id.clone());
+                        (3, Some(format!("{base}/bsub_{}.json", stream.id)))
+                    } else {
+                        (3, Some(format!("{base}/sub_{}.srt", stream.id)))
+                    }
                 }
                 _ => continue,
             };
@@ -216,6 +232,7 @@ impl Context {
                 language: stream.language.clone(),
                 language_code: stream.language.as_deref().map(language_code),
                 selected: false,
+                pictures: picture_streams.contains(&stream.id),
             });
         }
 
@@ -320,6 +337,7 @@ impl Context {
             .media_file
             .first()
             .and_then(|file| file.duration_in_milliseconds);
+        item.segments = segments(movie.media_file.first(), None);
         watched(&mut item, &movie.watch_status);
         self.describe(&mut item, &movie.metadata);
         item
@@ -415,11 +433,12 @@ impl Context {
             ..Item::default()
         };
         // An episode that shares its file with others is only its slice.
-        let slice = episode
-            .media_file_parts
-            .first()
+        let part = episode.media_file_parts.first();
+        let slice = part
             .map(|part| part.duration_in_milliseconds as u64)
             .filter(|duration| *duration > 0);
+        item.start_offset = part.map_or(0, |part| part.start_in_milliseconds.max(0.0) as u64);
+        item.segments = segments(episode.media_file.first(), Some(&episode.id));
         item.duration = slice.or_else(|| {
             episode
                 .media_file
@@ -556,6 +575,30 @@ fn season_item(show: &Item, uuid: &str, number: u32, episodes: usize, watched: u
     }
 }
 
+/// The intro and credits of a file, for the episode `of` when the file
+/// holds several.
+fn segments(file: Option<&wire::MediaFile>, of: Option<&str>) -> Vec<Segment> {
+    let Some(file) = file else {
+        return Vec::new();
+    };
+    file.segments
+        .iter()
+        .filter(|segment| segment.episode_id.is_none() || segment.episode_id.as_deref() == of)
+        .filter_map(|segment| {
+            let kind = match segment.kind.as_str() {
+                "INTRO" => SegmentKind::Intro,
+                "OUTRO" => SegmentKind::Outro,
+                _ => return None,
+            };
+            let (start, end) = (
+                segment.start_in_milliseconds.max(0.0) as u64,
+                segment.end_in_milliseconds.max(0.0) as u64,
+            );
+            (end > start).then_some(Segment { kind, start, end })
+        })
+        .collect()
+}
+
 /// How often the item was played and where the last play stopped.
 fn watched(item: &mut Item, statuses: &[wire::WatchStatus]) {
     item.view_count = statuses.iter().filter(|status| status.watched).count() as u32;
@@ -606,4 +649,69 @@ mod tests {
         assert!(!same_language("en", "nl"));
         assert!(!same_language("", ""));
     }
+    fn episode(value: serde_json::Value) -> Item {
+        Context::default().episode(&serde_json::from_value(value).unwrap())
+    }
+
+    fn file(streams: serde_json::Value, segments: serde_json::Value) -> serde_json::Value {
+        serde_json::json!({
+            "id": "file", "durationInMilliseconds": 360_000,
+            "directory": {"servingNode": {"url": "http://node"}},
+            "mediaFileStreams": streams, "segments": segments,
+        })
+    }
+
+    #[test]
+    fn an_episode_in_a_shared_file_is_its_slice() {
+        let segments = serde_json::json!([
+            {"type": "INTRO", "startInMilliseconds": 0.0, "endInMilliseconds": 30_000.0, "episodeId": "first"},
+            {"type": "INTRO", "startInMilliseconds": 180_000.0, "endInMilliseconds": 210_000.0, "episodeId": "second"},
+            {"type": "OUTRO", "startInMilliseconds": 340_000.0, "endInMilliseconds": 360_000.0, "episodeId": "second"},
+            {"type": "OUTRO", "startInMilliseconds": 5.0, "endInMilliseconds": 5.0, "episodeId": "second"},
+        ]);
+        let item = episode(serde_json::json!({
+            "id": "second", "number": 2,
+            "mediaFile": [file(serde_json::json!([]), segments)],
+            "mediaFileParts": [{"startInMilliseconds": 180_000.0, "durationInMilliseconds": 180_000.0, "mediaFile": {"id": "file"}}],
+        }));
+        assert_eq!(item.start_offset, 180_000);
+        assert_eq!(item.duration, Some(180_000));
+        // Only its own, in the time of the file, and none that is empty.
+        assert_eq!(
+            item.segments,
+            [
+                Segment { kind: SegmentKind::Intro, start: 180_000, end: 210_000 },
+                Segment { kind: SegmentKind::Outro, start: 340_000, end: 360_000 },
+            ]
+        );
+    }
+
+    #[test]
+    fn subtitles_are_text_pictures_or_a_text_reading_of_pictures() {
+        let stream = |id: &str, index: u32, kind: &str, codec: &str| {
+            serde_json::json!({"id": id, "streamIndex": index, "codecType": kind, "codecName": codec, "language": "eng"})
+        };
+        let item = episode(serde_json::json!({
+            "id": "one", "number": 1,
+            "mediaFile": [file(serde_json::json!([
+                stream("text", 2, "SUBTITLE", "subrip"),
+                stream("pictures", 3, "SUBTITLE", "hdmv_pgs_subtitle"),
+                stream("read", 4, "SUBTITLE", "dvd_subtitle"),
+                stream("reading", 4, "EXTERNAL_SUBTITLE", "subtitle"),
+            ]), serde_json::json!([]))],
+        }));
+        let subtitles: Vec<(&str, bool, &str)> = item
+            .streams(girens_model::model::StreamKind::Subtitle)
+            .map(|stream| (stream.id.as_str(), stream.pictures, stream.key.as_deref().unwrap()))
+            .collect();
+        assert_eq!(
+            subtitles,
+            [
+                ("text", false, "http://node/hls/file/sub_text.srt"),
+                ("pictures", true, "http://node/hls/file/bsub_pictures.json"),
+                ("reading", false, "http://node/hls/file/sub_reading.srt"),
+            ]
+        );
+    }
+
 }

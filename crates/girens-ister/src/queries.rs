@@ -28,7 +28,8 @@ macro_rules! file {
     () => {
         "fragment File on MediaFile { id size durationInMilliseconds format \
          directory { servingNode { url } } \
-         mediaFileStreams { id streamIndex codecName codecType width height language title } }"
+         mediaFileStreams { id streamIndex codecName codecType width height language title } \
+         segments { type startInMilliseconds endInMilliseconds episodeId } }"
     };
 }
 macro_rules! movie {

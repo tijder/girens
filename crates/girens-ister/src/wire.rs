@@ -77,11 +77,29 @@ pub struct MediaFile {
     pub directory: Directory,
     #[serde(default, deserialize_with = "list")]
     pub media_file_streams: Vec<Option<MediaFileStream>>,
+    #[serde(default, deserialize_with = "list")]
+    pub segments: Vec<MediaSegment>,
+}
+
+/// An intro or the credits, in the time of the file.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MediaSegment {
+    #[serde(rename = "type")]
+    pub kind: String,
+    #[serde(default)]
+    pub start_in_milliseconds: f64,
+    #[serde(default)]
+    pub end_in_milliseconds: f64,
+    /// Whose it is, in a file that holds several episodes.
+    pub episode_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaFilePart {
+    #[serde(default)]
+    pub start_in_milliseconds: f64,
     #[serde(default)]
     pub duration_in_milliseconds: f64,
 }

@@ -131,6 +131,14 @@ pub struct Item {
     #[serde(rename = "playQueueItemID")]
     pub play_queue_item_id: Option<ItemId>,
 
+    /// Where the item begins in its file, in milliseconds: not at the
+    /// start for an episode that shares its file with others.
+    #[serde(default)]
+    pub start_offset: u64,
+    /// The parts of the file one may want to skip.
+    #[serde(default)]
+    pub segments: Vec<Segment>,
+
     #[serde(default, rename = "Genre")]
     pub genres: Vec<Tag>,
     #[serde(default, rename = "Media")]
@@ -187,6 +195,22 @@ impl Item {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SegmentKind {
+    Intro,
+    /// The credits at the end.
+    Outro,
+}
+
+/// A stretch of a file, in milliseconds from its start.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+pub struct Segment {
+    pub kind: SegmentKind,
+    pub start: u64,
+    pub end: u64,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Tag {
     pub tag: String,
@@ -240,6 +264,10 @@ pub struct Stream {
     pub language_code: Option<String>,
     #[serde(default)]
     pub selected: bool,
+    /// Subtitles that are pictures rather than text; `key` then leads to
+    /// the list of them.
+    #[serde(default)]
+    pub pictures: bool,
 }
 
 impl Stream {

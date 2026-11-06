@@ -1,1 +1,1 @@
-{"data":{"playlists":[]}}
+{"data":{"playlists":[{"id":"462143c9-eba4-4f74-a840-b5017aa55db0","name":"Wolf songs","type":"MANUAL","libraryType":"MUSIC","itemCount":4,"coverImages":[{"id":"f068bddc-d80e-4116-8c0c-d37761ce8c72","type":"COVER","selected":false,"directory":{"servingNode":{"url":"http://localhost:8080"}}},{"id":"da2f7908-cf08-47c3-979c-ef1ec2b262ef","type":"COVER","selected":false,"directory":{"servingNode":{"url":"http://localhost:8080"}}}]}]}}
