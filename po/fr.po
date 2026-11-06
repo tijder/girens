@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:12+0100\n"
+"POT-Creation-Date: 2026-11-06 14:53+0100\n"
 "PO-Revision-Date: 2022-11-29 09:41+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Available offline"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:155
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:159
 msgid "Continue watching"
 msgstr ""
 
@@ -247,10 +247,14 @@ msgid "Description"
 msgstr "Description"
 
 #: ../data/ui/player_view.blp:140
+msgid "Version"
+msgstr ""
+
+#: ../data/ui/player_view.blp:144
 msgid "Audio "
 msgstr "Audio "
 
-#: ../data/ui/player_view.blp:143
+#: ../data/ui/player_view.blp:147
 msgid "Subtitle "
 msgstr "Sous-titre "
 
@@ -468,58 +472,58 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:392
+#: ../src/player/mod.rs:394
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:400
+#: ../src/player/mod.rs:402
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:535
+#: ../src/player/mod.rs:537
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:730
+#: ../src/player/mod.rs:751
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1304
+#: ../src/player/mod.rs:1341
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: ../src/player/mod.rs:1416
+#: ../src/player/mod.rs:1453
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/session.rs:490
+#: ../src/session.rs:500
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 
-#: ../src/session.rs:491
+#: ../src/session.rs:501
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: ../src/session.rs:574
+#: ../src/session.rs:584
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: ../src/session.rs:575
+#: ../src/session.rs:585
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: ../src/session.rs:576
+#: ../src/session.rs:586
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: ../src/session.rs:577
+#: ../src/session.rs:587
 msgid "Unknown"
 msgstr ""
 
-#: ../src/session.rs:579
+#: ../src/session.rs:589
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
@@ -656,23 +660,23 @@ msgstr ""
 msgid "The photo has no picture"
 msgstr ""
 
-#: ../src/views/player_view.rs:325
+#: ../src/views/player_view.rs:343
 msgid "Audio"
 msgstr ""
 
-#: ../src/views/player_view.rs:326
+#: ../src/views/player_view.rs:344
 msgid "Subtitle"
 msgstr ""
 
-#: ../src/views/player_view.rs:381
+#: ../src/views/player_view.rs:399
 msgid "Skip intro"
 msgstr ""
 
-#: ../src/views/player_view.rs:382
+#: ../src/views/player_view.rs:400
 msgid "Next episode"
 msgstr ""
 
-#: ../src/views/player_view.rs:567
+#: ../src/views/player_view.rs:585
 msgid "None"
 msgstr "Aucun"
 
@@ -700,25 +704,29 @@ msgstr "Transcoder les médias au lieu de les lire directement."
 msgid "Resolution"
 msgstr ""
 
-#: ../src/views/preferences.rs:70
+#: ../src/views/preferences.rs:57
+msgid "The server in use decides this itself"
+msgstr ""
+
+#: ../src/views/preferences.rs:78
 msgid "Playback"
 msgstr ""
 
-#: ../src/views/preferences.rs:77
+#: ../src/views/preferences.rs:85
 msgid "Ask who is watching"
 msgstr ""
 
-#: ../src/views/preferences.rs:79
+#: ../src/views/preferences.rs:87
 msgid ""
 "Choose the profile of the Plex Home at every start, instead of continuing as "
 "the one used last."
 msgstr ""
 
-#: ../src/views/preferences.rs:86
+#: ../src/views/preferences.rs:94
 msgid "Profiles"
 msgstr ""
 
-#: ../src/views/preferences.rs:94
+#: ../src/views/preferences.rs:102
 msgid "Preferences"
 msgstr ""
 
@@ -845,55 +853,55 @@ msgstr "Accueil"
 msgid "Starting Girens"
 msgstr "Démarrage de Girens"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:149
-#: ../src/window/connection.rs:213 ../src/window/connection.rs:265
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:154
+#: ../src/window/connection.rs:218 ../src/window/connection.rs:270
 #, rust-format
 msgid "Connecting to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:90
+#: ../src/window/connection.rs:95
 #, rust-format
 msgid "Your session at {} has ended."
 msgstr ""
 
-#: ../src/window/connection.rs:95
+#: ../src/window/connection.rs:100
 msgid "Sign in again"
 msgstr ""
 
-#: ../src/window/connection.rs:113 ../src/window/connection.rs:118
+#: ../src/window/connection.rs:118 ../src/window/connection.rs:123
 #, rust-format
 msgid "Could not reach plex.tv: {}"
 msgstr ""
 
-#: ../src/window/connection.rs:117
+#: ../src/window/connection.rs:122
 msgid "The username or password is not right."
 msgstr ""
 
-#: ../src/window/connection.rs:125
+#: ../src/window/connection.rs:130
 msgid "The server does not accept this token."
 msgstr ""
 
-#: ../src/window/connection.rs:126 ../src/window/connection.rs:135
+#: ../src/window/connection.rs:131 ../src/window/connection.rs:140
 #, rust-format
 msgid "Could not connect to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:138
+#: ../src/window/connection.rs:143
 #, rust-format
 msgid "No Ister server was found at {}."
 msgstr ""
 
-#: ../src/window/connection.rs:273 ../src/window/connection.rs:321
-#: ../src/window/connection.rs:790
+#: ../src/window/connection.rs:278 ../src/window/connection.rs:326
+#: ../src/window/connection.rs:795
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: ../src/window/connection.rs:300
+#: ../src/window/connection.rs:305
 msgid "No servers found for this account."
 msgstr "Aucun serveur trouvé pour ce compte."
 
-#: ../src/window/connection.rs:314
+#: ../src/window/connection.rs:319
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -901,53 +909,53 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: ../src/window/connection.rs:360
+#: ../src/window/connection.rs:365
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:420
+#: ../src/window/connection.rs:425
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/connection.rs:516
+#: ../src/window/connection.rs:521
 msgid "Who is watching?"
 msgstr ""
 
-#: ../src/window/connection.rs:618
+#: ../src/window/connection.rs:623
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: ../src/window/connection.rs:620
+#: ../src/window/connection.rs:625
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: ../src/window/connection.rs:632
+#: ../src/window/connection.rs:637
 msgid "PIN"
 msgstr ""
 
-#: ../src/window/connection.rs:637 ../src/window/connection.rs:721
+#: ../src/window/connection.rs:642 ../src/window/connection.rs:726
 msgid "Cancel"
 msgstr ""
 
-#: ../src/window/connection.rs:638
+#: ../src/window/connection.rs:643
 msgid "Continue"
 msgstr ""
 
-#: ../src/window/connection.rs:669
+#: ../src/window/connection.rs:674
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: ../src/window/connection.rs:716
+#: ../src/window/connection.rs:721
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: ../src/window/connection.rs:718
+#: ../src/window/connection.rs:723
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: ../src/window/connection.rs:722
+#: ../src/window/connection.rs:727
 msgid "Sign out"
 msgstr ""
 

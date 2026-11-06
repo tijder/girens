@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:12+0100\n"
+"POT-Creation-Date: 2026-11-06 14:53+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -73,7 +73,7 @@ msgstr "Muziekclip afspelen"
 msgid "Available offline"
 msgstr "Offline beschikbaar"
 
-#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:155
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:159
 msgid "Continue watching"
 msgstr "Verder kijken"
 
@@ -249,10 +249,14 @@ msgid "Description"
 msgstr "Beschrĳving"
 
 #: ../data/ui/player_view.blp:140
+msgid "Version"
+msgstr "Versie"
+
+#: ../data/ui/player_view.blp:144
 msgid "Audio "
 msgstr "Audio "
 
-#: ../data/ui/player_view.blp:143
+#: ../data/ui/player_view.blp:147
 msgid "Subtitle "
 msgstr "Ondertitel "
 
@@ -470,60 +474,60 @@ msgstr "Geen afspeellijsten"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: ../src/player/mod.rs:392
+#: ../src/player/mod.rs:394
 msgid "Nothing to play"
 msgstr "Er is niets om af te spelen"
 
-#: ../src/player/mod.rs:400
+#: ../src/player/mod.rs:402
 msgid "Could not create a play queue"
 msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: ../src/player/mod.rs:535
+#: ../src/player/mod.rs:537
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: ../src/player/mod.rs:730
+#: ../src/player/mod.rs:751
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1304
+#: ../src/player/mod.rs:1341
 msgid "Could not load the subtitles"
 msgstr "Kan de ondertitels niet laden"
 
-#: ../src/player/mod.rs:1416
+#: ../src/player/mod.rs:1453
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
-#: ../src/session.rs:490
+#: ../src/session.rs:500
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 "Je bent aangemeld. Je kunt deze pagina sluiten en teruggaan naar Girens."
 
-#: ../src/session.rs:491
+#: ../src/session.rs:501
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 "Aanmelden is niet gelukt. Ga terug naar Girens om het opnieuw te proberen."
 
-#: ../src/session.rs:574
+#: ../src/session.rs:584
 #, rust-format
 msgid "Season {}"
 msgstr "Seizoen {}"
 
-#: ../src/session.rs:575
+#: ../src/session.rs:585
 #, rust-format
 msgid "Episode {}"
 msgstr "Aflevering {}"
 
-#: ../src/session.rs:576
+#: ../src/session.rs:586
 #, rust-format
 msgid "Track {}"
 msgstr "Nummer {}"
 
-#: ../src/session.rs:577
+#: ../src/session.rs:587
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: ../src/session.rs:579
+#: ../src/session.rs:589
 #, rust-format
 msgid "{} (pictures)"
 msgstr "{} (plaatjes)"
@@ -660,23 +664,23 @@ msgstr "Volgende foto"
 msgid "The photo has no picture"
 msgstr "De foto heeft geen afbeelding"
 
-#: ../src/views/player_view.rs:325
+#: ../src/views/player_view.rs:343
 msgid "Audio"
 msgstr "Audio"
 
-#: ../src/views/player_view.rs:326
+#: ../src/views/player_view.rs:344
 msgid "Subtitle"
 msgstr "Ondertiteling"
 
-#: ../src/views/player_view.rs:381
+#: ../src/views/player_view.rs:399
 msgid "Skip intro"
 msgstr "Intro overslaan"
 
-#: ../src/views/player_view.rs:382
+#: ../src/views/player_view.rs:400
 msgid "Next episode"
 msgstr "Volgende aflevering"
 
-#: ../src/views/player_view.rs:567
+#: ../src/views/player_view.rs:585
 msgid "None"
 msgstr "Geen"
 
@@ -704,15 +708,19 @@ msgstr "Transcodeer media in plaats van direct af te spelen."
 msgid "Resolution"
 msgstr "Resolutie"
 
-#: ../src/views/preferences.rs:70
+#: ../src/views/preferences.rs:57
+msgid "The server in use decides this itself"
+msgstr "De server in gebruik bepaalt dit zelf"
+
+#: ../src/views/preferences.rs:78
 msgid "Playback"
 msgstr "Afspelen"
 
-#: ../src/views/preferences.rs:77
+#: ../src/views/preferences.rs:85
 msgid "Ask who is watching"
 msgstr "Vragen wie er kijkt"
 
-#: ../src/views/preferences.rs:79
+#: ../src/views/preferences.rs:87
 msgid ""
 "Choose the profile of the Plex Home at every start, instead of continuing as "
 "the one used last."
@@ -720,11 +728,11 @@ msgstr ""
 "Kies bij elke start het profiel van de Plex Home, in plaats van verder te "
 "gaan als het laatst gebruikte."
 
-#: ../src/views/preferences.rs:86
+#: ../src/views/preferences.rs:94
 msgid "Profiles"
 msgstr "Profielen"
 
-#: ../src/views/preferences.rs:94
+#: ../src/views/preferences.rs:102
 msgid "Preferences"
 msgstr "Voorkeuren"
 
@@ -851,55 +859,55 @@ msgstr "Thuis"
 msgid "Starting Girens"
 msgstr "Girens wordt opgestart"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:149
-#: ../src/window/connection.rs:213 ../src/window/connection.rs:265
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:154
+#: ../src/window/connection.rs:218 ../src/window/connection.rs:270
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
 
-#: ../src/window/connection.rs:90
+#: ../src/window/connection.rs:95
 #, rust-format
 msgid "Your session at {} has ended."
 msgstr "Je sessie bij {} is verlopen."
 
-#: ../src/window/connection.rs:95
+#: ../src/window/connection.rs:100
 msgid "Sign in again"
 msgstr "Opnieuw aanmelden"
 
-#: ../src/window/connection.rs:113 ../src/window/connection.rs:118
+#: ../src/window/connection.rs:118 ../src/window/connection.rs:123
 #, rust-format
 msgid "Could not reach plex.tv: {}"
 msgstr "Kan plex.tv niet bereiken: {}"
 
-#: ../src/window/connection.rs:117
+#: ../src/window/connection.rs:122
 msgid "The username or password is not right."
 msgstr "De gebruikersnaam of het wachtwoord klopt niet."
 
-#: ../src/window/connection.rs:125
+#: ../src/window/connection.rs:130
 msgid "The server does not accept this token."
 msgstr "De server accepteert dit token niet."
 
-#: ../src/window/connection.rs:126 ../src/window/connection.rs:135
+#: ../src/window/connection.rs:131 ../src/window/connection.rs:140
 #, rust-format
 msgid "Could not connect to {}."
 msgstr "Kan geen verbinding maken met {}."
 
-#: ../src/window/connection.rs:138
+#: ../src/window/connection.rs:143
 #, rust-format
 msgid "No Ister server was found at {}."
 msgstr "Er is geen Ister-server gevonden op {}."
 
-#: ../src/window/connection.rs:273 ../src/window/connection.rs:321
-#: ../src/window/connection.rs:790
+#: ../src/window/connection.rs:278 ../src/window/connection.rs:326
+#: ../src/window/connection.rs:795
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/window/connection.rs:300
+#: ../src/window/connection.rs:305
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/window/connection.rs:314
+#: ../src/window/connection.rs:319
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -910,55 +918,55 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/window/connection.rs:360
+#: ../src/window/connection.rs:365
 msgid "The server cannot be reached. Showing your downloads."
 msgstr "De server is niet bereikbaar. Je downloads worden getoond."
 
-#: ../src/window/connection.rs:420
+#: ../src/window/connection.rs:425
 msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
-#: ../src/window/connection.rs:516
+#: ../src/window/connection.rs:521
 msgid "Who is watching?"
 msgstr "Wie kijkt er?"
 
-#: ../src/window/connection.rs:618
+#: ../src/window/connection.rs:623
 msgid "That PIN is not correct. Try again."
 msgstr "Die pincode klopt niet. Probeer het opnieuw."
 
-#: ../src/window/connection.rs:620
+#: ../src/window/connection.rs:625
 msgid "Enter the PIN of this profile."
 msgstr "Voer de pincode van dit profiel in."
 
-#: ../src/window/connection.rs:632
+#: ../src/window/connection.rs:637
 msgid "PIN"
 msgstr "Pincode"
 
-#: ../src/window/connection.rs:637 ../src/window/connection.rs:721
+#: ../src/window/connection.rs:642 ../src/window/connection.rs:726
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../src/window/connection.rs:638
+#: ../src/window/connection.rs:643
 msgid "Continue"
 msgstr "Doorgaan"
 
-#: ../src/window/connection.rs:669
+#: ../src/window/connection.rs:674
 msgid "Could not switch to this profile"
 msgstr "Kon niet naar dit profiel wisselen"
 
-#: ../src/window/connection.rs:716
+#: ../src/window/connection.rs:721
 #, rust-format
 msgid "Sign out {}?"
 msgstr "{} afmelden?"
 
-#: ../src/window/connection.rs:718
+#: ../src/window/connection.rs:723
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 "De downloads en voorkeuren van dit account worden van dit apparaat "
 "verwijderd."
 
-#: ../src/window/connection.rs:722
+#: ../src/window/connection.rs:727
 msgid "Sign out"
 msgstr "Afmelden"
 

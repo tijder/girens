@@ -75,6 +75,10 @@ mod imp {
         #[template_child]
         pub _audio_box: TemplateChild<adw::ComboRow>,
         #[template_child]
+        pub _version_box: TemplateChild<adw::ComboRow>,
+        /// The files of the item that is loaded, as the menu lists them.
+        pub versions: RefCell<Vec<ItemId>>,
+        #[template_child]
         pub _options_list: TemplateChild<gtk::ListBox>,
         #[template_child]
         pub _deck_shows_box: TemplateChild<List>,
@@ -243,6 +247,20 @@ impl PlayerView {
             move |_, _, _, _| player.play_pause()
         ));
 
+        imp._version_box.connect_selected_notify(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |row| {
+                let imp = view.imp();
+                if imp.updating_streams.get() {
+                    return;
+                }
+                let version = imp.versions.borrow().get(row.selected() as usize).copied();
+                if let (Some(version), Some(player)) = (version, imp.player.get()) {
+                    player.set_version(version);
+                }
+            }
+        ));
         imp._audio_box.connect_selected_notify(glib::clone!(
             #[weak(rename_to = view)]
             self,
@@ -571,6 +589,30 @@ impl PlayerView {
         let strings = |titles: &[String]| {
             gtk::StringList::new(&titles.iter().map(String::as_str).collect::<Vec<_>>())
         };
+        // The files an item comes in, such as two resolutions; the one that
+        // plays is the first.
+        let versions: Vec<String> = item
+            .media
+            .iter()
+            .enumerate()
+            .map(|(index, media)| {
+                let named = [
+                    media.video_resolution.as_ref().map(|height| format!("{height}p")),
+                    media.container.as_ref().map(|container| container.to_uppercase()),
+                ];
+                let name = util::detail_line(named);
+                if name.is_empty() {
+                    (index + 1).to_string()
+                } else {
+                    name
+                }
+            })
+            .collect();
+        imp._version_box.set_model(Some(&strings(&versions)));
+        imp._version_box.set_selected(0);
+        imp._version_box.set_visible(versions.len() > 1);
+        imp.versions
+            .replace(item.media.iter().map(|media| media.id).collect());
         imp._audio_box.set_model(Some(&strings(&audio_titles)));
         imp._audio_box.set_selected(
             audio
@@ -597,7 +639,7 @@ impl PlayerView {
         imp._audio_box.set_visible(audio.len() > 1);
         imp._subtitle_box.set_visible(!subtitles.is_empty());
         imp._options_list
-            .set_visible(audio.len() > 1 || !subtitles.is_empty());
+            .set_visible(audio.len() > 1 || !subtitles.is_empty() || versions.len() > 1);
     }
 
     /// What is on deck in the library of the playing item.

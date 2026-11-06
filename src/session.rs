@@ -319,6 +319,11 @@ impl Session {
         let account =
             runtime::run(async move { MyPlex::with_token_at(&plex_tv, &token, &client).await })
                 .await?;
+        // Someone else may have become active while plex.tv was asked;
+        // this account must not end up as theirs.
+        if self.account_id().as_deref() != Some(&stored.id) {
+            return Ok(false);
+        }
         self.remember_details(&account);
         let mut state = self.state.borrow_mut();
         state.account = Some(account);
@@ -385,6 +390,11 @@ impl Session {
             }
         };
 
+        // Someone else may have become active while plex.tv was asked;
+        // this account must not end up as theirs.
+        if self.account_id().as_deref() != Some(&stored.id) {
+            return Ok(false);
+        }
         self.remember_details(&account);
         let mut state = self.state.borrow_mut();
         state.account = Some(account);

@@ -48,6 +48,14 @@ pub fn present(parent: &impl IsA<gtk::Widget>) {
         .position(|(_, value)| *value == stored)
         .unwrap_or(0);
     resolution.set_selected(selected as u32);
+    // Not every server lets the player choose what it converts to.
+    let chooses = crate::session::Session::current()
+        .server()
+        .is_none_or(|server| server.supports(crate::backend::Feature::TranscodeResolution));
+    if !chooses {
+        resolution.set_sensitive(false);
+        resolution.set_subtitle(&gettext("The server in use decides this itself"));
+    }
     resolution.connect_selected_notify(glib::clone!(
         #[strong]
         settings,

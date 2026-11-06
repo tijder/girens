@@ -170,6 +170,8 @@ struct Playing {
 
 #[derive(Default)]
 struct State {
+    /// The file the user chose for an item that comes in several.
+    version: Option<(ItemId, ItemId)>,
     queue: Option<PlayQueue>,
     index: usize,
     current: Option<Playing>,
@@ -579,6 +581,25 @@ impl Player {
         .await;
     }
 
+    /// Plays another of the files the loaded item comes in, from where
+    /// playback is now.
+    pub fn set_version(&self, media: ItemId) {
+        let position = {
+            let mut state = self.inner.state.borrow_mut();
+            let Some((item, position)) = state
+                .current
+                .as_ref()
+                .map(|playing| (playing.loading.rating_key, playing.position))
+            else {
+                return;
+            };
+            state.version = Some((item, media));
+            position
+        };
+        self.inner
+            .end_with(EndAction::Restart((position * 1000.0) as u64));
+    }
+
     /// Selects an audio stream of the loaded item (a Plex stream id).
     pub fn set_audio_stream(&self, stream_id: ItemId) {
         self.inner
@@ -758,6 +779,8 @@ impl Inner {
             }
             None => item.clone(),
         };
+        let mut loading = loading;
+        self.prefer_version(&mut loading);
 
         let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
         let opened = if let Some(path) =
@@ -902,6 +925,20 @@ impl Inner {
                 item: Box::new(item),
                 video,
             });
+        }
+    }
+
+    /// What plays is the first file of an item: puts the one the user chose
+    /// for `item` there.
+    fn prefer_version(&self, item: &mut Item) {
+        let chosen = self
+            .state
+            .borrow()
+            .version
+            .filter(|(of, _)| *of == item.rating_key)
+            .and_then(|(_, media)| item.media.iter().position(|file| file.id == media));
+        if let Some(chosen) = chosen {
+            item.media.swap(0, chosen);
         }
     }
 
@@ -1420,6 +1457,8 @@ impl Inner {
                 }
             };
 
+            let mut updated = updated;
+            self.prefer_version(&mut updated);
             let transcoding = {
                 let mut state = self.state.borrow_mut();
                 match state.current.as_mut() {

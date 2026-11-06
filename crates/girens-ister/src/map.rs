@@ -336,10 +336,12 @@ impl Context {
     fn media(&self, files: &[wire::MediaFile]) -> Vec<Media> {
         files
             .iter()
-            .map(|file| {
+            .filter_map(|file| {
+                // A file of a list: not asked for in enough detail to play.
+                let directory = file.directory.as_ref()?;
                 let base = format!(
                     "{}/hls/{}",
-                    file.directory.serving_node.url.trim_end_matches('/'),
+                    directory.serving_node.url.trim_end_matches('/'),
                     file.id
                 );
                 let container = file.format.as_deref().map(str::to_ascii_lowercase);
@@ -350,7 +352,7 @@ impl Context {
                     .find(|stream| stream.codec_type == "VIDEO")
                     .map(|stream| stream.height)
                     .filter(|height| *height > 0);
-                Media {
+                Some(Media {
                     id: ItemId::new(&file.id),
                     container: container.clone(),
                     video_resolution: height.map(|height| height.to_string()),
@@ -361,7 +363,7 @@ impl Context {
                         container,
                         size: file.size.map(|size| size as u64),
                     }],
-                }
+                })
             })
             .collect()
     }

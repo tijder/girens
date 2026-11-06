@@ -74,7 +74,8 @@ pub struct MediaFile {
     pub size: Option<f64>,
     pub duration_in_milliseconds: Option<u64>,
     pub format: Option<String>,
-    pub directory: Directory,
+    /// Absent in lists, which do not ask what a file holds.
+    pub directory: Option<Directory>,
     #[serde(default, deserialize_with = "list")]
     pub media_file_streams: Vec<Option<MediaFileStream>>,
     #[serde(default, deserialize_with = "list")]

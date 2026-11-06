@@ -36,7 +36,12 @@ impl PlexWindow {
             }
             stored
         };
+        let whose = session.account_id();
         let (account, stored) = tokio::join!(session.restore_account(), stored_server);
+        if session.account_id() != whose {
+            // Another account was chosen meanwhile, and is starting itself.
+            return;
+        }
 
         match account {
             Ok(true) => {}

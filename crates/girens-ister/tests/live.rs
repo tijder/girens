@@ -160,6 +160,14 @@ async fn play_and_mark_on_a_real_server() {
     let shuffled = server.shuffle_play_queue(queue.id, true).await.unwrap();
     assert!(shuffled.shuffled);
 
+    // A whole show is marked episode by episode.
+    server.mark_watched(show.rating_key).await.unwrap();
+    let watched = server.item(show.rating_key).await.unwrap();
+    assert_eq!(watched.viewed_leaf_count, watched.leaf_count);
+    assert!(watched.is_watched());
+    server.mark_unwatched(show.rating_key).await.unwrap();
+    assert_eq!(server.item(show.rating_key).await.unwrap().viewed_leaf_count, Some(0));
+
     // The server keeps a position from a minute in until a minute before
     // the end, which only the episodes of the test data are long enough for.
     let playing = &queue.items[index];

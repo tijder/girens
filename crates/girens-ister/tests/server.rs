@@ -282,6 +282,10 @@ async fn a_library_is_asked_for_by_page_and_order() {
     assert_eq!(movie.kind, ItemKind::Movie);
     assert!(movie.rating_key.as_str().starts_with("movie-"));
     assert!(movie.duration.is_some());
+    // A list tells how long an item plays, not what its file holds; that
+    // comes with the item itself.
+    assert_eq!(movie.parts().count(), 0);
+    let movie = server.item(movie.rating_key).await.unwrap();
     let part = movie.parts().next().unwrap();
     assert!(part.key.contains("/hls/"));
     assert!(movie.streams(StreamKind::Audio).next().is_some());
@@ -331,7 +335,8 @@ async fn music_runs_from_artist_to_album_to_track() {
     assert_eq!(tracks[0].parent_rating_key, Some(albums[0].rating_key));
     assert_eq!(tracks[0].grandparent_title.as_deref(), Some(artist.title.as_str()));
     // A track with several files plays the first.
-    assert_eq!(tracks[0].parts().count(), 1);
+    let track = server.item(tracks[0].rating_key).await.unwrap();
+    assert_eq!(track.parts().count(), 1);
 }
 
 #[tokio::test]
@@ -384,10 +389,16 @@ async fn a_queue_is_made_played_and_reported() {
     assert_eq!(queue_id, queue.id.as_str());
 
     let loaded = server.item(playing.rating_key).await.unwrap();
-    // The episodes of the test data are MPEG-4 video, which the stream
-    // cannot carry as it is: asking for that still gets a conversion.
+    // Video the stream cannot carry as it is (anything but H.264 and
+    // HEVC) is converted, also when asked to play it as it is.
+    let fits = loaded
+        .streams(StreamKind::Video)
+        .all(|stream| matches!(stream.codec.as_deref(), Some("h264" | "hevc")));
     let url = server.stream_url(&loaded, true).unwrap();
-    assert!(url.contains("/master.m3u8?direct=false&transcode=true&subtitleFormat=SRT&token=stream-token"));
+    assert!(url.contains(&format!(
+        "/master.m3u8?direct={fits}&transcode={}&subtitleFormat=SRT&token=stream-token",
+        !fits
+    )));
     // A movie in HEVC plays as it is, or converted when asked.
     let movie = server.item("movie-any".into()).await.unwrap();
     assert!(server.stream_url(&movie, true).unwrap().contains("direct=true&transcode=false"));
@@ -400,7 +411,7 @@ async fn a_queue_is_made_played_and_reported() {
         .and(body_partial_json(json!({"variables": {
             "id": queue_id, "item": entry, "progress": 61000, "state": "PLAYING",
             "device": "6f1c2a0e-0000-4000-8000-00000000abcd",
-            "settings": {"direct": false, "transcode": true, "subtitleFormat": "SRT"},
+            "settings": {"direct": fits, "transcode": !fits, "subtitleFormat": "SRT"},
         }})))
         .respond_with(
             ResponseTemplate::new(200).set_body_raw(fixture("UpdatePlayQueue"), "application/json"),

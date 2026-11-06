@@ -32,6 +32,13 @@ macro_rules! file {
          segments { type startInMilliseconds endInMilliseconds episodeId } }"
     };
 }
+/// A file as far as a list needs it: how long it plays. What it holds is
+/// asked for when the item itself is.
+macro_rules! file_brief {
+    () => {
+        "fragment File on MediaFile { id durationInMilliseconds }"
+    };
+}
 macro_rules! movie {
     () => {
         "fragment MovieF on Movie { id name releaseYear rating images { ...Img } \
@@ -91,7 +98,7 @@ pub const MOVIES: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const SHOWS: &str = document!(
@@ -126,7 +133,7 @@ pub const TRACKS: &str = document!(
     track,
     image,
     metadata,
-    file
+    file_brief
 );
 
 pub const MOVIE: &str = document!(
@@ -153,7 +160,7 @@ pub const SHOW_EPISODES: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const SEASON: &str = document!(
@@ -164,7 +171,7 @@ pub const SEASON: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const EPISODE: &str = document!(
@@ -190,7 +197,7 @@ pub const ALBUM: &str = document!(
     track,
     image,
     metadata,
-    file
+    file_brief
 );
 
 pub const TRACK: &str = document!(
@@ -209,7 +216,7 @@ pub const RECENTLY_WATCHED: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const SEARCH: &str = document!(
@@ -225,7 +232,7 @@ pub const SEARCH: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const PLAYLISTS: &str = document!(
@@ -243,7 +250,7 @@ pub const PLAYLIST: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const CREATE_PLAY_QUEUE: &str = document!(
@@ -255,7 +262,7 @@ pub const CREATE_PLAY_QUEUE: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 pub const GET_PLAY_QUEUE: &str = document!(
@@ -267,7 +274,7 @@ pub const GET_PLAY_QUEUE: &str = document!(
     image,
     metadata,
     status,
-    file
+    file_brief
 );
 
 /// Reports the position; also what keeps the session of the player alive.

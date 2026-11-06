@@ -136,6 +136,10 @@ template $player_view : Adw.Bin {
             width-request: 300;
             valign: start;
 
+            Adw.ComboRow _version_box {
+              title: _("Version");
+              visible: false;
+            }
             Adw.ComboRow _audio_box {
               title: _("Audio ");
             }

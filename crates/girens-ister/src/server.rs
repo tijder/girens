@@ -760,9 +760,26 @@ impl IsterServer {
     // What the user did with an item
 
     pub async fn mark_watched(&self, id: ItemId) -> Result<()> {
-        for (media_type, uuid) in self.playable(id).await? {
+        let items = self.playable(id).await?;
+        self.for_each(items, |server, (media_type, uuid)| async move {
             let variables = json!({ "type": media_type, "id": uuid });
-            let _: Value = self.query(queries::MARK_PLAYED, variables).await?;
+            let _: Value = server.query(queries::MARK_PLAYED, variables).await?;
+            Ok(())
+        })
+        .await
+    }
+
+    /// Does `work` for every one of `items`, one after the other. Several
+    /// at a time would be quicker for a show of hundreds of episodes, but
+    /// the server trips over its own "continue watching" entry of a show
+    /// when two of its episodes change at once.
+    async fn for_each<T, F, Fut>(&self, items: Vec<T>, work: F) -> Result<()>
+    where
+        F: Fn(Self, T) -> Fut,
+        Fut: std::future::Future<Output = Result<()>>,
+    {
+        for item in items {
+            work(self.clone(), item).await?;
         }
         Ok(())
     }
@@ -776,16 +793,18 @@ impl IsterServer {
             #[serde(default)]
             playback_history: Vec<wire::Id>,
         }
-        for (media_type, uuid) in self.playable(id).await? {
+        let items = self.playable(id).await?;
+        self.for_each(items, |server, (media_type, uuid)| async move {
             let variables = json!({ "type": media_type, "id": uuid });
-            let history: History = self.query(queries::PLAYBACK_HISTORY, variables).await?;
+            let history: History = server.query(queries::PLAYBACK_HISTORY, variables).await?;
             for entry in history.playback_history {
-                let _: Value = self
+                let _: Value = server
                     .query(queries::DELETE_WATCH_STATUS, json!({ "id": entry.id }))
                     .await?;
             }
-        }
-        Ok(())
+            Ok(())
+        })
+        .await
     }
 
     /// The movies, episodes and tracks that `id` stands for, as the server
