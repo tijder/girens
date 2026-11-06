@@ -430,7 +430,13 @@ impl PlexWindow {
                 .set_icon_name(Some("avatar-default-symbolic"));
             return;
         };
-        match runtime::run(async move { girens_model::net::download(&url).await }).await {
+        let whose = imp.session.account_id();
+        let downloaded = runtime::run(async move { girens_model::net::download(&url).await }).await;
+        if imp.session.account_id() != whose {
+            // Someone else took over while the picture was on its way.
+            return;
+        }
+        match downloaded {
             Ok(bytes) => match gdk::Texture::from_bytes(&glib::Bytes::from_owned(bytes)) {
                 Ok(texture) => imp._avatar_image.set_paintable(Some(&texture)),
                 Err(err) => eprintln!("Could not decode the avatar: {err}"),

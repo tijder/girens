@@ -635,6 +635,10 @@ impl PlexWindow {
             "shortcuts" => self.show_shortcuts(),
             "about" => self.show_about(),
             "accounts" => self.show_accounts(),
+            "login" => {
+                self.show_login();
+                self.imp()._login_view.offer_ister("media.example.org");
+            }
             "pin" | "wrong-pin" => {
                 let (window, wrong) = (self.clone(), dialog == "wrong-pin");
                 glib::spawn_future_local(async move {

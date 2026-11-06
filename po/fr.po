@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:08+0100\n"
+"POT-Creation-Date: 2026-11-06 11:58+0100\n"
 "PO-Revision-Date: 2022-11-29 09:41+0000\n"
 "Last-Translator: rene-coty <irenee.thirion@e.email>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/girens/girens/fr/"
@@ -122,7 +122,7 @@ msgstr ""
 msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr ""
 
-#: ../data/ui/login_view.blp:49
+#: ../data/ui/login_view.blp:49 ../data/ui/login_view.blp:137
 msgid "Sign in"
 msgstr ""
 
@@ -156,6 +156,22 @@ msgstr ""
 
 #: ../data/ui/login_view.blp:109
 msgid "Connect"
+msgstr ""
+
+#: ../data/ui/login_view.blp:120
+msgid "Ister"
+msgstr ""
+
+#: ../data/ui/login_view.blp:125
+msgid "Sign in to an Ister server"
+msgstr ""
+
+#: ../data/ui/login_view.blp:126
+msgid "Opens your browser to sign in"
+msgstr ""
+
+#: ../data/ui/login_view.blp:130
+msgid "The address of the Ister server"
 msgstr ""
 
 #: ../data/ui/main_window.blp:37
@@ -455,110 +471,110 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:350
+#: ../src/player/mod.rs:352
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:358
+#: ../src/player/mod.rs:360
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:467
+#: ../src/player/mod.rs:469
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:662
+#: ../src/player/mod.rs:664
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1141
+#: ../src/player/mod.rs:1175
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/sync.rs:510
+#: ../src/sync.rs:509
 msgid "Sync failed"
 msgstr ""
 
-#: ../src/sync.rs:596
+#: ../src/sync.rs:595
 msgid "Could not download an item"
 msgstr ""
 
-#: ../src/sync.rs:643
+#: ../src/sync.rs:642
 msgid "Not enough disk space for the download"
 msgstr ""
 
-#: ../src/views/album_view.rs:52
+#: ../src/views/album_view.rs:53
 #, rust-format
 msgid "{} song"
 msgid_plural "{} songs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/album_view.rs:57
+#: ../src/views/album_view.rs:58
 #, rust-format
 msgid "{} album"
 msgid_plural "{} albums"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/album_view.rs:62
+#: ../src/views/album_view.rs:63
 #, rust-format
 msgid "{} item"
 msgid_plural "{} items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/album_view.rs:69
+#: ../src/views/album_view.rs:70
 #, rust-format
 msgid "{} min"
 msgstr ""
 
-#: ../src/views/album_view.rs:72
+#: ../src/views/album_view.rs:73
 #, rust-format
 msgid "{0} h {1} min"
 msgstr ""
 
-#: ../src/views/album_view.rs:162
+#: ../src/views/album_view.rs:163
 #, rust-format
 msgid "Disc {}"
 msgstr ""
 
-#: ../src/views/album_view.rs:301 ../src/views/cover_box.rs:233
-#: ../src/views/cover_box.rs:240
+#: ../src/views/album_view.rs:302 ../src/views/cover_box.rs:234
+#: ../src/views/cover_box.rs:241
 msgid "Go to artist view"
 msgstr "Aller à la vue des artistes"
 
-#: ../src/views/album_view.rs:306 ../src/views/album_view.rs:327
-#: ../src/views/cover_box.rs:276
+#: ../src/views/album_view.rs:308 ../src/views/album_view.rs:332
+#: ../src/views/cover_box.rs:278
 msgid "Sync"
 msgstr "Synchroniser"
 
-#: ../src/views/cover_box.rs:226
+#: ../src/views/cover_box.rs:227
 msgid "Go to album view"
 msgstr "Aller à la vue des albums"
 
-#: ../src/views/cover_box.rs:256
+#: ../src/views/cover_box.rs:257
 msgid "Go to show view"
 msgstr "Aller à la vue des émissions"
 
-#: ../src/views/cover_box.rs:261
+#: ../src/views/cover_box.rs:262
 msgid "Mark as Played"
 msgstr "Marquer comme joué"
 
-#: ../src/views/cover_box.rs:268
+#: ../src/views/cover_box.rs:269
 msgid "Mark as Unplayed"
 msgstr "Marquer comme non joué"
 
-#: ../src/views/cover_box.rs:282
+#: ../src/views/cover_box.rs:284
 msgid "Shuffle"
 msgstr "Mélanger"
 
-#: ../src/views/cover_box.rs:286 ../src/window/playback.rs:119
+#: ../src/views/cover_box.rs:288 ../src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr "Commencer depuis le début"
 
-#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:162
-#: ../src/views/sidebar_box.rs:194
+#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:164
+#: ../src/views/sidebar_box.rs:197
 msgid "Downloads"
 msgstr ""
 
@@ -570,27 +586,27 @@ msgstr ""
 msgid "Could not rate the track"
 msgstr ""
 
-#: ../src/views/photo_view.rs:72
+#: ../src/views/photo_view.rs:73
 msgid "Previous photo"
 msgstr ""
 
-#: ../src/views/photo_view.rs:75
+#: ../src/views/photo_view.rs:76
 msgid "Next photo"
 msgstr ""
 
-#: ../src/views/photo_view.rs:289
+#: ../src/views/photo_view.rs:290
 msgid "The photo has no picture"
 msgstr ""
 
-#: ../src/views/player_view.rs:309
+#: ../src/views/player_view.rs:310
 msgid "Audio"
 msgstr ""
 
-#: ../src/views/player_view.rs:310
+#: ../src/views/player_view.rs:311
 msgid "Subtitle"
 msgstr ""
 
-#: ../src/views/player_view.rs:431
+#: ../src/views/player_view.rs:432
 msgid "None"
 msgstr "Aucun"
 
@@ -660,7 +676,11 @@ msgstr ""
 msgid "Server"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:226
+#: ../src/views/profile_dialog.rs:203
+msgid "Ister account"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:227
 #, rust-format
 msgid "Sign out {}"
 msgstr ""
@@ -689,69 +709,69 @@ msgstr ""
 msgid "Albums"
 msgstr ""
 
-#: ../src/views/section_view.rs:21
+#: ../src/views/section_view.rs:22
 msgid "Added at"
 msgstr "Ajouté le"
 
-#: ../src/views/section_view.rs:22
+#: ../src/views/section_view.rs:23
 msgid "Last viewed at"
 msgstr "Dernière vue le"
 
-#: ../src/views/section_view.rs:23
+#: ../src/views/section_view.rs:24
 msgid "Originally available at"
 msgstr "Disponible à l’origine le"
 
-#: ../src/views/section_view.rs:24
+#: ../src/views/section_view.rs:25
 msgid "Title"
 msgstr "Titre"
 
-#: ../src/views/section_view.rs:25
+#: ../src/views/section_view.rs:26
 msgid "Rating"
 msgstr "Évaluation"
 
-#: ../src/views/section_view.rs:26
+#: ../src/views/section_view.rs:27
 msgid "Unwatched"
 msgstr "Non vu"
 
-#: ../src/views/section_view.rs:27
+#: ../src/views/section_view.rs:28
 msgid "View count"
 msgstr "Voir le compte"
 
-#: ../src/views/section_view.rs:28
+#: ../src/views/section_view.rs:29
 msgid "User rating"
 msgstr "Évaluation utilisateur"
 
-#: ../src/views/section_view.rs:29
+#: ../src/views/section_view.rs:30
 msgid "Media height"
 msgstr "Hauteur des médias"
 
-#: ../src/views/section_view.rs:30
+#: ../src/views/section_view.rs:31
 msgid "Duration"
 msgstr "Durée"
 
-#: ../src/views/section_view.rs:421 ../src/views/sidebar_box.rs:157
+#: ../src/views/section_view.rs:422 ../src/views/sidebar_box.rs:158
 msgid "Playlists"
 msgstr "Listes de lecture"
 
-#: ../src/views/show_view.rs:214
+#: ../src/views/show_view.rs:215
 #, rust-format
 msgid "{} season"
 msgid_plural "{} seasons"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/show_view.rs:218
+#: ../src/views/show_view.rs:219
 #, rust-format
 msgid "{} episode"
 msgid_plural "{} episodes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/sidebar_box.rs:151 ../src/views/sidebar_box.rs:189
+#: ../src/views/sidebar_box.rs:152 ../src/views/sidebar_box.rs:192
 msgid "Player"
 msgstr "Lecteur"
 
-#: ../src/views/sidebar_box.rs:155
+#: ../src/views/sidebar_box.rs:156
 msgid "Home"
 msgstr "Accueil"
 
@@ -759,27 +779,27 @@ msgstr "Accueil"
 msgid "Starting Girens"
 msgstr "Démarrage de Girens"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:85
-#: ../src/window/connection.rs:150
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:103
+#: ../src/window/connection.rs:167 ../src/window/connection.rs:214
 #, rust-format
 msgid "Connecting to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:119
+#: ../src/window/connection.rs:137 ../src/window/connection.rs:184
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 
-#: ../src/window/connection.rs:156 ../src/window/connection.rs:204
-#: ../src/window/connection.rs:665
+#: ../src/window/connection.rs:222 ../src/window/connection.rs:270
+#: ../src/window/connection.rs:739
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: ../src/window/connection.rs:183
+#: ../src/window/connection.rs:249
 msgid "No servers found for this account."
 msgstr "Aucun serveur trouvé pour ce compte."
 
-#: ../src/window/connection.rs:197
+#: ../src/window/connection.rs:263
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -787,71 +807,71 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: ../src/window/connection.rs:243
+#: ../src/window/connection.rs:309
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:301
+#: ../src/window/connection.rs:369
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/connection.rs:391
+#: ../src/window/connection.rs:465
 msgid "Who is watching?"
 msgstr ""
 
-#: ../src/window/connection.rs:493
+#: ../src/window/connection.rs:567
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: ../src/window/connection.rs:495
+#: ../src/window/connection.rs:569
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: ../src/window/connection.rs:507
+#: ../src/window/connection.rs:581
 msgid "PIN"
 msgstr ""
 
-#: ../src/window/connection.rs:512 ../src/window/connection.rs:596
+#: ../src/window/connection.rs:586 ../src/window/connection.rs:670
 msgid "Cancel"
 msgstr ""
 
-#: ../src/window/connection.rs:513
+#: ../src/window/connection.rs:587
 msgid "Continue"
 msgstr ""
 
-#: ../src/window/connection.rs:544
+#: ../src/window/connection.rs:618
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: ../src/window/connection.rs:591
+#: ../src/window/connection.rs:665
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: ../src/window/connection.rs:593
+#: ../src/window/connection.rs:667
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: ../src/window/connection.rs:597
+#: ../src/window/connection.rs:671
 msgid "Logout"
 msgstr ""
 
-#: ../src/window/mod.rs:342
+#: ../src/window/mod.rs:343
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: ../src/window/mod.rs:659
+#: ../src/window/mod.rs:668
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:664
+#: ../src/window/mod.rs:673
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:667
+#: ../src/window/mod.rs:676
 msgid "Help with translating"
 msgstr "Contribuer aux traductions"
 

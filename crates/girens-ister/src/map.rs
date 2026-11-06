@@ -189,12 +189,17 @@ impl Context {
                 _ => continue,
             };
             let codec = stream.codec_name.to_ascii_uppercase();
-            let name = stream
-                .title
-                .clone()
-                .filter(|title| !title.is_empty())
-                .or_else(|| stream.language.clone())
-                .unwrap_or_else(|| "Unknown".to_owned());
+            // "eng · Surround 5.1": the language and what the file calls it.
+            let named: Vec<&str> = [stream.language.as_deref(), stream.title.as_deref()]
+                .into_iter()
+                .flatten()
+                .filter(|part| !part.is_empty() && *part != "und")
+                .collect();
+            let name = if named.is_empty() {
+                "Unknown".to_owned()
+            } else {
+                named.join(" · ")
+            };
             let display = match stream_type {
                 3 => name,
                 _ => format!("{name} ({codec})"),

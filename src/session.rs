@@ -1216,4 +1216,166 @@ mod tests {
             assert_eq!(secrets, ["server:machine:uuid-1", "uuid-1"]);
         });
     }
+    /// An Ister server and the provider it signs in at, in one. The
+    /// provider gives `refresh-1` for the code of a sign-in and the next
+    /// number for every refresh token.
+    async fn ister() -> &'static MockServer {
+        runtime::run(async move {
+            let mock = MockServer::start().await;
+            let uri = mock.uri();
+            Mock::given(method("GET"))
+                .and(path("/.well-known/ister"))
+                .respond_with(
+                    ResponseTemplate::new(200)
+                        .set_body_string(format!("Home\n{uri}/openid\n{uri}/api\n")),
+                )
+                .mount(&mock)
+                .await;
+            Mock::given(method("GET"))
+                .and(path("/openid"))
+                .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                    "authorization_endpoint": format!("{uri}/auth"),
+                    "token_endpoint": format!("{uri}/token"),
+                    "revocation_endpoint": format!("{uri}/revoke"),
+                })))
+                .mount(&mock)
+                .await;
+            Mock::given(method("POST"))
+                .and(path("/token"))
+                .respond_with(|request: &wiremock::Request| {
+                    let form = String::from_utf8_lossy(&request.body).into_owned();
+                    let number = form
+                        .split('&')
+                        .find_map(|pair| pair.strip_prefix("refresh_token=refresh-"))
+                        .and_then(|number| number.parse::<u32>().ok());
+                    let next = match number {
+                        Some(number) => number + 1,
+                        None if form.contains("grant_type=authorization_code") => 1,
+                        None => return ResponseTemplate::new(400),
+                    };
+                    ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                        "access_token": format!("access-{next}"),
+                        "refresh_token": format!("refresh-{next}"),
+                        "expires_in": 300,
+                    }))
+                })
+                .mount(&mock)
+                .await;
+            Mock::given(method("POST"))
+                .and(path("/revoke"))
+                .respond_with(ResponseTemplate::new(200))
+                .mount(&mock)
+                .await;
+            Mock::given(method("POST"))
+                .and(path("/api/graphql"))
+                .respond_with(|request: &wiremock::Request| {
+                    let body: serde_json::Value = serde_json::from_slice(&request.body).unwrap();
+                    let operation = body["query"]
+                        .as_str()
+                        .unwrap()
+                        .split(|c: char| !c.is_ascii_alphanumeric())
+                        .nth(1)
+                        .unwrap()
+                        .to_owned();
+                    let file = format!(
+                        "{}/crates/girens-ister/tests/fixtures/{operation}.json",
+                        env!("CARGO_MANIFEST_DIR")
+                    );
+                    ResponseTemplate::new(200)
+                        .set_body_raw(std::fs::read_to_string(file).unwrap(), "application/json")
+                })
+                .mount(&mock)
+                .await;
+            &*Box::leak(Box::new(mock))
+        })
+        .await
+    }
+
+    /// Does what the browser does once the user has signed in at the
+    /// provider: returns to the port the sign-in listens on.
+    async fn sign_in_in_the_browser(page: &str) {
+        let page = reqwest::Url::parse(page).unwrap();
+        let asked = |name: &str| {
+            page.query_pairs()
+                .find(|(key, _)| key == name)
+                .map(|(_, value)| value.into_owned())
+                .unwrap()
+        };
+        let back = format!(
+            "{}/?code=the-code&state={}",
+            asked("redirect_uri").replace("localhost", "127.0.0.1"),
+            asked("state")
+        );
+        runtime::run(async move {
+            reqwest::get(back).await.unwrap();
+        })
+        .await;
+    }
+
+    #[test]
+    fn an_ister_account_signs_in_continues_and_signs_out() {
+        run("ister", || async {
+            let server = ister().await;
+            let settings = settings();
+            let session = Session::new(&settings, "http://127.0.0.1:1");
+
+            let pending = session.start_ister_login(server.uri()).await.unwrap();
+            // Nobody is signed in yet, so the provider need not ask again.
+            assert!(!pending.url.contains("prompt="));
+            let page = pending.url.clone();
+            let (signed_in, ()) = tokio::join!(
+                session.finish_ister_login(pending),
+                sign_in_in_the_browser(&page)
+            );
+            signed_in.unwrap();
+
+            let machine = session.machine_identifier().unwrap();
+            assert!(machine.starts_with("ister_127.0.0.1_"));
+            let id = format!("ister:{machine}:bff9d7c2-d8bb-458c-a04f-033e6ce2cf62");
+            assert_eq!(session.account_id().as_deref(), Some(id.as_str()));
+            assert_eq!(session.user_key().as_deref(), Some(id.as_str()));
+            let stored = session.stored_account().unwrap();
+            assert_eq!(stored.kind, AccountKind::Ister);
+            assert_eq!(stored.name, "Ister Admin");
+            assert_eq!(stored.server.unwrap().url, server.uri());
+            assert!(session.server().is_some());
+            assert!(!session.can_download());
+            // Only the token that continues the session is kept.
+            assert_eq!(keyring(), std::slice::from_ref(&id));
+            assert_eq!(secret(&id).as_deref(), Some("refresh-1"));
+
+            // The next start continues with it, and keeps what replaces it.
+            let restarted = Session::new(&settings, "http://127.0.0.1:1");
+            assert!(restarted.server().is_none());
+            assert!(!restarted.restore_account().await.unwrap());
+            assert!(restarted.connect_stored_server().await.unwrap());
+            assert!(restarted.server().is_some());
+            assert_eq!(secret(&id).as_deref(), Some("refresh-2"));
+
+            // A session that ran out asks to sign in again, and a second
+            // sign-in has the provider ask who it is.
+            secrets::TEST_KEYRING
+                .with_borrow_mut(|keyring| keyring.insert(id.clone(), "long gone".into()));
+            let expired = Session::new(&settings, "http://127.0.0.1:1");
+            assert!(matches!(
+                expired.connect_stored_server().await,
+                Err(Error::Unauthorized)
+            ));
+            let again = expired.start_ister_login(server.uri()).await.unwrap();
+            assert!(again.url.contains("prompt=login"));
+
+            expired.remove_account(&id).await;
+            assert!(keyring().is_empty());
+            assert!(expired.accounts().is_empty());
+            assert_eq!(expired.account_id(), None);
+            let revoked = runtime::run(async move { server.received_requests().await })
+                .await
+                .unwrap()
+                .iter()
+                .filter(|request| request.url.path() == "/revoke")
+                .count();
+            assert_eq!(revoked, 1);
+        });
+    }
+
 }

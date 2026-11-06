@@ -81,7 +81,7 @@ const ACTIVATE_INTERVAL: u64 = 3;
 /// activated once the server is connected; several actions separated by `;`
 /// follow each other, to visit one page after another. With `GIRENS_DEBUG_SIDEBAR_ROW=3`
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
-/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync|accounts|pin|wrong-pin` that
+/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync|accounts|login|pin|wrong-pin` that
 /// dialog is opened; with `GIRENS_DEBUG_ACCOUNT="switch 1"` (or `sign-out 1`,
 /// `add-server <url> <token>`, `add-ister <address>`) that is done with the accounts, once. Lets
 /// scripts open a page for a screenshot.
