@@ -1,9 +1,9 @@
-//! The grid of one library, or of the playlists.
+//! The grid of one library, of the playlists, or of an album of photos.
 
 use std::cell::{Cell, RefCell};
 
 use adw::subclass::prelude::*;
-use girens_plex::model::LibrarySection;
+use girens_plex::model::{ItemKind, LibrarySection};
 use gtk::prelude::*;
 use gtk::{glib, CompositeTemplate};
 
@@ -57,8 +57,10 @@ mod imp {
         #[template_child]
         pub _load_box: TemplateChild<gtk::Box>,
 
-        /// `None` while the playlists are shown.
+        /// `None` while the playlists or an album of photos are shown.
         pub section: RefCell<Option<LibrarySection>>,
+        /// The album of photos that is shown, by rating key.
+        pub folder: Cell<Option<u64>>,
         pub sort_keys: RefCell<Vec<String>>,
         pub sort: RefCell<Option<String>>,
         pub descending: Cell<bool>,
@@ -159,11 +161,48 @@ glib::wrapper! {
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
 }
 
+impl Default for SectionView {
+    fn default() -> Self {
+        glib::Object::new()
+    }
+}
+
 impl SectionView {
     /// Called with the library, its sort order and whether to shuffle when
     /// the play or shuffle button is used.
     pub fn connect_play(&self, callback: impl Fn(LibrarySection, Option<String>, bool) + 'static) {
         self.imp().on_play.replace(Some(Box::new(callback)));
+    }
+
+    /// The album of photos that is shown, if any.
+    pub fn folder(&self) -> Option<u64> {
+        self.imp().folder.get()
+    }
+
+    /// Shows what is in an album of photos: photos, videos and more albums.
+    pub fn show_folder(&self, rating_key: u64) {
+        let imp = self.imp();
+        self.reset("");
+        imp.section.replace(None);
+        imp.playlists.set(false);
+        imp.folder.set(Some(rating_key));
+        imp._section_controll_box.set_visible(false);
+        let Some(server) = Session::current().server() else {
+            return;
+        };
+        // The name comes separately; the photos do not wait for it.
+        glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            async move {
+                let album = runtime::run(async move { server.item(rating_key).await }).await;
+                if let (Ok(album), Some(_)) = (album, view.folder().filter(|key| *key == rating_key))
+                {
+                    view.imp()._title_label.set_label(&album.title);
+                }
+            }
+        ));
+        self.load_more();
     }
 
     /// Whether the playlists are shown rather than a library.
@@ -208,6 +247,7 @@ impl SectionView {
         self.reset("");
         self.imp().section.replace(None);
         self.imp().playlists.set(false);
+        self.imp().folder.set(None);
     }
 
     /// Shows a library, with the sort order used last time.
@@ -224,7 +264,12 @@ impl SectionView {
         self.reset(&section.title);
         imp.section.replace(Some(section.clone()));
         imp.playlists.set(false);
+        imp.folder.set(None);
         imp._section_controll_box.set_visible(true);
+        // Photos are not played one after the other.
+        let playable = section.kind != ItemKind::Photo;
+        imp._play_button.set_visible(playable);
+        imp._shuffle_button.set_visible(playable);
 
         let user = Session::current().user_key().unwrap_or_default();
         let (sort, direction) = match store::section_sort(&user, &section.uuid) {
@@ -307,11 +352,13 @@ impl SectionView {
     /// Loads the next page, if there is one and none is being loaded.
     fn load_more(&self) {
         let imp = self.imp();
-        let (Some(section), Some(server)) =
-            (imp.section.borrow().clone(), Session::current().server())
-        else {
+        let Some(server) = Session::current().server() else {
             return;
         };
+        let (section, folder) = (imp.section.borrow().clone(), imp.folder.get());
+        if section.is_none() && folder.is_none() {
+            return;
+        }
         let offset = imp.offset.get();
         if imp.loading.get() || (offset > 0 && offset >= imp.total.get()) {
             return;
@@ -325,9 +372,17 @@ impl SectionView {
             self,
             async move {
                 let page = runtime::run(async move {
-                    server
-                        .section_items(section.key, offset, PAGE_SIZE, sort.as_deref())
-                        .await
+                    match (section, folder) {
+                        (Some(section), _) => {
+                            server
+                                .section_items(section.key, offset, PAGE_SIZE, sort.as_deref())
+                                .await
+                        }
+                        (None, Some(folder)) => {
+                            server.children_page(folder, offset, PAGE_SIZE).await
+                        }
+                        (None, None) => unreachable!("checked before the page was requested"),
+                    }
                 })
                 .await;
                 let imp = view.imp();
@@ -365,6 +420,7 @@ impl SectionView {
         let imp = self.imp();
         self.reset(&gettext("Playlists"));
         imp.section.replace(None);
+        imp.folder.set(None);
         imp.playlists.set(true);
         imp._section_controll_box.set_visible(false);
         let Some(server) = Session::current().server() else {

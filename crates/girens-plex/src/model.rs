@@ -163,6 +163,12 @@ impl Item {
         }
     }
 
+    /// Whether this is an album of a photo library rather than a photo:
+    /// Plex calls both a photo, but only a picture has a file.
+    pub fn is_photo_album(&self) -> bool {
+        self.kind == ItemKind::Photo && self.media.is_empty()
+    }
+
     pub fn parts(&self) -> impl Iterator<Item = &Part> {
         self.media.iter().flat_map(|media| media.parts.iter())
     }

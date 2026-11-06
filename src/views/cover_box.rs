@@ -160,7 +160,7 @@ fn present(item: &Item, in_show_view: bool) -> Presentation {
         ),
         ItemKind::Season => (parent(), Some(item.title.clone()), 300),
         ItemKind::Album => (parent(), Some(item.title.clone()), 200),
-        ItemKind::Artist | ItemKind::Playlist => (item.title.clone(), None, 200),
+        ItemKind::Artist | ItemKind::Playlist | ItemKind::Photo => (item.title.clone(), None, 200),
         _ => (item.title.clone(), year(), 300),
     };
 
@@ -169,6 +169,10 @@ fn present(item: &Item, in_show_view: bool) -> Presentation {
             Some(("win.play-item", item.rating_key))
         }
         ItemKind::Playlist => Some(("win.show-playlist-by-id", item.rating_key)),
+        ItemKind::Photo if item.is_photo_album() => {
+            Some(("win.show-photo-album-by-id", item.rating_key))
+        }
+        ItemKind::Photo => Some(("win.show-photo-by-id", item.rating_key)),
         ItemKind::Season => item
             .parent_rating_key
             .map(|key| ("win.show-show-by-id", key)),
@@ -267,7 +271,8 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
         );
     }
     let offline = crate::sync::Sync::current().is_downloaded(item.rating_key);
-    if !offline {
+    // Photos are looked at, not kept offline.
+    if !offline && item.kind != ItemKind::Photo {
         add(&gettext("Sync"), "win.sync-by-id", item.rating_key);
     }
     if matches!(
@@ -322,8 +327,10 @@ impl CoverBox {
 
         let has_watched_state = !matches!(
             item.kind,
-            ItemKind::Playlist | ItemKind::Album | ItemKind::Artist
+            ItemKind::Playlist | ItemKind::Album | ItemKind::Artist | ItemKind::Photo
         );
+        // There is nothing to do with a photo but open it.
+        imp._menu_button.set_visible(item.kind != ItemKind::Photo);
         imp._watched_image
             .set_visible(has_watched_state && !item.is_watched());
 

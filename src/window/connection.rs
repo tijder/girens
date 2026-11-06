@@ -409,6 +409,12 @@ impl PlexWindow {
         Sync::current().forget();
         imp.history.borrow_mut().clear();
         imp._section_view.forget();
+        if let Some(photos) = imp.photos_view.get() {
+            photos.forget();
+        }
+        if let Some(photo) = imp.photo_view.get() {
+            photo.forget();
+        }
         imp.servers.borrow_mut().clear();
         imp._sidebar_box.clear();
         imp._avatar_image

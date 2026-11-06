@@ -70,3 +70,9 @@ button:hover > box > overlay > .cover-menu-button,
   border-radius: 9999px;
   padding: 6px;
 }
+
+/* The name of a photo, over the photo. */
+.photo-caption {
+  border-radius: 9999px;
+  padding: 6px 14px;
+}

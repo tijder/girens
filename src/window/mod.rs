@@ -109,6 +109,9 @@ mod imp {
         /// The dialog with accounts and profiles, while it is open.
         pub accounts_dialog: glib::WeakRef<ProfileDialog>,
         pub downloads_view: OnceCell<views::DownloadsView>,
+        /// The page of an album of photos, and that of one photo.
+        pub photos_view: OnceCell<views::SectionView>,
+        pub photo_view: OnceCell<views::PhotoView>,
         pub music_controls: OnceCell<MediaControls>,
         /// Cookie of the idle inhibitor that is held while video plays.
         pub inhibit_cookie: Cell<Option<u32>>,
@@ -165,6 +168,8 @@ mod imp {
                 sync_dialog: OnceCell::new(),
                 accounts_dialog: glib::WeakRef::new(),
                 downloads_view: OnceCell::new(),
+                photos_view: OnceCell::new(),
+                photo_view: OnceCell::new(),
                 music_controls: OnceCell::new(),
                 inhibit_cookie: Cell::new(None),
                 video_playing: Cell::new(false),
@@ -727,6 +732,12 @@ impl PlexWindow {
         add("show-album-by-id", |window, key| {
             window.open(Location::Album(key))
         });
+        add("show-photo-album-by-id", |window, key| {
+            window.open(Location::PhotoAlbum(key))
+        });
+        add("show-photo-by-id", |window, key| {
+            window.open(Location::Photo(key))
+        });
         add("show-playlist-by-id", |window, key| {
             window.open(Location::Playlist(key))
         });
@@ -892,6 +903,9 @@ impl PlexWindow {
         imp._section_view.set_cover_width(cover_width(30));
         imp._search_view.set_cover_width(cover_width(30));
         imp._player_view.set_window_width(width);
+        if let Some(photos) = imp.photos_view.get() {
+            photos.set_cover_width(cover_width(30));
+        }
         if let Some(downloads) = imp.downloads_view.get() {
             downloads.set_cover_width(cover_width(30));
         }
@@ -912,6 +926,13 @@ impl PlexWindow {
                     .is_some_and(|widget| widget.is::<gtk::Text>());
                 if typing {
                     return glib::Propagation::Proceed;
+                }
+                // While a photo is shown the arrows step through its album.
+                let photo = window.imp().photo_view.get().filter(|view| view.is_mapped());
+                if let Some(photo) = photo {
+                    if photo.handle_key(key).is_stop() {
+                        return glib::Propagation::Stop;
+                    }
                 }
                 window.imp()._player_view.handle_key(key)
             }

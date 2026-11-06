@@ -320,6 +320,13 @@ impl PlexServer {
             .await
     }
 
+    /// One page of what is in a photo album, which may hold thousands of
+    /// photos.
+    pub async fn children_page(&self, rating_key: u64, offset: u32, size: u32) -> Result<Page<Item>> {
+        let path = format!("/library/metadata/{rating_key}/children");
+        self.page(&path, offset, size, None).await
+    }
+
     /// All episodes of a show or all tracks of an artist.
     pub async fn all_leaves(&self, rating_key: u64) -> Result<Vec<Item>> {
         self.items(&format!("/library/metadata/{rating_key}/allLeaves"), &[])

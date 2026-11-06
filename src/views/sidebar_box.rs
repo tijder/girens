@@ -168,6 +168,7 @@ impl SidebarBox {
                 ItemKind::Movie => "camera-video-symbolic",
                 ItemKind::Show => "video-display-symbolic",
                 ItemKind::Artist => "audio-x-generic-symbolic",
+                ItemKind::Photo => "image-x-generic-symbolic",
                 _ => continue,
             };
             add(&section.title, icon, Destination::Section(section.clone()));

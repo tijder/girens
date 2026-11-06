@@ -62,6 +62,10 @@ pub fn load_album() -> String {
     gettext("Could not load the album")
 }
 
+pub fn load_photo() -> String {
+    gettext("Could not load the photo")
+}
+
 pub fn load_playlist() -> String {
     gettext("Could not load the playlist")
 }

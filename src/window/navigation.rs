@@ -15,6 +15,9 @@ pub enum Location {
     Artist(u64),
     Album(u64),
     Playlist(u64),
+    /// What is in an album of photos.
+    PhotoAlbum(u64),
+    Photo(u64),
     Player,
 }
 
@@ -199,6 +202,33 @@ impl PlexWindow {
                     imp._album_view.show_playlist(*key);
                 }
                 imp._album_view.get().upcast()
+            }
+            // A grid like that of a library, kept apart from it so that
+            // the library is as it was on the way back.
+            Location::PhotoAlbum(key) => {
+                let view = imp.photos_view.get_or_init(|| {
+                    let view = views::SectionView::default();
+                    // As `apply_width` does for the pages that exist.
+                    let width = self.width();
+                    view.set_cover_width(if width < 450 { width / 2 - 30 } else { 200 });
+                    imp.page_stack.add(&view);
+                    view
+                });
+                if fresh || view.folder() != Some(*key) {
+                    view.show_folder(*key);
+                }
+                view.clone().upcast()
+            }
+            Location::Photo(key) => {
+                let view = imp.photo_view.get_or_init(|| {
+                    let view = views::PhotoView::default();
+                    imp.page_stack.add(&view);
+                    view
+                });
+                if fresh || view.rating_key() != Some(*key) {
+                    view.show(*key);
+                }
+                view.clone().upcast()
             }
             Location::Player => imp._player_view.get().upcast(),
         };
