@@ -48,6 +48,20 @@ template $player_view : Adw.Bin {
         }
 
         [overlay]
+        Button _skip_button {
+          visible: false;
+          halign: end;
+          valign: end;
+          margin-end: 24;
+          margin-bottom: 96;
+
+          styles [
+            "osd",
+            "pill",
+          ]
+        }
+
+        [overlay]
         Box _controlls_bottom {
           valign: end;
           opacity: 0.8;

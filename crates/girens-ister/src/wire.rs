@@ -298,6 +298,8 @@ pub struct UserSettings {
     pub preferred_subtitle_languages: Vec<String>,
     #[serde(default)]
     pub hide_subtitles_matching_audio: bool,
+    #[serde(default)]
+    pub auto_skip_intro: bool,
 }
 
 #[derive(Debug, Clone, Deserialize)]

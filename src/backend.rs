@@ -104,6 +104,14 @@ impl Server {
         matches!(self, Server::Ister(_))
     }
 
+    /// Whether the user wants intros skipped without being asked.
+    pub fn skips_intros(&self) -> bool {
+        match self {
+            Server::Plex(_) => false,
+            Server::Ister(server) => server.skips_intros(),
+        }
+    }
+
     /// What tells this server from others; also names its folder in the
     /// cache.
     pub fn machine_identifier(&self) -> &str {

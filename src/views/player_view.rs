@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use girens_model::model::{Item, ItemKind, StreamKind};
+use girens_model::model::{Item, ItemKind, SegmentKind, StreamKind};
 use gtk::{gdk, glib, CompositeTemplate};
 
 use super::{List, MediaBoxVideoBottom, MediaBoxVideoTop, MediaControls};
@@ -42,6 +42,8 @@ mod imp {
         pub _media_top: TemplateChild<MediaBoxVideoTop>,
         #[template_child]
         pub _media_bottom: TemplateChild<MediaBoxVideoBottom>,
+        #[template_child]
+        pub _skip_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _video_box: TemplateChild<gtk::Box>,
         #[template_child]
@@ -222,6 +224,11 @@ impl PlayerView {
                 }
             }
         ));
+        imp._skip_button.connect_clicked(glib::clone!(
+            #[strong]
+            player,
+            move |_| player.skip_segment()
+        ));
         imp._right_click.connect_released(glib::clone!(
             #[strong]
             player,
@@ -357,6 +364,22 @@ impl PlayerView {
             .is_some_and(MediaControls::is_active)
     }
 
+    /// Offers to skip the intro, or to go on to the next item during the
+    /// credits when there is one.
+    fn offer_skip(&self, segment: Option<SegmentKind>) {
+        let imp = self.imp();
+        let has_next = imp.player.get().is_some_and(Player::has_next);
+        let label = match segment {
+            Some(SegmentKind::Intro) => Some(gettext("Skip intro")),
+            Some(SegmentKind::Outro) if has_next => Some(gettext("Next episode")),
+            _ => None,
+        };
+        if let Some(label) = &label {
+            imp._skip_button.set_label(label);
+        }
+        imp._skip_button.set_visible(label.is_some());
+    }
+
     // Player events
 
     fn on_player_event(&self, event: &Event) {
@@ -367,7 +390,9 @@ impl PlayerView {
                 }
                 self.show_controls();
             }
+            Event::Segment(segment) => self.offer_skip(*segment),
             Event::Stopped => {
+                self.offer_skip(None);
                 if self.imp().fullscreen.get() {
                     self.toggle_fullscreen();
                 } else if self.imp().windowed.get() {
@@ -512,6 +537,7 @@ impl PlayerView {
             gdk::Key::q => player.stop(),
             gdk::Key::comma => player.previous(),
             gdk::Key::period => player.next(),
+            gdk::Key::s => player.skip_segment(),
             gdk::Key::bracketleft | gdk::Key::Left => player.seek_by(-10),
             gdk::Key::bracketright | gdk::Key::Right => player.seek_by(30),
             gdk::Key::Up => change_volume(5),

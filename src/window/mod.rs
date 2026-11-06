@@ -629,6 +629,34 @@ impl PlexWindow {
     }
 
     #[cfg(debug_assertions)]
+    pub fn debug_player(&self, command: &str) {
+        let Some(player) = self.imp().player.get() else {
+            return;
+        };
+        let mut words = command.split_whitespace();
+        let (command, argument) = (words.next(), words.next().and_then(|word| word.parse::<u64>().ok()));
+        match (command, argument) {
+            (Some("skip"), _) => player.skip_segment(),
+            (Some("next"), _) => player.next(),
+            (Some("seek"), Some(seconds)) => player.seek_to(seconds * 1000),
+            (Some("subtitle"), Some(nth)) => {
+                let stream = player.loaded_item().and_then(|item| {
+                    item.streams(girens_model::model::StreamKind::Subtitle)
+                        .nth(nth as usize)
+                        .map(|stream| stream.id)
+                });
+                player.set_subtitle_stream(stream);
+            }
+            (Some("position"), _) => eprintln!(
+                "player: {} ms into {:?}",
+                player.position(),
+                player.loaded_item().map(|item| item.title)
+            ),
+            _ => eprintln!("GIRENS_DEBUG_PLAYER: cannot do {command:?}"),
+        }
+    }
+
+    #[cfg(debug_assertions)]
     pub fn debug_open(&self, dialog: &str) {
         match dialog {
             "preferences" => views::preferences::present(self),

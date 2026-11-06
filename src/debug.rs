@@ -108,6 +108,23 @@ pub fn after_connect(window: &crate::window::PlexWindow) {
             });
         }
     }
+    // `GIRENS_DEBUG_PLAYER="skip@12;seek 170@20"`: what to tell the player,
+    // and after how many seconds (`skip`, `next`, `seek <seconds>`,
+    // `subtitle <n>` for the n-th subtitle stream, `position` to print it).
+    if let Ok(spec) = std::env::var("GIRENS_DEBUG_PLAYER") {
+        for step in spec.split(';') {
+            let Some((command, at)) = step.rsplit_once('@') else {
+                continue;
+            };
+            let (command, at) = (command.trim().to_owned(), at.trim().parse().unwrap_or(0));
+            let window = window.downgrade();
+            glib::timeout_add_local_once(Duration::from_secs(at), move || {
+                if let Some(window) = window.upgrade() {
+                    window.debug_player(&command);
+                }
+            });
+        }
+    }
     // Switching connects again, which must not repeat the step.
     static ACCOUNT_STEP: std::sync::Once = std::sync::Once::new();
     if let Ok(step) = std::env::var("GIRENS_DEBUG_ACCOUNT") {

@@ -13,7 +13,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use girens_model::model::{Item, ItemKind, LibrarySection, StreamKind};
+use girens_model::model::{Item, ItemKind, LibrarySection, Segment, SegmentKind, StreamKind};
 use girens_model::{PlayQueue, PlaybackState};
 use gtk::prelude::*;
 use gtk::{gio, glib};
@@ -28,6 +28,11 @@ use crate::{config, runtime};
 const UI_INTERVAL: f64 = 0.5;
 const TIMELINE_INTERVAL: f64 = 5.0;
 const PING_INTERVAL: u32 = 30;
+/// Seconds an intro plays before it is skipped for a user who wants that.
+const AUTO_SKIP_DELAY: f64 = 5.0;
+/// A file has to go on for this long after an episode, in seconds, for the
+/// episode to be taken as a part of it.
+const SLICE_MARGIN: f64 = 2.0;
 
 /// Where playback of an item starts.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -69,6 +74,8 @@ pub enum Event {
     Position(u64),
     /// The play queue or the position in it changed.
     QueueChanged,
+    /// Playback entered the intro or the credits, or left them.
+    Segment(Option<SegmentKind>),
     /// Whether the item that is playing starts over when it ends.
     RepeatChanged(bool),
     /// Nothing is playing any more.
@@ -117,7 +124,14 @@ struct Playing {
     loading: Item,
     /// Transcode session; `None` for direct play.
     session: Option<String>,
+    /// Seconds into the item, which is what the user sees.
     position: f64,
+    /// Where the item starts in the file mpv plays, in seconds.
+    base: f64,
+    /// The intro or credits playback is in.
+    segment: Option<Segment>,
+    /// Whether the intro was skipped for the user already.
+    intro_skipped: bool,
     last_ui_update: f64,
     last_timeline_update: f64,
     paused: bool,
@@ -431,9 +445,35 @@ impl Player {
 
     /// Seeks to a position in milliseconds.
     pub fn seek_to(&self, position: u64) {
-        if self.is_playing() {
+        let base = self
+            .inner
+            .state
+            .borrow()
+            .current
+            .as_ref()
+            .map(|playing| playing.base);
+        if let Some(base) = base {
             self.inner
-                .set_mpv("playback-time", position as f64 / 1000.0);
+                .set_mpv("playback-time", base + position as f64 / 1000.0);
+        }
+    }
+
+    /// Jumps past the intro that is playing, or from the credits to the
+    /// next item.
+    pub fn skip_segment(&self) {
+        let segment = self
+            .inner
+            .state
+            .borrow()
+            .current
+            .as_ref()
+            .and_then(|playing| playing.segment);
+        match segment {
+            Some(segment) if segment.kind == SegmentKind::Outro && self.has_next() => self.next(),
+            Some(segment) => self
+                .inner
+                .set_mpv("playback-time", segment.end as f64 / 1000.0),
+            None => {}
         }
     }
 
@@ -492,7 +532,7 @@ impl Player {
         };
         let mut item = playing.item.clone();
         item.duration = playing.loading.duration.or(item.duration);
-        let position = (playing.position * 1000.0) as u64;
+        let position = ((playing.position + playing.base) * 1000.0) as u64;
         let (loading, session) = (playing.loading, playing.session);
         runtime::run(async move {
             let farewell = async {
@@ -732,16 +772,21 @@ impl Inner {
             return Ok(());
         }
 
-        let offset = match mode {
-            StartMode::At(position) => position as f64 / 1000.0,
-            StartMode::Resume => loading.view_offset as f64 / 1000.0,
-            StartMode::Ask | StartMode::Beginning => 0.0,
-        };
+        let base = loading.start_offset as f64 / 1000.0;
+        let offset = base
+            + match mode {
+                StartMode::At(position) => position as f64 / 1000.0,
+                StartMode::Resume => loading.view_offset as f64 / 1000.0,
+                StartMode::Ask | StartMode::Beginning => 0.0,
+            };
         self.state.borrow_mut().current = Some(Playing {
             item,
             loading,
             session,
             position: 0.0,
+            base,
+            segment: None,
+            intro_skipped: false,
             last_ui_update: 0.0,
             last_timeline_update: 0.0,
             paused: true,
@@ -821,7 +866,59 @@ impl Inner {
         }
     }
 
-    fn on_position(self: &Rc<Self>, position: f64) {
+    /// `time` is where mpv is in the file, in seconds.
+    fn on_position(self: &Rc<Self>, time: f64) {
+        let (position, slice_end, segment, auto_skip) = {
+            let mut state = self.state.borrow_mut();
+            let Some(playing) = state.current.as_mut() else {
+                return;
+            };
+            let position = item_time(time, playing.base);
+            // Where the item ends, when it is followed by another in the
+            // same file.
+            let slice_end = playing
+                .loading
+                .duration
+                .map(|duration| playing.base + duration as f64 / 1000.0)
+                .filter(|end| playing.started && time >= *end);
+            let now = segment_at(&playing.loading.segments, time);
+            let changed = (now != playing.segment).then_some(now);
+            playing.segment = now;
+            let auto_skip = now.filter(|segment| {
+                segment.kind == SegmentKind::Intro
+                    && !playing.intro_skipped
+                    && time >= segment.start as f64 / 1000.0 + AUTO_SKIP_DELAY
+            });
+            (position, slice_end, changed, auto_skip)
+        };
+        if let Some(segment) = segment {
+            self.emit(Event::Segment(segment.map(|segment| segment.kind)));
+        }
+        if let Some(intro) = auto_skip {
+            let wanted = Session::current()
+                .server()
+                .is_some_and(|server| server.skips_intros());
+            if let Some(playing) = self.state.borrow_mut().current.as_mut() {
+                // Once: who goes back into the intro wants to see it.
+                playing.intro_skipped = true;
+            }
+            if wanted {
+                self.set_mpv("playback-time", intro.end as f64 / 1000.0);
+                return;
+            }
+        }
+        if let Some(end) = slice_end {
+            let file_ends = self
+                .mpv
+                .get()
+                .and_then(|mpv| mpv.get_property::<f64>("duration").ok());
+            if file_ends.is_some_and(|file_ends| file_ends > end + SLICE_MARGIN) {
+                // The next episode of the file is not this item.
+                self.end_with(EndAction::Advance);
+                return;
+            }
+        }
+
         let (ui, timeline, refresh_queue) = {
             let mut state = self.state.borrow_mut();
             let Some(playing) = state.current.as_mut() else {
@@ -912,7 +1009,8 @@ impl Inner {
         // is actually playing.
         let mut item = playing.item.clone();
         item.duration = playing.loading.duration.or(item.duration);
-        let position = (playing.position * 1000.0) as u64;
+        // Servers count from the start of the file.
+        let position = ((playing.position + playing.base) * 1000.0) as u64;
 
         // An offline copy of a video remembers the position itself, for
         // when the server cannot be asked.
@@ -1200,6 +1298,20 @@ impl Inner {
     }
 }
 
+/// Seconds into an item for a time in the file it starts at `base` in.
+fn item_time(time: f64, base: f64) -> f64 {
+    (time - base).max(0.0)
+}
+
+/// The intro or credits that `time`, in seconds into the file, falls in.
+fn segment_at(segments: &[Segment], time: f64) -> Option<Segment> {
+    let time = (time * 1000.0) as u64;
+    segments
+        .iter()
+        .copied()
+        .find(|segment| (segment.start..segment.end).contains(&time))
+}
+
 /// Creates the mpv core and makes it wake the main loop for its events.
 fn create_mpv() -> Result<Mpv, libmpv2::Error> {
     let mut mpv = Mpv::with_initializer(|init| {
@@ -1304,4 +1416,36 @@ mod tests {
     fn stop_ends_playback() {
         assert_eq!(next_after(EndAction::Stop, 0, 3, false), None);
     }
+    #[test]
+    fn an_item_counts_from_where_it_starts_in_its_file() {
+        assert_eq!(item_time(12.5, 0.0), 12.5);
+        assert_eq!(item_time(192.5, 180.0), 12.5);
+        // mpv may report a moment before the start while it seeks there.
+        assert_eq!(item_time(179.9, 180.0), 0.0);
+    }
+
+    #[test]
+    fn a_position_is_in_the_intro_the_credits_or_neither() {
+        let segments = [
+            Segment {
+                kind: SegmentKind::Intro,
+                start: 5_000,
+                end: 35_000,
+            },
+            Segment {
+                kind: SegmentKind::Outro,
+                start: 270_000,
+                end: 300_000,
+            },
+        ];
+        let kind = |time| segment_at(&segments, time).map(|segment| segment.kind);
+        assert_eq!(kind(4.9), None);
+        assert_eq!(kind(5.0), Some(SegmentKind::Intro));
+        assert_eq!(kind(34.9), Some(SegmentKind::Intro));
+        // The end is where a skip lands: no longer in it.
+        assert_eq!(kind(35.0), None);
+        assert_eq!(kind(280.0), Some(SegmentKind::Outro));
+        assert_eq!(segment_at(&[], 10.0), None);
+    }
+
 }

@@ -211,6 +211,14 @@ impl IsterServer {
         &self.inner.user
     }
 
+    /// Whether the user set the server to skip intros by itself.
+    pub fn skips_intros(&self) -> bool {
+        self.inner
+            .context
+            .read()
+            .is_ok_and(|context| context.settings.auto_skip_intro)
+    }
+
     /// The refresh token as it is now, to keep for the next session.
     pub async fn refresh_token(&self) -> String {
         self.inner.tokens.lock().await.refresh.clone()

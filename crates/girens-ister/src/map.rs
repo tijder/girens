@@ -446,6 +446,9 @@ impl Context {
                 .and_then(|file| file.duration_in_milliseconds)
         });
         watched(&mut item, &episode.watch_status);
+        // The server counts from the start of the file, the item from its
+        // own start.
+        item.view_offset = item.view_offset.saturating_sub(item.start_offset);
         self.describe(&mut item, &episode.metadata);
         item
     }

@@ -79,7 +79,7 @@ pub const ME: &str = "query Me { me { id name email } }";
 pub const LIBRARIES: &str = "query Libraries { libraries { id name type } }";
 
 pub const USER_SETTINGS: &str = "query UserSettings { userSettings { \
-     preferredAudioLanguages preferredSubtitleLanguages hideSubtitlesMatchingAudio } }";
+     preferredAudioLanguages preferredSubtitleLanguages hideSubtitlesMatchingAudio autoSkipIntro } }";
 
 pub const CREATE_STREAM_TOKEN: &str = "mutation CreateStreamToken { createStreamToken { token } }";
 
