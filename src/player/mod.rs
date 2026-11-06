@@ -81,6 +81,8 @@ pub enum Event {
     QueueChanged,
     /// Playback entered the intro or the credits, or left them.
     Segment(Option<SegmentKind>),
+    /// Another audio or subtitle stream of the loaded item was chosen.
+    StreamsChanged,
     /// The subtitles to draw over the video changed; `None` when there
     /// are none to draw.
     Subtitles(Option<SubtitlePictures>),
@@ -1428,6 +1430,9 @@ impl Inner {
                     _ => None,
                 }
             };
+            if transcoding.is_some() {
+                self.emit(Event::StreamsChanged);
+            }
             match transcoding {
                 Some((true, position)) => {
                     self.end_with(EndAction::Restart((position * 1000.0) as u64))

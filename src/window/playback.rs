@@ -113,7 +113,7 @@ impl PlexWindow {
         let dialog = adw::AlertDialog::new(
             Some(title),
             Some(&gettext(
-                "Do you want resume watching or start from the beginning?",
+                "Do you want to resume watching or start from the beginning?",
             )),
         );
         dialog.add_response("_beginning_button", &gettext("Start from the beginning"));

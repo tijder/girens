@@ -492,6 +492,12 @@ impl PlayerView {
                 self.show_controls();
             }
             Event::Segment(segment) => self.offer_skip(*segment),
+            // Also when it was chosen elsewhere than in the menus here.
+            Event::StreamsChanged => {
+                if let Some(item) = self.imp().player.get().and_then(Player::loaded_item) {
+                    self.show_streams(&item);
+                }
+            }
             Event::Subtitles(subtitles) => self.show_subtitles(subtitles.clone()),
             Event::Stopped => {
                 self.offer_skip(None);

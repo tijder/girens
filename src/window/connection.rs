@@ -719,7 +719,7 @@ impl PlexWindow {
             )),
         );
         dialog.add_response("cancel", &gettext("Cancel"));
-        dialog.add_response("logout", &gettext("Logout"));
+        dialog.add_response("logout", &gettext("Sign out"));
         dialog.set_response_appearance("logout", adw::ResponseAppearance::Destructive);
         dialog.set_close_response("cancel");
         if dialog.choose_future(Some(self)).await == "logout" {

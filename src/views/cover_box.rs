@@ -29,6 +29,8 @@ mod imp {
         #[template_child]
         pub _cover_image: TemplateChild<gtk::Picture>,
         #[template_child]
+        pub _placeholder_image: TemplateChild<gtk::Image>,
+        #[template_child]
         pub popover_menu: TemplateChild<gtk::PopoverMenu>,
         #[template_child]
         pub _downloaded_image: TemplateChild<gtk::Image>,
@@ -352,6 +354,16 @@ impl CoverBox {
             .set_visible(crate::sync::Sync::current().is_downloaded(item.rating_key));
 
         imp._cover_image.set_paintable(gdk::Paintable::NONE);
+        // Until the picture is there, and for an item that has none, the
+        // tile shows what kind of thing it is.
+        imp._placeholder_image.set_icon_name(Some(match item.kind {
+            ItemKind::Show | ItemKind::Season | ItemKind::Episode => "video-display-symbolic",
+            ItemKind::Artist | ItemKind::Album | ItemKind::Track => "audio-x-generic-symbolic",
+            ItemKind::Playlist => "view-list-symbolic",
+            ItemKind::Photo => "image-x-generic-symbolic",
+            _ => "camera-video-symbolic",
+        }));
+        imp._placeholder_image.set_visible(true);
         let Some((key, thumb)) = presentation.image else {
             return;
         };
@@ -371,6 +383,7 @@ impl CoverBox {
                 };
                 if let Some(texture) = texture {
                     cover.imp()._cover_image.set_paintable(Some(&texture));
+                    cover.imp()._placeholder_image.set_visible(false);
                 }
             }
         ));
@@ -396,6 +409,7 @@ impl CoverBox {
         imp._watched_image.set_visible(false);
         imp._downloaded_image.set_visible(false);
         imp._cover_image.set_paintable(gdk::Paintable::NONE);
+        imp._placeholder_image.set_visible(false);
         imp._cover_image.set_size_request(width, image_height);
     }
 

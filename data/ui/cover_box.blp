@@ -34,6 +34,19 @@ template $cover_box : Button {
       }
 
       [overlay]
+      Image _placeholder_image {
+        visible: false;
+        can-target: false;
+        halign: center;
+        valign: center;
+        pixel-size: 64;
+
+        styles [
+          "dim-label",
+        ]
+      }
+
+      [overlay]
       Image _watched_image {
         styles [
           "watched_tip",

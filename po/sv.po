@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:40+0100\n"
+"POT-Creation-Date: 2026-11-06 14:12+0100\n"
 "PO-Revision-Date: 2022-10-31 11:06+0000\n"
 "Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/girens/girens/sv/"
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#: ../data/ui/album_header.blp:113 ../data/ui/cover_box.blp:59
+#: ../data/ui/album_header.blp:113 ../data/ui/cover_box.blp:72
 msgid "More"
 msgstr ""
 
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Play music clip"
 msgstr ""
 
-#: ../data/ui/cover_box.blp:77
+#: ../data/ui/cover_box.blp:90
 msgid "Available offline"
 msgstr ""
 
@@ -468,27 +468,27 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:390
+#: ../src/player/mod.rs:392
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:398
+#: ../src/player/mod.rs:400
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:533
+#: ../src/player/mod.rs:535
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:728
+#: ../src/player/mod.rs:730
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1302
+#: ../src/player/mod.rs:1304
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: ../src/player/mod.rs:1414
+#: ../src/player/mod.rs:1416
 msgid "Could not change the stream"
 msgstr ""
 
@@ -572,37 +572,41 @@ msgstr ""
 msgid "Disc {}"
 msgstr ""
 
-#: ../src/views/album_view.rs:302 ../src/views/cover_box.rs:234
-#: ../src/views/cover_box.rs:241
+#: ../src/views/album_view.rs:302 ../src/views/cover_box.rs:236
+#: ../src/views/cover_box.rs:243
 msgid "Go to artist view"
 msgstr ""
 
-#: ../src/views/album_view.rs:308 ../src/views/album_view.rs:332
-#: ../src/views/cover_box.rs:278
+#: ../src/views/album_view.rs:308 ../src/views/album_view.rs:337
+#: ../src/views/cover_box.rs:280
 msgid "Sync"
 msgstr ""
 
-#: ../src/views/cover_box.rs:227
+#: ../src/views/album_view.rs:324
+msgid "This playlist is empty"
+msgstr ""
+
+#: ../src/views/cover_box.rs:229
 msgid "Go to album view"
 msgstr ""
 
-#: ../src/views/cover_box.rs:257
+#: ../src/views/cover_box.rs:259
 msgid "Go to show view"
 msgstr ""
 
-#: ../src/views/cover_box.rs:262
+#: ../src/views/cover_box.rs:264
 msgid "Mark as Played"
 msgstr ""
 
-#: ../src/views/cover_box.rs:269
+#: ../src/views/cover_box.rs:271
 msgid "Mark as Unplayed"
 msgstr ""
 
-#: ../src/views/cover_box.rs:284
+#: ../src/views/cover_box.rs:286
 msgid "Shuffle"
 msgstr ""
 
-#: ../src/views/cover_box.rs:288 ../src/window/playback.rs:119
+#: ../src/views/cover_box.rs:290 ../src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr ""
 
@@ -668,7 +672,7 @@ msgstr ""
 msgid "Next episode"
 msgstr ""
 
-#: ../src/views/player_view.rs:561
+#: ../src/views/player_view.rs:567
 msgid "None"
 msgstr ""
 
@@ -942,7 +946,7 @@ msgid ""
 msgstr ""
 
 #: ../src/window/connection.rs:722
-msgid "Logout"
+msgid "Sign out"
 msgstr ""
 
 #: ../src/window/mod.rs:343
@@ -972,7 +976,7 @@ msgid "This is not available without a connection to the server"
 msgstr ""
 
 #: ../src/window/playback.rs:116
-msgid "Do you want resume watching or start from the beginning?"
+msgid "Do you want to resume watching or start from the beginning?"
 msgstr ""
 
 #: ../src/window/playback.rs:120

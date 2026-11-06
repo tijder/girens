@@ -320,11 +320,16 @@ impl AlbumHeader {
         let imp = header.imp();
         header.describe(
             playlist,
-            &util::detail_line([
-                (items > 0).then(|| item_count(items)),
-                (duration > 0).then(|| playing_time(duration)),
-            ]),
+            &if items == 0 {
+                gettext("This playlist is empty")
+            } else {
+                util::detail_line([
+                    Some(item_count(items)),
+                    (duration > 0).then(|| playing_time(duration)),
+                ])
+            },
         );
+        imp._play_button.set_sensitive(items > 0);
         imp._play_button.add_css_class("suggested-action");
 
         let menu = gio::Menu::new();
@@ -483,7 +488,9 @@ impl AlbumView {
                 };
                 let total = first.total;
                 let mut rows = vec![MusicRow::Playlist {
-                    items: playlist.leaf_count.unwrap_or(total),
+                    // What the server lists, which for a list that fills
+                    // itself can be less than it claims to hold.
+                    items: total,
                     duration: playlist.duration.unwrap_or(0),
                     playlist: Box::new(playlist),
                 }];
