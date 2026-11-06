@@ -1,5 +1,6 @@
-//! An album as one virtualised list: its header, then the tracks. The rows
-//! are shared with the artist page, which lists several albums.
+//! An album or playlist as one virtualised list: its header, then the
+//! tracks. The rows are shared with the artist page, which lists several
+//! albums.
 
 use std::cell::{Cell, OnceCell, RefCell};
 
@@ -29,6 +30,19 @@ pub enum MusicRow {
     },
     Disc(u32),
     Track(Box<Item>),
+    /// The header of the page of a playlist.
+    Playlist {
+        playlist: Box<Item>,
+        items: u32,
+        /// Playing time of everything in it, in milliseconds.
+        duration: u64,
+    },
+    /// An item of the playlist with this rating key; playing it continues
+    /// with what follows it there.
+    Entry {
+        playlist: u64,
+        item: Box<Item>,
+    },
     /// Shown while the page is fetched.
     Loading,
 }
@@ -41,6 +55,11 @@ pub fn song_count(count: u32) -> String {
 /// `3 albums`.
 pub fn album_count(count: u32) -> String {
     ngettext_f("{} album", "{} albums", count)
+}
+
+/// `40 items`, for a playlist: it may hold videos as well as music.
+fn item_count(count: u32) -> String {
+    ngettext_f("{} item", "{} items", count)
 }
 
 /// A playing time in words: `52 min`, `1 h 4 min`.
@@ -83,6 +102,30 @@ pub fn album_rows(album: &Item, tracks: &[Item], link_to_artist: bool) -> Vec<Mu
     rows
 }
 
+/// How many items of a playlist are fetched at a time.
+const PLAYLIST_PAGE: u32 = 200;
+
+/// The rows for items of the playlist `playlist`, the first of which is at
+/// `offset` in it.
+fn playlist_rows(playlist: u64, items: &[Item], offset: u32) -> Vec<MusicRow> {
+    let rows = items.iter().enumerate().map(|(position, item)| {
+        // A row shows a number and a title: here the place in the playlist,
+        // and whose track or which episode it is.
+        let mut shown = item.clone();
+        shown.index = Some(offset + position as u32 + 1);
+        shown.title = util::detail_line([
+            Some(item.title.clone()),
+            item.grandparent_title.clone(),
+            item.season_episode(),
+        ]);
+        MusicRow::Entry {
+            playlist,
+            item: Box::new(shown),
+        }
+    });
+    rows.collect()
+}
+
 /// Makes `list` show [`MusicRow`]s and returns its store.
 pub fn setup_music_list(list: &gtk::ListView) -> gio::ListStore {
     let store = music_store(list);
@@ -122,7 +165,14 @@ fn music_store(list: &gtk::ListView) -> gio::ListStore {
                 label.set_margin_bottom(6);
                 RowWidget::inert(&label)
             }
-            MusicRow::Track(track) => match previous.and_downcast::<AlbumItem>() {
+            MusicRow::Playlist {
+                playlist,
+                items,
+                duration,
+            } => RowWidget::inert(&AlbumHeader::for_playlist(playlist, *items, *duration)),
+            MusicRow::Track(track) | MusicRow::Entry { item: track, .. } => match previous
+                .and_downcast::<AlbumItem>()
+            {
                 Some(item) => {
                     item.set_track(track);
                     RowWidget::activatable(&item)
@@ -133,11 +183,16 @@ fn music_store(list: &gtk::ListView) -> gio::ListStore {
         glib::clone!(
             #[weak]
             list,
-            move |row: &MusicRow| {
-                if let MusicRow::Track(track) = row {
+            move |row: &MusicRow| match row {
+                MusicRow::Track(track) => {
                     let key = (track.rating_key as i64).to_variant();
                     let _ = list.activate_action("win.play-item", Some(&key));
                 }
+                MusicRow::Entry { playlist, item } => {
+                    let keys = (*playlist as i64, item.rating_key as i64).to_variant();
+                    let _ = list.activate_action("win.play-playlist-item", Some(&keys));
+                }
+                _ => {}
             }
         ),
     )
@@ -208,18 +263,14 @@ impl AlbumHeader {
         let header: Self = glib::Object::new();
         let imp = header.imp();
 
-        imp._title_label.set_text(&album.title);
-        imp._subtitle_label.set_text(&util::detail_line([
-            album.year.map(|year| year.to_string()),
-            (tracks > 0).then(|| song_count(tracks)),
-            (duration > 0).then(|| playing_time(duration)),
-        ]));
-        let target = (album.rating_key as i64).to_variant();
-        imp._play_button.set_action_target_value(Some(&target));
-        imp._play_button.set_action_name(Some("win.play-item"));
-        imp._shuffle_button.set_action_target_value(Some(&target));
-        imp._shuffle_button
-            .set_action_name(Some("win.shuffle-by-id"));
+        header.describe(
+            album,
+            &util::detail_line([
+                album.year.map(|year| year.to_string()),
+                (tracks > 0).then(|| song_count(tracks)),
+                (duration > 0).then(|| playing_time(duration)),
+            ]),
+        );
 
         // On its own page the album is what the page is about: its artist is
         // one click away and playing it is the obvious thing to do.
@@ -255,9 +306,54 @@ impl AlbumHeader {
         add(&gettext("Sync"), "win.sync-by-id", album.rating_key);
         imp._menu_button.set_menu_model(Some(&menu));
 
+        header.load_cover(album.rating_key, album.thumb.clone());
+        header
+    }
+
+    /// The header of the page of a playlist.
+    fn for_playlist(playlist: &Item, items: u32, duration: u64) -> Self {
+        let header: Self = glib::Object::new();
+        let imp = header.imp();
+        header.describe(
+            playlist,
+            &util::detail_line([
+                (items > 0).then(|| item_count(items)),
+                (duration > 0).then(|| playing_time(duration)),
+            ]),
+        );
+        imp._play_button.add_css_class("suggested-action");
+
+        let menu = gio::Menu::new();
+        let entry = gio::MenuItem::new(Some(&gettext("Sync")), None);
+        let key = (playlist.rating_key as i64).to_variant();
+        entry.set_action_and_target_value(Some("win.sync-by-id"), Some(&key));
+        menu.append_item(&entry);
+        imp._menu_button.set_menu_model(Some(&menu));
+
+        // A playlist is pictured by the covers of what is in it.
+        let image = playlist.composite.clone().or_else(|| playlist.thumb.clone());
+        header.load_cover(playlist.rating_key, image);
+        header
+    }
+
+    /// Fills in the title, the line below it and what the buttons play.
+    fn describe(&self, item: &Item, details: &str) {
+        let imp = self.imp();
+        imp._title_label.set_text(&item.title);
+        imp._subtitle_label.set_text(details);
+        let target = (item.rating_key as i64).to_variant();
+        imp._play_button.set_action_target_value(Some(&target));
+        imp._play_button.set_action_name(Some("win.play-item"));
+        imp._shuffle_button.set_action_target_value(Some(&target));
+        imp._shuffle_button
+            .set_action_name(Some("win.shuffle-by-id"));
+    }
+
+    fn load_cover(&self, key: u64, thumb: Option<String>) {
+        let header = self;
+        let imp = self.imp();
         imp._cover_picture.set_paintable(gdk::Paintable::NONE);
-        if let (Some(thumb), Some(server)) = (album.thumb.clone(), Session::current().server()) {
-            let key = album.rating_key;
+        if let (Some(thumb), Some(server)) = (thumb, Session::current().server()) {
             let task = glib::spawn_future_local(glib::clone!(
                 #[weak]
                 header,
@@ -271,7 +367,6 @@ impl AlbumHeader {
             ));
             imp.cover_task.replace(Some(task));
         }
-        header
     }
 }
 
@@ -326,6 +421,89 @@ impl AlbumView {
     /// What is currently displayed.
     pub fn rating_key(&self) -> Option<u64> {
         self.imp().rating_key.get()
+    }
+
+    /// Loads and shows the playlist with this rating key. Its items come
+    /// in a page at a time, as a playlist can be very long.
+    pub fn show_playlist(&self, rating_key: u64) {
+        let imp = self.imp();
+        imp.rating_key.set(Some(rating_key));
+        let store = imp.store.get().expect("set in constructed").clone();
+        row_list::replace_from(&store, 0, vec![MusicRow::Loading]);
+        let Some(server) = Session::current().server() else {
+            return;
+        };
+        let task = glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            async move {
+                let failed = |err: girens_plex::Error| {
+                    let retry = glib::clone!(
+                        #[weak]
+                        view,
+                        move || view.show_playlist(rating_key)
+                    );
+                    crate::notify::failure_with_retry(
+                        &crate::messages::load_playlist(),
+                        &err,
+                        retry,
+                    );
+                };
+                let page = |offset: u32| {
+                    let server = server.clone();
+                    runtime::run(async move {
+                        server
+                            .playlist_page(rating_key, offset, PLAYLIST_PAGE)
+                            .await
+                    })
+                };
+
+                let loaded = {
+                    let server = server.clone();
+                    let (playlist, first) = tokio::join!(
+                        runtime::run(async move { server.item(rating_key).await }),
+                        page(0)
+                    );
+                    playlist.and_then(|playlist| Ok((playlist, first?)))
+                };
+                let (playlist, first) = match loaded {
+                    Ok(loaded) => loaded,
+                    Err(err) => {
+                        row_list::replace_from(&store, 0, Vec::<MusicRow>::new());
+                        failed(err);
+                        return;
+                    }
+                };
+                let total = first.total;
+                let mut rows = vec![MusicRow::Playlist {
+                    items: playlist.leaf_count.unwrap_or(total),
+                    duration: playlist.duration.unwrap_or(0),
+                    playlist: Box::new(playlist),
+                }];
+                rows.extend(playlist_rows(rating_key, &first.items, 0));
+                let mut loaded = first.items.len() as u32;
+                row_list::replace_from(&store, 0, rows);
+
+                // The rest follows while the start can be used already.
+                while loaded < total {
+                    match page(loaded).await {
+                        Ok(next) if next.items.is_empty() => break,
+                        Ok(next) => {
+                            let rows = playlist_rows(rating_key, &next.items, loaded);
+                            loaded += next.items.len() as u32;
+                            row_list::replace_from(&store, store.n_items(), rows);
+                        }
+                        Err(err) => {
+                            failed(err);
+                            break;
+                        }
+                    }
+                }
+            }
+        ));
+        if let Some(previous) = imp.task.replace(Some(task)) {
+            previous.abort();
+        }
     }
 
     /// Loads and shows the album with this rating key.

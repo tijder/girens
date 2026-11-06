@@ -263,6 +263,18 @@ impl PlexServer {
         size: u32,
         sort: Option<&str>,
     ) -> Result<Page<Item>> {
+        self.page(&format!("/library/sections/{section}/all"), offset, size, sort)
+            .await
+    }
+
+    /// `size` items of the list at `path`, from `offset`.
+    async fn page(
+        &self,
+        path: &str,
+        offset: u32,
+        size: u32,
+        sort: Option<&str>,
+    ) -> Result<Page<Item>> {
         let (offset_text, size_text) = (offset.to_string(), size.to_string());
         let mut params = vec![
             ("X-Plex-Container-Start", offset_text.as_str()),
@@ -271,9 +283,7 @@ impl PlexServer {
         if let Some(sort) = sort {
             params.push(("sort", sort));
         }
-        let envelope: Envelope<Items> = self
-            .get(&format!("/library/sections/{section}/all"), &params)
-            .await?;
+        let envelope: Envelope<Items> = self.get(path, &params).await?;
         let container = envelope.container;
         Ok(Page {
             offset: container.offset.unwrap_or(offset),
@@ -322,6 +332,12 @@ impl PlexServer {
 
     pub async fn playlist_items(&self, rating_key: u64) -> Result<Vec<Item>> {
         self.items(&format!("/playlists/{rating_key}/items"), &[])
+            .await
+    }
+
+    /// One page of a playlist, which may hold thousands of items.
+    pub async fn playlist_page(&self, rating_key: u64, offset: u32, size: u32) -> Result<Page<Item>> {
+        self.page(&format!("/playlists/{rating_key}/items"), offset, size, None)
             .await
     }
 

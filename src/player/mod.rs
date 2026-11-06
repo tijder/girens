@@ -45,6 +45,8 @@ pub enum StartMode {
 pub enum PlayTarget {
     /// Any item, by rating key.
     Item(u64),
+    /// A playlist, starting at one of its items; both by rating key.
+    PlaylistItem { playlist: u64, item: u64 },
     /// A whole library in the given sort order.
     Section {
         section: LibrarySection,
@@ -319,6 +321,13 @@ impl Player {
                     PlayTarget::Section { section, sort } => {
                         server
                             .create_section_play_queue(&section, sort.as_deref(), shuffle)
+                            .await
+                    }
+                    PlayTarget::PlaylistItem { playlist, item } => {
+                        let (playlist, item) =
+                            tokio::try_join!(server.item(playlist), server.item(item))?;
+                        server
+                            .create_play_queue(&playlist, Some(&item), shuffle)
                             .await
                     }
                     PlayTarget::Item(key) => {

@@ -727,6 +727,9 @@ impl PlexWindow {
         add("show-album-by-id", |window, key| {
             window.open(Location::Album(key))
         });
+        add("show-playlist-by-id", |window, key| {
+            window.open(Location::Playlist(key))
+        });
         add("mark-as-played-by-id", |window, key| {
             window.set_watched(key, true)
         });
@@ -744,6 +747,25 @@ impl PlexWindow {
         add("shuffle-by-id", |window, key| {
             window.play(PlayTarget::Item(key), true, StartMode::Ask)
         });
+
+        // The rating keys of a playlist and of the item in it to start at.
+        let action = gio::SimpleAction::new("play-playlist-item", glib::VariantTy::new("(xx)").ok());
+        action.connect_activate(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |_, parameter| {
+                let keys = parameter
+                    .and_then(|value| value.get::<(i64, i64)>())
+                    .and_then(|(playlist, item)| {
+                        Some((u64::try_from(playlist).ok()?, u64::try_from(item).ok()?))
+                    });
+                if let Some((playlist, item)) = keys {
+                    let target = PlayTarget::PlaylistItem { playlist, item };
+                    window.play(target, false, StartMode::Ask);
+                }
+            }
+        ));
+        self.add_action(&action);
     }
 
     /// Adds an item to the offline sync. A show first asks which episodes.

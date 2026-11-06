@@ -165,9 +165,10 @@ fn present(item: &Item, in_show_view: bool) -> Presentation {
     };
 
     let action = match item.kind {
-        ItemKind::Episode | ItemKind::Movie | ItemKind::Playlist | ItemKind::Clip => {
+        ItemKind::Episode | ItemKind::Movie | ItemKind::Clip => {
             Some(("win.play-item", item.rating_key))
         }
+        ItemKind::Playlist => Some(("win.show-playlist-by-id", item.rating_key)),
         ItemKind::Season => item
             .parent_rating_key
             .map(|key| ("win.show-show-by-id", key)),

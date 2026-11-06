@@ -193,6 +193,9 @@ async fn playlists_use_their_composite_as_cover() {
     assert_eq!(playlist.kind, ItemKind::Playlist);
     assert_eq!(playlist.cover(), playlist.composite.as_deref());
     assert!(!server.playlist_items(9).await.unwrap().is_empty());
+    let page = server.playlist_page(9, 0, 50).await.unwrap();
+    assert!(!page.items.is_empty());
+    assert!(page.total >= page.items.len() as u32);
 }
 
 #[tokio::test]

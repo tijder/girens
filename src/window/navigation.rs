@@ -14,6 +14,7 @@ pub enum Location {
     Show(u64),
     Artist(u64),
     Album(u64),
+    Playlist(u64),
     Player,
 }
 
@@ -189,6 +190,13 @@ impl PlexWindow {
             Location::Album(key) => {
                 if fresh || imp._album_view.rating_key() != Some(*key) {
                     imp._album_view.show(*key);
+                }
+                imp._album_view.get().upcast()
+            }
+            // The page of an album also shows a playlist.
+            Location::Playlist(key) => {
+                if fresh || imp._album_view.rating_key() != Some(*key) {
+                    imp._album_view.show_playlist(*key);
                 }
                 imp._album_view.get().upcast()
             }
