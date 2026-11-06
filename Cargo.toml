@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "crates/girens-model", "crates/girens-plex", "search-provider"]
+members = [".", "crates/girens-ister", "crates/girens-model", "crates/girens-plex", "search-provider"]
 resolver = "2"
 
 [workspace.package]

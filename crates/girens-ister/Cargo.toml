@@ -1,0 +1,25 @@
+[package]
+name = "girens-ister"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Minimal Ister client covering what Girens uses"
+
+[dependencies]
+girens-model = { path = "../girens-model" }
+base64 = "0.22"
+getrandom = "0.2"
+reqwest = { version = "0.13", features = ["json", "form"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tokio = { version = "1", features = ["io-util", "net", "sync", "time"] }
+url = "2"
+
+[dev-dependencies]
+graphql-parser = "0.4"
+reqwest = { version = "0.13", features = ["json", "form"] }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt"] }
+wiremock = "0.6"

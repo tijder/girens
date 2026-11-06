@@ -1,0 +1,2015 @@
+type Query {
+    """
+    Admin only. What an item's artwork of one type could be: the images the server has (local
+    files, the scan's download, the generated video frame, uploads) plus the alternatives TMDB offers.
+    """
+    imageCandidates(target: ImageTargetInput!, type: ImageType!): ImageCandidates!
+    "Admin only. Number of events whose handler kept failing and that wait in the dead-letter queue."
+    deadLetterCount: Int!
+    """
+    Name, url and OIDC discovery url of this server, readable without a token (a player needs
+    them to start the login). The node list is only filled for an authenticated user; anonymous
+    callers get an empty list.
+    """
+    getServerInfo: ServerInfo
+    "Initial state for the serverActivity/nowPlaying subscriptions: last known cluster-wide status."
+    serverActivitySnapshot: ServerActivitySnapshot!
+    "Continue-watching entries, optionally narrowed to one library."
+    recentlyWatched(libraryId: ID): [RecentlyWatched!]
+    """
+    The calling user's playback history for one media item, newest first. Movies, episodes,
+    tracks and podcast episodes have one entry per play; books and audiobook chapters keep a
+    single updated entry. BOOK/COMIC also includes the listens of the book's chapters.
+    """
+    playbackHistory(mediaType: MediaType!, mediaId: ID!): [WatchStatus!]!
+    """
+    The calling user's plays of every track on an album, or of every track an artist is credited
+    on, newest first — one entry per play. Tracks in libraries the caller may not access are
+    omitted; an unknown or inaccessible container yields an empty list. limit defaults to 100.
+    """
+    trackPlaybackHistory(scope: TrackHistoryScope!, id: ID!, limit: Int): [WatchStatus!]!
+    "One library by id; null when it does not exist or the caller may not access it."
+    libraryById(id: ID!): Library
+    episodeById(id: ID): Episode
+    """
+    Episodes of a show library, across shows. Defaults to newest-added first. NAME sorts on the
+    metadata title, RELEASE_YEAR on the earliest metadata release (air) date; episodes without
+    one sort last.
+    """
+    episodes(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID, filter: MediaFilterInput): EpisodePage
+    seasonById(id: ID): Season
+    shows(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID, filter: MediaFilterInput): ShowPage
+    movies(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID, filter: MediaFilterInput): MoviePage
+    movieById(id: ID): Movie
+    showById(id: ID): Show
+    """
+    Paged cast/credits for a single show, movie or episode.
+    Exactly one of showId/movieId/episodeId should be provided.
+    Ordered by castOrder (nulls last).
+    """
+    cast(showId: ID, movieId: ID, episodeId: ID, page: Int, size: Int): CreditPage
+    getPlayQueue(id: ID!): PlayQueue
+    libraries: [Library!]
+    persons(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID, filter: MediaFilterInput): PersonPage
+    personById(id: ID): Person
+    """
+    Albums of a music library. `artistId` returns the albums the artist owns (is the album artist of);
+    `appearsOnArtistId` returns the albums the artist is credited on without owning them — compilations
+    and guest appearances. `filter` takes precedence over both.
+    """
+    albums(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, artistId: ID, appearsOnArtistId: ID, libraryId: ID, filter: MediaFilterInput): AlbumPage
+    albumById(id: ID): Album
+    trackById(id: ID): Track
+    """
+    Tracks of a music library, across albums. NAME sorts on the tag/metadata title,
+    RELEASE_YEAR on the earliest metadata release date; tracks without one sort last.
+    `artistId` narrows to every track the artist is credited on (as primary or featured artist)
+    plus every track on an album they own, so compilations and guest appearances are included.
+    `filter` takes precedence over `artistId`.
+    """
+    tracks(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, artistId: ID, libraryId: ID, filter: MediaFilterInput): TrackPage
+    books(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, authorId: ID, libraryId: ID): BookPage
+    bookById(id: ID): Book
+    seriesById(id: ID): Series
+    "Series of a (comic) library: the browse grid for COMIC libraries lists series, not volumes."
+    series(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID): SeriesPage
+    chapterById(id: ID): Chapter
+    podcasts(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID): PodcastPage
+    podcastById(id: ID): Podcast
+    "Games of a GAME library (or every visible one), optionally one platform."
+    games(page: Int, size: Int, sorting: SortingEnum, sortingOrder: SortingOrder, libraryId: ID, platform: GamePlatform): GamePage
+    gameById(id: ID): Game
+    "The platforms a GAME library knows: folder names, file extensions and the default launcher per platform."
+    gamePlatforms: [GamePlatformInfo!]!
+    "The calling user's most recently unlocked achievements across games."
+    recentAchievements(limit: Int): [GameAchievement!]!
+    """
+    Episodes of one podcast. Always paged: feeds can hold hundreds of episodes. Without an explicit
+    sortingOrder the calling user's stored order for this podcast is used (newest first when unset).
+    """
+    podcastEpisodes(podcastId: ID!, page: Int, size: Int, sortingOrder: SortingOrder): PodcastEpisodePage!
+    podcastEpisodeById(id: ID): PodcastEpisode
+    "Podcast directory search (iTunes Search API); subscribe with the returned feedUrl."
+    searchPodcastDirectory(term: String!): [PodcastDirectoryResult!]!
+    search(term: String!, size: Int, libraryId: ID): [SearchResult!]!
+    "The calling user's playback settings; defaults (the server's languages) when they never saved any."
+    userSettings: UserSettings!
+    "The calling user: identity plus whether the admin realm role is present on the token."
+    me: Me!
+    "Every user that logged in at least once. Admin only."
+    users: [User!]!
+    "The calling user's playback-session sharing preferences (defaults when never saved)."
+    playbackSharingSettings: PlaybackSharingSettings!
+    "Users the caller can pick for a sharing allowlist: id + display name only, excluding the caller."
+    shareableUsers: [ShareableUser!]!
+    """
+    Devices listening along (follow mode) with one of the caller's OWN live sessions, oldest
+    registration first. Empty for a session the caller does not own (deny-as-not-found) and for a
+    session nobody follows.
+    """
+    sessionFollowers(playQueueId: ID!): [SessionFollower!]!
+    "External metadata/image providers actually in use on this server, for attribution display."
+    attributions: [Attribution!]!
+    "The calling user's custom views (saved filters), by name; optionally narrowed to one library and/or kind."
+    savedViews(libraryId: ID, kind: FilterKind): [SavedView!]!
+    "The calling user's playlists, by name; optionally narrowed to one library."
+    playlists(libraryId: ID): [Playlist!]!
+    "One of the caller's own playlists; null for an unknown id and for someone else's playlist."
+    playlistById(id: ID!): Playlist
+    "The calling user's registered devices, most recently seen first."
+    myDevices: [Device!]!
+}
+
+"The external provider a metadata row or image originated from, for attribution."
+enum MetadataSource {
+    TMDB
+    MUSICBRAINZ
+    COVER_ART_ARCHIVE
+    WIKIMEDIA_COMMONS
+    WIKIPEDIA
+    WIKIDATA
+    OPEN_LIBRARY
+    PODCAST_FEED
+    LOCAL_FILE
+    "Steam's public artwork of a Steam game."
+    STEAM
+    "Added by an admin through the artwork API: an upload or a frame from the item's own video."
+    USER
+}
+
+"The two artwork slots an admin can fill; Image.type also knows ICON (achievements) and UNKNOWN."
+enum ImageType {
+    COVER
+    BACKGROUND
+}
+
+"""
+The item an artwork action is about: exactly one id must be set.
+"""
+input ImageTargetInput {
+    movieId: ID
+    showId: ID
+    episodeId: ID
+    albumId: ID
+    personId: ID
+    bookId: ID
+    podcastId: ID
+    gameId: ID
+    seriesId: ID
+}
+
+"""
+An image a metadata provider (TMDB) offers for an item that the server has not stored. previewUrl
+is a reduced-size variant for the picker; sourceUri is the provenance key the stored row gets, so a
+client can match it against Image.sourceUri to show "already on the server".
+"""
+type RemoteImageCandidate {
+    previewUrl: String!
+    sourceUri: String!
+    source: MetadataSource!
+    width: Int
+    height: Int
+    "ISO 639-3, or null for text-less artwork."
+    language: String
+    "The provider's own rating of the image, when it has one."
+    score: Float
+}
+
+type ImageCandidates {
+    "Every image the server has for the item and type, in id order; at most one is selected."
+    current: [Image!]!
+    "Alternatives the item's metadata provider offers; empty for items without a provider link."
+    remote: [RemoteImageCandidate!]!
+}
+
+type Attribution {
+    source: MetadataSource!
+    name: String!
+    url: String
+    "Provider-mandated notice text, if any (e.g. the TMDB non-endorsement notice)."
+    notice: String
+    "License of the contributed content where relevant (e.g. \"CC BY-SA 4.0\" for Wikipedia text)."
+    license: String
+}
+
+union SearchResult = Movie | Show | Episode | Person | Album | Track | Book | Podcast | Game
+
+enum MetadataRefreshMode {
+    "Fetch only what is missing (metadata, artwork, image blur-hashes). Cheap, idempotent, safe to run anytime."
+    MISSING
+    "Delete stored metadata, artwork and stream info first, then re-fetch everything from the metadata services. Heavy and destructive; requires libraryId."
+    FORCE
+}
+
+type Mutation {
+    "Admin only. Marks a stored image as the one to show for its item and type; clears the previous choice."
+    selectImage(imageId: ID!): Image!
+    """
+    Admin only. Downloads a provider alternative (a RemoteImageCandidate's sourceUri), stores it in
+    the cache and selects it. A candidate the server already has is selected without a download.
+    """
+    selectRemoteImage(target: ImageTargetInput!, type: ImageType!, sourceUri: String!): Image!
+    """
+    Admin only. Grabs one frame of the media file at positionMs (the file's own timeline) with
+    ffmpeg, stores it and selects it. Movies and episodes only.
+    """
+    selectVideoFrame(target: ImageTargetInput!, type: ImageType!, mediaFileId: ID!, positionMs: Int!): Image!
+    "Admin only. Drops the choice for an item and type: the automatic rule (local file, then lowest id) applies again."
+    clearSelectedImage(target: ImageTargetInput!, type: ImageType!): Boolean!
+    "Admin only. Deletes an image the admin added (source USER: upload or video frame). Scanned and provider images cannot be deleted."
+    deleteImage(imageId: ID!): Boolean!
+    """
+    Admin only. Scans the library folders for newly added files, optionally limited to one
+    library. Cheap: already-known files are skipped. Does not re-fetch metadata for existing
+    items — that is refreshMetadata's job.
+    """
+    scanLibraries(libraryId: ID): Boolean!
+    """
+    Admin only. Fetches metadata and artwork. MISSING (the default) backfills items that lack
+    metadata, artwork or TMDB enrichment and recomputes missing image blur-hashes; libraryId
+    optionally narrows it to one library. FORCE requires libraryId and deletes that library's
+    stored metadata, artwork and stream info before re-fetching everything — heavy, hits the
+    external metadata services for every item in the library.
+    """
+    refreshMetadata(mode: MetadataRefreshMode! = MISSING, libraryId: ID): Boolean!
+    createPlayQueue(input: CreatePlayQueueInput!): PlayQueue!
+    """
+    streamSettings: what the client is currently playing with; enables prefetching the next queue item in the same format.
+    playState: whether the client is playing or paused (defaults to PLAYING). This mutation doubles as the playback
+    heartbeat: keep calling it every few seconds — also while paused — or the session counts as stopped after 60s.
+    anchorPositionMs/anchorServerTimeMs: optional shared-timeline anchor for listen-along tight sync — "the playing
+    device was at anchorPositionMs at server-clock time anchorServerTimeMs" (the client converts its local clock using
+    the offset it measured against GET /time). Followers extrapolate the leader position locally from the anchor.
+    """
+    updatePlayQueue(id: ID!, progressInMilliseconds: Int!, playQueueItemId: ID!, streamSettings: StreamSettingsInput, playState: PlayState, deviceId: ID, anchorPositionMs: Int, anchorServerTimeMs: Float, repeatMode: RepeatMode): PlayQueue
+    movePlayQueueItem(playQueueId: ID!, playQueueItemId: ID!, afterPlayQueueItemId: ID): PlayQueue!
+    removePlayQueueItem(playQueueId: ID!, playQueueItemId: ID!): PlayQueue!
+    addPlayQueueItem(playQueueId: ID!, mediaType: MediaType!, mediaId: ID!, afterPlayQueueItemId: ID): PlayQueue!
+    "Appends all tracks of the album to the end of the queue, in natural play order (disc number, track number)."
+    addPlayQueueAlbum(playQueueId: ID!, albumId: ID!): PlayQueue!
+    createStreamToken: StreamToken!
+    "Admin only. Deletes and re-fetches metadata and artwork for one episode."
+    refreshEpisode(episodeId: ID!): Boolean!
+    "Admin only. Deletes and re-fetches metadata and artwork for one movie."
+    refreshMovie(movieId: ID!): Boolean!
+    "Admin only. Deletes and re-fetches metadata and artwork for one show and all its episodes."
+    refreshShow(showId: ID!): Boolean!
+    "Admin only. Deletes and re-fetches metadata and artwork for one person, fanning out to their albums (artists) and books (authors)."
+    refreshPerson(personId: ID!): Boolean!
+    "Admin only. Deletes and re-fetches metadata and artwork for one album and its tracks."
+    refreshAlbum(albumId: ID!): Boolean!
+    "Admin only. Deletes and re-reads metadata for one track from its audio files."
+    refreshTrack(trackId: ID!): Boolean!
+    "Admin only. Rebuilds the search index into a fresh collection and swaps it in; search stays available while it runs."
+    rebuildSearchIndex: Boolean!
+    """
+    Admin only. Sends every dead-lettered event back to the queue it failed on, e.g. after the bug
+    that dead-lettered it has been deployed. Returns the number replayed; an event that fails again
+    simply dead-letters again.
+    """
+    replayDeadLetters: Int!
+    "Sets the calling user's rating (1-10) for a media item. Pass rating: null to clear it. Returns true."
+    setRating(mediaType: RatingMediaType!, mediaId: ID!, rating: Int): Boolean!
+    """
+    Records a play of the item as of now for the calling user: movies, episodes, tracks and
+    podcast episodes get a new watched history entry; BOOK/COMIC/CHAPTER mark their single
+    progress entry finished.
+    """
+    markPlayed(mediaType: MediaType!, mediaId: ID!): WatchStatus!
+    "Deletes one of the calling user's own watch-status entries. Returns true if an entry was deleted."
+    deleteWatchStatus(id: ID!): Boolean!
+    """
+    Stores the calling user's epub reading position for a book. location is an epubcfi string,
+    progress runs 0.0-1.0; the book counts as read from 0.97. Reading has no play queue: there is
+    one watch status row per user per book.
+    """
+    updateReadingProgress(bookId: ID!, location: String!, progress: Float!): WatchStatus!
+    """
+    Records a finished play session of the calling user: the game moves to the top of continue
+    watching and the duration is added to its play time. There is one watch status row per user per game.
+    """
+    recordGamePlayed(gameId: ID!, durationMs: Int!): WatchStatus!
+    """
+    Heartbeat of an activity without a play queue — reading a BOOK or COMIC, or playing a GAME — so it
+    shows up in nowPlaying next to the playback sessions. sessionId is a client-generated id per
+    activity session (the same user must own it); the session expires like a playback session when
+    the heartbeats stop (60 s), or at once through endActivity. Visibility follows the caller's
+    now-playing sharing scope. Other media types are rejected.
+    """
+    reportActivity(sessionId: ID!, mediaType: MediaType!, mediaId: ID!, mediaFileId: ID,
+                   progressFraction: Float, progressLabel: String, playState: PlayState!,
+                   deviceId: ID!): Boolean!
+    "Ends an activity session of the calling user immediately; true also when it was already gone."
+    endActivity(sessionId: ID!): Boolean!
+    "Admin only. Overrides where a game keeps its saves (Ludusavi placeholders, e.g. <winAppData>/Game/Saves); empty clears the override."
+    updateGameSavePaths(gameId: ID!, savePaths: [String!]!): Game!
+    "Copies an older save snapshot of the calling user to a new head version."
+    restoreGameSave(gameId: ID!, version: Int!): GameSave!
+    deleteGameSave(gameId: ID!, version: Int!): Boolean!
+    "Admin only. Subscribes to an RSS feed (or reactivates an unsubscribed one) and queues the first refresh."
+    subscribePodcast(feedUrl: String!): Podcast!
+    "Admin only. Deactivates the subscription; episodes and listening history are kept."
+    unsubscribePodcast(id: ID!): Boolean!
+    """
+    Sets the calling user's episode sort order for one podcast. It applies to every client of that
+    user, and to podcast play queues created from then on — a queue that is already playing keeps
+    the order it was built with. Returns true.
+    """
+    setPodcastEpisodeOrder(podcastId: ID!, order: SortingOrder!): Boolean!
+    """
+    Sets the calling user's grid sort key and direction for one library. It applies to every client
+    of that user. Returns true.
+    """
+    setLibrarySorting(libraryId: ID!, sorting: SortingEnum!, sortingOrder: SortingOrder!): Boolean!
+    """
+    Sets the calling user's reading direction for one comic/manga series; it applies to every
+    client of that user. A null direction clears the override so the series default applies again.
+    Returns true.
+    """
+    setSeriesReadingDirection(seriesId: ID!, direction: ReadingDirection): Boolean!
+    "Queues a feed refresh for every active podcast."
+    refreshPodcasts: Boolean!
+    "Queues a download of the episode's audio to this node's cache directory."
+    downloadPodcastEpisode(episodeId: ID!): Boolean!
+    """
+    Sends a remote-control command to the client playing the given queue. The caller must be
+    allowed to control that session by the owner's remote-control sharing scope (see
+    updatePlaybackSharingSettings / setSessionSharing); the owner always may, and a denied caller
+    gets a dropped command. Delivered over the cluster status exchange, so it reaches the playing
+    client regardless of which node it is connected to. Returns whether an active session for the
+    queue was known and the command was accepted.
+    """
+    sendPlaybackCommand(playQueueId: ID!, command: PlaybackCommandType!, positionInMilliseconds: Int, playQueueItemId: ID, repeatMode: RepeatMode): Boolean!
+    """
+    Registers (active: true) or deregisters (active: false) this device as a follower of a live
+    playback session: the device plays the same queue along and the following user's watch status
+    is written alongside the owner's — once per user, however many devices they follow on. Allowed
+    for the owner and anyone who may remote-control the session; keep calling every ~20s while
+    following or the registration expires with the session timeout. deviceId is a stable
+    client-generated install id.
+    """
+    followPlayQueue(playQueueId: ID!, deviceId: String!, active: Boolean!): FollowResult!
+    """
+    Kicks a listen-along follower off one of the caller's OWN sessions: a null deviceId removes
+    every device of that user, otherwise just that one. The devices are told to stop over the
+    playbackCommands channel (STOP_FOLLOW) and are refused a re-registration until the kick
+    expires with the session timeout. Returns whether anything was following.
+    """
+    removeFollower(playQueueId: ID!, userId: ID!, deviceId: String): Boolean!
+    """
+    Saves the calling user's playback settings. They apply to every client of that user and steer
+    pre-transcoding: only the preferred audio languages (and video variants up to maxVideoHeight)
+    are transcoded in the background.
+    """
+    updateUserSettings(input: UserSettingsInput!): UserSettings!
+    "Admin only. Marks a library as visible to every user (true) or restricted (false). Returns true."
+    setLibraryVisibleToAll(libraryId: ID!, visibleToAll: Boolean!): Boolean!
+    """
+    Admin only. Grants (true) or revokes (false) one user's access to one restricted library.
+    Idempotent: granting twice or revoking a grant that does not exist is fine. Returns true.
+    """
+    setUserLibraryAccess(userId: ID!, libraryId: ID!, granted: Boolean!): Boolean!
+    "Saves the calling user's playback-session sharing preferences (scopes + allowlists)."
+    updatePlaybackSharingSettings(input: PlaybackSharingSettingsInput!): PlaybackSharingSettings!
+    """
+    Overrides remote-control sharing for one of the caller's own sessions (owner only).
+    controlScope null clears the override (fall back to the account default); allowedUserIds is the
+    session's own control allowlist, used when controlScope is ALLOWLIST. Returns true.
+    """
+    setSessionSharing(playQueueId: ID!, controlScope: RemoteControlScope, allowedUserIds: [ID!]): Boolean!
+    "Saves a custom view (named filter) for the calling user."
+    createSavedView(input: SavedViewInput!): SavedView!
+    """
+    Updates one of the caller's own views. Play queues created from the view keep playing with
+    the definition they were created with.
+    """
+    updateSavedView(id: ID!, input: SavedViewInput!): SavedView!
+    "Deletes one of the caller's own views. Returns true."
+    deleteSavedView(id: ID!): Boolean!
+    "Creates a playlist for the calling user, over exactly one library."
+    createPlaylist(input: PlaylistInput!): Playlist!
+    """
+    Updates one of the caller's own playlists. The library and type are immutable. Play queues
+    created from the playlist keep playing with the items/filter they were created with.
+    """
+    updatePlaylist(id: ID!, input: PlaylistInput!): Playlist!
+    "Deletes one of the caller's own playlists. Running play queues keep their items. Returns true."
+    deletePlaylist(id: ID!): Boolean!
+    """
+    Appends a playable item of the playlist's library, at the end or directly after an existing
+    entry. The item kind follows from the library type (track, movie, episode, podcast episode or
+    book); an item from another library is rejected as not-found. MANUAL playlists only.
+    """
+    addPlaylistItem(playlistId: ID!, mediaId: ID!, afterPlaylistItemId: ID): Playlist!
+    "Moves an entry to directly after another entry, or to the front when afterPlaylistItemId is null."
+    movePlaylistItem(playlistId: ID!, playlistItemId: ID!, afterPlaylistItemId: ID): Playlist!
+    removePlaylistItem(playlistId: ID!, playlistItemId: ID!): Playlist!
+    """
+    Registers (or refreshes) the calling user's device. deviceId is the stable client-generated
+    install id — the same one followPlayQueue uses. The name only seeds the first registration;
+    a later rename by the user wins over whatever the client reports.
+    """
+    registerDevice(deviceId: ID!, name: String!, platform: DevicePlatform!): Device!
+    "Renames one of the caller's own devices; null for an unknown or someone else's device."
+    renameDevice(deviceId: ID!, name: String!): Device
+    "Removes one of the caller's own devices. Returns whether it existed."
+    removeDevice(deviceId: ID!): Boolean!
+    """
+    Presence heartbeat: marks the device online cluster-wide for ~60s. Call every ~20s while the
+    app is open (alongside an open deviceCommands subscription — only a device that is listening
+    should report itself online). Returns false for an unregistered device.
+    """
+    pingDevice(deviceId: ID!): Boolean!
+    """
+    Sends a command to one of the caller's OWN devices (deny-as-not-found for anyone else's).
+    The target must be online (presence registry); TAKEOVER_QUEUE, START_FOLLOW and HANDOFF_QUEUE
+    additionally require a live playback session for playQueueId. HANDOFF_QUEUE also requires an
+    own, online targetDeviceId different from deviceId, and refuses when the session reports a
+    different playing device than deviceId. Delivery is best-effort over the cluster
+    status exchange: true means published to an online device, not executed.
+    """
+    sendDeviceCommand(deviceId: ID!, command: DeviceCommandType!, mediaType: MediaType,
+        mediaId: ID, startId: ID, playQueueId: ID, positionInMilliseconds: Float,
+        targetDeviceId: ID): Boolean!
+}
+
+type Subscription {
+    "Live server activity from all nodes: processing snapshots, queue depths and failures."
+    serverActivity: ServerActivityEvent!
+    "The full list of active playback sessions, re-emitted on every change."
+    nowPlaying: [PlaybackSession!]!
+    """
+    Remote-control commands for one play queue. The playing client executes PLAY/PAUSE/NEXT/
+    PREVIOUS/SEEK/SKIP_TO_ITEM; QUEUE_CHANGED tells every listener (playing client and open
+    remote controls) to refetch the queue after someone edited it.
+    """
+    playbackCommands(playQueueId: ID!): PlaybackCommand!
+    """
+    Commands addressed to this device (own devices only: the subscription is rejected when the
+    device is not the caller's). Keep it open while the app runs — a device without a live
+    subscriber silently drops its commands.
+    """
+    deviceCommands(deviceId: ID!): DeviceCommand!
+}
+
+"The platform a registered device runs on, as reported by the client."
+enum DevicePlatform {
+    ANDROID
+    ANDROID_TV
+    IOS
+    LINUX
+    MACOS
+    WINDOWS
+    WEB
+    OTHER
+}
+
+enum DeviceCommandType {
+    "Start playback of a media item on the target device."
+    PLAY_MEDIA
+    "Hand the play queue off: the target resumes it at the given position, the source stops."
+    TAKEOVER_QUEUE
+    "Make the target device start listen-along (follow mode) on the given play queue."
+    START_FOLLOW
+    "Ask the target device to hand its live queue off to targetDeviceId (pull handoff)."
+    HANDOFF_QUEUE
+}
+
+"One of the calling user's registered devices."
+type Device {
+    "The client-generated install id (unique per user, not globally)."
+    deviceId: ID!
+    name: String!
+    platform: DevicePlatform!
+    "Whether the device pinged its presence within the session timeout — only online devices accept commands."
+    online: Boolean!
+    "Durable last activity (registration or presence ping), ISO-8601."
+    lastSeenAt: String!
+    createdAt: String!
+}
+
+type DeviceCommand {
+    deviceId: ID!
+    command: DeviceCommandType!
+    "PLAY_MEDIA: what to play."
+    mediaType: MediaType
+    mediaId: ID
+    "PLAY_MEDIA: item to start at (track/episode/chapter) within the media."
+    startId: ID
+    "TAKEOVER_QUEUE / START_FOLLOW: the play queue to resume or follow."
+    playQueueId: ID
+    "TAKEOVER_QUEUE: position to resume at. Float: long media exceeds GraphQL Int."
+    positionInMilliseconds: Float
+    "HANDOFF_QUEUE: the device to push the queue to."
+    targetDeviceId: ID
+    timestamp: String!
+}
+
+"""
+Result of followPlayQueue. NOT_FOUND covers both a missing queue/session and missing control
+permission (deny-as-not-found); NO_LIBRARY_ACCESS is only distinguished after the caller has
+proven control rights.
+"""
+enum FollowResult {
+    OK
+    NOT_FOUND
+    NO_LIBRARY_ACCESS
+}
+
+enum PlaybackCommandType {
+    PLAY
+    PAUSE
+    NEXT
+    PREVIOUS
+    SEEK
+    SKIP_TO_ITEM
+    QUEUE_CHANGED
+    """
+    Not a transport command: it tells one listening-along device (targetDeviceId) that the session
+    owner removed it. Sent here because deviceCommands only reaches the caller's own devices.
+    """
+    STOP_FOLLOW
+    "Switch the playing client's repeat mode to repeatMode; every controller then shows it."
+    SET_REPEAT
+    """
+    End the whole session: the playing client tears down its queue and re-publishes STOP so
+    listening-along devices stop too. Sent by a remote control or by the playing client itself.
+    """
+    STOP
+}
+
+"""
+Repeat mode of a playing client. Enforced client-side; the server only relays it, so a remote
+control shows and toggles the same state as the device that is playing.
+"""
+enum RepeatMode {
+    NONE
+    ALL
+    ONE
+}
+
+type PlaybackCommand {
+    playQueueId: ID!
+    command: PlaybackCommandType!
+    "Target position for SEEK."
+    positionInMilliseconds: Int
+    "Target queue item for SKIP_TO_ITEM."
+    playQueueItemId: ID
+    """
+    STOP_FOLLOW: install id of the follower device that must stop. Every subscriber of the queue
+    sees it — an install id, not a personal identifier — and ignores the ones that are not theirs.
+    """
+    targetDeviceId: String
+    "SET_REPEAT: the requested repeat mode."
+    repeatMode: RepeatMode
+    timestamp: String!
+}
+
+"One device listening along with a session; only the session owner can see these."
+type SessionFollower {
+    userId: ID!
+    "Display name of the following user."
+    userName: String
+    "The follower's client install id — unique per user, not globally."
+    deviceId: String!
+    "Registered device name; null when the follower never called registerDevice."
+    deviceName: String
+    "Registered device platform; null without a device registration."
+    platform: DevicePlatform
+    "When this device started following, ISO-8601."
+    since: String!
+}
+
+enum PlayState {
+    PLAYING
+    PAUSED
+}
+
+"""
+What kind of session a now-playing entry is. PLAYBACK is a play-queue heartbeat; READING and GAME
+are activity sessions (reportActivity) without a queue: never controllable, never followable.
+"""
+enum ActivityKind {
+    PLAYBACK
+    READING
+    GAME
+}
+
+enum ServerActivityEventType {
+    NODE_ACTIVITY
+    QUEUE_STATS
+    FAILURE
+    TRANSCODE_ACTIVITY
+}
+
+"One status update from one node; exactly one of processing/queueStats/failure is set, matching `type`."
+type ServerActivityEvent {
+    type: ServerActivityEventType!
+    nodeName: String!
+    timestamp: String!
+    "What the node is processing right now (NODE_ACTIVITY)."
+    processing: [ProcessingItem!]
+    "Messages handled by the node since startup (NODE_ACTIVITY)."
+    processedCount: Int
+    "Messages that failed on the node since startup (NODE_ACTIVITY)."
+    failedCount: Int
+    queueStats: [QueueStat!]
+    failure: EventFailure
+    "The node's currently running FFmpeg transcode passes (TRANSCODE_ACTIVITY); replaces the node's previous list."
+    transcodes: [TranscodePass!]
+    "What the node reports about itself (NODE_ACTIVITY): host, uptime, directories with disk space, helper set-up. Null from nodes older than 3.5."
+    nodeInfo: NodeInfo
+}
+
+type ProcessingItem {
+    queue: String!
+    eventType: String!
+    startedAt: String!
+    "What is being worked on (file name / entity title); null until the handler reports it."
+    subject: String
+    "Machine token for the current sub-step (e.g. \"probe\", \"crop\"); clients map it to a label and must tolerate unknown tokens."
+    step: String
+    "Title of the entity the work belongs to (the show, movie, album, book, podcast or library); groups the steps of one item on the activity screen."
+    context: String
+    "Machine token for the kind of `context`: \"show\", \"movie\", \"album\", \"book\", \"podcast\", \"person\" or \"library\"; clients must tolerate unknown tokens."
+    contextType: String
+    "Id of the context entity; with `contextType` the grouping key."
+    contextId: ID
+    "Name of the directory (disk) the work runs on."
+    directory: String
+    "Name of the library the work belongs to."
+    library: String
+}
+
+"Slow-changing facts a node publishes about itself with every activity snapshot (at least once a minute)."
+type NodeInfo {
+    hostname: String
+    "When the node process started."
+    startedAt: String
+    javaVersion: String
+    availableProcessors: Int
+    "JVM heap limit in bytes."
+    maxMemoryBytes: Float
+    "Directories this node owns, library and cache alike."
+    directories: [NodeDirectory!]!
+    "Directories of other nodes this node helps with, and for which job families."
+    helperDisks: [HelperDisk!]!
+    "Job families this node hands off to helper nodes for its own directories."
+    offloadJobs: [String!]!
+}
+
+"One directory (disk) of a node with its file-system space; the byte counts are Float because Int is 32-bit."
+type NodeDirectory {
+    name: String!
+    path: String!
+    "LIBRARY or CACHE."
+    type: String
+    library: String
+    "Null when the path is not mounted on the node."
+    totalBytes: Float
+    freeBytes: Float
+    "Whether the node can create files here (media mounts are often read-only, which rules out uploads). Null when unknown: S3, not mounted, or a node that predates this field."
+    writable: Boolean
+}
+
+type HelperDisk {
+    name: String!
+    jobs: [String!]!
+}
+
+"One running FFmpeg transcode pass on a node."
+type TranscodePass {
+    nodeName: String!
+    mediaFileId: ID!
+    "Display name of the media file (basename of its path)."
+    title: String
+    "The pass's slice of the generation key, e.g. \"video_720p\" or \"audio_0_128k\"."
+    quality: String!
+    "True for pre-transcode/prefetch work running at background priority."
+    background: Boolean!
+    startedAt: String!
+    "Title of the show / movie / album the file belongs to, matching ProcessingItem.context."
+    context: String
+    contextType: String
+    contextId: ID
+}
+
+type QueueStat {
+    queue: String!
+    depth: Int!
+    consumers: Int!
+}
+
+type EventFailure {
+    nodeName: String!
+    queue: String!
+    eventType: String
+    errorMessage: String
+    occurredAt: String!
+}
+
+type PlaybackSession {
+    playQueueId: ID!
+    playQueueItemId: ID
+    userId: ID!
+    userName: String
+    mediaType: MediaType
+    mediaId: ID
+    title: String
+    "Total duration of the playing media file, when known."
+    durationInMilliseconds: Int
+    "The media file the playing client opened; null when it doesn't report one. A follower opens the same file, so both share one timeline."
+    mediaFileId: ID
+    "Cover art (movie/show poster or album cover); fetch via GET /images/{id}/download."
+    artworkImageId: ID
+    progressInMilliseconds: Int!
+    playState: PlayState!
+    "The node the client sends its updates to."
+    nodeName: String!
+    updatedAt: String!
+    "Whether the requesting user may remote-control this session (computed per viewer)."
+    controllable: Boolean!
+    "Number of devices currently following (listening along with) this session."
+    followerCount: Int!
+    "Install id of the playing device; null for clients that don't report one."
+    deviceId: ID
+    "Registered name of the playing device; null without a device id."
+    deviceName: String
+    "Tight-sync timeline anchor: playback position at anchorServerTimeMs. Null when the playing client doesn't report one."
+    anchorPositionMs: Int
+    "Server-clock instant (epoch ms) the anchor position was sampled at. Null when the playing client doesn't report one."
+    anchorServerTimeMs: Float
+    "Repeat mode of the playing client; null for clients that don't report one."
+    repeatMode: RepeatMode
+    "PLAYBACK for play-queue sessions; READING/GAME for activity sessions, which carry no timeline."
+    activityKind: ActivityKind!
+    "Reading progress of an activity session, 0.0-1.0; null for playback and games."
+    progressFraction: Float
+    "Position label of an activity session as the reading client rendered it (chapter, page); null otherwise."
+    progressLabel: String
+}
+
+type ServerActivitySnapshot {
+    "Last activity snapshot per node."
+    nodes: [ServerActivityEvent!]!
+    queueStats: [QueueStat!]!
+    "Recently dead-lettered events (newest first, max 100, in-memory)."
+    recentFailures: [EventFailure!]!
+    nowPlaying: [PlaybackSession!]!
+    "Currently running FFmpeg transcode passes across all nodes."
+    transcodes: [TranscodePass!]!
+}
+
+enum SortingEnum {
+    DATE_CREATED
+    NAME
+    RELEASE_YEAR
+}
+
+enum SortingOrder {
+    DESCENDING
+    ASCENDING
+}
+
+"The media type a custom filter targets; mirrors the browse kinds of a library grid."
+enum FilterKind {
+    ARTIST
+    ALBUM
+    TRACK
+    MOVIE
+    SHOW
+    EPISODE
+}
+
+"How the conditions and subgroups of one filter group combine."
+enum FilterMatch {
+    "Match all of the following (AND)."
+    ALL
+    "Match any of the following (OR)."
+    ANY
+}
+
+"""
+Fields a custom filter can compare on. Which fields apply per FilterKind: TITLE/GENRE/DATE_ADDED
+apply everywhere; ARTIST_NAME to albums and tracks; ALBUM_NAME, PLAY_COUNT, LAST_PLAYED_AT to
+tracks; RELEASE_YEAR to everything except artists (BIRTH_YEAR); RATING to everything except
+artists; DURATION to tracks, movies and episodes; WATCHED to movies and episodes.
+"""
+enum FilterField {
+    TITLE
+    ARTIST_NAME
+    ALBUM_NAME
+    RELEASE_YEAR
+    BIRTH_YEAR
+    "Free-text metadata genre, matched over every metadata row of the item (and its parent)."
+    GENRE
+    "The calling user's own 1-10 rating."
+    RATING
+    "How often the calling user played the track."
+    PLAY_COUNT
+    "When the calling user last played the track."
+    LAST_PLAYED_AT
+    "Duration of the item's media file, in milliseconds."
+    DURATION
+    "Whether the calling user watched the item to the end."
+    WATCHED
+    "When the item was added to the library."
+    DATE_ADDED
+}
+
+"""
+Operators of a filter condition. Strings take EQUALS/NOT_EQUALS/CONTAINS/NOT_CONTAINS, numbers
+EQUALS/NOT_EQUALS/LESS_THAN/GREATER_THAN, dates BEFORE/AFTER/IN_LAST_DAYS, booleans EQUALS;
+IS_SET/IS_NOT_SET apply to everything except booleans.
+"""
+enum FilterOperator {
+    EQUALS
+    NOT_EQUALS
+    CONTAINS
+    NOT_CONTAINS
+    LESS_THAN
+    GREATER_THAN
+    BEFORE
+    AFTER
+    "Within the last N days (value is the number of days)."
+    IN_LAST_DAYS
+    IS_SET
+    IS_NOT_SET
+}
+
+"One row of a filter group. The value is a string; numbers, dates (YYYY-MM-DD) and booleans are parsed server-side. IS_SET/IS_NOT_SET take no value."
+input FilterConditionInput {
+    field: FilterField!
+    operator: FilterOperator!
+    value: String
+}
+
+"""
+A filter group: conditions and nested subgroups combined with match. limit caps the total result
+and is only allowed on the top-level group.
+"""
+input MediaFilterInput {
+    match: FilterMatch!
+    conditions: [FilterConditionInput!]
+    groups: [MediaFilterInput!]
+    limit: Int
+}
+
+"A filter condition as stored on a saved view."
+type FilterConditionValue {
+    field: FilterField!
+    operator: FilterOperator!
+    value: String
+}
+
+"A filter group as stored on a saved view; mirrors MediaFilterInput."
+type FilterGroup {
+    match: FilterMatch!
+    conditions: [FilterConditionValue!]!
+    groups: [FilterGroup!]!
+    limit: Int
+}
+
+"A custom view: the calling user's named filter over one browse kind, optionally scoped to one library."
+type SavedView {
+    id: ID!
+    name: String!
+    kind: FilterKind!
+    libraryId: ID
+    filter: FilterGroup!
+    sorting: SortingEnum
+    sortingOrder: SortingOrder
+}
+
+input SavedViewInput {
+    name: String!
+    kind: FilterKind!
+    libraryId: ID
+    filter: MediaFilterInput!
+    sorting: SortingEnum
+    sortingOrder: SortingOrder
+}
+
+"Whether a playlist's contents are hand-picked or produced by an embedded filter."
+enum PlaylistType {
+    MANUAL
+    SMART
+}
+
+"""
+A private, per-user playlist over exactly one library. MANUAL playlists hold explicit items
+(tracks, movies, episodes, podcast episodes or books, per the library type); SMART playlists
+embed their own filter (TRACK, MOVIE or EPISODE kinds, matching the library type) and resolve
+it live when browsed. Playing one pins the filter on the queue, like FILTER sources.
+"""
+type Playlist {
+    id: ID!
+    name: String!
+    type: PlaylistType!
+    libraryId: ID!
+    libraryType: LibraryType!
+    "MANUAL only: number of entries. Null for SMART playlists (resolve via the filtered browse queries)."
+    itemCount: Int
+    "SMART only: which browse kind the embedded filter targets."
+    filterKind: FilterKind
+    "SMART only: the embedded filter definition."
+    filter: FilterGroup
+    "SMART only: play/browse order of the resolved items."
+    sorting: SortingEnum
+    sortingOrder: SortingOrder
+    "MANUAL entries in play order; empty for SMART playlists."
+    items: [PlaylistItem!]!
+    """
+    Up to four distinct covers taken from the playlist's first entries (an album cover for a
+    track, a podcast's artwork for its episode, the item's own for movies, episodes and books).
+    Fewer when the opening entries share their artwork, empty when there is none — clients repeat
+    what they get to fill a four-tile mosaic.
+    """
+    coverImages: [Image!]!
+}
+
+"One entry of a MANUAL playlist. Exactly one media field is set, matching type."
+type PlaylistItem {
+    id: ID!
+    "Opaque sort key; may be fractional after reordering."
+    position: Float!
+    type: MediaType!
+    movie: Movie
+    episode: Episode
+    track: Track
+    book: Book
+    podcastEpisode: PodcastEpisode
+}
+
+input PlaylistInput {
+    name: String!
+    "The one library this playlist belongs to; immutable after creation."
+    libraryId: ID!
+    "Immutable after creation."
+    type: PlaylistType!
+    "SMART only; required together with filterKind."
+    filter: MediaFilterInput
+    "SMART only: TRACK, MOVIE or EPISODE, matching the library type."
+    filterKind: FilterKind
+    "SMART only: play/browse order of the resolved items."
+    sorting: SortingEnum
+    sortingOrder: SortingOrder
+}
+
+"""
+Ranking of the library Discover top-lists and of ARTIST play queues. For books and series
+RECENTLY_PLAYED means recently read. RECENTLY_ADDED (newest in the library first) is an artist
+ranking only; the Discover `ranked*` lists return an empty page for it.
+"""
+enum RankKind {
+    RECENTLY_PLAYED
+    MOST_PLAYED
+    HIGHEST_RATED
+    RECENTLY_ADDED
+}
+
+"The container a track playback history is asked for."
+enum TrackHistoryScope {
+    ALBUM
+    ARTIST
+}
+
+"Page order of a comic/manga series: western comics read LTR, unflipped manga RTL."
+enum ReadingDirection {
+    LTR
+    RTL
+}
+
+enum LibraryType {
+    MOVIE
+    SHOW
+    MUSIC
+    BOOK
+    PODCAST
+    "Comics (pdf/cbz/epub); series-first layout: one directory per series."
+    COMIC
+    "Emulator ROMs, PS3 folders, PC and Steam games; played on the client, saves synced through the server."
+    GAME
+}
+
+enum MediaType {
+    MOVIE
+    EPISODE
+    TRACK
+    "An audiobook chapter; streams like a track."
+    CHAPTER
+    "An epub being read; only used for watch status and recently-watched."
+    BOOK
+    "A podcast episode; streams like a track once downloaded."
+    PODCAST_EPISODE
+    "A comic volume being read; grouped per series in recently watched."
+    COMIC
+    "A game; watch status holds last-played and play time, one continue-watching entry per game."
+    GAME
+}
+
+enum RatingMediaType {
+    MOVIE
+    SHOW
+    EPISODE
+    ALBUM
+    TRACK
+    BOOK
+    PODCAST
+    GAME
+}
+
+enum PlayQueueSourceType {
+    MOVIE
+    SHOW
+    ALBUM
+    LIBRARY
+    BOOK
+    PODCAST
+    """
+    A ranked track list of an artist (see rankKind), or — with shuffle — every track the artist is
+    on, in a seeded random order. Evaluated as of queue creation; grows lazily like other sources.
+    """
+    ARTIST
+    """
+    A custom filter: a saved view (sourceId) or an inline filter (filter + filterKind). The
+    definition is pinned onto the queue at creation and the play-derived fields are evaluated as
+    of that moment; grows lazily like other sources. Only TRACK, MOVIE and EPISODE filters play.
+    """
+    FILTER
+    """
+    One of the caller's own playlists (sourceId). MANUAL playlists play their entries in order or
+    seeded-shuffled; SMART playlists pin their embedded filter at creation, like FILTER. A BOOK
+    library's playlist expands each book to its chapters and cannot shuffle.
+    """
+    PLAYLIST
+}
+
+enum SubtitleFormat {
+    WEBVTT
+    SRT
+}
+
+"Stream settings the client is playing the current item with, as passed to the HLS master playlist request."
+input StreamSettingsInput {
+    "Include the stream-copy (direct) quality variant."
+    direct: Boolean!
+    "Include the re-encoded (720p/480p) quality variants."
+    transcode: Boolean!
+    subtitleFormat: SubtitleFormat
+    "Which media file of the item the client opened, for an item with several (versions). Ignored unless it belongs to the reported item; omitted means the first file."
+    mediaFileId: ID
+}
+
+"""
+A user's playback settings, stored server-side so they follow the account to every device — and so
+pre-transcoding knows which audio tracks are worth producing.
+"""
+type UserSettings {
+    "Preferred spoken languages, most preferred first (ISO-639 tags)."
+    preferredAudioLanguages: [String!]!
+    "Preferred subtitle languages, most preferred first. Empty means: no subtitles by default."
+    preferredSubtitleLanguages: [String!]!
+    directPlay: Boolean!
+    transcode: Boolean!
+    "Highest video variant to pre-transcode (720 or 480); null means every variant."
+    maxVideoHeight: Int
+    "Auto-seek past detected intros during playback."
+    autoSkipIntro: Boolean!
+    """
+    Leave subtitles off when the subtitle language that would be picked is the one already being
+    spoken. The two preference lists are applied independently, so without this a user with Dutch at
+    the top of both gets Dutch audio *and* Dutch subtitles.
+    """
+    hideSubtitlesMatchingAudio: Boolean!
+}
+
+input UserSettingsInput {
+    preferredAudioLanguages: [String!]!
+    preferredSubtitleLanguages: [String!]!
+    directPlay: Boolean!
+    transcode: Boolean!
+    maxVideoHeight: Int
+    "Defaulted so clients predating the field keep working."
+    autoSkipIntro: Boolean! = false
+    "Defaulted so clients predating the field keep working."
+    hideSubtitlesMatchingAudio: Boolean! = false
+}
+
+input CreatePlayQueueInput {
+    sourceType: PlayQueueSourceType!
+    """
+    The movie/show/album/library/book/podcast to play, the artist for ARTIST sources, the saved
+    view for FILTER sources, or the playlist for PLAYLIST sources. Only optional for FILTER
+    sources with an inline filter.
+    """
+    sourceId: ID
+    """
+    Episode or track to start at; ignored for MOVIE sources. Filter-backed sources (FILTER and
+    SMART playlists) accept it as well, but not together with shuffle: the item must match the
+    filter, and only its own position in the result is resolved — the items before it are never
+    materialized. For a BOOK library's playlist a book id starts at that book's first chapter.
+    """
+    startId: ID
+    "Play the source in a stable random order; defaults to false, required for LIBRARY sources. An ARTIST source then plays the artist's whole catalogue instead of a ranking, so it takes no rankKind."
+    shuffle: Boolean
+    "Which ranked track list of the artist to play; required for unshuffled ARTIST sources, forbidden otherwise."
+    rankKind: RankKind
+    "Inline (ad-hoc) filter for FILTER sources without a saved view; requires filterKind."
+    filter: MediaFilterInput
+    "Which browse kind the inline filter targets; only TRACK, MOVIE and EPISODE can be played."
+    filterKind: FilterKind
+    "Optional library scope for an inline FILTER source."
+    libraryId: ID
+    "Play order of an inline FILTER source (ignored with shuffle); a saved view carries its own."
+    sorting: SortingEnum
+    sortingOrder: SortingOrder
+}
+
+enum DirectoryType {
+    LIBRARY
+    CACHE
+}
+
+type ServerInfo {
+    name: String!
+    url: String!
+    openIdUrl: String!
+    nodes: [Node!]!
+}
+
+type Node {
+    id: ID!
+    name: String!
+    url: String!
+    version: String!
+}
+
+type Episode {
+    id: ID!
+    number: Int!
+    show: Show
+    images: [Image!]
+    season: Season
+    metadata: [Metadata!]
+    watchStatus: [WatchStatus!]
+    mediaFile: [MediaFile!]
+    "The file slices containing this episode: one entry per file. For an episode inside a multi-episode file (s04e06-e07.mkv) start/duration cover only this episode's slice; for normal files start is 0 and duration the whole file."
+    mediaFileParts: [MediaFilePart!]
+    cast: [Credit!]
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    "Runtime in minutes, from TMDB; null until analyzed."
+    runtime: Int
+    "TMDB community rating, 0-10 with one decimal."
+    voteAverage: Float
+    voteCount: Int
+}
+
+"One episode's time slice within a media file. Playback opens the file's HLS stream, seeks to startInMilliseconds and treats start + duration as end-of-episode."
+type MediaFilePart {
+    mediaFile: MediaFile!
+    startInMilliseconds: Float!
+    "0 while analysis has not yet computed the episode boundaries of a multi-episode file."
+    durationInMilliseconds: Float!
+}
+
+type Image {
+    id: ID!
+    path: String!
+    type: String!
+    language: String
+    sourceUri: String
+    "Normalized provider for attribution; null for images without a known external origin."
+    source: MetadataSource
+    show: Show
+    blurHash: String
+    directory: Directory!
+    """
+    Chosen by an admin as the one to show for its item and type (at most one per item+type).
+    Clients try a selected image first; a forced metadata refresh keeps it.
+    """
+    selected: Boolean!
+}
+
+type MediaFile {
+    id: ID!
+    episodes: [Episode!]
+    path: String!
+    size: Float!
+    durationInMilliseconds: Int
+    mediaFileStreams: [MediaFileStream]
+    directory: Directory!
+    "For epub files: true when the epub has EPUB 3 media overlays (read-aloud audio). Null for other files."
+    mediaOverlays: Boolean
+    "For comic volumes: the cbz image count or pdf page count. Null for other files."
+    pageCount: Int
+    "The file format taken from the path extension, uppercased (EPUB, CBZ, PDF, MKV, ...). Null when the path has no extension."
+    format: String
+    "Detected intro/outro ranges; empty until season-wide detection has run for this file."
+    segments: [MediaSegment!]
+}
+
+enum MediaSegmentType {
+    INTRO
+    OUTRO
+}
+
+"""
+A detected intro or outro (credits) range, in absolute file time — the same timeline as playback
+position and MediaFilePart. For a multi-episode file episodeId says whose intro/outro it is; null
+for single-episode files.
+"""
+type MediaSegment {
+    id: ID!
+    type: MediaSegmentType!
+    startInMilliseconds: Float!
+    endInMilliseconds: Float!
+    episodeId: ID
+}
+
+type Directory {
+    id: ID!
+    name: String!
+    "The owning node of a LOCAL directory; null for an S3 directory, which every attached node can serve."
+    node: Node
+    "The node to stream this directory's files from: the owner of a LOCAL directory, else (S3) the node answering this request when it is attached, else any attached node."
+    servingNode: Node!
+    library: Library!
+    "Absolute path for LOCAL, s3://bucket/prefix for S3."
+    path: String!
+    type: DirectoryType!
+    storageKind: StorageKind!
+    "Nodes that can serve this directory: the owner, or every node attached to an S3 directory."
+    attachedNodes: [Node!]!
+    s3Bucket: String
+    s3Prefix: String
+    s3Connection: String
+}
+
+enum StorageKind {
+    LOCAL
+    S3
+}
+
+type Library {
+    id: ID!
+    name: String!
+    type: LibraryType!
+    "The calling user's grid sort key for this library; NAME when unset."
+    sorting: SortingEnum!
+    "The calling user's grid sort direction for this library; ASCENDING when unset."
+    sortingOrder: SortingOrder!
+    "Whether every user may see this library. Admins always see everything."
+    visibleToAll: Boolean!
+    # Discover top-lists: the calling user's ranked lists, scoped to this library. Empty when the
+    # library holds no matching content (including a library of another type) or the user has no
+    # play history/ratings yet. Only select these under libraryById — under `libraries` they fan
+    # out into one set of aggregate queries per library.
+    recentlyPlayedMovies(limit: Int): [Movie!]!
+    mostPlayedMovies(limit: Int): [Movie!]!
+    highestRatedMovies(limit: Int): [Movie!]!
+    recentlyPlayedShows(limit: Int): [Show!]!
+    mostPlayedShows(limit: Int): [Show!]!
+    highestRatedShows(limit: Int): [Show!]!
+    recentlyPlayedAlbums(limit: Int): [Album!]!
+    mostPlayedAlbums(limit: Int): [Album!]!
+    highestRatedAlbums(limit: Int): [Album!]!
+    recentlyReadBooks(limit: Int): [Book!]!
+    highestRatedBooks(limit: Int): [Book!]!
+    recentlyReadSeries(limit: Int): [Series!]!
+    recentlyPlayedPodcasts(limit: Int): [Podcast!]!
+    mostPlayedPodcasts(limit: Int): [Podcast!]!
+    highestRatedPodcasts(limit: Int): [Podcast!]!
+    # Paged variants of the top-lists above, for "show all" grids. A kind a type does not support
+    # (MOST_PLAYED books, MOST_PLAYED/HIGHEST_RATED series) returns an empty page.
+    rankedMovies(kind: RankKind!, page: Int, size: Int): MoviePage!
+    rankedShows(kind: RankKind!, page: Int, size: Int): ShowPage!
+    rankedAlbums(kind: RankKind!, page: Int, size: Int): AlbumPage!
+    rankedBooks(kind: RankKind!, page: Int, size: Int): BookPage!
+    rankedSeries(kind: RankKind!, page: Int, size: Int): SeriesPage!
+    rankedPodcasts(kind: RankKind!, page: Int, size: Int): PodcastPage!
+    "The calling user's playlists scoped to this library, by name. Batch-resolved, safe under `libraries`."
+    playlists: [Playlist!]!
+}
+
+"The calling user, as seen by the server."
+type Me {
+    id: ID!
+    name: String
+    email: String
+    "Whether the token carries the admin realm role."
+    isAdmin: Boolean!
+}
+
+"A user known to this server (anyone who logged in at least once). Admin-only fields."
+type User {
+    id: ID!
+    name: String
+    email: String
+    "Snapshot of the admin realm role, as of the user's most recent request."
+    isAdmin: Boolean!
+    "Restricted libraries this user was explicitly granted (visible-to-all libraries are not listed)."
+    grantedLibraries: [Library!]!
+}
+
+type MediaFileStream {
+    id: ID!
+    streamIndex: Int
+    codecName: String!
+    codecType: String!
+    width: Int!
+    height: Int!
+    path: String!
+    language: String
+    title: String
+    "Detected baked-in black-bar crop (source pixels). Null = not yet detected; equal to the full frame = no bars."
+    cropX: Int
+    cropY: Int
+    cropWidth: Int
+    cropHeight: Int
+}
+
+type Metadata {
+    id: ID!
+    sourceUri: String
+    "Normalized provider for attribution; null for locally sourced metadata."
+    source: MetadataSource
+    language: String
+    title: String
+    description: String
+    released: String
+    genre: String
+    "Localized TMDB tagline; null for entities without one."
+    tagline: String
+}
+
+type Movie {
+    id: ID!
+    name: String!
+    releaseYear: Int!
+    images: [Image!]
+    metadata: [Metadata!]
+    watchStatus: [WatchStatus!]
+    mediaFile: [MediaFile!]
+    cast: [Credit!]
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    # TMDB enrichment; all null until the movie has been analyzed with a TMDB api key configured.
+    tmdbId: Int
+    imdbId: String
+    "TMDB community rating, 0-10 with one decimal."
+    voteAverage: Float
+    voteCount: Int
+    "Runtime in minutes."
+    runtime: Int
+    "Certification for the configured country (e.g. PG-13, 16)."
+    contentRating: String
+    "TMDB release status (Released, Post Production, ...)."
+    status: String
+    homepage: String
+    "Name of the TMDB collection this movie belongs to (e.g. \"The Lord of the Rings Collection\")."
+    collectionName: String
+    "Comma-separated production company names."
+    studios: String
+    "Comma-separated ISO 3166-1 production country codes."
+    originCountry: String
+    "Comma-separated TMDB keywords (English only)."
+    keywords: String
+    "Trailer video key; with trailerSite YouTube the url is https://www.youtube.com/watch?v=<key>."
+    trailerKey: String
+    trailerSite: String
+}
+
+type PlayQueue {
+    id: ID!
+    currentItemId: String
+    currentItem: PlayQueueItem
+    "Last progress within the current item, as reported via updatePlayQueue."
+    progressInMilliseconds: Int!
+    "The media file of the current item the playing client opened; null when it never said (the first file then). A device taking the queue over opens this one."
+    currentMediaFileId: ID
+    shuffle: Boolean!
+    sourceType: PlayQueueSourceType
+    "True when the source has no more items to append; the visible queue is the whole queue."
+    sourceExhausted: Boolean!
+    playQueueItems: [PlayQueueItem!]
+    "Per-session remote-control override; null means the owner's account-level control scope applies."
+    controlScopeOverride: RemoteControlScope
+    "Grantee ids of this session's own control allowlist (used when controlScopeOverride is ALLOWLIST)."
+    controlAllowedUserIds: [ID!]!
+}
+
+"Who may see a user's now-playing sessions."
+enum SharingScope {
+    EVERYONE
+    ALLOWLIST
+    PRIVATE
+}
+
+"Who may remote-control a user's session; also the per-session override value."
+enum RemoteControlScope {
+    PRIVATE
+    EVERYONE
+    ALLOWLIST
+    SAME_AS_NOW_PLAYING
+}
+
+"A user's playback-session sharing preferences. The allowlists hold grantee user ids."
+type PlaybackSharingSettings {
+    nowPlayingScope: SharingScope!
+    controlScope: RemoteControlScope!
+    nowPlayingAllowedUserIds: [ID!]!
+    controlAllowedUserIds: [ID!]!
+}
+
+input PlaybackSharingSettingsInput {
+    nowPlayingScope: SharingScope!
+    controlScope: RemoteControlScope!
+    nowPlayingAllowedUserIds: [ID!]!
+    controlAllowedUserIds: [ID!]!
+}
+
+"A user the caller may add to a sharing allowlist: identity only, no admin/email fields."
+type ShareableUser {
+    id: ID!
+    name: String
+}
+
+type PlayQueueItem {
+    id: ID!
+    "Opaque sort key; may be fractional after reordering."
+    position: Float!
+    type: MediaType!
+    """
+    Whether the calling user's library access allows streaming this item. Items from libraries the
+    caller cannot see stay in the queue (a follower's indexes must match the session owner's) but
+    are marked inaccessible; streaming stays enforced server-side regardless.
+    """
+    accessible: Boolean!
+    movie: Movie
+    episode: Episode
+    track: Track
+    chapter: Chapter
+    podcastEpisode: PodcastEpisode
+}
+
+type Season {
+    id: ID!
+    episodes: [Episode!]
+    show: Show!
+    number: Int!
+}
+
+type MoviePage {
+    content: [Movie!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type EpisodePage {
+    content: [Episode!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type TrackPage {
+    content: [Track!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type ShowPage {
+    content: [Show!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type Person {
+    id: ID!
+    name: String!
+    birthYear: Int
+    albums: [Album!]
+    books: [Book!]
+    images: [Image!]
+    metadata: [Metadata!]
+    credits: [Credit!]
+    "The calling user's most played tracks of this artist (as track or album artist), most played first."
+    topPlayedTracks(limit: Int): [Track!]!
+    "The calling user's most recently played tracks of this artist, newest first."
+    recentlyPlayedTracks(limit: Int): [Track!]!
+    "The calling user's highest rated tracks of this artist, highest rating first."
+    topRatedTracks(limit: Int): [Track!]!
+    """
+    The newest tracks of this artist (as primary/featured artist or album artist) by the date they
+    were added to the library, newest first. Not per user.
+    """
+    recentlyAddedTracks(limit: Int): [Track!]!
+}
+
+enum CreditType {
+    CAST
+    GUEST_STAR
+}
+
+type Credit {
+    id: ID!
+    person: Person!
+    characterName: String
+    creditType: CreditType!
+    castOrder: Int
+    movie: Movie
+    show: Show
+    episode: Episode
+}
+
+type Album {
+    id: ID!
+    name: String!
+    releaseYear: Int!
+    artist: Person!
+    tracks: [Track!]
+    images: [Image!]
+    metadata: [Metadata!]
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    "When the album was added to the library (ISO-8601)."
+    dateAdded: String
+}
+
+enum TrackCreditType {
+    PRIMARY
+    FEATURED
+}
+
+"A person credited on a track, either as the primary artist or as a featured guest."
+type TrackCredit {
+    id: ID!
+    person: Person!
+    type: TrackCreditType!
+    position: Int!
+}
+
+type Track {
+    id: ID!
+    number: Int!
+    discNumber: Int!
+    "The primary artist; the same person as the PRIMARY entry of `artists`."
+    artist: Person!
+    "Everyone credited on this track: the primary artist first, then featured guests."
+    artists: [TrackCredit!]!
+    album: Album!
+    metadata: [Metadata!]
+    mediaFile: [MediaFile!]
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    "How often the calling user played this track, or null when never played."
+    playCount: Int
+    "When the calling user last played this track (ISO-8601), or null when never played."
+    lastPlayedAt: String
+    "When the track was added to the library (ISO-8601)."
+    dateAdded: String
+}
+
+type Book {
+    id: ID!
+    "Raw name as derived from the file/directory path."
+    name: String!
+    "Clean display title: name with a known '{series} - '/'{series}: ' prefix stripped; falls back to name."
+    title: String!
+    releaseYear: Int!
+    "The author; null for comic volumes (comics are series-first and carry no author)."
+    author: Person
+    "The series this book belongs to, or null for a standalone book."
+    series: Series
+    "Position within the series (calibre allows fractions like 1.5), or null when unknown."
+    seriesIndex: Float
+    "Audiobook chapters, in play order; empty when the book only has epub files."
+    chapters: [Chapter!]
+    """
+    Where the calling user should continue listening: the chapter they last played, or the next
+    unfinished one when they finished it. Chapters skipped earlier in the book are not revisited.
+    Null when the book has no chapters, was never started, or was listened to the end; start at the
+    first chapter then.
+    """
+    resumeChapter: Chapter
+    "Epub files of this book; mediaOverlays = true marks the read-aloud edition."
+    epubFiles: [MediaFile!]
+    images: [Image!]
+    metadata: [Metadata!]
+    "Reading progress (book-level rows) for the calling user."
+    watchStatus: [WatchStatus!]
+    """
+    How far the calling user is in the book as a whole — listening counts finished chapters in
+    full instead of only showing the position inside the current chapter. Null when the book was
+    never started. When the user both reads and listens, the mode they touched last wins.
+    """
+    progress: BookProgress
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+}
+
+type BookProgress {
+    "Whether this position comes from the epub or from the audiobook."
+    mode: BookProgressMode!
+    "Position in the whole book, 0.0-1.0."
+    progress: Float!
+    "Read/listened to the end; clients hide the progress bar for these."
+    finished: Boolean!
+    "Total duration of all analysed chapters; null while reading."
+    durationInMilliseconds: Int
+    "Position within that total; null while reading."
+    positionInMilliseconds: Int
+    "When this position was last updated (ISO-8601)."
+    updatedAt: String!
+}
+
+enum BookProgressMode {
+    READING
+    LISTENING
+}
+
+type Chapter {
+    id: ID!
+    "From the filename's leading digits; may be zero-based, only the ordering matters."
+    number: Int!
+    author: Person!
+    book: Book!
+    metadata: [Metadata!]
+    mediaFile: [MediaFile!]
+    watchStatus: [WatchStatus!]
+}
+
+type BookPage {
+    content: [Book!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type Series {
+    id: ID!
+    name: String!
+    "The author; null for comic series."
+    author: Person
+    "Start year from the \"(YYYY)\" suffix on a comic series directory; 0 = unknown."
+    startYear: Int!
+    "Books/volumes in series order: seriesIndex ascending, unknown positions last."
+    books: [Book!]!
+    "Series-level metadata (comic series description per language)."
+    metadata: [Metadata!]
+    "Series-level artwork (folder.jpg or a wiki thumbnail)."
+    images: [Image!]
+    "The series' own artwork when present, else the cover of the first book/volume."
+    cover: Image
+    """
+    The calling user's effective reading direction: their override, else the detected series
+    default (RTL for manga), else LTR.
+    """
+    readingDirection: ReadingDirection!
+    "The calling user's explicit override, if any; null when the series default applies."
+    userReadingDirection: ReadingDirection
+}
+
+type SeriesPage {
+    content: [Series!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type Podcast {
+    id: ID!
+    title: String!
+    "Publisher/author from the feed (plain text, not a Person)."
+    author: String
+    feedUrl: String!
+    active: Boolean!
+    lastRefreshedAt: String
+    images: [Image!]
+    metadata: [Metadata!]
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    "The calling user's episode sort order for this podcast; DESCENDING (newest first) when unset."
+    episodeOrder: SortingOrder!
+}
+
+type PodcastEpisode {
+    id: ID!
+    podcast: Podcast!
+    publishedAt: String
+    episodeNumber: Int
+    seasonNumber: Int
+    "True once the audio is downloaded to a cache directory and playable."
+    downloaded: Boolean!
+    "ffprobe duration of the download, or the feed's duration hint before that."
+    durationInMilliseconds: Int
+    metadata: [Metadata!]
+    mediaFile: [MediaFile!]
+    watchStatus: [WatchStatus!]
+}
+
+type PodcastPage {
+    content: [Podcast!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type PodcastEpisodePage {
+    content: [PodcastEpisode!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type PodcastDirectoryResult {
+    name: String
+    author: String
+    feedUrl: String!
+    artworkUrl: String
+}
+
+type PersonPage {
+    content: [Person!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type AlbumPage {
+    content: [Album!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type CreditPage {
+    content: [Credit!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+type Show {
+    id: ID!
+    name: String!
+    releaseYear: Int!
+    episodes: [Episode!]
+    seasons: [Season!]
+    images: [Image!]
+    metadata: [Metadata!]
+    cast: [Credit!]
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    # TMDB enrichment; all null until the show has been analyzed with a TMDB api key configured.
+    tmdbId: Int
+    imdbId: String
+    "TMDB community rating, 0-10 with one decimal."
+    voteAverage: Float
+    voteCount: Int
+    "Content rating for the configured country (e.g. TV-MA, 16)."
+    contentRating: String
+    "TMDB series status (Returning Series, Ended, Canceled, ...)."
+    status: String
+    homepage: String
+    "Comma-separated network names."
+    networks: String
+    "Comma-separated production company names."
+    studios: String
+    "Comma-separated ISO 3166-1 origin country codes."
+    originCountry: String
+    "Comma-separated TMDB keywords (English only)."
+    keywords: String
+    "Trailer video key; with trailerSite YouTube the url is https://www.youtube.com/watch?v=<key>."
+    trailerKey: String
+    trailerSite: String
+    """
+    Comparable shows from the same library, best match first. Scored on the metadata TMDB
+    enrichment already stores: shared keywords, genres and cast members, plus a smaller bonus for
+    an overlapping network, origin country or a nearby release year. Empty for a show that has no
+    TMDB enrichment yet, rather than arbitrary neighbours.
+    """
+    related(limit: Int): [Show!]!
+}
+
+type RecentlyWatched {
+    type: MediaType!
+    episode: Episode
+    movie: Movie
+    "Next unfinished audiobook chapter. Set on a type BOOK entry when the user was listening (a book resumes reading and/or listening from one entry), or on a legacy type CHAPTER entry."
+    chapter: Chapter
+    "The book to resume (type BOOK). Always set for a book entry, even when only its audiobook was played; also the containing book of a legacy CHAPTER entry."
+    book: Book
+    "Partially played podcast episode (type PODCAST_EPISODE)."
+    podcastEpisode: PodcastEpisode
+    "A recently played game (type GAME)."
+    game: Game
+}
+
+"""
+A game in a GAME library. Played on the client: the player downloads the files listed by
+GET /game/{id}/manifest, starts a local emulator or the game itself (see launcher) and syncs the
+calling user's saves through /game/{id}/saves.
+"""
+type Game {
+    id: ID!
+    "Path identity: the game folder name without its year."
+    name: String!
+    "Display title: from PARAM.SFO / the Steam manifest / a metadata provider, else name."
+    title: String!
+    releaseYear: Int!
+    platform: GamePlatform!
+    form: GameForm!
+    "What the client launches, relative to the game folder or archive root; null when the single file is the game."
+    entryPath: String
+    "PS3 title id (BLUS12345); names RPCS3's savedata and trophy folders."
+    titleId: String
+    steamAppId: String
+    "The folder name under steamapps/common a Steam game is restored into."
+    steamInstallDir: String
+    "Ludusavi reports Steam Cloud sync for this game; clients warn about syncing twice."
+    steamCloud: Boolean!
+    sizeBytes: Float!
+    fileCount: Int!
+    "Changes when the game's files changed on the server; equals the manifest's version (steamBuildId when set, else a digest)."
+    version: String
+    "Steam's build number from the .acf, when the game is a Steam game."
+    steamBuildId: String
+    "When the game row last changed (ISO-8601 instant)."
+    updatedAt: String
+    "How the client should start the game, derived from the platform."
+    launcher: GameLauncherHint!
+    "Where the game keeps its saves: the admin override when set, else what the Ludusavi manifest says."
+    savePaths: [GameSavePath!]!
+    "ADMIN / MANIFEST / NONE: where savePaths came from."
+    savePathSource: String!
+    "The admin override alone (empty when none), for the settings screen."
+    savePathOverride: [GameSavePath!]!
+    images: [Image!]
+    metadata: [Metadata!]
+    library: Library!
+    "The calling user's rating (1-10), or null if unrated."
+    rating: Int
+    "When the calling user last played (ISO-8601), or null."
+    lastPlayed: String
+    "The calling user's accumulated play time in milliseconds."
+    playTimeMs: Float!
+    "The calling user's save snapshots, newest first."
+    saves: [GameSave!]!
+    "Achievement progress of the calling user; total 0 when nothing was reported yet."
+    achievements: GameAchievementSummary!
+}
+
+type GamePage {
+    content: [Game!]!
+    totalPages: Int!
+    totalElements: Int!
+    number: Int!
+    size: Int!
+}
+
+"A save-location template with Ludusavi placeholders; os narrows it to windows / linux / mac, null = any."
+type GameSavePath {
+    path: String!
+    os: String
+}
+
+type GameLauncherHint {
+    kind: GameLauncherKind!
+    "The libretro core name (snes9x, mupen64plus_next, ...) for RETROARCH launches."
+    retroArchCore: String
+}
+
+type GamePlatformInfo {
+    platform: GamePlatform!
+    "Folder names under the library root this platform answers to."
+    folderNames: [String!]!
+    "File extensions of a launchable file (empty for folder platforms)."
+    entryExtensions: [String!]!
+    "Extensions of companion files of a ROM set (the .bin of a .cue)."
+    companionExtensions: [String!]!
+    launcher: GameLauncherHint!
+}
+
+type GameSave {
+    id: ID!
+    version: Int!
+    sizeBytes: Float!
+    sha256: String!
+    "The client that uploaded it (hostname)."
+    deviceName: String
+    note: String
+    "When it was uploaded (ISO-8601)."
+    createdAt: String!
+}
+
+type GameAchievementSummary {
+    total: Int!
+    unlocked: Int!
+    list: [GameAchievement!]!
+}
+
+type GameAchievement {
+    id: ID!
+    source: GameAchievementSource!
+    externalId: String!
+    name: String!
+    description: String
+    "PS3 trophy grade: BRONZE / SILVER / GOLD / PLATINUM."
+    grade: String
+    hidden: Boolean!
+    icon: Image
+    "When the calling user unlocked it (ISO-8601); null while locked."
+    unlockedAt: String
+    game: Game!
+}
+
+enum GamePlatform {
+    NES
+    SNES
+    N64
+    GB
+    GBC
+    GBA
+    NDS
+    PSX
+    PS2
+    GC
+    WII
+    PS3
+    PC
+    LINUX
+    STEAM
+}
+
+enum GameForm {
+    "One ROM file (plus companions), launched in a RetroArch core."
+    ROM
+    "A PS3 game folder (PS3_GAME/USRDIR/EBOOT.BIN), launched with RPCS3."
+    PS3_FOLDER
+    "A zip of a ready-to-run Windows game folder."
+    PC_PORTABLE_ZIP
+    "A GOG-style Linux installer (.sh)."
+    PC_LINUX_INSTALLER
+    "A tar archive of a ready-to-run Linux game folder."
+    PC_LINUX_PORTABLE
+    "An installed Steam game (steamapps/common tree + appmanifest), restored into a local Steam library."
+    STEAM
+}
+
+enum GameLauncherKind {
+    RETROARCH
+    RPCS3
+    NATIVE_WINDOWS
+    NATIVE_LINUX
+    STEAM
+}
+
+enum GameAchievementSource {
+    PS3_TROPHY
+    STEAM
+    RETROACHIEVEMENTS
+}
+
+type StreamToken {
+    id: ID!
+    token: String!
+    expiresAt: String!
+}
+
+type WatchStatus {
+    id: ID!
+    playQueueItemId: String!
+    episode: Episode
+    movie: Movie
+    chapter: Chapter
+    book: Book
+    podcastEpisode: PodcastEpisode
+    track: Track
+    watched: Boolean!
+    progressInMilliseconds: Int!
+    "Epub reading position (epubcfi); only on book-level rows."
+    readingLocation: String
+    "Epub reading progress 0.0-1.0; only on book-level rows."
+    readingProgress: Float
+    "When this entry was created (ISO-8601)."
+    createdAt: String!
+    "When the play last progressed (ISO-8601); doubles as the played-at moment."
+    updatedAt: String!
+}

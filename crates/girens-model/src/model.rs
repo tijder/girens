@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{de, ItemId};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ItemKind {
     Movie,
@@ -20,6 +20,7 @@ pub enum ItemKind {
     Playlist,
     Clip,
     Photo,
+    #[default]
     #[serde(other)]
     Other,
 }
@@ -77,7 +78,7 @@ impl ItemKind {
 ///
 /// Plex describes all of them with the same loosely filled record; `kind`
 /// tells which fields are meaningful.
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Item {
     pub rating_key: ItemId,
@@ -191,7 +192,7 @@ pub struct Tag {
     pub tag: String,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Media {
     pub id: ItemId,
@@ -201,7 +202,7 @@ pub struct Media {
     pub parts: Vec<Part>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Part {
     pub id: ItemId,
@@ -222,7 +223,7 @@ pub enum StreamKind {
     Other,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Stream {
     pub id: ItemId,
