@@ -36,8 +36,19 @@ async fn blocking<T: Send + 'static>(
     }
 }
 
+#[cfg(test)]
+thread_local! {
+    /// Stands in for the keyring under test: tokens by their `uuid`.
+    pub static TEST_KEYRING: std::cell::RefCell<HashMap<String, String>> =
+        std::cell::RefCell::default();
+}
+
 /// The token stored for an account or server uuid.
 pub async fn lookup(uuid: &str) -> Result<Option<String>, glib::Error> {
+    #[cfg(test)]
+    if true {
+        return Ok(TEST_KEYRING.with_borrow(|keyring| keyring.get(uuid).cloned()));
+    }
     let uuid = uuid.to_owned();
     blocking(move || {
         let attributes = HashMap::from([("uuid", uuid.as_str())]);
@@ -57,6 +68,14 @@ pub async fn store(
     attributes: Vec<(&'static str, String)>,
     token: String,
 ) -> Result<(), glib::Error> {
+    #[cfg(test)]
+    if true {
+        let uuid = attributes.iter().find(|(name, _)| *name == "uuid");
+        let uuid = uuid.expect("a token is stored by its uuid").1.clone();
+        TEST_KEYRING.with_borrow_mut(|keyring| keyring.insert(uuid, token));
+        let _ = label;
+        return Ok(());
+    }
     blocking(move || {
         let names: Vec<&str> = attributes.iter().map(|(name, _)| *name).collect();
         let values: HashMap<&str, &str> = attributes
@@ -76,6 +95,11 @@ pub async fn store(
 }
 
 pub async fn clear(uuid: &str) -> Result<(), glib::Error> {
+    #[cfg(test)]
+    if true {
+        TEST_KEYRING.with_borrow_mut(|keyring| keyring.remove(uuid));
+        return Ok(());
+    }
     let uuid = uuid.to_owned();
     blocking(move || {
         let attributes = HashMap::from([("uuid", uuid.as_str())]);

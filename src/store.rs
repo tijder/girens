@@ -27,6 +27,13 @@ thread_local! {
         const { std::cell::RefCell::new(None) };
 }
 
+/// Makes the calling test use `path` as the config file, or the real one
+/// again with `None`.
+#[cfg(test)]
+pub fn use_test_file(path: Option<std::path::PathBuf>) {
+    TEST_FILE.set(path);
+}
+
 fn config_file() -> std::path::PathBuf {
     #[cfg(test)]
     if let Some(path) = TEST_FILE.with_borrow(Clone::clone) {

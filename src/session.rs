@@ -33,8 +33,12 @@ struct State {
 pub struct Session {
     settings: gio::Settings,
     client: ClientInfo,
+    /// Where plex.tv is; a stand-in under test.
+    plex_tv: String,
     state: RefCell<State>,
 }
+
+const PLEX_TV: &str = "https://plex.tv";
 
 thread_local! {
     static CURRENT: RefCell<Option<Rc<Session>>> = const { RefCell::new(None) };
@@ -56,12 +60,12 @@ impl Session {
         CURRENT.with(|current| {
             current
                 .borrow_mut()
-                .get_or_insert_with(|| Self::new(&gio::Settings::new(config::APP_ID)))
+                .get_or_insert_with(|| Self::new(&gio::Settings::new(config::APP_ID), PLEX_TV))
                 .clone()
         })
     }
 
-    fn new(settings: &gio::Settings) -> Rc<Self> {
+    fn new(settings: &gio::Settings, plex_tv: &str) -> Rc<Self> {
         let mut identifier = settings.string("client-identifier").to_string();
         if identifier.is_empty() {
             identifier = glib::uuid_string_random().to_string();
@@ -77,6 +81,7 @@ impl Session {
                 version: config::VERSION.into(),
                 device_name: glib::host_name().to_string(),
             },
+            plex_tv: plex_tv.to_owned(),
             state: RefCell::default(),
         });
 
@@ -284,9 +289,10 @@ impl Session {
         let Some(token) = self.token(&stored.id).await else {
             return Ok(false);
         };
-        let client = self.client.clone();
+        let (client, plex_tv) = (self.client.clone(), self.plex_tv.clone());
         let account =
-            runtime::run(async move { MyPlex::with_token(&token, &client).await }).await?;
+            runtime::run(async move { MyPlex::with_token_at(&plex_tv, &token, &client).await })
+                .await?;
         self.remember_details(&account);
         let mut state = self.state.borrow_mut();
         state.account = Some(account);
@@ -308,10 +314,10 @@ impl Session {
         let Some(token) = self.token(&stored.id).await else {
             return Ok(false);
         };
-        let client = self.client.clone();
+        let (client, plex_tv) = (self.client.clone(), self.plex_tv.clone());
         let account = runtime::run({
-            let client = client.clone();
-            async move { MyPlex::with_token(&token, &client).await }
+            let (client, plex_tv) = (client.clone(), plex_tv.clone());
+            async move { MyPlex::with_token_at(&plex_tv, &token, &client).await }
         })
         .await?;
 
@@ -321,7 +327,10 @@ impl Session {
             Some(uuid) => {
                 let restored = match self.token(&profile_secret(&stored.id, &uuid)).await {
                     Some(token) => {
-                        runtime::run(async move { MyPlex::with_token(&token, &client).await }).await
+                        runtime::run(async move {
+                            MyPlex::with_token_at(&plex_tv, &token, &client).await
+                        })
+                        .await
                     }
                     None => Err(Error::Unauthorized),
                 };
@@ -620,4 +629,380 @@ impl Session {
 /// `$XDG_CONFIG_HOME/config`; see [`store`].
 pub fn config_file() -> std::path::PathBuf {
     glib::user_config_dir().join("config")
+}
+
+#[cfg(test)]
+mod tests {
+    use std::future::Future;
+    use std::path::PathBuf;
+
+    use wiremock::matchers::{header, method, path, query_param};
+    use wiremock::{Mock, MockServer, ResponseTemplate};
+
+    use super::*;
+
+    fn fixture(name: &str) -> String {
+        let file = format!(
+            "{}/crates/girens-plex/tests/fixtures/{name}.json",
+            env!("CARGO_MANIFEST_DIR")
+        );
+        std::fs::read_to_string(&file).unwrap_or_else(|err| panic!("{file}: {err}"))
+    }
+
+    fn json(status: u16, body: String) -> ResponseTemplate {
+        ResponseTemplate::new(status).set_body_raw(body, "application/json")
+    }
+
+    /// The settings of Girens, kept in memory.
+    fn settings() -> gio::Settings {
+        static SCHEMAS: std::sync::OnceLock<PathBuf> = std::sync::OnceLock::new();
+        let dir = SCHEMAS.get_or_init(|| {
+            let dir = std::env::temp_dir().join(format!("girens-schemas-{}", std::process::id()));
+            std::fs::create_dir_all(&dir).unwrap();
+            let compiled = std::process::Command::new("glib-compile-schemas")
+                .arg(format!("--targetdir={}", dir.display()))
+                .arg(concat!(env!("CARGO_MANIFEST_DIR"), "/data"))
+                .status()
+                .expect("glib-compile-schemas is needed for this test");
+            assert!(compiled.success());
+            dir
+        });
+        let source = gio::SettingsSchemaSource::from_directory(dir, None, false).unwrap();
+        let schema = source.lookup(config::APP_ID, false).unwrap();
+        let backend = gio::memory_settings_backend_new();
+        gio::Settings::new_full(&schema, Some(&backend), None)
+    }
+
+    /// Runs `test` with a config file and a keyring of its own.
+    fn run<F: Future<Output = ()>>(name: &str, test: impl FnOnce() -> F) {
+        let file = std::env::temp_dir().join(format!(
+            "girens-session-test-{}-{name}",
+            std::process::id()
+        ));
+        let _ = std::fs::remove_file(&file);
+        store::use_test_file(Some(file.clone()));
+        secrets::TEST_KEYRING.with_borrow_mut(|keyring| keyring.clear());
+        glib::MainContext::new().block_on(test());
+        store::use_test_file(None);
+        let _ = std::fs::remove_file(file);
+    }
+
+    fn keyring() -> Vec<String> {
+        let mut keys: Vec<String> =
+            secrets::TEST_KEYRING.with_borrow(|keyring| keyring.keys().cloned().collect());
+        keys.sort();
+        keys
+    }
+
+    fn secret(key: &str) -> Option<String> {
+        secrets::TEST_KEYRING.with_borrow(|keyring| keyring.get(key).cloned())
+    }
+
+    /// A Plex Media Server that accepts `token`. It is never dropped:
+    /// wiremock cannot shut a server down from within the main loop the
+    /// tests run in.
+    async fn media_server(machine: &str, token: &'static str) -> &'static MockServer {
+        let root = fixture("server_root").replace("machineIdentifier-04409eeb", machine);
+        runtime::run(async move {
+            let mock = MockServer::start().await;
+            Mock::given(method("GET"))
+                .and(path("/"))
+                .and(header("x-plex-token", token))
+                .respond_with(json(200, root))
+                .mount(&mock)
+                .await;
+            Mock::given(method("GET"))
+                .and(path("/"))
+                .respond_with(ResponseTemplate::new(401))
+                .with_priority(10)
+                .mount(&mock)
+                .await;
+            &*Box::leak(Box::new(mock))
+        })
+        .await
+    }
+
+    /// A plex.tv with the account `uuid-1`, whose Home also has `uuid-2`
+    /// (with PIN 1234) and the managed `uuid-3`.
+    async fn plex_tv() -> &'static MockServer {
+        let user = fixture("plextv_user");
+        let home = fixture("plextv_home_users");
+        let switched = fixture("plextv_switch");
+        runtime::run(async move {
+            let mock = MockServer::start().await;
+            for (token, body) in [("account-token", &user), ("profile-token", &switched)] {
+                Mock::given(method("GET"))
+                    .and(path("/api/v2/user"))
+                    .and(header("x-plex-token", token))
+                    .respond_with(json(200, body.clone()))
+                    .mount(&mock)
+                    .await;
+            }
+            Mock::given(method("GET"))
+                .and(path("/api/v2/user"))
+                .respond_with(ResponseTemplate::new(401))
+                .with_priority(10)
+                .mount(&mock)
+                .await;
+            Mock::given(method("GET"))
+                .and(path("/api/v2/home/users"))
+                .respond_with(json(200, home))
+                .mount(&mock)
+                .await;
+            Mock::given(method("POST"))
+                .and(path("/api/v2/home/users/uuid-3/switch"))
+                .respond_with(json(201, switched.clone()))
+                .mount(&mock)
+                .await;
+            Mock::given(method("POST"))
+                .and(path("/api/v2/home/users/uuid-2/switch"))
+                .and(query_param("pin", "1234"))
+                .respond_with(json(201, switched.replace("uuid-3", "uuid-2")))
+                .mount(&mock)
+                .await;
+            Mock::given(method("POST"))
+                .and(path("/api/v2/home/users/uuid-2/switch"))
+                .respond_with(ResponseTemplate::new(403))
+                .with_priority(10)
+                .mount(&mock)
+                .await;
+            &*Box::leak(Box::new(mock))
+        })
+        .await
+    }
+
+    /// What an earlier run left behind for a signed-in plex.tv account.
+    async fn signed_in(settings: &gio::Settings) {
+        store::save_account(&store::Account {
+            id: "uuid-1".into(),
+            ..store::Account::default()
+        });
+        settings.set_string("user-uuid", "uuid-1").unwrap();
+        let attributes = vec![("uuid", "uuid-1".to_owned())];
+        secrets::store("Girens token", attributes, "account-token".into())
+            .await
+            .unwrap();
+    }
+
+    #[test]
+    fn servers_by_address_are_accounts_to_switch_between_and_sign_out() {
+        run("servers", || async {
+            let first = media_server("first", "token-1").await;
+            let second = media_server("second", "token-2").await;
+            let session = Session::new(&settings(), PLEX_TV);
+            assert!(session.account_id().is_none());
+
+            assert!(matches!(
+                session.connect_url(first.uri(), "wrong".into()).await,
+                Err(Error::Unauthorized)
+            ));
+            assert!(session.accounts().is_empty());
+
+            session
+                .connect_url(first.uri(), "token-1".into())
+                .await
+                .unwrap();
+            assert_eq!(session.account_id().as_deref(), Some("server:first"));
+            assert_eq!(session.user_key().as_deref(), Some("server:first"));
+            assert_eq!(session.machine_identifier().as_deref(), Some("first"));
+
+            // A second one does not replace the first.
+            session
+                .connect_url(second.uri(), "token-2".into())
+                .await
+                .unwrap();
+            assert_eq!(session.account_id().as_deref(), Some("server:second"));
+            assert_eq!(session.accounts().len(), 2);
+            assert_eq!(
+                keyring(),
+                ["server:first:server:first", "server:second:server:second"]
+            );
+
+            // Back to the first, as at start: nothing connected yet.
+            session.switch_account("server:first");
+            assert!(session.server().is_none());
+            assert_eq!(session.user_key().as_deref(), Some("server:first"));
+            assert!(!session.restore_account().await.unwrap());
+            assert!(session.connect_stored_server().await.unwrap());
+            assert_eq!(session.machine_identifier().as_deref(), Some("first"));
+
+            // Signing out the one in use leaves the other, which takes over.
+            store::add_sync_entry(
+                "server:first",
+                "first",
+                &store::SyncEntry {
+                    rating_key: 1,
+                    converted: false,
+                    only_unwatched: false,
+                    max_items: None,
+                },
+            );
+            session.remove_account("server:first").await;
+            assert_eq!(session.account_id().as_deref(), Some("server:second"));
+            assert!(session.server().is_none());
+            assert_eq!(keyring(), ["server:second:server:second"]);
+            assert!(store::sync_entries("server:first", "first").is_empty());
+            assert!(session.connect_stored_server().await.unwrap());
+            assert_eq!(session.machine_identifier().as_deref(), Some("second"));
+
+            // Signing out the last one leaves nobody.
+            session.remove_account("server:second").await;
+            assert!(session.account_id().is_none());
+            assert!(session.user_key().is_none());
+            assert!(session.server().is_none());
+            assert!(session.accounts().is_empty());
+            assert!(keyring().is_empty());
+            assert!(!session.connect_stored_server().await.unwrap());
+        });
+    }
+
+    #[test]
+    fn a_profile_of_the_home_takes_over_and_is_continued_next_time() {
+        run("profiles", || async {
+            let plex_tv = plex_tv().await;
+            let settings = settings();
+            signed_in(&settings).await;
+
+            let session = Session::new(&settings, &plex_tv.uri());
+            assert_eq!(session.user_key().as_deref(), Some("uuid-1"));
+            assert!(!session.has_profile());
+            assert!(session.restore_account().await.unwrap());
+            assert_eq!(session.account().unwrap().uuid, "uuid-1");
+            assert_eq!(session.stored_account().unwrap().name, "title-1");
+
+            let profiles = session.profiles().await;
+            assert_eq!(profiles.len(), 3);
+            assert_eq!(session.stored_account().unwrap().profiles, profiles);
+
+            // A wrong PIN changes nothing.
+            let wrong = session.switch_profile(&profiles[1], Some("0000".into())).await;
+            assert!(matches!(wrong, Err(Error::WrongPin)));
+            assert_eq!(session.user_key().as_deref(), Some("uuid-1"));
+            assert_eq!(session.account().unwrap().uuid, "uuid-1");
+
+            session.switch_profile(&profiles[2], None).await.unwrap();
+            assert_eq!(session.user_key().as_deref(), Some("uuid-3"));
+            assert_eq!(session.account().unwrap().uuid, "uuid-3");
+            assert_eq!(session.account_id().as_deref(), Some("uuid-1"));
+            assert_eq!(
+                secret("profile:uuid-1:uuid-3").as_deref(),
+                Some("profile-token")
+            );
+
+            // The next run continues as that profile.
+            let next = Session::new(&settings, &plex_tv.uri());
+            assert_eq!(next.user_key().as_deref(), Some("uuid-3"));
+            assert!(next.restore_account().await.unwrap());
+            assert_eq!(next.account().unwrap().uuid, "uuid-3");
+
+            // And back to the account itself, which needs no PIN here.
+            next.switch_profile(&profiles[0], None).await.unwrap();
+            assert_eq!(next.user_key().as_deref(), Some("uuid-1"));
+            assert_eq!(next.stored_account().unwrap().profile, None);
+
+            // With the right PIN the protected profile opens.
+            next.switch_profile(&profiles[1], Some("1234".into()))
+                .await
+                .unwrap();
+            assert_eq!(next.user_key().as_deref(), Some("uuid-2"));
+
+            // Signing out removes every token of the account.
+            next.remove_account("uuid-1").await;
+            assert!(keyring().is_empty());
+            assert!(next.account().is_none());
+            assert!(next.account_id().is_none());
+        });
+    }
+
+    #[test]
+    fn a_profile_that_cannot_be_continued_falls_back_to_the_account() {
+        run("fallback", || async {
+            let plex_tv = plex_tv().await;
+            let settings = settings();
+            signed_in(&settings).await;
+            let session = Session::new(&settings, &plex_tv.uri());
+            session.restore_account().await.unwrap();
+            let profiles = session.profiles().await;
+            session.switch_profile(&profiles[2], None).await.unwrap();
+
+            // Its token is gone, e.g. removed from the keyring.
+            secrets::clear("profile:uuid-1:uuid-3").await.unwrap();
+            let next = Session::new(&settings, &plex_tv.uri());
+            assert!(next.restore_account().await.unwrap());
+            assert_eq!(next.user_key().as_deref(), Some("uuid-1"));
+            assert_eq!(next.account().unwrap().uuid, "uuid-1");
+            assert_eq!(next.stored_account().unwrap().profile, None);
+
+            // Not when the account itself is behind a PIN: then nobody is
+            // let in without signing in again.
+            next.switch_profile(&profiles[2], None).await.unwrap();
+            secrets::clear("profile:uuid-1:uuid-3").await.unwrap();
+            store::update_account("uuid-1", |stored| stored.profiles[0].protected = true);
+            let locked = Session::new(&settings, &plex_tv.uri());
+            assert!(matches!(
+                locked.restore_account().await,
+                Err(Error::Unauthorized)
+            ));
+            assert!(locked.account().is_none());
+        });
+    }
+
+    #[test]
+    fn asking_who_is_watching_signs_in_without_a_profile() {
+        run("choose", || async {
+            let plex_tv = plex_tv().await;
+            let settings = settings();
+            signed_in(&settings).await;
+            let session = Session::new(&settings, &plex_tv.uri());
+            // Not asked for a single profile, or when the user does not
+            // want it.
+            settings.set_boolean("ask-profile-at-start", true).unwrap();
+            assert!(!session.asks_profile_at_start());
+            session.restore_account().await.unwrap();
+            let profiles = session.profiles().await;
+            assert!(session.asks_profile_at_start());
+            settings.set_boolean("ask-profile-at-start", false).unwrap();
+            assert!(!session.asks_profile_at_start());
+
+            let next = Session::new(&settings, &plex_tv.uri());
+            assert!(next.restore_account_to_choose().await.unwrap());
+            assert!(!next.has_profile());
+            assert!(next.account().is_none());
+            next.switch_profile(&profiles[2], None).await.unwrap();
+            assert!(next.has_profile());
+            assert_eq!(next.user_key().as_deref(), Some("uuid-3"));
+        });
+    }
+
+    #[test]
+    fn what_a_single_user_version_stored_is_handed_over() {
+        run("migration", || async {
+            let server = media_server("machine", "server-token").await;
+            let settings = settings();
+            settings.set_string("user-uuid", "uuid-1").unwrap();
+            settings.set_string("server-uuid", "machine").unwrap();
+            settings.set_string("server-url", &server.uri()).unwrap();
+            for (key, token) in [("uuid-1", "account-token"), ("machine", "server-token")] {
+                let attributes = vec![("uuid", key.to_owned())];
+                secrets::store("Girens token", attributes, token.into())
+                    .await
+                    .unwrap();
+            }
+
+            let session = Session::new(&settings, PLEX_TV);
+            assert_eq!(session.account_id().as_deref(), Some("uuid-1"));
+            // Until the keyring is done the server cannot be connected.
+            assert!(!session.connect_stored_server().await.unwrap());
+            session.prepare().await;
+            assert_eq!(keyring(), ["server:machine:uuid-1", "uuid-1"]);
+            assert!(session.connect_stored_server().await.unwrap());
+            assert_eq!(session.machine_identifier().as_deref(), Some("machine"));
+
+            // Once.
+            assert!(store::migrate(None, None).is_none());
+            let mut secrets = session.stored_account().unwrap().secrets;
+            secrets.sort();
+            assert_eq!(secrets, ["server:machine:uuid-1", "uuid-1"]);
+        });
+    }
 }
