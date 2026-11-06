@@ -2,7 +2,7 @@
 
 Girens is a media player for [Plex](https://www.plex.tv/) and [Ister](https://github.com/ister-app) servers. You can watch and listen to your music, shows and movies with this GTK app, with accounts of both kinds signed in next to each other.
 
-Downloads for watching offline are for Plex only, as an Ister server only streams.
+Both can be downloaded from for watching offline; what was watched that way is told to the server when it can be reached again.
 
 To stay signed in to an Ister server after the session in the browser has ended, Girens asks its OpenID Connect provider for the `offline_access` scope. A provider that does not grant that to the `ister` client still works: Girens then asks to sign in again when the session has ended.
 

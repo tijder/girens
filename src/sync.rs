@@ -211,7 +211,14 @@ fn prune(dir: &Path, keep: &HashSet<ItemId>) {
             .and_then(copy_key)
             .is_some_and(|key| !keep.contains(&key));
         if unwanted {
-            if let Err(err) = std::fs::remove_file(file.path()) {
+            // A copy is a file, or a folder for a stream.
+            let path = file.path();
+            let removed = if path.is_dir() {
+                std::fs::remove_dir_all(&path)
+            } else {
+                std::fs::remove_file(&path)
+            };
+            if let Err(err) = removed {
                 eprintln!("Could not remove {}: {err}", file.path().display());
             }
         }
@@ -671,6 +678,28 @@ impl Sync {
             .string("transcode-media-to-resolution")
             .to_string();
         let resolution = (converted && !item.kind.is_audio()).then_some(resolution);
+        if let Some(ister) = server.as_ister().cloned() {
+            // A stream is copied part by part into a folder, which takes
+            // the place of the file once it is whole.
+            let partial = PathBuf::from(format!("{}.tmp", target.display()));
+            return runtime::run(async move {
+                let progress = move |done: u64, total: u64| {
+                    counters.0.store(done, Ordering::Relaxed);
+                    counters.1.store(total, Ordering::Relaxed);
+                };
+                ister
+                    .download_stream(&item, converted, &partial, progress)
+                    .await?;
+                tokio::fs::rename(&partial, &target)
+                    .await
+                    .map_err(|source| girens_model::Error::Io {
+                        path: target.display().to_string(),
+                        source,
+                    })
+            })
+            .await
+            .map_err(|err: girens_model::Error| err.to_string());
+        }
         runtime::run(async move {
             let progress = move |received: u64, total: Option<u64>| {
                 counters.0.store(received, Ordering::Relaxed);

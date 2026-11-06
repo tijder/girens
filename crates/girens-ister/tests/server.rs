@@ -424,11 +424,6 @@ async fn a_queue_is_made_played_and_reported() {
         .await
         .unwrap();
 
-    // An item that is in no queue of the server has nothing to report to.
-    server
-        .update_timeline(&loaded, 61_000, PlaybackState::Playing, None)
-        .await
-        .unwrap();
 }
 
 #[tokio::test]

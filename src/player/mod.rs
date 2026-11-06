@@ -783,14 +783,30 @@ impl Inner {
         self.prefer_version(&mut loading);
 
         let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
+        let mut local_subtitles = Vec::new();
         let opened = if let Some(path) =
             crate::sync::local_file(&machine, &user, loading.rating_key)
         {
-            // An offline copy plays without the server.
+            // An offline copy plays without the server. The copy of a
+            // stream is a folder, with its subtitles beside the list.
+            let stream = path.is_dir();
+            if stream {
+                local_subtitles = subtitles_in(&path);
+            }
             Opened {
-                url: path.to_string_lossy().into_owned(),
+                url: if stream {
+                    path.join(girens_ister::download::MASTER)
+                } else {
+                    path
+                }
+                .to_string_lossy()
+                .into_owned(),
                 session: None,
-                subtitle_delay: 0.0,
+                subtitle_delay: if stream {
+                    girens_ister::SUBTITLE_DELAY
+                } else {
+                    0.0
+                },
                 segmented: false,
             }
         } else {
@@ -865,7 +881,13 @@ impl Inner {
         // Stay paused until mpv is ready and the start position is set.
         self.set_pause(true);
         mpv.command("loadfile", &[url.as_str(), "replace"])
-            .map_err(|err| format!("mpv could not open the stream: {err}"))
+            .map_err(|err| format!("mpv could not open the stream: {err}"))?;
+        // Offered, not shown: which to show is up to the user.
+        for (path, language) in local_subtitles {
+            let path = path.to_string_lossy();
+            self.command("sub-add", &[&path, "auto", &language, &language]);
+        }
+        Ok(())
     }
 
     // mpv events
@@ -1481,6 +1503,24 @@ impl Inner {
             }
         });
     }
+}
+
+/// The subtitle files in the folder of a copy, each with its language as
+/// the name of the file tells it (`sub_<language>_<id>.srt`).
+fn subtitles_in(dir: &std::path::Path) -> Vec<(std::path::PathBuf, String)> {
+    let mut found: Vec<(std::path::PathBuf, String)> = std::fs::read_dir(dir)
+        .into_iter()
+        .flatten()
+        .flatten()
+        .filter_map(|file| {
+            let name = file.file_name().to_str()?.to_owned();
+            let language = name.strip_prefix("sub_")?.strip_suffix(".srt")?;
+            let language = language.split('_').next()?.to_owned();
+            Some((file.path(), language))
+        })
+        .collect();
+    found.sort();
+    found
 }
 
 /// Seconds into an item for a time in the file it starts at `base` in.

@@ -167,10 +167,7 @@ impl Session {
     pub fn can_download(&self) -> bool {
         match self.server() {
             Some(server) => server.supports(crate::backend::Feature::Downloads),
-            // Without a connection: by what kind of account it is.
-            None => self
-                .stored_account()
-                .is_some_and(|stored| stored.kind != AccountKind::Ister),
+            None => self.account_id().is_some(),
         }
     }
 
@@ -1376,7 +1373,7 @@ mod tests {
             assert_eq!(stored.name, "Ister Admin");
             assert_eq!(stored.server.unwrap().url, server.uri());
             assert!(session.server().is_some());
-            assert!(!session.can_download());
+            assert!(session.can_download());
             // Only the token that continues the session is kept.
             assert_eq!(keyring(), std::slice::from_ref(&id));
             assert_eq!(secret(&id).as_deref(), Some("refresh-1"));

@@ -76,6 +76,8 @@ struct Inner {
     queues: Mutex<HashMap<ItemId, QueueSource>>,
     opened: Mutex<HashMap<ItemId, Opened>>,
     search: Mutex<Option<(String, Instant, Vec<Item>)>>,
+    /// The queue entries made for items that play outside a queue.
+    own_entries: Mutex<HashMap<ItemId, ItemId>>,
     /// Where the answers of the server are written, to make test data.
     record: Mutex<Option<std::path::PathBuf>>,
 }
@@ -158,6 +160,7 @@ impl IsterServer {
                 queues: Mutex::new(HashMap::new()),
                 opened: Mutex::new(HashMap::new()),
                 search: Mutex::new(None),
+                own_entries: Mutex::new(HashMap::new()),
                 record: Mutex::new(None),
             }),
         };
@@ -964,6 +967,27 @@ impl IsterServer {
     /// What mpv plays for `item`: the server's stream of the file as it is
     /// (`direct`) or converted.
     pub fn stream_url(&self, item: &Item, direct: bool) -> Result<String> {
+        let address = self.stream_address(item, direct)?;
+        // What it was opened with is told to the server with the reports.
+        let direct = address.contains("direct=true");
+        if let Some(part) = item.parts().next() {
+            locked(&self.inner.opened).insert(
+                item.rating_key,
+                Opened {
+                    direct,
+                    file: part.id,
+                },
+            );
+        }
+        Ok(address)
+    }
+
+    pub(crate) fn http(&self) -> &reqwest::Client {
+        &self.inner.http
+    }
+
+    /// The address of the stream of `item`, as it is or converted.
+    pub(crate) fn stream_address(&self, item: &Item, direct: bool) -> Result<String> {
         let part = item
             .parts()
             .next()
@@ -976,13 +1000,6 @@ impl IsterServer {
             .filter(|stream| stream.stream_type == 1)
             .all(|stream| matches!(stream.codec.as_deref(), Some("h264" | "hevc")));
         let direct = direct && fits;
-        locked(&self.inner.opened).insert(
-            item.rating_key,
-            Opened {
-                direct,
-                file: part.id,
-            },
-        );
         Ok(format!(
             "{}/master.m3u8?direct={direct}&transcode={}&subtitleFormat=SRT&token={}",
             part.key,
@@ -1000,11 +1017,13 @@ impl IsterServer {
         state: PlaybackState,
         _session: Option<&str>,
     ) -> Result<()> {
-        // Without a queue on the server there is nothing to report to.
-        let Some((queue, entry)) = item
-            .play_queue_item_id
-            .and_then(|id| id.as_str().split_once(':'))
-        else {
+        // What plays from a copy, or was watched without the server, is in
+        // no queue of the server: one is made for it to report to.
+        let entry = match item.play_queue_item_id {
+            Some(entry) => entry,
+            None => self.queue_entry_for(item).await?,
+        };
+        let Some((queue, entry)) = entry.as_str().split_once(':') else {
             return Ok(());
         };
         let opened = locked(&self.inner.opened).get(&item.rating_key).copied();
@@ -1032,6 +1051,23 @@ impl IsterServer {
         });
         let _: Value = self.query(queries::UPDATE_PLAY_QUEUE, variables).await?;
         Ok(())
+    }
+
+    /// The entry of a queue of the server that stands for `item`, made
+    /// once for as long as this program runs.
+    async fn queue_entry_for(&self, item: &Item) -> Result<ItemId> {
+        if let Some(entry) = locked(&self.inner.own_entries).get(&item.rating_key) {
+            return Ok(*entry);
+        }
+        let queue = self.create_play_queue(item, None, false).await?;
+        let entry = queue
+            .items
+            .iter()
+            .find(|entry| entry.rating_key == item.rating_key)
+            .and_then(|entry| entry.play_queue_item_id)
+            .ok_or(Error::NotFound(item.rating_key))?;
+        locked(&self.inner.own_entries).insert(item.rating_key, entry);
+        Ok(entry)
     }
 
     // Play queues

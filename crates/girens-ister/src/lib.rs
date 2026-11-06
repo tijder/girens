@@ -5,6 +5,7 @@
 //! under the same operations as the Plex client has.
 
 pub mod auth;
+pub mod download;
 mod map;
 mod queries;
 mod server;

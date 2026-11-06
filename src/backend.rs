@@ -90,8 +90,9 @@ impl Server {
     pub fn supports(&self, feature: Feature) -> bool {
         match (self, feature) {
             (Server::Plex(_), _) => true,
-            // Ister only hands out streams, and decides their sizes itself.
-            (Server::Ister(_), Feature::Downloads | Feature::TranscodeResolution) => false,
+            // Ister decides itself what it converts to.
+            (Server::Ister(_), Feature::TranscodeResolution) => false,
+            (Server::Ister(_), Feature::Downloads) => true,
         }
     }
 
