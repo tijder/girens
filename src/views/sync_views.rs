@@ -145,8 +145,6 @@ mod sync_dialog {
         pub _item_box: TemplateChild<gtk::ListBox>,
         #[template_child]
         pub _sync_button: TemplateChild<gtk::Button>,
-        #[template_child]
-        pub _ok_button: TemplateChild<gtk::Button>,
     }
 
     #[glib::object_subclass]
@@ -168,13 +166,6 @@ mod sync_dialog {
         fn constructed(&self) {
             self.parent_constructed();
             let dialog = self.obj();
-            self._ok_button.connect_clicked(glib::clone!(
-                #[weak]
-                dialog,
-                move |_| {
-                    dialog.close();
-                }
-            ));
             self._sync_button.connect_clicked(glib::clone!(
                 #[weak]
                 dialog,

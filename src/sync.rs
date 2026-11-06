@@ -86,14 +86,20 @@ fn write_sidecar(dir: &Path, item: &Item) {
     }
 }
 
-/// How far a user is with an item, as the server told when it was synced.
+/// How far a user is with an item: as the server told when it was synced,
+/// or as watched from the offline copy since.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 struct Watched {
     view_offset: u64,
     view_count: u32,
     user_rating: Option<f32>,
+    /// Watched without the server knowing; it is told when it is back.
+    unsent: bool,
 }
+
+/// From where an item counts as watched to the end.
+const WATCHED_FRACTION: f64 = 0.9;
 
 impl Watched {
     fn of(item: &Item) -> Self {
@@ -101,6 +107,17 @@ impl Watched {
             view_offset: item.view_offset,
             view_count: item.view_count,
             user_rating: item.user_rating,
+            unsent: false,
+        }
+    }
+
+    /// What to keep for `item` after asking the server: what it says,
+    /// unless `self` holds progress it has not heard of yet.
+    fn updated(self, item: &Item) -> Self {
+        if self.unsent {
+            self
+        } else {
+            Self::of(item)
         }
     }
 }
@@ -302,6 +319,103 @@ fn offline_items_in(dir: &Path, user: &str) -> Vec<Item> {
     items
 }
 
+/// Remembers how far `user` is in an offline copy, so that it resumes there
+/// without the server too. `duration` tells when it is watched to the end.
+/// The server is still to be told; see [`progress_sent`].
+pub fn record_progress(
+    machine_identifier: &str,
+    user: &str,
+    rating_key: u64,
+    position: u64,
+    duration: Option<u64>,
+) {
+    let dir = images::cache_dir_of(machine_identifier);
+    record_progress_in(&dir, user, rating_key, position, duration);
+}
+
+fn record_progress_in(
+    dir: &Path,
+    user: &str,
+    rating_key: u64,
+    position: u64,
+    duration: Option<u64>,
+) {
+    let mut manifest = Manifest::read(dir, user);
+    let Some(watched) = manifest.items.get_mut(&rating_key) else {
+        return;
+    };
+    let finished = duration
+        .is_some_and(|duration| duration > 0 && position as f64 >= duration as f64 * WATCHED_FRACTION);
+    if finished {
+        watched.view_offset = 0;
+        watched.view_count = watched.view_count.max(1);
+    } else {
+        watched.view_offset = position;
+    }
+    watched.unsent = true;
+    manifest.write(dir, user);
+}
+
+/// Notes that the server knows how far `user` is in an offline copy.
+pub fn progress_sent(machine_identifier: &str, user: &str, rating_key: u64) {
+    progress_sent_in(&images::cache_dir_of(machine_identifier), user, rating_key);
+}
+
+fn progress_sent_in(dir: &Path, user: &str, rating_key: u64) {
+    let mut manifest = Manifest::read(dir, user);
+    if let Some(watched) = manifest.items.get_mut(&rating_key) {
+        if std::mem::take(&mut watched.unsent) {
+            manifest.write(dir, user);
+        }
+    }
+}
+
+/// The offline copies `user` watched without the server, with how far.
+fn unsent_progress(dir: &Path, user: &str) -> Vec<(Item, Watched)> {
+    Manifest::read(dir, user)
+        .items
+        .into_iter()
+        .filter(|(_, watched)| watched.unsent)
+        .filter_map(|(key, watched)| {
+            let text = std::fs::read_to_string(sidecar(dir, key)).ok()?;
+            Some((serde_json::from_str(&text).ok()?, watched))
+        })
+        .collect()
+}
+
+/// Tells the server what `user` watched from offline copies while it was
+/// out of reach.
+pub async fn push_progress(server: &PlexServer, user: &str) {
+    let dir = images::cache_dir(server);
+    for (item, watched) in unsent_progress(&dir, user) {
+        let key = item.rating_key;
+        let sent = {
+            let server = server.clone();
+            runtime::run(async move {
+                if watched.view_offset > 0 {
+                    let stopped = girens_plex::playback::PlaybackState::Stopped;
+                    server
+                        .update_timeline(&item, watched.view_offset, stopped, None)
+                        .await
+                } else {
+                    server.mark_watched(key).await
+                }
+            })
+            .await
+        };
+        match sent {
+            Ok(()) => progress_sent_in(&dir, user, key),
+            Err(err) => {
+                eprintln!("Could not tell the server how far item {key} was watched: {err}");
+                // The others will not get through either.
+                if err.is_network() {
+                    return;
+                }
+            }
+        }
+    }
+}
+
 /// The offline copy of an item, if there is one, whoever asked for it.
 fn downloaded(server: &PlexServer, rating_key: u64) -> Option<PathBuf> {
     Some(local_path(server, rating_key)).filter(|path| path.exists())
@@ -390,6 +504,8 @@ impl Sync {
         self.emit(Event::Busy(true));
         let sync = self.clone();
         let task = glib::spawn_future_local(async move {
+            // Before the server is asked how far the user is.
+            push_progress(&server, &user).await;
             if let Err(err) = sync.run_once(&server, &user).await {
                 crate::notify::failure(&crate::i18n::gettext("Sync failed"), &err);
             }
@@ -422,6 +538,13 @@ impl Sync {
         let mut wanted = HashSet::new();
         // What the user has a copy of when this run is over.
         let mut manifest = Manifest::default();
+        let before = Manifest::read(&dir, user);
+        let watched = |item: &Item| {
+            before
+                .items
+                .get(&item.rating_key)
+                .map_or_else(|| Watched::of(item), |known| known.updated(item))
+        };
         for entry in store::sync_entries(user, server.machine_identifier()) {
             let items = {
                 let server = server.clone();
@@ -452,14 +575,14 @@ impl Sync {
                     if !sidecar(&dir, item.rating_key).exists() {
                         write_sidecar(&dir, &item);
                     }
-                    manifest.items.insert(item.rating_key, Watched::of(&item));
+                    manifest.items.insert(item.rating_key, watched(&item));
                     self.downloaded.borrow_mut().insert(item.rating_key);
                 } else {
                     self.emit(Event::Downloading(Box::new(item.clone()), true));
                     let result = self.download(server, &item, entry.converted).await;
                     if result.is_ok() {
                         write_sidecar(&dir, &item);
-                        manifest.items.insert(item.rating_key, Watched::of(&item));
+                        manifest.items.insert(item.rating_key, watched(&item));
                         self.downloaded.borrow_mut().insert(item.rating_key);
                         // So that the copy is the user's even when the
                         // rest of the run is cancelled.
@@ -680,7 +803,7 @@ mod tests {
                 Watched {
                     view_offset: 5_000,
                     view_count: 1,
-                    user_rating: None,
+                    ..Watched::default()
                 },
             );
             // Wanted, but the file is not there (yet).
@@ -695,6 +818,50 @@ mod tests {
             assert_eq!(items[0].title, "Movie 2");
             assert_eq!(items[0].view_offset, 5_000);
             assert_eq!(items[0].view_count, 1);
+        });
+    }
+
+    #[test]
+    fn what_is_watched_offline_is_kept_until_the_server_knows() {
+        with_dir(|dir| {
+            copy(dir, 1, 0);
+            copy(dir, 2, 0);
+            manifest(dir, "me", &[1, 2]);
+            manifest(dir, "child", &[1]);
+
+            // Half way through the first, to the end of the second.
+            record_progress_in(dir, "me", 1, 30 * 60_000, Some(60 * 60_000));
+            record_progress_in(dir, "me", 2, 56 * 60_000, Some(60 * 60_000));
+            // Not a copy of this user: nothing to remember.
+            record_progress_in(dir, "me", 3, 1_000, None);
+
+            let items = offline_items_in(dir, "me");
+            assert_eq!(items[0].view_offset, 30 * 60_000);
+            assert_eq!(items[0].view_count, 0);
+            assert_eq!((items[1].view_offset, items[1].view_count), (0, 1));
+            assert_eq!(offline_items_in(dir, "child")[0].view_offset, 0);
+
+            let unsent: Vec<u64> = unsent_progress(dir, "me")
+                .iter()
+                .map(|(item, _)| item.rating_key)
+                .collect();
+            assert_eq!(unsent, [1, 2]);
+            assert!(unsent_progress(dir, "child").is_empty());
+
+            // A sync that hears older news from the server keeps this.
+            let stale: Item =
+                serde_json::from_str(&std::fs::read_to_string(sidecar(dir, 1)).unwrap()).unwrap();
+            let known = Manifest::read(dir, "me").items[&1];
+            assert_eq!(known.updated(&stale).view_offset, 30 * 60_000);
+
+            progress_sent_in(dir, "me", 1);
+            let unsent = unsent_progress(dir, "me");
+            assert_eq!(unsent.len(), 1);
+            assert_eq!(unsent[0].0.rating_key, 2);
+            // The position stays for resuming; the server has it now too.
+            let known = Manifest::read(dir, "me").items[&1];
+            assert_eq!(known.view_offset, 30 * 60_000);
+            assert_eq!(known.updated(&stale).view_offset, 0);
         });
     }
 

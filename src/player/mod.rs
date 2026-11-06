@@ -896,14 +896,31 @@ impl Inner {
     }
 
     fn send_timeline(&self, playing: &Playing, playback: PlaybackState) {
-        let Some(server) = Session::current().server() else {
-            return;
-        };
+        let session_state = Session::current();
         // Progress is reported for the queue entry, with the duration of what
         // is actually playing.
         let mut item = playing.item.clone();
         item.duration = playing.loading.duration.or(item.duration);
         let position = (playing.position * 1000.0) as u64;
+
+        // An offline copy of a video remembers the position itself, for
+        // when the server cannot be asked.
+        let key = item.rating_key;
+        let copy = match (
+            matches!(item.kind, ItemKind::Movie | ItemKind::Episode),
+            session_state.machine_identifier(),
+            session_state.user_key(),
+        ) {
+            (true, Some(machine), Some(user)) => {
+                crate::sync::record_progress(&machine, &user, key, position, item.duration);
+                Some((machine, user))
+            }
+            _ => None,
+        };
+
+        let Some(server) = session_state.server() else {
+            return;
+        };
         let session = playing.session.clone();
         glib::spawn_future_local(async move {
             let result = runtime::run(async move {
@@ -912,8 +929,12 @@ impl Inner {
                     .await
             })
             .await;
-            if let Err(err) = result {
-                eprintln!("Could not report the playback position: {err}");
+            match (result, copy) {
+                (Ok(()), Some((machine, user))) => {
+                    crate::sync::progress_sent(&machine, &user, key);
+                }
+                (Ok(()), None) => {}
+                (Err(err), _) => eprintln!("Could not report the playback position: {err}"),
             }
         });
     }

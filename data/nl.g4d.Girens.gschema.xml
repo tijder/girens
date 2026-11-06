@@ -39,6 +39,11 @@
         <summary>When playing music and the track has a music clip, play that instead of the audio</summary>
         <description></description>
     </key>
+    <key type="b" name="ask-profile-at-start">
+        <default>false</default>
+        <summary>Ask who is watching at start</summary>
+        <description>When the account is part of a Plex Home, choose the profile at every start instead of continuing as the one used last.</description>
+    </key>
     <key type="s" name="user-uuid">
         <default>""</default>
         <summary>The account in use</summary>

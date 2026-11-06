@@ -191,10 +191,14 @@ impl Session {
         key: String,
         token: String,
     ) {
-        attributes.push(("uuid", key.clone()));
-        if let Err(err) = secrets::store(label, attributes, token).await {
-            eprintln!("Could not store a token in the keyring: {err}");
-            return;
+        // Usually it is there already, from the last time.
+        let known = matches!(secrets::lookup(&key).await, Ok(Some(stored)) if stored == token);
+        if !known {
+            attributes.push(("uuid", key.clone()));
+            if let Err(err) = secrets::store(label, attributes, token).await {
+                eprintln!("Could not store a token in the keyring: {err}");
+                return;
+            }
         }
         store::update_account(account_id, |stored| {
             if !stored.secrets.contains(&key) {
@@ -249,6 +253,46 @@ impl Session {
     /// URL of the server that was used last, for status messages.
     pub fn stored_server_url(&self) -> Option<String> {
         Some(self.stored_account()?.server?.url)
+    }
+
+    /// Whether to ask who is watching at start, instead of continuing as
+    /// the profile that was active: the user wants that, and there is more
+    /// than one profile to choose from.
+    pub fn asks_profile_at_start(&self) -> bool {
+        self.settings.boolean("ask-profile-at-start")
+            && self.stored_account().is_some_and(|stored| {
+                stored.kind == AccountKind::Plex && stored.profiles.len() > 1
+            })
+    }
+
+    /// Whether a profile is active. Not between signing in at start and
+    /// choosing who is watching.
+    pub fn has_profile(&self) -> bool {
+        self.state.borrow().profile.is_some()
+    }
+
+    /// Signs in to the account in use without continuing as anyone, so that
+    /// a profile can be chosen with [`Self::switch_profile`]. `Ok(false)`
+    /// means there is no plex.tv account to restore.
+    pub async fn restore_account_to_choose(&self) -> Result<bool> {
+        let Some(stored) = self
+            .stored_account()
+            .filter(|stored| stored.kind == AccountKind::Plex)
+        else {
+            return Ok(false);
+        };
+        let Some(token) = self.token(&stored.id).await else {
+            return Ok(false);
+        };
+        let client = self.client.clone();
+        let account =
+            runtime::run(async move { MyPlex::with_token(&token, &client).await }).await?;
+        self.remember_details(&account);
+        let mut state = self.state.borrow_mut();
+        state.account = Some(account);
+        state.profile = None;
+        state.server = None;
+        Ok(true)
     }
 
     /// Signs in with the tokens of an earlier session: the account in use

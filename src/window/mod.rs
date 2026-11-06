@@ -106,6 +106,8 @@ mod imp {
         pub servers: RefCell<Vec<Resource>>,
         pub player: OnceCell<Player>,
         pub sync_dialog: OnceCell<SyncDialog>,
+        /// The dialog with accounts and profiles, while it is open.
+        pub accounts_dialog: glib::WeakRef<ProfileDialog>,
         pub downloads_view: OnceCell<views::DownloadsView>,
         pub music_controls: OnceCell<MediaControls>,
         /// Cookie of the idle inhibitor that is held while video plays.
@@ -161,6 +163,7 @@ mod imp {
                 servers: RefCell::default(),
                 player: OnceCell::new(),
                 sync_dialog: OnceCell::new(),
+                accounts_dialog: glib::WeakRef::new(),
                 downloads_view: OnceCell::new(),
                 music_controls: OnceCell::new(),
                 inhibit_cookie: Cell::new(None),
@@ -315,6 +318,33 @@ impl PlexWindow {
         ) else {
             return;
         };
+        // The item may be on another server than the one in use.
+        let machine = request.first().filter(|machine| !machine.is_empty());
+        if let Some(machine) = machine.filter(|machine| *machine != server.machine_identifier()) {
+            let resource = self
+                .imp()
+                .servers
+                .borrow()
+                .iter()
+                .find(|resource| resource.client_identifier == *machine)
+                .cloned();
+            if self.imp().session.account().is_some() && self.imp().servers.borrow().is_empty() {
+                // plex.tv has not listed the servers yet; ask again then.
+                self.imp().launch_options.borrow_mut().show_id = Some(request);
+                return;
+            }
+            let Some(resource) = resource else {
+                crate::notify::message(&gettext("This item is on a server that is not in use"));
+                return;
+            };
+            self.imp().launch_options.borrow_mut().show_id = Some(request);
+            glib::spawn_future_local(glib::clone!(
+                #[weak(rename_to = window)]
+                self,
+                async move { window.use_server(&resource).await }
+            ));
+            return;
+        }
         glib::spawn_future_local(glib::clone!(
             #[weak(rename_to = window)]
             self,
@@ -428,15 +458,7 @@ impl PlexWindow {
                 if current.is_some_and(|s| s.machine_identifier() == resource.client_identifier) {
                     return;
                 }
-                glib::spawn_future_local(async move {
-                    if window.connect_resource(&resource).await {
-                        // The other server's pages and playback make way.
-                        let servers = window.imp().servers.take();
-                        window.reset_for_user_change();
-                        window.imp().servers.replace(servers);
-                        window.connected().await;
-                    }
-                });
+                glib::spawn_future_local(async move { window.use_server(&resource).await });
             }
         ));
 

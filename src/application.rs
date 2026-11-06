@@ -53,9 +53,11 @@ mod imp {
             app.add_main_option(
                 "video-output-driver",
                 glib::Char::from(b'v'),
-                glib::OptionFlags::NONE,
+                // Still accepted, so that launchers made for earlier
+                // versions keep working.
+                glib::OptionFlags::HIDDEN,
                 glib::OptionArg::String,
-                "Which video output driver mpv will use",
+                "Ignored: Girens renders the video itself",
                 None,
             );
             app.add_main_option(

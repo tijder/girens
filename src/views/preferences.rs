@@ -73,8 +73,23 @@ pub fn present(parent: &impl IsA<gtk::Widget>) {
     playback.add(&transcode);
     playback.add(&resolution);
 
+    let ask_profile = adw::SwitchRow::builder()
+        .title(gettext("Ask who is watching"))
+        .subtitle(gettext(
+            "Choose the profile of the Plex Home at every start, instead of continuing as the one used last.",
+        ))
+        .build();
+    settings
+        .bind("ask-profile-at-start", &ask_profile, "active")
+        .build();
+    let profiles = adw::PreferencesGroup::builder()
+        .title(gettext("Profiles"))
+        .build();
+    profiles.add(&ask_profile);
+
     let page = adw::PreferencesPage::new();
     page.add(&playback);
+    page.add(&profiles);
     let dialog = adw::PreferencesDialog::builder()
         .title(gettext("Preferences"))
         .build();

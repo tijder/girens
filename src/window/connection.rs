@@ -19,6 +19,9 @@ impl PlexWindow {
             self.show_login();
             return;
         }
+        if session.asks_profile_at_start() && self.ask_who_is_watching().await {
+            return;
+        }
 
         // Signing in to plex.tv and connecting to the server used last do not
         // depend on each other, so they run at the same time, and the
@@ -204,6 +207,23 @@ impl PlexWindow {
         }
     }
 
+    /// Continues on another server of the account.
+    pub(super) async fn use_server(&self, resource: &Resource) {
+        if !self.connect_resource(resource).await {
+            // Whatever was to be opened there is not opened elsewhere.
+            self.imp().launch_options.borrow_mut().show_id = None;
+            if self.imp().session.server().is_some() {
+                self.show_main();
+            }
+            return;
+        }
+        // The other server's pages and playback make way.
+        let servers = self.imp().servers.take();
+        self.reset_for_user_change();
+        self.imp().servers.replace(servers);
+        self.connected().await;
+    }
+
     /// Shows the offline copies when the server cannot be reached. Returns
     /// false when there are none, so that there is nothing to show.
     fn show_offline(&self) -> bool {
@@ -265,6 +285,11 @@ impl PlexWindow {
         };
         self.show_main();
         Sync::current().rescan(server.machine_identifier(), &user);
+        // What was watched from offline copies while the server was away.
+        glib::spawn_future_local({
+            let (server, user) = (server.clone(), user.clone());
+            async move { sync::push_progress(&server, &user).await }
+        });
 
         let sections = {
             let server = server.clone();
@@ -312,6 +337,10 @@ impl PlexWindow {
                 .set_servers(&names, active.map(|index| index as u32));
         }
         imp.servers.replace(servers);
+        // It may have been opened before plex.tv had answered.
+        self.refresh_accounts_dialog();
+        // An item of another server of the account may be waiting.
+        self.open_requested_item();
 
         // The avatar is decoration; nothing waits for it.
         glib::spawn_future_local(glib::clone!(
@@ -342,6 +371,30 @@ impl PlexWindow {
         }
     }
 
+    /// Signs in to the account and asks which profile of its Plex Home
+    /// continues. Returns false when plex.tv cannot be asked; the profile
+    /// used last then goes on, which is all that works without it.
+    async fn ask_who_is_watching(&self) -> bool {
+        let session = self.imp().session.clone();
+        match session.restore_account_to_choose().await {
+            Ok(true) => {}
+            Ok(false) => return false,
+            Err(Error::Unauthorized) => {
+                self.show_login();
+                return true;
+            }
+            Err(err) => {
+                eprintln!("Could not sign in to plex.tv: {err}");
+                return false;
+            }
+        }
+        self.show_loading(&gettext("Who is watching?"));
+        // To open the choice again after closing it.
+        self.imp()._loading_view.set_accounts_visible(true);
+        self.show_accounts();
+        true
+    }
+
     /// Clears away what belongs to whoever was active: playback, a running
     /// sync, the pages that were open and the list of libraries. Used when
     /// another server, profile or account takes over.
@@ -364,16 +417,8 @@ impl PlexWindow {
 
     /// Shows who is using Girens, to switch profile or account.
     pub(super) fn show_accounts(&self) {
-        let session = self.imp().session.clone();
         let dialog = ProfileDialog::new();
-        dialog.set_account(session.account().as_ref());
-        dialog.set_accounts(&session.accounts(), session.account_id().as_deref());
-        // As plex.tv listed them last, until it has answered.
-        let known = session
-            .stored_account()
-            .map(|stored| stored.profiles)
-            .unwrap_or_default();
-        dialog.set_profiles(&known, session.user_key().as_deref());
+        self.imp().accounts_dialog.set(Some(&dialog));
 
         dialog.connect_profile(glib::clone!(
             #[weak(rename_to = window)]
@@ -402,6 +447,25 @@ impl PlexWindow {
             move || window.add_account()
         ));
         dialog.present(Some(self));
+        self.refresh_accounts_dialog();
+    }
+
+    /// Fills the dialog with who is using Girens, if it is open: at once
+    /// with what is known, and again when plex.tv has listed the profiles.
+    pub(super) fn refresh_accounts_dialog(&self) {
+        let Some(dialog) = self.imp().accounts_dialog.upgrade() else {
+            return;
+        };
+        let session = self.imp().session.clone();
+        // Nobody is, while choosing who is watching at start.
+        let active = |session: &Session| session.user_key().filter(|_| session.has_profile());
+        dialog.set_account(session.account().as_ref());
+        dialog.set_accounts(&session.accounts(), session.account_id().as_deref());
+        let known = session
+            .stored_account()
+            .map(|stored| stored.profiles)
+            .unwrap_or_default();
+        dialog.set_profiles(&known, active(&session).as_deref());
 
         glib::spawn_future_local(glib::clone!(
             #[weak]
@@ -410,7 +474,7 @@ impl PlexWindow {
                 let account = session.account_id();
                 let profiles = session.profiles().await;
                 if session.account_id() == account && profiles != known {
-                    dialog.set_profiles(&profiles, session.user_key().as_deref());
+                    dialog.set_profiles(&profiles, active(&session).as_deref());
                 }
             }
         ));
