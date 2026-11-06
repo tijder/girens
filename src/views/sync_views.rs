@@ -153,7 +153,7 @@ mod sync_dialog {
     impl ObjectSubclass for SyncDialog {
         const NAME: &'static str = "sync_dialog";
         type Type = super::SyncDialog;
-        type ParentType = gtk::Window;
+        type ParentType = adw::Dialog;
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
@@ -168,49 +168,47 @@ mod sync_dialog {
         fn constructed(&self) {
             self.parent_constructed();
             let dialog = self.obj();
-            dialog.set_hide_on_close(true);
             self._ok_button.connect_clicked(glib::clone!(
                 #[weak]
                 dialog,
-                move |_| dialog.set_visible(false)
+                move |_| {
+                    dialog.close();
+                }
             ));
             self._sync_button.connect_clicked(glib::clone!(
                 #[weak]
                 dialog,
                 move |_| {
                     Sync::current().run();
-                    dialog.set_visible(false);
+                    dialog.close();
                 }
             ));
             Sync::current().connect(glib::clone!(
                 #[weak]
                 dialog,
                 move |event| {
-                    if matches!(event, Event::EntriesChanged) && dialog.is_visible() {
+                    if matches!(event, Event::EntriesChanged) && dialog.is_mapped() {
                         dialog.fill();
                     }
                 }
             ));
-            dialog.connect_show(|dialog| dialog.fill());
+            dialog.connect_map(|dialog| dialog.fill());
         }
     }
 
     impl WidgetImpl for SyncDialog {}
-    impl WindowImpl for SyncDialog {}
+    impl AdwDialogImpl for SyncDialog {}
 }
 
 glib::wrapper! {
     pub struct SyncDialog(ObjectSubclass<sync_dialog::SyncDialog>)
-        @extends gtk::Window, gtk::Widget,
-        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native,
-                    gtk::Root, gtk::ShortcutManager;
+        @extends adw::Dialog, gtk::Widget,
+        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::ShortcutManager;
 }
 
 impl SyncDialog {
-    pub fn new(parent: &impl IsA<gtk::Window>) -> Self {
-        let dialog: Self = glib::Object::new();
-        dialog.set_transient_for(Some(parent));
-        dialog
+    pub fn new() -> Self {
+        glib::Object::new()
     }
 
     fn fill(&self) {
@@ -245,7 +243,7 @@ mod sync_settings {
     impl ObjectSubclass for SyncSettings {
         const NAME: &'static str = "sync_settings";
         type Type = super::SyncSettings;
-        type ParentType = gtk::Window;
+        type ParentType = adw::Dialog;
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
@@ -280,22 +278,20 @@ mod sync_settings {
     }
 
     impl WidgetImpl for SyncSettings {}
-    impl WindowImpl for SyncSettings {}
+    impl AdwDialogImpl for SyncSettings {}
 }
 
 glib::wrapper! {
     pub struct SyncSettings(ObjectSubclass<sync_settings::SyncSettings>)
-        @extends gtk::Window, gtk::Widget,
-        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Native,
-                    gtk::Root, gtk::ShortcutManager;
+        @extends adw::Dialog, gtk::Widget,
+        @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::ShortcutManager;
 }
 
 impl SyncSettings {
-    pub fn new(parent: &impl IsA<gtk::Window>, rating_key: u64) -> Self {
-        let window: Self = glib::Object::new();
-        window.imp().rating_key.set(rating_key);
-        window.set_transient_for(Some(parent));
-        window
+    pub fn new(rating_key: u64) -> Self {
+        let dialog: Self = glib::Object::new();
+        dialog.imp().rating_key.set(rating_key);
+        dialog
     }
 }
 

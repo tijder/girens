@@ -1,38 +1,51 @@
 using Gtk 4.0;
+using Adw 1;
 
-template $sync_dialog : Window {
+template $sync_dialog : Adw.Dialog {
   title: _("Sync items");
-  modal: true;
-  default-width: 300;
-  default-height: 300;
-  deletable: false;
+  content-width: 400;
+  content-height: 400;
 
-  Box {
-    orientation: vertical;
-    spacing: 2;
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
 
-    ScrolledWindow {
+    content: ScrolledWindow {
       vexpand: true;
-      Viewport {
-        ListBox _item_box {
-          selection-mode: none;
-          activate-on-single-click: false;
-        }
-      }
-    }
+      hscrollbar-policy: never;
 
+      ListBox _item_box {
+        selection-mode: none;
+        activate-on-single-click: false;
+        valign: start;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 12;
+        margin-end: 12;
+
+        styles ["boxed-list"]
+      }
+    };
+
+    [bottom]
     Box {
-      styles["linked"]
+      margin-top: 6;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+      spacing: 6;
+      homogeneous: true;
+
       Button _sync_button {
         tooltip-text: _("Sync");
-        hexpand: true;
         label: _("Sync");
+
+        styles ["suggested-action"]
       }
 
       Button _ok_button {
-        hexpand: true;
         label: _("Ok");
       }
     }
-  }
+  };
 }

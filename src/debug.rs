@@ -69,7 +69,7 @@ const ACTIVATE_INTERVAL: u64 = 3;
 /// activated once the server is connected; several actions separated by `;`
 /// follow each other, to visit one page after another. With `GIRENS_DEBUG_SIDEBAR_ROW=3`
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
-/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about` that
+/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync` that
 /// dialog is opened. Lets scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {
@@ -98,7 +98,7 @@ pub fn after_connect(window: &crate::window::PlexWindow) {
         window.debug_open(&dialog);
     }
     if let Ok(query) = std::env::var("GIRENS_DEBUG_SEARCH") {
-        window.debug_search(&query);
+        window.search(&query);
     }
     if let Some(row) = std::env::var("GIRENS_DEBUG_SIDEBAR_ROW")
         .ok()

@@ -11,6 +11,8 @@ use crate::window::PlexWindow;
 pub struct LaunchOptions {
     /// `<server machine id>;<rating key>`, split on `;`.
     pub show_id: Option<Vec<String>>,
+    /// What to search for, as typed in the GNOME Shell search.
+    pub search: Option<String>,
     pub video_output_driver: Option<String>,
     pub deinterlace: Option<String>,
 }
@@ -41,6 +43,14 @@ mod imp {
                 None,
             );
             app.add_main_option(
+                "search",
+                glib::Char::from(0),
+                glib::OptionFlags::NONE,
+                glib::OptionArg::String,
+                "Search the library",
+                None,
+            );
+            app.add_main_option(
                 "video-output-driver",
                 glib::Char::from(b'v'),
                 glib::OptionFlags::NONE,
@@ -66,6 +76,7 @@ mod imp {
             let options = LaunchOptions {
                 show_id: string_option("show-id")
                     .map(|value| value.split(';').map(str::to_owned).collect()),
+                search: string_option("search").filter(|query| !query.trim().is_empty()),
                 video_output_driver: string_option("video-output-driver"),
                 deinterlace: string_option("deinterlace"),
             };
@@ -86,9 +97,16 @@ glib::wrapper! {
 
 impl Application {
     pub fn new() -> Self {
+        #[allow(unused_mut)]
+        let mut flags = gio::ApplicationFlags::HANDLES_COMMAND_LINE;
+        // Lets a build under test run next to the installed Girens.
+        #[cfg(debug_assertions)]
+        if std::env::var_os("GIRENS_DEBUG_NON_UNIQUE").is_some() {
+            flags |= gio::ApplicationFlags::NON_UNIQUE;
+        }
         glib::Object::builder()
             .property("application-id", config::APP_ID)
-            .property("flags", gio::ApplicationFlags::HANDLES_COMMAND_LINE)
+            .property("flags", flags)
             .build()
     }
 

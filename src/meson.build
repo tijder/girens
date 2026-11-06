@@ -47,3 +47,19 @@ custom_target(
     '@OUTDIR@',
   ],
 )
+
+# The tests of the workspace and Clippy; the CI runs them with `meson test`.
+test(
+  'cargo-test',
+  cargo,
+  args: ['test', cargo_options, '--workspace'],
+  env: cargo_env,
+  timeout: 3600,
+)
+test(
+  'cargo-clippy',
+  cargo,
+  args: ['clippy', cargo_options, '--workspace', '--all-targets', '--', '-D', 'warnings'],
+  env: cargo_env,
+  timeout: 3600,
+)

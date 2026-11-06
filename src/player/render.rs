@@ -1,7 +1,4 @@
 //! Renders mpv video into a `GtkGLArea` through libmpv's render API.
-//!
-//! This replaces the python-mpv + PyOpenGL code in `legacy/player.py`
-//! (`__on_realize`, `on_realize`, `do_render`, `GetProcAddressGetter`).
 
 use std::cell::{Cell, RefCell};
 use std::ffi::{c_char, c_int, c_uint, c_void, CString};

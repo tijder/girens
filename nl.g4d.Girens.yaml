@@ -149,7 +149,7 @@ modules:
     buildsystem: meson
     config-opts:
       - --libdir=lib
-      - -Dbuildtype=debug
+      - -Dbuildtype=release
       - -Dnetwork_tests=false
     builddir: true
     build-options:
@@ -158,6 +158,16 @@ modules:
         # build-aux/cargo-sources.py.
         CARGO_HOME: /run/build/girens/cargo
     sources:
-      - type: git
-        url: https://gitlab.gnome.org/tijder/girens
+      # This checkout, without what earlier builds left in it.
+      - type: dir
+        path: .
+        skip:
+          - .flatpak-builder
+          - builddir
+          - builddir-rust
+          - builddir-rust-meson
+          - builddir-rust-offline
+          - builddir-rust-release
+          - flatpak-build-test
+          - target
       - cargo-sources.json

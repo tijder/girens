@@ -272,6 +272,9 @@ impl PlexWindow {
         if options.show_id.is_some() {
             current.show_id.clone_from(&options.show_id);
         }
+        if options.search.is_some() {
+            current.search.clone_from(&options.search);
+        }
         if options.video_output_driver.is_some() {
             current
                 .video_output_driver
@@ -296,8 +299,13 @@ impl PlexWindow {
     }
 
     /// Opens the item given with `--show-id <server>;<rating key>`, as the
-    /// search provider does for a search result.
+    /// search provider does for a search result, or the results for
+    /// `--search <text>`.
     fn open_requested_item(&self) {
+        let search = self.imp().launch_options.borrow_mut().search.take();
+        if let Some(query) = search {
+            self.search(&query);
+        }
         let Some(request) = self.imp().launch_options.borrow_mut().show_id.take() else {
             return;
         };
@@ -518,8 +526,8 @@ impl PlexWindow {
                 window
                     .imp()
                     .sync_dialog
-                    .get_or_init(|| SyncDialog::new(&window))
-                    .present();
+                    .get_or_init(SyncDialog::new)
+                    .present(Some(&window));
             }
         ));
         Sync::current().connect(glib::clone!(
@@ -551,6 +559,11 @@ impl PlexWindow {
             "preferences" => views::preferences::present(self),
             "shortcuts" => self.show_shortcuts(),
             "about" => self.show_about(),
+            "sync" => self
+                .imp()
+                .sync_dialog
+                .get_or_init(SyncDialog::new)
+                .present(Some(self)),
             _ => {}
         }
     }
@@ -667,7 +680,7 @@ impl PlexWindow {
             async move {
                 match runtime::run(async move { server.item(rating_key).await }).await {
                     Ok(item) if item.kind == girens_plex::model::ItemKind::Show => {
-                        SyncSettings::new(&window, rating_key).present();
+                        SyncSettings::new(rating_key).present(Some(&window));
                     }
                     Ok(_) => Sync::current().add(SyncEntry {
                         rating_key,

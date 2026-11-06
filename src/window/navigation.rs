@@ -79,8 +79,8 @@ impl PlexWindow {
         self.add_controller(shortcuts);
     }
 
-    #[cfg(debug_assertions)]
-    pub fn debug_search(&self, query: &str) {
+    /// Shows the results of a search for `query`.
+    pub fn search(&self, query: &str) {
         self.open(Location::Search(query.to_owned()));
     }
 

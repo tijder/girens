@@ -1,6 +1,6 @@
 //! Media playback with mpv.
 //!
-//! Replaces `legacy/player.py`. Everything runs on the main thread: mpv wakes
+//! Everything runs on the main thread: mpv wakes
 //! the main loop when it has events, and what happens when a file ends is
 //! decided by an explicit [`EndAction`] instead of a set of flags.
 

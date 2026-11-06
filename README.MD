@@ -1,8 +1,5 @@
 # Girens for Plex
 
-> **⚠ Maintenance mode**
-> This project is in maintenance mode. No new features will be added. Dependency updates and bug fixes will still be applied.
-
 Girens is a [Plex](https://www.plex.tv/) media player client. You can watch and listen to your music, shows and movies with this GTK app.
 
 ## Why this app
@@ -37,11 +34,11 @@ flatpak-builder --user --force-clean --install-deps-from=flathub builddir nl.g4d
 flatpak-builder --run builddir nl.g4d.Girens.yaml girens
 ```
 
-### Building your checkout
+### Working on Girens
 
-Girens is written in Rust. The manifest builds the upstream repository, so to
-build your own checkout, build the dependencies first and then the app itself
-inside the build sandbox:
+Girens is written in Rust. The commands above build your checkout from
+scratch. While developing it is quicker to build the dependencies once and
+then the app itself inside the build sandbox:
 
 ```bash
 flatpak-builder --user --force-clean --install-deps-from=flathub --stop-at=girens builddir-rust nl.g4d.Girens.yaml
@@ -49,6 +46,9 @@ flatpak build --share=network --filesystem=$PWD --env=PATH=/app/bin:/usr/bin:/us
   sh -c "cd $PWD && meson setup builddir-rust-meson --prefix=/app --libdir=lib -Dbuildtype=debug -Dnetwork_tests=false && ninja -C builddir-rust-meson install"
 flatpak build --socket=wayland --socket=fallback-x11 --share=ipc --share=network --device=dri --socket=pulseaudio builddir-rust girens
 ```
+
+`meson test -C builddir-rust-meson` (run the same way) runs the Rust tests
+and Clippy.
 
 ## Update depedencies
 

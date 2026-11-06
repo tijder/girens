@@ -156,8 +156,8 @@ impl Provider {
         launch(&["--show-id", &identifier]);
     }
 
-    fn launch_search(&self, _terms: Vec<String>, _timestamp: u32) {
-        launch(&[]);
+    fn launch_search(&self, terms: Vec<String>, _timestamp: u32) {
+        launch(&["--search", &terms.join(" ")]);
     }
 }
 

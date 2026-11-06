@@ -1,6 +1,5 @@
 //! A small Plex client with exactly the functionality Girens needs.
 //!
-//! It replaces the `plexapi` Python library and `legacy/plex_compat.py`.
 //! Everything is async and independent of GTK.
 
 mod de;

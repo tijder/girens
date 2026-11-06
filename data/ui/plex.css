@@ -9,12 +9,12 @@ gridview.cover-grid {
 }
 
 .media_box {
-  background-color: @theme_base_color;
+  background-color: var(--view-bg-color);
 }
 
 /* The dot on items that were not played yet. */
 .watched_tip {
-  background-color: @accent_bg_color;
+  background-color: var(--accent-bg-color);
   border-radius: 9999px;
   min-width: 12px;
   min-height: 12px;
@@ -22,7 +22,7 @@ gridview.cover-grid {
 }
 
 .unplayed {
-  color: @theme_selected_bg_color;
+  color: var(--accent-color);
 }
 
 .black_background {
@@ -34,7 +34,7 @@ gridview.cover-grid {
 }
 
 .load-box {
-  background-color: @theme_base_color;
+  background-color: var(--view-bg-color);
 }
 
 /* Detail pages are one list; it should look like page content, not a sheet. */
@@ -62,7 +62,7 @@ button:hover > box > overlay > .cover-menu-button,
 /* The track that is playing, in an album. */
 .now-playing {
   font-weight: bold;
-  color: @accent_color;
+  color: var(--accent-color);
 }
 
 /* The mark on tiles of items with an offline copy. */

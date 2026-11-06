@@ -1,4 +1,4 @@
-//! Transcoding and progress reporting, ported from `legacy/plex_compat.py`.
+//! Transcoding and progress reporting.
 
 use reqwest::Method;
 use url::Url;

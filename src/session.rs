@@ -1,7 +1,7 @@
 //! The login state: the plex.tv account (if any) and the connected server.
 //!
-//! Replaces the login and connection half of `legacy/plex.py`. All methods
-//! are called on the main thread; network work is handed to [`runtime`].
+//! All methods are called on the main thread; network work is handed to
+//! [`runtime`].
 
 use std::cell::RefCell;
 use std::rc::Rc;
