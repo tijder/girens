@@ -12,7 +12,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 
 use crate::auth::{self, Provider, Tokens, WellKnown};
-use crate::map::{self, Context, Labels, Selection};
+use crate::map::{self, Context, Kind, Labels, Selection};
 use crate::{queries, wire};
 
 /// A token for media and images lasts a day; it is replaced well before.
@@ -383,8 +383,11 @@ impl IsterServer {
     pub async fn recently_added(&self) -> Result<Vec<Item>> {
         let mut items = Vec::new();
         for section in self.sections().await? {
-            let newest = match section.kind {
-                ItemKind::Artist => self.albums(Some(section.key), None, 0, 20, Some("addedAt:desc")).await?,
+            let newest = match map::split(section.key) {
+                Some((Kind::Artist, _)) => {
+                    self.albums(Some(section.key), None, 0, 20, Some("addedAt:desc"))
+                        .await?
+                }
                 _ => self.section_items(section.key, 0, 20, Some("addedAt:desc")).await?,
             };
             items.extend(newest.items);
@@ -431,7 +434,7 @@ impl IsterServer {
         let variables = paging(Some(library), offset, size, sort);
         let context = self.context();
         match kind {
-            ItemKind::Movie => {
+            Kind::Movie => {
                 #[derive(Deserialize)]
                 struct Answer {
                     movies: Option<wire::Page<wire::Movie>>,
@@ -439,7 +442,7 @@ impl IsterServer {
                 let answer: Answer = self.query(queries::MOVIES, variables).await?;
                 Ok(page(answer.movies, offset, |movie| context.movie(movie)))
             }
-            ItemKind::Show => {
+            Kind::Show => {
                 #[derive(Deserialize)]
                 struct Answer {
                     shows: Option<wire::Page<wire::Show>>,
@@ -447,13 +450,35 @@ impl IsterServer {
                 let answer: Answer = self.query(queries::SHOWS, variables).await?;
                 Ok(page(answer.shows, offset, |show| context.show(show)))
             }
-            ItemKind::Artist => {
+            Kind::Artist => {
                 #[derive(Deserialize)]
                 struct Answer {
                     persons: Option<wire::Page<wire::Person>>,
                 }
                 let answer: Answer = self.query(queries::ARTISTS, variables).await?;
                 Ok(page(answer.persons, offset, |person| context.artist(person)))
+            }
+            Kind::Book => {
+                #[derive(Deserialize)]
+                struct Answer {
+                    books: Option<wire::Page<wire::Book>>,
+                }
+                let answer: Answer = self.query(queries::BOOKS, variables).await?;
+                let mut books = page(answer.books, offset, |book| context.book(book));
+                // Only what can be listened to: Girens does not show books
+                // to read.
+                books.items.retain(|book| book.leaf_count.unwrap_or(0) > 0);
+                Ok(books)
+            }
+            Kind::Podcast => {
+                #[derive(Deserialize)]
+                struct Answer {
+                    podcasts: Option<wire::Page<wire::Podcast>>,
+                }
+                let answer: Answer = self.query(queries::PODCASTS, variables).await?;
+                Ok(page(answer.podcasts, offset, |podcast| {
+                    context.podcast(podcast, None)
+                }))
             }
             _ => Err(Error::NotFound(section)),
         }
@@ -482,6 +507,19 @@ impl IsterServer {
     /// Every album of a music library.
     pub async fn section_albums(&self, section: ItemId) -> Result<Vec<Item>> {
         let mut albums = Vec::new();
+        // The books and podcasts of a library are its albums.
+        if matches!(map::split(section), Some((Kind::Book | Kind::Podcast, _))) {
+            loop {
+                let more = self
+                    .section_items(section, albums.len() as u32, 200, None)
+                    .await?;
+                let (fetched, total) = (more.items.len(), more.total);
+                albums.extend(more.items);
+                if fetched == 0 || (albums.len() as u32) >= total || fetched < 200 {
+                    return Ok(albums);
+                }
+            }
+        }
         loop {
             let more = self
                 .albums(Some(section), None, albums.len() as u32, 200, None)
@@ -517,7 +555,7 @@ impl IsterServer {
         let context = self.context();
         let missing = || Error::NotFound(id);
         match kind {
-            ItemKind::Movie => {
+            Kind::Movie => {
                 #[derive(Deserialize)]
                 #[serde(rename_all = "camelCase")]
                 struct Answer {
@@ -526,9 +564,9 @@ impl IsterServer {
                 let answer: Answer = self.query(queries::MOVIE, variables).await?;
                 Ok(context.movie(&answer.movie_by_id.ok_or_else(missing)?))
             }
-            ItemKind::Show => Ok(context.show(&self.show(id).await?)),
-            ItemKind::Season => Ok(context.season(&self.season(id).await?)),
-            ItemKind::Episode => {
+            Kind::Show => Ok(context.show(&self.show(id).await?)),
+            Kind::Season => Ok(context.season(&self.season(id).await?)),
+            Kind::Episode => {
                 #[derive(Deserialize)]
                 #[serde(rename_all = "camelCase")]
                 struct Answer {
@@ -537,9 +575,9 @@ impl IsterServer {
                 let answer: Answer = self.query(queries::EPISODE, variables).await?;
                 Ok(context.episode(&answer.episode_by_id.ok_or_else(missing)?))
             }
-            ItemKind::Artist => Ok(context.artist(&self.artist(id).await?)),
-            ItemKind::Album => Ok(context.album(&self.album(id).await?)),
-            ItemKind::Track => {
+            Kind::Artist => Ok(context.artist(&self.artist(id).await?)),
+            Kind::Album => Ok(context.album(&self.album(id).await?)),
+            Kind::Track => {
                 #[derive(Deserialize)]
                 #[serde(rename_all = "camelCase")]
                 struct Answer {
@@ -548,8 +586,42 @@ impl IsterServer {
                 let answer: Answer = self.query(queries::TRACK, variables).await?;
                 Ok(context.track(&answer.track_by_id.ok_or_else(missing)?))
             }
-            ItemKind::Playlist => Ok(context.playlist(&self.playlist(id).await?)),
-            _ => Err(missing()),
+            Kind::Playlist => Ok(context.playlist(&self.playlist(id).await?)),
+            Kind::Book => Ok(context.book(&self.book(id).await?.0)),
+            Kind::Chapter => {
+                #[derive(Deserialize)]
+                #[serde(rename_all = "camelCase")]
+                struct Answer {
+                    chapter_by_id: Option<wire::Chapter>,
+                }
+                let answer: Answer = self.query(queries::CHAPTER, variables).await?;
+                Ok(context.chapter(&answer.chapter_by_id.ok_or_else(missing)?))
+            }
+            Kind::Podcast => {
+                #[derive(Deserialize)]
+                #[serde(rename_all = "camelCase")]
+                struct Answer {
+                    podcast_by_id: Option<wire::Podcast>,
+                }
+                let answer: Answer = self.query(queries::PODCAST, variables).await?;
+                let episodes = self.podcast_episodes(id).await?.len() as u32;
+                Ok(context.podcast(
+                    &answer.podcast_by_id.ok_or_else(missing)?,
+                    Some(episodes),
+                ))
+            }
+            Kind::PodcastEpisode => {
+                #[derive(Deserialize)]
+                #[serde(rename_all = "camelCase")]
+                struct Answer {
+                    podcast_episode_by_id: Option<wire::PodcastEpisode>,
+                }
+                let answer: Answer = self.query(queries::PODCAST_EPISODE, variables).await?;
+                Ok(context.podcast_episode(
+                    &answer.podcast_episode_by_id.ok_or_else(missing)?,
+                    0,
+                ))
+            }
         }
     }
 
@@ -593,6 +665,51 @@ impl IsterServer {
         answer.album_by_id.ok_or(Error::NotFound(id))
     }
 
+    /// A book with its chapters, in order.
+    async fn book(&self, id: ItemId) -> Result<(wire::Book, Vec<wire::Chapter>)> {
+        #[derive(Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Answer {
+            book_by_id: Option<Value>,
+        }
+        let answer: Answer = self.query(queries::BOOK, by_id(id)?).await?;
+        let book = answer.book_by_id.ok_or(Error::NotFound(id))?;
+        let decode = |source| Error::Decode {
+            url: "book".into(),
+            source,
+        };
+        let mut chapters: Vec<wire::Chapter> =
+            serde_json::from_value(book["chapters"].clone()).map_err(decode)?;
+        chapters.sort_by_key(|chapter| chapter.number);
+        Ok((serde_json::from_value(book).map_err(decode)?, chapters))
+    }
+
+    /// The episodes of a podcast that the server has the sound of.
+    async fn podcast_episodes(&self, id: ItemId) -> Result<Vec<Item>> {
+        #[derive(Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Answer {
+            podcast_episodes: wire::Page<wire::PodcastEpisode>,
+        }
+        let (_, uuid) = map::split(id).ok_or(Error::NotFound(id))?;
+        let context = self.context();
+        let mut episodes = Vec::new();
+        let mut asked = 0;
+        loop {
+            let variables = json!({ "podcast": uuid, "page": asked / 200, "size": 200 });
+            let answer: Answer = self.query(queries::PODCAST_EPISODES, variables).await?;
+            let page = answer.podcast_episodes;
+            asked += page.content.len() as u32;
+            for episode in page.content.iter().filter(|episode| episode.downloaded) {
+                let position = episodes.len() as u32 + 1;
+                episodes.push(context.podcast_episode(episode, position));
+            }
+            if page.content.is_empty() || asked >= page.total_elements {
+                return Ok(episodes);
+            }
+        }
+    }
+
     async fn playlist(&self, id: ItemId) -> Result<wire::Playlist> {
         #[derive(Deserialize)]
         #[serde(rename_all = "camelCase")]
@@ -609,8 +726,8 @@ impl IsterServer {
         let (kind, _) = map::split(id).ok_or(Error::NotFound(id))?;
         let context = self.context();
         match kind {
-            ItemKind::Show => Ok(context.seasons(&self.show(id).await?)),
-            ItemKind::Season => {
+            Kind::Show => Ok(context.seasons(&self.show(id).await?)),
+            Kind::Season => {
                 let season = self.season(id).await?;
                 let mut episodes: Vec<Item> = season
                     .episodes
@@ -620,7 +737,7 @@ impl IsterServer {
                 episodes.sort_by_key(|episode| episode.index);
                 Ok(episodes)
             }
-            ItemKind::Artist => {
+            Kind::Artist => {
                 let artist = self.artist(id).await?;
                 Ok(artist
                     .albums
@@ -629,7 +746,7 @@ impl IsterServer {
                     .map(|album| context.album(album))
                     .collect())
             }
-            ItemKind::Album => {
+            Kind::Album => {
                 let album = self.album(id).await?;
                 let mut tracks: Vec<Item> = album
                     .tracks
@@ -640,6 +757,14 @@ impl IsterServer {
                 tracks.sort_by_key(|track| (track.parent_index, track.index));
                 Ok(tracks)
             }
+            Kind::Book => {
+                let (_, chapters) = self.book(id).await?;
+                Ok(chapters
+                    .iter()
+                    .map(|chapter| context.chapter(chapter))
+                    .collect())
+            }
+            Kind::Podcast => self.podcast_episodes(id).await,
             _ => Err(Error::NotFound(id)),
         }
     }
@@ -653,7 +778,7 @@ impl IsterServer {
         let (kind, uuid) = map::split(id).ok_or(Error::NotFound(id))?;
         let context = self.context();
         match kind {
-            ItemKind::Show => {
+            Kind::Show => {
                 #[derive(Deserialize)]
                 #[serde(rename_all = "camelCase")]
                 struct Answer {
@@ -669,7 +794,7 @@ impl IsterServer {
                 episodes.sort_by_key(|episode| (episode.parent_index, episode.index));
                 Ok(episodes)
             }
-            ItemKind::Artist => {
+            Kind::Artist => {
                 #[derive(Deserialize)]
                 struct Answer {
                     tracks: Option<wire::Page<wire::Track>>,
@@ -689,7 +814,7 @@ impl IsterServer {
                     }
                 }
             }
-            ItemKind::Season | ItemKind::Album => self.children(id).await,
+            Kind::Season | Kind::Album | Kind::Book | Kind::Podcast => self.children(id).await,
             _ => Err(Error::NotFound(id)),
         }
     }
@@ -820,16 +945,30 @@ impl IsterServer {
                 .unwrap_or_default()
         };
         Ok(match kind {
-            ItemKind::Movie => vec![("MOVIE", uuid.to_owned())],
-            ItemKind::Episode => vec![("EPISODE", uuid.to_owned())],
-            ItemKind::Track => vec![("TRACK", uuid.to_owned())],
-            ItemKind::Show | ItemKind::Season => self
+            Kind::Movie => vec![("MOVIE", uuid.to_owned())],
+            Kind::Episode => vec![("EPISODE", uuid.to_owned())],
+            Kind::Track => vec![("TRACK", uuid.to_owned())],
+            Kind::Chapter => vec![("CHAPTER", uuid.to_owned())],
+            Kind::PodcastEpisode => vec![("PODCAST_EPISODE", uuid.to_owned())],
+            Kind::Book => self
+                .children(id)
+                .await?
+                .iter()
+                .map(|chapter| ("CHAPTER", uuid_of(chapter)))
+                .collect(),
+            Kind::Podcast => self
+                .children(id)
+                .await?
+                .iter()
+                .map(|episode| ("PODCAST_EPISODE", uuid_of(episode)))
+                .collect(),
+            Kind::Show | Kind::Season => self
                 .all_leaves(id)
                 .await?
                 .iter()
                 .map(|episode| ("EPISODE", uuid_of(episode)))
                 .collect(),
-            ItemKind::Album => self
+            Kind::Album => self
                 .children(id)
                 .await?
                 .iter()
@@ -843,11 +982,13 @@ impl IsterServer {
     pub async fn rate(&self, id: ItemId, rating: f32) -> Result<()> {
         let (kind, uuid) = map::split(id).ok_or(Error::NotFound(id))?;
         let media_type = match kind {
-            ItemKind::Movie => "MOVIE",
-            ItemKind::Show => "SHOW",
-            ItemKind::Episode => "EPISODE",
-            ItemKind::Album => "ALBUM",
-            ItemKind::Track => "TRACK",
+            Kind::Movie => "MOVIE",
+            Kind::Show => "SHOW",
+            Kind::Episode => "EPISODE",
+            Kind::Album => "ALBUM",
+            Kind::Track => "TRACK",
+            Kind::Book => "BOOK",
+            Kind::Podcast => "PODCAST",
             _ => return Err(Error::NotFound(id)),
         };
         let rating = rating.round().clamp(0.0, 10.0) as u32;
@@ -1082,11 +1223,12 @@ impl IsterServer {
         let uuid = |id: ItemId| map::split(id).map(|(_, uuid)| uuid);
         let source = uuid(item.rating_key).ok_or(Error::NotFound(item.rating_key))?;
         let start = start_item.and_then(|start| uuid(start.rating_key));
-        let mut input = match item.kind {
-            ItemKind::Movie => json!({ "sourceType": "MOVIE", "sourceId": source }),
-            ItemKind::Show => json!({ "sourceType": "SHOW", "sourceId": source, "startId": start }),
+        let of = map::split(item.rating_key).map(|(kind, _)| kind);
+        let mut input = match of {
+            Some(Kind::Movie) => json!({ "sourceType": "MOVIE", "sourceId": source }),
+            Some(Kind::Show) => json!({ "sourceType": "SHOW", "sourceId": source, "startId": start }),
             // A season or an episode plays within its show.
-            ItemKind::Season => {
+            Some(Kind::Season) => {
                 let show = item.parent_rating_key.and_then(uuid);
                 let first = match start {
                     Some(start) => Some(start.to_owned()),
@@ -1099,20 +1241,34 @@ impl IsterServer {
                 };
                 json!({ "sourceType": "SHOW", "sourceId": show, "startId": first })
             }
-            ItemKind::Episode => {
+            Some(Kind::Episode) => {
                 let show = item.grandparent_rating_key.and_then(uuid);
                 json!({ "sourceType": "SHOW", "sourceId": show, "startId": source })
             }
-            ItemKind::Album => json!({ "sourceType": "ALBUM", "sourceId": source, "startId": start }),
-            ItemKind::Track => {
+            Some(Kind::Album) => json!({ "sourceType": "ALBUM", "sourceId": source, "startId": start }),
+            Some(Kind::Track) => {
                 let album = item.parent_rating_key.and_then(uuid);
                 json!({ "sourceType": "ALBUM", "sourceId": album, "startId": source })
             }
-            ItemKind::Artist if shuffle => json!({ "sourceType": "ARTIST", "sourceId": source }),
-            ItemKind::Artist => {
+            Some(Kind::Artist) if shuffle => json!({ "sourceType": "ARTIST", "sourceId": source }),
+            Some(Kind::Artist) => {
                 json!({ "sourceType": "ARTIST", "sourceId": source, "rankKind": "MOST_PLAYED" })
             }
-            ItemKind::Playlist => {
+            // A book or a podcast plays from the chosen chapter or episode
+            // on; a chapter or an episode plays within it.
+            Some(Kind::Book) => json!({ "sourceType": "BOOK", "sourceId": source, "startId": start }),
+            Some(Kind::Chapter) => {
+                let book = item.parent_rating_key.and_then(uuid);
+                json!({ "sourceType": "BOOK", "sourceId": book, "startId": source })
+            }
+            Some(Kind::Podcast) => {
+                json!({ "sourceType": "PODCAST", "sourceId": source, "startId": start })
+            }
+            Some(Kind::PodcastEpisode) => {
+                let podcast = item.parent_rating_key.and_then(uuid);
+                json!({ "sourceType": "PODCAST", "sourceId": podcast, "startId": source })
+            }
+            Some(Kind::Playlist) => {
                 json!({ "sourceType": "PLAYLIST", "sourceId": source, "startId": start })
             }
             _ => return Err(Error::NotFound(item.rating_key)),

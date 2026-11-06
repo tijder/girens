@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:53+0100\n"
+"POT-Creation-Date: 2026-11-06 15:07+0100\n"
 "PO-Revision-Date: 2026-01-21 23:01+0000\n"
 "Last-Translator: marius <marius+weblate@vaagan.eu>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/girens/"
@@ -493,55 +493,60 @@ msgstr ""
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1341
+#: ../src/player/mod.rs:1363
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: ../src/player/mod.rs:1453
+#: ../src/player/mod.rs:1475
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/session.rs:500
+#: ../src/session.rs:497
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 
-#: ../src/session.rs:501
+#: ../src/session.rs:498
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: ../src/session.rs:584
+#: ../src/session.rs:581
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: ../src/session.rs:585
+#: ../src/session.rs:582
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: ../src/session.rs:586
+#: ../src/session.rs:583
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: ../src/session.rs:587
+#: ../src/session.rs:584
+#, rust-format
+msgid "Chapter {}"
+msgstr ""
+
+#: ../src/session.rs:585
 msgid "Unknown"
 msgstr ""
 
-#: ../src/session.rs:589
+#: ../src/session.rs:587
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
 
-#: ../src/sync.rs:509
+#: ../src/sync.rs:516
 msgid "Sync failed"
 msgstr ""
 
-#: ../src/sync.rs:595
+#: ../src/sync.rs:602
 msgid "Could not download an item"
 msgstr ""
 
-#: ../src/sync.rs:642
+#: ../src/sync.rs:649
 msgid "Not enough disk space for the download"
 msgstr ""
 

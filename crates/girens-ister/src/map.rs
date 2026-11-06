@@ -9,27 +9,72 @@ use girens_model::ItemId;
 
 use crate::wire;
 
-/// An id as Girens keeps it: the server only has UUIDs, which do not tell
-/// what they are of, so the kind goes in front.
-pub fn id(kind: ItemKind, uuid: &str) -> ItemId {
-    ItemId::new(&format!("{}-{uuid}", kind.as_str()))
+/// What an id of the server is of. The server only has UUIDs, which do not
+/// tell, so Girens puts this in front of them.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Kind {
+    Movie,
+    Show,
+    Season,
+    Episode,
+    Artist,
+    Album,
+    Track,
+    Playlist,
+    /// A book that can be listened to; shown as an album of chapters.
+    Book,
+    Chapter,
+    /// Shown as an album of its episodes.
+    Podcast,
+    PodcastEpisode,
+}
+
+impl Kind {
+    const ALL: [Kind; 12] = [
+        Kind::Movie,
+        Kind::Show,
+        Kind::Season,
+        Kind::Episode,
+        Kind::Artist,
+        Kind::Album,
+        Kind::Track,
+        Kind::Playlist,
+        Kind::Book,
+        Kind::Chapter,
+        Kind::Podcast,
+        Kind::PodcastEpisode,
+    ];
+
+    /// What goes in front of the UUID; without a dash, which ends it.
+    fn prefix(self) -> &'static str {
+        match self {
+            Kind::Movie => "movie",
+            Kind::Show => "show",
+            Kind::Season => "season",
+            Kind::Episode => "episode",
+            Kind::Artist => "artist",
+            Kind::Album => "album",
+            Kind::Track => "track",
+            Kind::Playlist => "playlist",
+            Kind::Book => "book",
+            Kind::Chapter => "chapter",
+            Kind::Podcast => "podcast",
+            Kind::PodcastEpisode => "podcastepisode",
+        }
+    }
+}
+
+/// An id as Girens keeps it.
+pub fn id(kind: Kind, uuid: &str) -> ItemId {
+    ItemId::new(&format!("{}-{uuid}", kind.prefix()))
 }
 
 /// The kind and the UUID in an id made by [`id`].
-pub fn split(id: ItemId) -> Option<(ItemKind, &'static str)> {
-    let (kind, uuid) = id.as_str().split_once('-')?;
-    let kind = [
-        ItemKind::Movie,
-        ItemKind::Show,
-        ItemKind::Season,
-        ItemKind::Episode,
-        ItemKind::Artist,
-        ItemKind::Album,
-        ItemKind::Track,
-        ItemKind::Playlist,
-    ]
-    .into_iter()
-    .find(|candidate| candidate.as_str() == kind)?;
+pub fn split(id: ItemId) -> Option<(Kind, &'static str)> {
+    let (prefix, uuid) = id.as_str().split_once('-')?;
+    let kind = Kind::ALL
+        .into_iter()
+        .find(|candidate| candidate.prefix() == prefix)?;
     Some((kind, uuid))
 }
 
@@ -89,6 +134,7 @@ pub struct Labels {
     pub season: String,
     pub episode: String,
     pub track: String,
+    pub chapter: String,
     /// A stream without language or title.
     pub unknown: String,
     /// Subtitles that are pictures, after their name.
@@ -103,6 +149,7 @@ impl Default for Labels {
             season: "Season {}".into(),
             episode: "Episode {}".into(),
             track: "Track {}".into(),
+            chapter: "Chapter {}".into(),
             unknown: "Unknown".into(),
             pictures: "{} (pictures)".into(),
             language: std::sync::Arc::new(str::to_owned),
@@ -369,7 +416,7 @@ impl Context {
     }
 
     pub fn movie(&self, movie: &wire::Movie) -> Item {
-        let rating_key = id(ItemKind::Movie, &movie.id);
+        let rating_key = id(Kind::Movie, &movie.id);
         let mut item = Item {
             rating_key,
             key: rating_key.to_string(),
@@ -393,7 +440,7 @@ impl Context {
     }
 
     pub fn show(&self, show: &wire::Show) -> Item {
-        let rating_key = id(ItemKind::Show, &show.id);
+        let rating_key = id(Kind::Show, &show.id);
         let mut item = Item {
             rating_key,
             key: rating_key.to_string(),
@@ -463,7 +510,7 @@ impl Context {
     }
 
     pub fn episode(&self, episode: &wire::Episode) -> Item {
-        let rating_key = id(ItemKind::Episode, &episode.id);
+        let rating_key = id(Kind::Episode, &episode.id);
         let mut item = Item {
             rating_key,
             key: rating_key.to_string(),
@@ -474,7 +521,7 @@ impl Context {
             parent_rating_key: episode
                 .season
                 .as_ref()
-                .map(|season| id(ItemKind::Season, &season.id)),
+                .map(|season| id(Kind::Season, &season.id)),
             parent_title: episode
                 .season
                 .as_ref()
@@ -482,7 +529,7 @@ impl Context {
             grandparent_rating_key: episode
                 .show
                 .as_ref()
-                .map(|show| id(ItemKind::Show, &show.id)),
+                .map(|show| id(Kind::Show, &show.id)),
             grandparent_title: episode.show.as_ref().map(|show| show.name.clone()),
             grandparent_thumb: episode.show.as_ref().and_then(|show| cover(&show.images)),
             user_rating: episode.rating.map(|rating| rating as f32),
@@ -517,7 +564,7 @@ impl Context {
     }
 
     pub fn artist(&self, person: &wire::Person) -> Item {
-        let rating_key = id(ItemKind::Artist, &person.id);
+        let rating_key = id(Kind::Artist, &person.id);
         let mut item = Item {
             rating_key,
             key: rating_key.to_string(),
@@ -535,7 +582,7 @@ impl Context {
     }
 
     pub fn album(&self, album: &wire::Album) -> Item {
-        let rating_key = id(ItemKind::Album, &album.id);
+        let rating_key = id(Kind::Album, &album.id);
         Item {
             rating_key,
             key: rating_key.to_string(),
@@ -545,14 +592,14 @@ impl Context {
             user_rating: album.rating.map(|rating| rating as f32),
             thumb: cover(&album.images),
             parent_title: Some(album.artist.name.clone()),
-            parent_rating_key: Some(id(ItemKind::Artist, &album.artist.id)),
+            parent_rating_key: Some(id(Kind::Artist, &album.artist.id)),
             leaf_count: album.tracks.as_ref().map(|tracks| tracks.len() as u32),
             ..Item::default()
         }
     }
 
     pub fn track(&self, track: &wire::Track) -> Item {
-        let rating_key = id(ItemKind::Track, &track.id);
+        let rating_key = id(Kind::Track, &track.id);
         let cover = cover(&track.album.images);
         let mut item = Item {
             rating_key,
@@ -562,11 +609,11 @@ impl Context {
             index: Some(track.number),
             parent_index: Some(track.disc_number.max(1)),
             parent_title: Some(track.album.name.clone()),
-            parent_rating_key: Some(id(ItemKind::Album, &track.album.id)),
+            parent_rating_key: Some(id(Kind::Album, &track.album.id)),
             parent_thumb: cover.clone(),
             thumb: cover,
             grandparent_title: Some(track.artist.name.clone()),
-            grandparent_rating_key: Some(id(ItemKind::Artist, &track.artist.id)),
+            grandparent_rating_key: Some(id(Kind::Artist, &track.artist.id)),
             user_rating: track.rating.map(|rating| rating as f32),
             view_count: track.play_count.unwrap_or(0),
             // Only the first of several versions is played.
@@ -581,18 +628,119 @@ impl Context {
         item
     }
 
-    /// The movie, episode or track of an entry.
+    /// A book to listen to, as an album of chapters.
+    pub fn book(&self, book: &wire::Book) -> Item {
+        let rating_key = id(Kind::Book, &book.id);
+        Item {
+            rating_key,
+            key: rating_key.to_string(),
+            kind: ItemKind::Album,
+            title: book.title.clone(),
+            year: book.release_year.filter(|year| *year > 0),
+            user_rating: book.rating.map(|rating| rating as f32),
+            thumb: cover(&book.images),
+            parent_title: book.author.as_ref().map(|author| author.name.clone()),
+            leaf_count: Some(book.chapters.len() as u32),
+            ..Item::default()
+        }
+    }
+
+    /// A chapter of a book, as a track of an album.
+    pub fn chapter(&self, chapter: &wire::Chapter) -> Item {
+        let rating_key = id(Kind::Chapter, &chapter.id);
+        let cover = cover(&chapter.book.images);
+        let mut item = Item {
+            rating_key,
+            key: rating_key.to_string(),
+            kind: ItemKind::Track,
+            title: Labels::numbered(&self.labels.chapter, chapter.number),
+            // Chapters are numbered from zero, tracks from one.
+            index: Some(chapter.number + 1),
+            parent_index: Some(1),
+            parent_title: Some(chapter.book.title.clone()),
+            parent_rating_key: Some(id(Kind::Book, &chapter.book.id)),
+            parent_thumb: cover.clone(),
+            thumb: cover,
+            grandparent_title: chapter.author.as_ref().map(|author| author.name.clone()),
+            media: self.media(&chapter.media_file[..chapter.media_file.len().min(1)]),
+            ..Item::default()
+        };
+        item.duration = chapter
+            .media_file
+            .first()
+            .and_then(|file| file.duration_in_milliseconds);
+        watched(&mut item, &chapter.watch_status);
+        self.describe(&mut item, &chapter.metadata);
+        item
+    }
+
+    /// A podcast, as an album of its episodes.
+    pub fn podcast(&self, podcast: &wire::Podcast, episodes: Option<u32>) -> Item {
+        let rating_key = id(Kind::Podcast, &podcast.id);
+        Item {
+            rating_key,
+            key: rating_key.to_string(),
+            kind: ItemKind::Album,
+            title: podcast.title.clone(),
+            user_rating: podcast.rating.map(|rating| rating as f32),
+            thumb: cover(&podcast.images),
+            parent_title: podcast.author.clone().filter(|author| !author.is_empty()),
+            leaf_count: episodes,
+            ..Item::default()
+        }
+    }
+
+    /// An episode of a podcast, as a track of an album. `position` is where
+    /// it stands in the list that is shown.
+    pub fn podcast_episode(&self, episode: &wire::PodcastEpisode, position: u32) -> Item {
+        let rating_key = id(Kind::PodcastEpisode, &episode.id);
+        let cover = cover(&episode.podcast.images);
+        let mut item = Item {
+            rating_key,
+            key: rating_key.to_string(),
+            kind: ItemKind::Track,
+            title: self.labels.unknown.clone(),
+            index: Some(episode.episode_number.unwrap_or(position)),
+            parent_index: Some(1),
+            parent_title: Some(episode.podcast.title.clone()),
+            parent_rating_key: Some(id(Kind::Podcast, &episode.podcast.id)),
+            parent_thumb: cover.clone(),
+            thumb: cover,
+            grandparent_title: episode.podcast.author.clone(),
+            media: self.media(&episode.media_file[..episode.media_file.len().min(1)]),
+            ..Item::default()
+        };
+        item.duration = episode.duration_in_milliseconds.or_else(|| {
+            episode
+                .media_file
+                .first()
+                .and_then(|file| file.duration_in_milliseconds)
+        });
+        watched(&mut item, &episode.watch_status);
+        self.describe(&mut item, &episode.metadata);
+        item
+    }
+
+    /// The movie, episode, track or chapter of an entry.
     pub fn entry(&self, entry: &wire::Entry) -> Option<Item> {
-        match (&entry.movie, &entry.episode, &entry.track) {
-            (Some(movie), _, _) => Some(self.movie(movie)),
-            (_, Some(episode), _) => Some(self.episode(episode)),
-            (_, _, Some(track)) => Some(self.track(track)),
-            _ => None,
+        if let Some(movie) = &entry.movie {
+            Some(self.movie(movie))
+        } else if let Some(episode) = &entry.episode {
+            Some(self.episode(episode))
+        } else if let Some(track) = &entry.track {
+            Some(self.track(track))
+        } else if let Some(chapter) = &entry.chapter {
+            Some(self.chapter(chapter))
+        } else {
+            entry
+                .podcast_episode
+                .as_ref()
+                .map(|episode| self.podcast_episode(episode, 0))
         }
     }
 
     pub fn playlist(&self, playlist: &wire::Playlist) -> Item {
-        let rating_key = id(ItemKind::Playlist, &playlist.id);
+        let rating_key = id(Kind::Playlist, &playlist.id);
         let audio = playlist.library_type == "MUSIC";
         let cover = playlist.cover_images.first().map(image_url);
         Item {
@@ -630,7 +778,7 @@ fn season_item(
     episodes: usize,
     watched: usize,
 ) -> Item {
-    let rating_key = id(ItemKind::Season, uuid);
+    let rating_key = id(Kind::Season, uuid);
     Item {
         rating_key,
         key: rating_key.to_string(),
@@ -686,14 +834,18 @@ fn watched(item: &mut Item, statuses: &[wire::WatchStatus]) {
 /// The libraries Girens can show; books, podcasts, comics and games are
 /// left out.
 pub fn section(library: &wire::Library) -> Option<LibrarySection> {
-    let kind = match library.kind.as_str() {
-        "MOVIE" => ItemKind::Movie,
-        "SHOW" => ItemKind::Show,
-        "MUSIC" => ItemKind::Artist,
+    // Books to listen to and podcasts are shown as music is: the sidebar
+    // has no other place for sound.
+    let (kind, of) = match library.kind.as_str() {
+        "MOVIE" => (ItemKind::Movie, Kind::Movie),
+        "SHOW" => (ItemKind::Show, Kind::Show),
+        "MUSIC" => (ItemKind::Artist, Kind::Artist),
+        "BOOK" => (ItemKind::Artist, Kind::Book),
+        "PODCAST" => (ItemKind::Artist, Kind::Podcast),
         _ => return None,
     };
     Some(LibrarySection {
-        key: id(kind, &library.id),
+        key: id(of, &library.id),
         uuid: library.id.clone(),
         title: library.name.clone(),
         kind,
@@ -707,9 +859,11 @@ mod tests {
     #[test]
     fn an_id_tells_the_kind() {
         let uuid = "6f1c2a0e-0000-4000-8000-000000000001";
-        let episode = id(ItemKind::Episode, uuid);
+        let episode = id(Kind::Episode, uuid);
         assert_eq!(episode.as_str(), format!("episode-{uuid}"));
-        assert_eq!(split(episode), Some((ItemKind::Episode, uuid)));
+        assert_eq!(split(episode), Some((Kind::Episode, uuid)));
+        let podcast_episode = id(Kind::PodcastEpisode, uuid);
+        assert_eq!(split(podcast_episode), Some((Kind::PodcastEpisode, uuid)));
         assert_eq!(split(ItemId::new(uuid)), None);
         assert_eq!(split(ItemId::new("42")), None);
     }

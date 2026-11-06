@@ -90,6 +90,8 @@ async fn browse_a_real_server() {
                 let season = server.item(seasons[0].rating_key).await.unwrap();
                 assert_eq!(season.kind, ItemKind::Season);
             }
+            // Books and podcasts are looked at below.
+            ItemKind::Artist if !section.key.as_str().starts_with("artist-") => {}
             ItemKind::Artist => {
                 let albums = server.children(item.rating_key).await.unwrap();
                 let tracks = server.children(albums[0].rating_key).await.unwrap();
@@ -105,6 +107,42 @@ async fn browse_a_real_server() {
                 let part = item.parts().next().unwrap();
                 println!("  {} ({:?}): {} streams, cover {:?}", item.title, item.year, part.streams.len(),
                     item.thumb.as_deref().map(|thumb| server.image_url(thumb, 200, 300).split("token=").next().unwrap().to_owned()));
+            }
+        }
+    }
+    // A book to listen to, when the server has one.
+    if let Some(books) = sections.iter().find(|section| section.key.as_str().starts_with("book-")) {
+        let listed = server.section_items(books.key, 0, 50, None).await.unwrap();
+        if let Some(book) = listed.items.first() {
+            let book = server.item(book.rating_key).await.unwrap();
+            let chapters = server.children(book.rating_key).await.unwrap();
+            let chapter = server.item(chapters[0].rating_key).await.unwrap();
+            println!("  {} by {:?}: {} chapters, first {:?} ({:?} ms)", book.title, book.parent_title,
+                chapters.len(), chapter.title, chapter.duration);
+            let queue = server.create_play_queue(&book, Some(&chapters[1]), false).await.unwrap();
+            let index = queue.selected_index().unwrap();
+            assert_eq!(queue.items[index].rating_key, chapters[1].rating_key);
+            let master = reqwest::get(server.stream_url(&chapter, true).unwrap()).await.unwrap();
+            assert!(master.status().is_success());
+        }
+    }
+    // A podcast, when the server has one with episodes it fetched.
+    if let Some(podcasts) = sections.iter().find(|section| section.key.as_str().starts_with("podcast-")) {
+        let listed = server.section_items(podcasts.key, 0, 50, None).await.unwrap();
+        if let Some(podcast) = listed.items.first() {
+            let podcast = server.item(podcast.rating_key).await.unwrap();
+            let episodes = server.children(podcast.rating_key).await.unwrap();
+            println!("  {}: {} episodes, first {:?}", podcast.title, episodes.len(),
+                episodes.first().map(|episode| &episode.title));
+            if let Some(first) = episodes.first() {
+                assert_eq!(Some(episodes.len() as u32), podcast.leaf_count);
+                let episode = server.item(first.rating_key).await.unwrap();
+                assert_eq!(episode.kind, ItemKind::Track);
+                let queue = server.create_play_queue(&podcast, Some(first), false).await.unwrap();
+                let index = queue.selected_index().unwrap();
+                assert_eq!(queue.items[index].rating_key, first.rating_key);
+                let master = reqwest::get(server.stream_url(&episode, true).unwrap()).await.unwrap();
+                assert!(master.status().is_success(), "{}", master.status());
             }
         }
     }

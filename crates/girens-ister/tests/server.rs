@@ -250,9 +250,19 @@ async fn only_the_libraries_girens_shows_are_listed() {
     let mock = serve(300).await;
     let (server, _) = connect(&mock).await;
     let sections = server.sections().await.unwrap();
-    let kinds: Vec<ItemKind> = sections.iter().map(|section| section.kind).collect();
-    // The fixture also has a library of books.
-    assert_eq!(kinds, [ItemKind::Show, ItemKind::Movie, ItemKind::Artist]);
+    // Movies and shows as what they are; music, books to listen to and
+    // podcasts all as music. The key tells which it is.
+    for section in &sections {
+        let (prefix, _) = section.key.as_str().split_once('-').unwrap();
+        let expected = match prefix {
+            "movie" => ItemKind::Movie,
+            "show" => ItemKind::Show,
+            "artist" | "book" | "podcast" => ItemKind::Artist,
+            other => panic!("a library of {other}"),
+        };
+        assert_eq!(section.kind, expected, "{}", section.title);
+    }
+    assert!(sections.iter().any(|section| section.key.as_str().starts_with("book-")));
     assert!(sections[0].key.as_str().starts_with("show-"));
     assert_eq!(sections[0].key.as_str(), format!("show-{}", sections[0].uuid));
 }
@@ -586,4 +596,51 @@ async fn a_provider_that_refuses_twice_has_another_reason() {
     };
     let (tokens, ()) = tokio::join!(login.finish(&http), browser);
     assert!(matches!(tokens, Err(Error::Server(reason)) if reason == "no"));
+}
+
+#[tokio::test]
+async fn a_book_to_listen_to_is_an_album_of_chapters() {
+    let mock = serve(300).await;
+    let (server, _) = connect(&mock).await;
+    let library = server
+        .sections()
+        .await
+        .unwrap()
+        .into_iter()
+        .find(|section| section.key.as_str().starts_with("book-"))
+        .unwrap();
+    // Books without sound are left out.
+    let books = server.section_items(library.key, 0, 50, None).await.unwrap();
+    assert!(!books.items.is_empty());
+    assert!(books.items.iter().all(|book| {
+        book.kind == ItemKind::Album
+            && book.rating_key.as_str().starts_with("book-")
+            && book.leaf_count.unwrap_or(0) > 0
+    }));
+
+    let book = server.item("book-any".into()).await.unwrap();
+    let chapters = server.children(book.rating_key).await.unwrap();
+    assert_eq!(Some(chapters.len() as u32), book.leaf_count);
+    let chapter = &chapters[0];
+    assert_eq!(chapter.kind, ItemKind::Track);
+    assert!(chapter.rating_key.as_str().starts_with("chapter-"));
+    assert_eq!(chapter.index, Some(1));
+    assert_eq!(chapter.parent_rating_key, Some(book.rating_key));
+    assert_eq!(chapter.parent_title.as_deref(), Some(book.title.as_str()));
+
+    // A chapter plays within its book, from there on.
+    let uuid = |id: girens_model::ItemId| id.as_str().split_once('-').unwrap().1.to_owned();
+    Mock::given(method("POST"))
+        .and(path("/api/graphql"))
+        .and(body_string_contains("CreatePlayQueue"))
+        .and(body_partial_json(json!({"variables": {"input": {
+            "sourceType": "BOOK", "sourceId": uuid(book.rating_key), "startId": uuid(chapter.rating_key),
+        }}})))
+        .respond_with(
+            ResponseTemplate::new(200).set_body_raw(fixture("CreatePlayQueue"), "application/json"),
+        )
+        .expect(1)
+        .mount(&mock)
+        .await;
+    server.create_play_queue(&book, Some(chapter), false).await.unwrap();
 }

@@ -74,10 +74,36 @@ macro_rules! track {
          album { id name images { ...Img } } metadata { ...Meta } mediaFile { ...File } }"
     };
 }
+macro_rules! book {
+    () => {
+        "fragment BookF on Book { id title releaseYear rating author { id name } \
+         images { ...Img } chapters { id } }"
+    };
+}
+macro_rules! chapter {
+    () => {
+        "fragment ChapterF on Chapter { id number author { id name } \
+         book { id title images { ...Img } } metadata { ...Meta } \
+         watchStatus { ...Status } mediaFile { ...File } }"
+    };
+}
+macro_rules! podcast {
+    () => {
+        "fragment PodcastF on Podcast { id title author rating images { ...Img } }"
+    };
+}
+macro_rules! podcast_episode {
+    () => {
+        "fragment PodcastEpisodeF on PodcastEpisode { id episodeNumber downloaded \
+         durationInMilliseconds podcast { id title author images { ...Img } } \
+         metadata { ...Meta } watchStatus { ...Status } mediaFile { ...File } }"
+    };
+}
 macro_rules! queue {
     () => {
         "fragment Queue on PlayQueue { id currentItemId shuffle \
-         playQueueItems { id type movie { ...MovieF } episode { ...EpisodeF } track { ...TrackF } } }"
+         playQueueItems { id type movie { ...MovieF } episode { ...EpisodeF } track { ...TrackF } \
+         chapter { ...ChapterF } podcastEpisode { ...PodcastEpisodeF } } }"
     };
 }
 
@@ -208,9 +234,73 @@ pub const TRACK: &str = document!(
     file
 );
 
+pub const BOOKS: &str = document!(
+    "query Books($library: ID, $page: Int, $size: Int, $sorting: SortingEnum, $order: SortingOrder) { \
+     books(libraryId: $library, page: $page, size: $size, sorting: $sorting, sortingOrder: $order) { \
+     totalElements content { ...BookF } } }",
+    book,
+    image
+);
+
+pub const BOOK: &str = document!(
+    "query Book($id: ID) { bookById(id: $id) { ...BookF chapters { ...ChapterF } } }",
+    book,
+    chapter,
+    image,
+    metadata,
+    status,
+    file_brief
+);
+
+pub const CHAPTER: &str = document!(
+    "query Chapter($id: ID) { chapterById(id: $id) { ...ChapterF } }",
+    chapter,
+    image,
+    metadata,
+    status,
+    file
+);
+
+pub const PODCASTS: &str = document!(
+    "query Podcasts($library: ID, $page: Int, $size: Int, $sorting: SortingEnum, $order: SortingOrder) { \
+     podcasts(libraryId: $library, page: $page, size: $size, sorting: $sorting, sortingOrder: $order) { \
+     totalElements content { ...PodcastF } } }",
+    podcast,
+    image
+);
+
+pub const PODCAST: &str = document!(
+    "query Podcast($id: ID) { podcastById(id: $id) { ...PodcastF } }",
+    podcast,
+    image
+);
+
+pub const PODCAST_EPISODES: &str = document!(
+    "query PodcastEpisodes($podcast: ID!, $page: Int, $size: Int) { \
+     podcastEpisodes(podcastId: $podcast, page: $page, size: $size) { \
+     totalElements content { ...PodcastEpisodeF } } }",
+    podcast_episode,
+    image,
+    metadata,
+    status,
+    file_brief
+);
+
+pub const PODCAST_EPISODE: &str = document!(
+    "query PodcastEpisode($id: ID) { podcastEpisodeById(id: $id) { ...PodcastEpisodeF } }",
+    podcast_episode,
+    image,
+    metadata,
+    status,
+    file
+);
+
 pub const RECENTLY_WATCHED: &str = document!(
     "query RecentlyWatched($library: ID) { recentlyWatched(libraryId: $library) { \
-     type movie { ...MovieF } episode { ...EpisodeF } } }",
+     type movie { ...MovieF } episode { ...EpisodeF } chapter { ...ChapterF } \
+     podcastEpisode { ...PodcastEpisodeF } } }",
+    chapter,
+    podcast_episode,
     movie,
     episode,
     image,
@@ -256,6 +346,8 @@ pub const PLAYLIST: &str = document!(
 pub const CREATE_PLAY_QUEUE: &str = document!(
     "mutation CreatePlayQueue($input: CreatePlayQueueInput!) { createPlayQueue(input: $input) { ...Queue } }",
     queue,
+    chapter,
+    podcast_episode,
     movie,
     episode,
     track,
@@ -268,6 +360,8 @@ pub const CREATE_PLAY_QUEUE: &str = document!(
 pub const GET_PLAY_QUEUE: &str = document!(
     "query GetPlayQueue($id: ID!) { getPlayQueue(id: $id) { ...Queue } }",
     queue,
+    chapter,
+    podcast_episode,
     movie,
     episode,
     track,
@@ -314,6 +408,13 @@ pub const ALL: &[&str] = &[
     ARTIST,
     ALBUM,
     TRACK,
+    BOOKS,
+    BOOK,
+    CHAPTER,
+    PODCASTS,
+    PODCAST,
+    PODCAST_EPISODES,
+    PODCAST_EPISODE,
     RECENTLY_WATCHED,
     SEARCH,
     PLAYLISTS,

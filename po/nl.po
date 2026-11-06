@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:53+0100\n"
+"POT-Creation-Date: 2026-11-06 15:07+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -490,57 +490,62 @@ msgstr "De wachtrij kon niet worden geschud"
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1341
+#: ../src/player/mod.rs:1363
 msgid "Could not load the subtitles"
 msgstr "Kan de ondertitels niet laden"
 
-#: ../src/player/mod.rs:1453
+#: ../src/player/mod.rs:1475
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
-#: ../src/session.rs:500
+#: ../src/session.rs:497
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 "Je bent aangemeld. Je kunt deze pagina sluiten en teruggaan naar Girens."
 
-#: ../src/session.rs:501
+#: ../src/session.rs:498
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 "Aanmelden is niet gelukt. Ga terug naar Girens om het opnieuw te proberen."
 
-#: ../src/session.rs:584
+#: ../src/session.rs:581
 #, rust-format
 msgid "Season {}"
 msgstr "Seizoen {}"
 
-#: ../src/session.rs:585
+#: ../src/session.rs:582
 #, rust-format
 msgid "Episode {}"
 msgstr "Aflevering {}"
 
-#: ../src/session.rs:586
+#: ../src/session.rs:583
 #, rust-format
 msgid "Track {}"
 msgstr "Nummer {}"
 
-#: ../src/session.rs:587
+#: ../src/session.rs:584
+#, rust-format
+msgid "Chapter {}"
+msgstr "Hoofdstuk {}"
+
+#: ../src/session.rs:585
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: ../src/session.rs:589
+#: ../src/session.rs:587
 #, rust-format
 msgid "{} (pictures)"
 msgstr "{} (plaatjes)"
 
-#: ../src/sync.rs:509
+#: ../src/sync.rs:516
 msgid "Sync failed"
 msgstr "Synchroniseren is mislukt"
 
-#: ../src/sync.rs:595
+#: ../src/sync.rs:602
 msgid "Could not download an item"
 msgstr "Een item kon niet worden gedownload"
 
-#: ../src/sync.rs:642
+#: ../src/sync.rs:649
 msgid "Not enough disk space for the download"
 msgstr "Niet genoeg schijfruimte voor de download"
 

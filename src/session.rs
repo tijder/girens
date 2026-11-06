@@ -581,6 +581,7 @@ impl Session {
             season: gettext("Season {}"),
             episode: gettext("Episode {}"),
             track: gettext("Track {}"),
+            chapter: gettext("Chapter {}"),
             unknown: gettext("Unknown"),
             // Subtitles that are pictures rather than text; {} is their name.
             pictures: gettext("{} (pictures)"),

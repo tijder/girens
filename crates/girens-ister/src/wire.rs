@@ -317,6 +317,76 @@ pub struct Entry {
     pub movie: Option<Movie>,
     pub episode: Option<Episode>,
     pub track: Option<Track>,
+    pub chapter: Option<Chapter>,
+    #[serde(rename = "podcastEpisode")]
+    pub podcast_episode: Option<PodcastEpisode>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct BookRef {
+    pub id: String,
+    pub title: String,
+    #[serde(default, deserialize_with = "list")]
+    pub images: Vec<Image>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Book {
+    pub id: String,
+    pub title: String,
+    pub release_year: Option<u32>,
+    pub rating: Option<u32>,
+    pub author: Option<PersonRef>,
+    #[serde(default, deserialize_with = "list")]
+    pub images: Vec<Image>,
+    /// In lists only their ids, which tells whether the book can be
+    /// listened to.
+    #[serde(default, deserialize_with = "list")]
+    pub chapters: Vec<serde_json::Value>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Chapter {
+    pub id: String,
+    pub number: u32,
+    pub author: Option<PersonRef>,
+    pub book: BookRef,
+    #[serde(default, deserialize_with = "list")]
+    pub metadata: Vec<Metadata>,
+    #[serde(default, deserialize_with = "list")]
+    pub watch_status: Vec<WatchStatus>,
+    #[serde(default, deserialize_with = "list")]
+    pub media_file: Vec<MediaFile>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Podcast {
+    pub id: String,
+    pub title: String,
+    pub author: Option<String>,
+    pub rating: Option<u32>,
+    #[serde(default, deserialize_with = "list")]
+    pub images: Vec<Image>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PodcastEpisode {
+    pub id: String,
+    pub episode_number: Option<u32>,
+    /// Whether the server has the sound; only then can it be played.
+    #[serde(default)]
+    pub downloaded: bool,
+    pub duration_in_milliseconds: Option<u64>,
+    pub podcast: Podcast,
+    #[serde(default, deserialize_with = "list")]
+    pub metadata: Vec<Metadata>,
+    #[serde(default, deserialize_with = "list")]
+    pub watch_status: Vec<WatchStatus>,
+    #[serde(default, deserialize_with = "list")]
+    pub media_file: Vec<MediaFile>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
