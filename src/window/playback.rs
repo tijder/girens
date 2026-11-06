@@ -49,14 +49,7 @@ impl PlexWindow {
         ));
         self.connect_fullscreened_notify(|window| window.on_fullscreen_changed());
 
-        crate::mpris::start(
-            &player,
-            glib::clone!(
-                #[weak(rename_to = window)]
-                self,
-                move || window.present()
-            ),
-        );
+        crate::mpris::start(&player, self.upcast_ref());
 
         let _ = imp.player.set(player);
     }

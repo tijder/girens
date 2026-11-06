@@ -66,6 +66,8 @@ pub enum Event {
     Position(u64),
     /// The play queue or the position in it changed.
     QueueChanged,
+    /// Whether the item that is playing starts over when it ends.
+    RepeatChanged(bool),
     /// Nothing is playing any more.
     Stopped,
 }
@@ -132,6 +134,7 @@ struct State {
     /// by a newer one can notice and give up.
     generation: u64,
     prefer_music_clips: bool,
+    repeat: bool,
 }
 
 struct Inner {
@@ -426,6 +429,10 @@ impl Player {
     pub fn set_repeat(&self, repeat: bool) {
         self.inner
             .set_mpv("loop-file", if repeat { "inf" } else { "no" });
+        let changed = std::mem::replace(&mut self.inner.state.borrow_mut().repeat, repeat) != repeat;
+        if changed {
+            self.inner.emit(Event::RepeatChanged(repeat));
+        }
     }
 
     /// Shuffles or restores the order of the play queue on the server.

@@ -2,7 +2,7 @@
 
 version=$(fgrep "version: " ../meson.build | grep -v "meson" | grep -o "'.*'" | sed "s/'//g")
 
-find ../src -iname "*.rs" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-rust.pot --force-po -L Rust --keyword=gettext --keyword=gettext_f --keyword=ngettext:1,2 --keyword=pgettext:1c,2
+find ../src -iname "*.rs" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-rust.pot --force-po -L Rust --keyword=gettext --keyword=gettext_f --keyword=ngettext:1,2 --keyword=ngettext_f:1,2 --keyword=pgettext:1c,2
 find ../data/ui -iname "*.blp" | xargs xgettext --package-name=Girens --package-version=$version --output=girens-blueprint.pot --from-code=UTF-8 --add-comments --keyword=_ --keyword=C_:1c,2
 find ../data/ -iname "*.desktop.in" | xargs xgettext --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-desktop.pot -L Desktop
 find ../data/ -iname "*.appdata.xml.in" | xargs xgettext --no-wrap --package-name=Girens --package-version=$version --from-code=UTF-8 --output=girens-appdata.pot

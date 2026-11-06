@@ -9,9 +9,8 @@ use girens_plex::model::Item;
 use gtk::prelude::*;
 use gtk::{gio, glib, CompositeTemplate};
 
-use super::album_view::{album_rows, setup_music_list, song_count, MusicRow};
+use super::album_view::{album_count, album_rows, setup_music_list, song_count, MusicRow};
 use super::row_list;
-use crate::i18n::ngettext_f;
 use crate::session::Session;
 use crate::{images, runtime};
 
@@ -145,8 +144,7 @@ impl ArtistView {
                 let genres: Vec<&str> = artist.genres.iter().map(|g| g.tag.as_str()).collect();
                 imp._subtitle_label.set_text(&crate::util::detail_line([
                     (!genres.is_empty()).then(|| genres.join(", ")),
-                    (!albums.is_empty())
-                        .then(|| ngettext_f("{} album", "{} albums", albums.len() as u32)),
+                    (!albums.is_empty()).then(|| album_count(albums.len() as u32)),
                     (!tracks.is_empty()).then(|| song_count(tracks.len() as u32)),
                 ]));
                 // The photo is decoration; the page does not wait for it.

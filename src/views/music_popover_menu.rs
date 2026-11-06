@@ -134,6 +134,12 @@ impl MusicPopoverMenu {
                         imp.updating.set(false);
                         player.set_repeat(false);
                     }
+                    Event::RepeatChanged(repeat) => {
+                        // Also changed from outside, through MPRIS.
+                        imp.updating.set(true);
+                        imp._repeat_button.set_active(*repeat);
+                        imp.updating.set(false);
+                    }
                     Event::QueueChanged => {
                         imp.updating.set(true);
                         imp._shuffle_button.set_active(player.is_shuffled());

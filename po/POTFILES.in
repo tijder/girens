@@ -35,6 +35,7 @@ src/views/player_view.rs
 src/views/preferences.rs
 src/views/search_view.rs
 src/views/section_view.rs
+src/views/show_view.rs
 src/views/sidebar_box.rs
 src/window/connection.rs
 src/window/mod.rs

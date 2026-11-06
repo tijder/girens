@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 18:25+0100\n"
+"POT-Creation-Date: 2026-11-05 22:22+0100\n"
 "PO-Revision-Date: 2022-10-30 10:32+0000\n"
 "Last-Translator: Sebin Nyshkim <sebin.nyshkim@icloud.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/girens/girens/de/"
@@ -57,25 +57,25 @@ msgstr ""
 msgid "girens;plex;media;player;"
 msgstr ""
 
-#: ../data/ui/album_header.blp:41 ../data/ui/artist_view.blp:62
+#: ../data/ui/album_header.blp:92 ../data/ui/artist_view.blp:82
 #: ../data/ui/media_box_music.blp:111 ../data/ui/media_box_video_bottom.blp:114
-#: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:56
+#: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:102
 msgid "Play"
 msgstr ""
 
-#: ../data/ui/album_header.blp:50 ../data/ui/cover_box.blp:57
+#: ../data/ui/album_header.blp:113 ../data/ui/cover_box.blp:59
 msgid "More"
 msgstr ""
 
-#: ../data/ui/album_item.blp:26
+#: ../data/ui/album_item.blp:44
 msgid "Play music clip"
 msgstr ""
 
-#: ../data/ui/cover_box.blp:75
+#: ../data/ui/cover_box.blp:77
 msgid "Available offline"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:130
+#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:135
 msgid "Continue watching"
 msgstr ""
 
@@ -91,12 +91,12 @@ msgstr ""
 msgid "Recently added Music"
 msgstr ""
 
-#: ../data/ui/list.blp:45 ../data/ui/media_box_music.blp:101
+#: ../data/ui/list.blp:40 ../data/ui/media_box_music.blp:101
 #: ../data/ui/media_box_video_bottom.blp:105
 msgid "Previous"
 msgstr ""
 
-#: ../data/ui/list.blp:60 ../data/ui/media_box_music.blp:120
+#: ../data/ui/list.blp:55 ../data/ui/media_box_music.blp:120
 #: ../data/ui/media_box_video_bottom.blp:123
 msgid "Next"
 msgstr ""
@@ -225,23 +225,23 @@ msgstr ""
 msgid "Repeat"
 msgstr "Wiederholen"
 
-#: ../data/ui/player_view.blp:89
+#: ../data/ui/player_view.blp:92
 msgid "Release date"
 msgstr "Erscheinungsdatum"
 
-#: ../data/ui/player_view.blp:93
+#: ../data/ui/player_view.blp:97
 msgid "Genre"
 msgstr "Genre"
 
-#: ../data/ui/player_view.blp:102
+#: ../data/ui/player_view.blp:107
 msgid "Description"
 msgstr "Beschreibung"
 
-#: ../data/ui/player_view.blp:115
+#: ../data/ui/player_view.blp:120
 msgid "Audio "
 msgstr "Audio "
 
-#: ../data/ui/player_view.blp:118
+#: ../data/ui/player_view.blp:123
 msgid "Subtitle "
 msgstr "Untertitel "
 
@@ -478,46 +478,70 @@ msgstr ""
 msgid "Not enough disk space for the download"
 msgstr ""
 
-#: ../src/views/album_view.rs:83
+#: ../src/views/album_view.rs:38
+#, rust-format
+msgid "{} song"
+msgid_plural "{} songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/views/album_view.rs:43
+#, rust-format
+msgid "{} album"
+msgid_plural "{} albums"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/views/album_view.rs:50
+#, rust-format
+msgid "{} min"
+msgstr ""
+
+#: ../src/views/album_view.rs:53
+#, rust-format
+msgid "{0} h {1} min"
+msgstr ""
+
+#: ../src/views/album_view.rs:119
 #, rust-format
 msgid "Disc {}"
 msgstr ""
 
-#: ../src/views/album_view.rs:186 ../src/views/cover_box.rs:203
-#: ../src/views/cover_box.rs:210
+#: ../src/views/album_view.rs:250 ../src/views/cover_box.rs:228
+#: ../src/views/cover_box.rs:235
 msgid "Go to artist view"
 msgstr "Zur Künstleransicht"
 
-#: ../src/views/album_view.rs:191 ../src/views/cover_box.rs:245
+#: ../src/views/album_view.rs:255 ../src/views/cover_box.rs:270
 msgid "Sync"
 msgstr "Synchronisierung"
 
-#: ../src/views/album_view.rs:192 ../src/views/cover_box.rs:251
-msgid "Shuffle"
-msgstr "Zufällig"
-
-#: ../src/views/cover_box.rs:196
+#: ../src/views/cover_box.rs:221
 msgid "Go to album view"
 msgstr "Zur Albumansicht"
 
-#: ../src/views/cover_box.rs:226
+#: ../src/views/cover_box.rs:251
 msgid "Go to show view"
 msgstr "Zur Serienansicht"
 
-#: ../src/views/cover_box.rs:231
+#: ../src/views/cover_box.rs:256
 msgid "Mark as Played"
 msgstr "Als gespielt markieren"
 
-#: ../src/views/cover_box.rs:238
+#: ../src/views/cover_box.rs:263
 msgid "Mark as Unplayed"
 msgstr "Als ungespielt markieren"
 
-#: ../src/views/cover_box.rs:255 ../src/window/playback.rs:123
+#: ../src/views/cover_box.rs:276
+msgid "Shuffle"
+msgstr "Zufällig"
+
+#: ../src/views/cover_box.rs:280 ../src/window/playback.rs:123
 msgid "Start from the beginning"
 msgstr "Von vorne beginnen"
 
-#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:160
-#: ../src/views/sidebar_box.rs:191
+#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:162
+#: ../src/views/sidebar_box.rs:193
 msgid "Downloads"
 msgstr ""
 
@@ -529,15 +553,15 @@ msgstr ""
 msgid "Could not rate the track"
 msgstr ""
 
-#: ../src/views/player_view.rs:308
+#: ../src/views/player_view.rs:309
 msgid "Audio"
 msgstr ""
 
-#: ../src/views/player_view.rs:309
+#: ../src/views/player_view.rs:310
 msgid "Subtitle"
 msgstr ""
 
-#: ../src/views/player_view.rs:430
+#: ../src/views/player_view.rs:431
 msgid "None"
 msgstr "Keine"
 
@@ -636,15 +660,29 @@ msgstr "Medienhöhe"
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../src/views/section_view.rs:356 ../src/views/sidebar_box.rs:155
+#: ../src/views/section_view.rs:356 ../src/views/sidebar_box.rs:157
 msgid "Playlists"
 msgstr "Wiedergabelisten"
 
-#: ../src/views/sidebar_box.rs:149 ../src/views/sidebar_box.rs:186
+#: ../src/views/show_view.rs:214
+#, rust-format
+msgid "{} season"
+msgid_plural "{} seasons"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/views/show_view.rs:218
+#, rust-format
+msgid "{} episode"
+msgid_plural "{} episodes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/views/sidebar_box.rs:151 ../src/views/sidebar_box.rs:188
 msgid "Player"
 msgstr "Wiedergabe"
 
-#: ../src/views/sidebar_box.rs:153
+#: ../src/views/sidebar_box.rs:155
 msgid "Home"
 msgstr "Startseite"
 
@@ -688,17 +726,17 @@ msgstr ""
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/mod.rs:556
+#: ../src/window/mod.rs:568
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:561
+#: ../src/window/mod.rs:573
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:564
+#: ../src/window/mod.rs:576
 msgid "Help with translating"
 msgstr ""
 

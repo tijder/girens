@@ -38,6 +38,11 @@ pub fn song_count(count: u32) -> String {
     ngettext_f("{} song", "{} songs", count)
 }
 
+/// `3 albums`.
+pub fn album_count(count: u32) -> String {
+    ngettext_f("{} album", "{} albums", count)
+}
+
 /// A playing time in words: `52 min`, `1 h 4 min`.
 fn playing_time(milliseconds: u64) -> String {
     let minutes = (milliseconds / 60_000).max(1);
