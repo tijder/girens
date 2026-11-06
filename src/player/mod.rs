@@ -6,6 +6,7 @@
 
 pub mod render;
 
+use girens_plex::ItemId;
 use std::cell::{OnceCell, RefCell};
 use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -44,9 +45,9 @@ pub enum StartMode {
 #[derive(Debug, Clone)]
 pub enum PlayTarget {
     /// Any item, by rating key.
-    Item(u64),
+    Item(ItemId),
     /// A playlist, starting at one of its items; both by rating key.
-    PlaylistItem { playlist: u64, item: u64 },
+    PlaylistItem { playlist: ItemId, item: ItemId },
     /// A whole library in the given sort order.
     Section {
         section: LibrarySection,
@@ -155,12 +156,12 @@ struct Inner {
 
 thread_local! {
     /// Rating key of what is playing, and who wants to know when it changes.
-    static NOW_PLAYING: std::cell::Cell<Option<u64>> = const { std::cell::Cell::new(None) };
+    static NOW_PLAYING: std::cell::Cell<Option<ItemId>> = const { std::cell::Cell::new(None) };
     static NOW_PLAYING_LISTENERS: RefCell<Vec<Box<dyn Fn()>>> = const { RefCell::new(Vec::new()) };
 }
 
 /// Rating key of the item that is playing, for lists that mark it.
-pub fn now_playing() -> Option<u64> {
+pub fn now_playing() -> Option<ItemId> {
     NOW_PLAYING.get()
 }
 
@@ -169,7 +170,7 @@ pub fn connect_now_playing(listener: impl Fn() + 'static) {
     NOW_PLAYING_LISTENERS.with_borrow_mut(|listeners| listeners.push(Box::new(listener)));
 }
 
-fn set_now_playing(rating_key: Option<u64>) {
+fn set_now_playing(rating_key: Option<ItemId>) {
     if NOW_PLAYING.replace(rating_key) != rating_key {
         NOW_PLAYING_LISTENERS.with_borrow(|listeners| {
             for listener in listeners {
@@ -512,14 +513,14 @@ impl Player {
     }
 
     /// Selects an audio stream of the loaded item (a Plex stream id).
-    pub fn set_audio_stream(&self, stream_id: u64) {
+    pub fn set_audio_stream(&self, stream_id: ItemId) {
         self.inner
             .clone()
             .select_stream(StreamKind::Audio, Some(stream_id));
     }
 
     /// Selects a subtitle stream of the loaded item, or none.
-    pub fn set_subtitle_stream(&self, stream_id: Option<u64>) {
+    pub fn set_subtitle_stream(&self, stream_id: Option<ItemId>) {
         self.inner
             .clone()
             .select_stream(StreamKind::Subtitle, stream_id);
@@ -1109,7 +1110,7 @@ impl Inner {
 
     /// Stores the choice on the server and applies it: directly for direct
     /// play, by restarting the stream when transcoding.
-    fn select_stream(self: Rc<Self>, kind: StreamKind, stream_id: Option<u64>) {
+    fn select_stream(self: Rc<Self>, kind: StreamKind, stream_id: Option<ItemId>) {
         let (Some(server), Some(loading)) = (
             Session::current().server(),
             self.state

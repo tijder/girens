@@ -831,7 +831,7 @@ mod tests {
                 "server:first",
                 "first",
                 &store::SyncEntry {
-                    rating_key: 1,
+                    rating_key: 1.into(),
                     converted: false,
                     only_unwatched: false,
                     max_items: None,

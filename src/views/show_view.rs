@@ -1,6 +1,7 @@
 //! A show: its details, then the episodes of the chosen season, as one
 //! virtualised list. Episodes are fetched per season, when it is chosen.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::collections::HashMap;
 
@@ -50,12 +51,12 @@ mod imp {
         #[template_child]
         pub _season_box: TemplateChild<gtk::Box>,
         pub store: OnceCell<gio::ListStore>,
-        pub rating_key: Cell<Option<u64>>,
+        pub rating_key: Cell<Option<ItemId>>,
         /// Episodes of the seasons that were looked at, by rating key of the
         /// season.
-        pub episodes: RefCell<HashMap<u64, Vec<Item>>>,
+        pub episodes: RefCell<HashMap<ItemId, Vec<Item>>>,
         /// The season whose episodes are shown or being fetched.
-        pub season: Cell<Option<u64>>,
+        pub season: Cell<Option<ItemId>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
         pub season_task: RefCell<Option<glib::JoinHandle<()>>>,
     }
@@ -98,7 +99,7 @@ mod imp {
                     view,
                     move |row: &Row| {
                         if let Row::Episode(episode) = row {
-                            let key = (episode.rating_key as i64).to_variant();
+                            let key = episode.rating_key.as_str().to_variant();
                             let _ = view.activate_action("win.play-item", Some(&key));
                         }
                     }
@@ -120,7 +121,7 @@ glib::wrapper! {
 
 impl ShowView {
     /// The show that is currently displayed.
-    pub fn rating_key(&self) -> Option<u64> {
+    pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()
     }
 
@@ -129,7 +130,7 @@ impl ShowView {
     }
 
     /// Loads and shows the show with this rating key.
-    pub fn show(&self, rating_key: u64) {
+    pub fn show(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
         imp._title_label.set_text("");
@@ -152,7 +153,7 @@ impl ShowView {
             vec![Row::Loading],
         );
 
-        let target = (rating_key as i64).to_variant();
+        let target = rating_key.as_str().to_variant();
         imp._play_button.set_action_target_value(Some(&target));
         imp._play_button.set_action_name(Some("win.play-item"));
         imp._shuffle_button.set_action_target_value(Some(&target));
@@ -261,7 +262,7 @@ impl ShowView {
     }
 
     /// Shows a season, fetching its episodes the first time.
-    fn show_season(&self, season: u64) {
+    fn show_season(&self, season: ItemId) {
         let imp = self.imp();
         imp.season.set(Some(season));
         if let Some(task) = imp.season_task.take() {

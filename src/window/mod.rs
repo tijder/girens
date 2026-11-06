@@ -1,3 +1,4 @@
+use girens_plex::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::rc::Rc;
 
@@ -318,7 +319,7 @@ impl PlexWindow {
             return;
         };
         let (Some(key), Some(server)) = (
-            request.get(1).and_then(|key| key.parse::<u64>().ok()),
+            request.get(1).map(|key| ItemId::new(key)),
             self.imp().session.server(),
         ) else {
             return;
@@ -367,7 +368,7 @@ impl PlexWindow {
                         return;
                     }
                 };
-                ActionGroupExt::activate_action(&window, action, Some(&(key as i64).to_variant()));
+                ActionGroupExt::activate_action(&window, action, Some(&key.as_str().to_variant()));
             }
         ));
     }
@@ -706,17 +707,16 @@ impl PlexWindow {
     // Actions
 
     /// The `win.*` actions used by cover tiles, rows and menus. All take the
-    /// rating key of an item as an int64.
+    /// id of an item as a string.
     fn setup_actions(&self) {
-        let add = |name: &str, handler: fn(&Self, u64)| {
-            let action = gio::SimpleAction::new(name, Some(glib::VariantTy::INT64));
+        let add = |name: &str, handler: fn(&Self, ItemId)| {
+            let action = gio::SimpleAction::new(name, Some(glib::VariantTy::STRING));
             action.connect_activate(glib::clone!(
                 #[weak(rename_to = window)]
                 self,
                 move |_, parameter| {
-                    let key = parameter.and_then(|value| value.get::<i64>());
-                    if let Some(key) = key.and_then(|key| u64::try_from(key).ok()) {
-                        handler(&window, key);
+                    if let Some(key) = parameter.and_then(|value| value.str()) {
+                        handler(&window, ItemId::new(key));
                     }
                 }
             ));
@@ -759,17 +759,15 @@ impl PlexWindow {
             window.play(PlayTarget::Item(key), true, StartMode::Ask)
         });
 
-        // The rating keys of a playlist and of the item in it to start at.
-        let action = gio::SimpleAction::new("play-playlist-item", glib::VariantTy::new("(xx)").ok());
+        // The ids of a playlist and of the item in it to start at.
+        let action = gio::SimpleAction::new("play-playlist-item", glib::VariantTy::new("(ss)").ok());
         action.connect_activate(glib::clone!(
             #[weak(rename_to = window)]
             self,
             move |_, parameter| {
                 let keys = parameter
-                    .and_then(|value| value.get::<(i64, i64)>())
-                    .and_then(|(playlist, item)| {
-                        Some((u64::try_from(playlist).ok()?, u64::try_from(item).ok()?))
-                    });
+                    .and_then(|value| value.get::<(String, String)>())
+                    .map(|(playlist, item)| (ItemId::new(&playlist), ItemId::new(&item)));
                 if let Some((playlist, item)) = keys {
                     let target = PlayTarget::PlaylistItem { playlist, item };
                     window.play(target, false, StartMode::Ask);
@@ -780,7 +778,7 @@ impl PlexWindow {
     }
 
     /// Adds an item to the offline sync. A show first asks which episodes.
-    fn sync_item(&self, rating_key: u64) {
+    fn sync_item(&self, rating_key: ItemId) {
         let Some(server) = self.imp().session.server() else {
             return;
         };
@@ -804,7 +802,7 @@ impl PlexWindow {
         ));
     }
 
-    fn set_watched(&self, rating_key: u64, watched: bool) {
+    fn set_watched(&self, rating_key: ItemId, watched: bool) {
         let Some(server) = self.imp().session.server() else {
             return;
         };

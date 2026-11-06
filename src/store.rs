@@ -17,6 +17,7 @@
 //! user, kept `sections` and `sync` at the top; [`migrate`] hands those to
 //! the user who was signed in.
 
+use girens_plex::ItemId;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 
@@ -334,7 +335,7 @@ pub fn set_section_sort(user: &str, section_uuid: &str, sort: &str, direction: &
 /// An item the user wants to have available offline.
 #[derive(Debug, Clone, PartialEq)]
 pub struct SyncEntry {
-    pub rating_key: u64,
+    pub rating_key: ItemId,
     /// Download a transcoded version instead of the original file.
     pub converted: bool,
     pub only_unwatched: bool,
@@ -400,7 +401,7 @@ pub fn add_sync_entry(user: &str, machine_identifier: &str, entry: &SyncEntry) {
     write(&config);
 }
 
-pub fn remove_sync_entry(user: &str, machine_identifier: &str, rating_key: u64) {
+pub fn remove_sync_entry(user: &str, machine_identifier: &str, rating_key: ItemId) {
     let mut config = read();
     let entries = object_mut(
         &mut config,
@@ -459,7 +460,7 @@ mod tests {
         }
     }
 
-    fn entry(rating_key: u64) -> SyncEntry {
+    fn entry(rating_key: ItemId) -> SyncEntry {
         SyncEntry {
             rating_key,
             converted: false,
@@ -499,13 +500,13 @@ mod tests {
                 entries,
                 [
                     SyncEntry {
-                        rating_key: 12,
+                        rating_key: 12.into(),
                         converted: false,
                         only_unwatched: true,
                         max_items: Some(5),
                     },
                     SyncEntry {
-                        rating_key: 34,
+                        rating_key: 34.into(),
                         converted: true,
                         only_unwatched: false,
                         max_items: None,
@@ -551,10 +552,10 @@ mod tests {
         with_config(|| {
             migrate(Some("me"), Some(&server()));
             set_section_sort("child", "uuid-1", "titleSort", "asc");
-            add_sync_entry("child", "machine", &entry(56));
-            add_sync_entry("me", "second server", &entry(78));
-            remove_sync_entry("me", "machine", 12);
-            remove_sync_entry("child", "machine", 34);
+            add_sync_entry("child", "machine", &entry(56.into()));
+            add_sync_entry("me", "second server", &entry(78.into()));
+            remove_sync_entry("me", "machine", 12.into());
+            remove_sync_entry("child", "machine", 34.into());
 
             assert_eq!(
                 section_sort("me", "uuid-1"),
@@ -565,16 +566,16 @@ mod tests {
                 Some(("titleSort".to_owned(), "asc".to_owned()))
             );
             let keys = |user: &str, server: &str| {
-                let mut keys: Vec<u64> = sync_entries(user, server)
+                let mut keys: Vec<ItemId> = sync_entries(user, server)
                     .iter()
                     .map(|entry| entry.rating_key)
                     .collect();
                 keys.sort_unstable();
                 keys
             };
-            assert_eq!(keys("me", "machine"), [34]);
-            assert_eq!(keys("child", "machine"), [56]);
-            assert_eq!(keys("me", "second server"), [78]);
+            assert_eq!(keys("me", "machine"), [ItemId::from(34)]);
+            assert_eq!(keys("child", "machine"), [ItemId::from(56)]);
+            assert_eq!(keys("me", "second server"), [ItemId::from(78)]);
         });
     }
 
@@ -587,12 +588,12 @@ mod tests {
                 "machine",
                 &SyncEntry {
                     converted: true,
-                    ..entry(12)
+                    ..entry(12.into())
                 },
             );
             let entry = sync_entries("me", "machine")
                 .into_iter()
-                .find(|entry| entry.rating_key == 12)
+                .find(|entry| entry.rating_key == 12.into())
                 .unwrap();
             assert!(!entry.converted);
             assert_eq!(entry.max_items, Some(5));
@@ -628,7 +629,7 @@ mod tests {
                 ..Account::default()
             });
             for user in ["me", "child", "partner"] {
-                add_sync_entry(user, "machine", &entry(99));
+                add_sync_entry(user, "machine", &entry(99.into()));
             }
 
             let mut gone = remove_account("me");

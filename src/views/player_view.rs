@@ -1,6 +1,7 @@
 //! The video page: the picture with its overlay controls, details of what is
 //! playing, audio and subtitle choice and what is on deck in the library.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::time::Instant;
 
@@ -72,8 +73,8 @@ mod imp {
         pub controls: OnceCell<MediaControls>,
         pub renderer: OnceCell<VideoRenderer>,
         /// Plex stream ids behind the rows of the two combo rows.
-        pub audio_streams: RefCell<Vec<u64>>,
-        pub subtitle_streams: RefCell<Vec<Option<u64>>>,
+        pub audio_streams: RefCell<Vec<ItemId>>,
+        pub subtitle_streams: RefCell<Vec<Option<ItemId>>>,
         pub updating_streams: Cell<bool>,
         pub fullscreen: Cell<bool>,
         pub windowed: Cell<bool>,

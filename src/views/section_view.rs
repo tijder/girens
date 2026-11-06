@@ -1,5 +1,6 @@
 //! The grid of one library, of the playlists, or of an album of photos.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::subclass::prelude::*;
@@ -60,7 +61,7 @@ mod imp {
         /// `None` while the playlists or an album of photos are shown.
         pub section: RefCell<Option<LibrarySection>>,
         /// The album of photos that is shown, by rating key.
-        pub folder: Cell<Option<u64>>,
+        pub folder: Cell<Option<ItemId>>,
         pub sort_keys: RefCell<Vec<String>>,
         pub sort: RefCell<Option<String>>,
         pub descending: Cell<bool>,
@@ -175,12 +176,12 @@ impl SectionView {
     }
 
     /// The album of photos that is shown, if any.
-    pub fn folder(&self) -> Option<u64> {
+    pub fn folder(&self) -> Option<ItemId> {
         self.imp().folder.get()
     }
 
     /// Shows what is in an album of photos: photos, videos and more albums.
-    pub fn show_folder(&self, rating_key: u64) {
+    pub fn show_folder(&self, rating_key: ItemId) {
         let imp = self.imp();
         self.reset("");
         imp.section.replace(None);

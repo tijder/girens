@@ -1,6 +1,7 @@
 //! Offline sync: the dialog with synced items, the options for syncing a
 //! show, and the popover that lists running downloads.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::prelude::*;
@@ -69,7 +70,7 @@ mod sync_item {
         pub _title_label: TemplateChild<gtk::Label>,
         #[template_child]
         pub _remove_button: TemplateChild<gtk::Button>,
-        pub rating_key: Cell<u64>,
+        pub rating_key: Cell<ItemId>,
     }
 
     #[glib::object_subclass]
@@ -227,7 +228,7 @@ mod sync_settings {
         pub _max_items_entry: TemplateChild<adw::EntryRow>,
         #[template_child]
         pub _sync_button: TemplateChild<gtk::Button>,
-        pub rating_key: Cell<u64>,
+        pub rating_key: Cell<ItemId>,
     }
 
     #[glib::object_subclass]
@@ -279,7 +280,7 @@ glib::wrapper! {
 }
 
 impl SyncSettings {
-    pub fn new(rating_key: u64) -> Self {
+    pub fn new(rating_key: ItemId) -> Self {
         let dialog: Self = glib::Object::new();
         dialog.imp().rating_key.set(rating_key);
         dialog
@@ -302,7 +303,7 @@ mod download_row {
         pub _title_label: TemplateChild<gtk::Label>,
         #[template_child]
         pub _download_spinner: TemplateChild<adw::Spinner>,
-        pub rating_key: Cell<u64>,
+        pub rating_key: Cell<ItemId>,
         pub title: RefCell<String>,
     }
 

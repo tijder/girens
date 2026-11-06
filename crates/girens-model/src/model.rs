@@ -1,8 +1,11 @@
-//! The parts of Plex' responses that Girens uses.
+//! Items, libraries and the files behind them.
+//!
+//! The names and the JSON form are those of Plex, which is also how
+//! downloads are described on disk; other servers are mapped onto them.
 
 use serde::{Deserialize, Serialize};
 
-use crate::de;
+use crate::{de, ItemId};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -77,8 +80,7 @@ impl ItemKind {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Item {
-    #[serde(deserialize_with = "de::id")]
-    pub rating_key: u64,
+    pub rating_key: ItemId,
     pub key: String,
     #[serde(rename = "type")]
     pub kind: ItemKind,
@@ -109,12 +111,12 @@ pub struct Item {
 
     pub parent_title: Option<String>,
     pub grandparent_title: Option<String>,
-    #[serde(default, deserialize_with = "de::optional_id")]
-    pub parent_rating_key: Option<u64>,
-    #[serde(default, deserialize_with = "de::optional_id")]
-    pub grandparent_rating_key: Option<u64>,
+    #[serde(default)]
+    pub parent_rating_key: Option<ItemId>,
+    #[serde(default)]
+    pub grandparent_rating_key: Option<ItemId>,
     #[serde(rename = "librarySectionID")]
-    pub library_section_id: Option<u64>,
+    pub library_section_id: Option<ItemId>,
 
     /// Music video for a track or trailer for a movie.
     pub primary_extra_key: Option<String>,
@@ -126,7 +128,7 @@ pub struct Item {
     pub smart: bool,
     /// Only set for items that are part of a play queue.
     #[serde(rename = "playQueueItemID")]
-    pub play_queue_item_id: Option<u64>,
+    pub play_queue_item_id: Option<ItemId>,
 
     #[serde(default, rename = "Genre")]
     pub genres: Vec<Tag>,
@@ -192,7 +194,7 @@ pub struct Tag {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Media {
-    pub id: u64,
+    pub id: ItemId,
     pub container: Option<String>,
     pub video_resolution: Option<String>,
     #[serde(default, rename = "Part")]
@@ -202,7 +204,7 @@ pub struct Media {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Part {
-    pub id: u64,
+    pub id: ItemId,
     /// Path of the media file on the server, e.g. `/library/parts/1/2/file.mkv`.
     pub key: String,
     pub container: Option<String>,
@@ -223,7 +225,7 @@ pub enum StreamKind {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Stream {
-    pub id: u64,
+    pub id: ItemId,
     pub stream_type: u32,
     /// Position among the streams of the file; absent for external subtitles.
     pub index: Option<u32>,
@@ -257,8 +259,7 @@ impl Stream {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LibrarySection {
-    #[serde(deserialize_with = "de::id")]
-    pub key: u64,
+    pub key: ItemId,
     pub uuid: String,
     pub title: String,
     /// `movie`, `show`, `artist` or `photo`.
@@ -273,12 +274,4 @@ pub struct SortOption {
     pub key: String,
     pub title: String,
     pub default_direction: Option<String>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ServerIdentity {
-    pub machine_identifier: String,
-    pub version: Option<String>,
-    pub friendly_name: Option<String>,
 }

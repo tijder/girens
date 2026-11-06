@@ -634,9 +634,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "girens-model"
+version = "3.0.0"
+dependencies = [
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "url",
+]
+
+[[package]]
 name = "girens-plex"
 version = "3.0.0"
 dependencies = [
+ "girens-model",
  "reqwest",
  "serde",
  "serde_json",

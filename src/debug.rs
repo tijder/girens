@@ -77,9 +77,9 @@ pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {
         for (index, step) in spec.split(';').enumerate() {
             let mut parts = step.split_whitespace();
-            let (Some(action), Some(Ok(key))) = (
+            let (Some(action), Some(key)) = (
                 parts.next().map(str::to_owned),
-                parts.next().map(str::parse::<i64>),
+                parts.next().map(str::to_owned),
             ) else {
                 continue;
             };

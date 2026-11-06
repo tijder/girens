@@ -2,6 +2,7 @@
 //! used (`$XDG_CACHE_HOME/<server id>/thumb_<key>`), decoded off the main
 //! thread and kept in a small in-memory cache.
 
+use girens_plex::ItemId;
 use std::cell::RefCell;
 use std::collections::{HashMap, VecDeque};
 use std::path::{Path, PathBuf};
@@ -85,7 +86,7 @@ pub fn cache_dir_of(machine_identifier: &str) -> PathBuf {
 }
 
 /// A cover that was downloaded earlier, for when the server is out of reach.
-pub async fn cached(machine_identifier: &str, key: u64) -> Option<gdk::Texture> {
+pub async fn cached(machine_identifier: &str, key: ItemId) -> Option<gdk::Texture> {
     let dir = cache_dir_of(machine_identifier);
     let file = gio::spawn_blocking(move || {
         [2, 1]
@@ -100,7 +101,7 @@ pub async fn cached(machine_identifier: &str, key: u64) -> Option<gdk::Texture> 
 
 /// File name of a cached cover. Scale 1 keeps the name the Python version
 /// used; sharper versions get a suffix.
-fn file_name(key: u64, scale: u32) -> String {
+fn file_name(key: ItemId, scale: u32) -> String {
     match scale {
         1 => format!("thumb_{key}"),
         scale => format!("thumb_{key}@{scale}"),
@@ -109,7 +110,7 @@ fn file_name(key: u64, scale: u32) -> String {
 
 /// A cached cover of the item, whatever its resolution; for other programs
 /// such as the desktop's media controls.
-pub fn cached_cover(server: &PlexServer, key: u64) -> Option<PathBuf> {
+pub fn cached_cover(server: &PlexServer, key: ItemId) -> Option<PathBuf> {
     let dir = cache_dir(server);
     [2, 1]
         .into_iter()
@@ -119,7 +120,7 @@ pub fn cached_cover(server: &PlexServer, key: u64) -> Option<PathBuf> {
 
 /// The image `thumb` (an item's `thumb`, `composite`, …), cached under `key`.
 /// Returns `None` when it cannot be loaded; the reason is logged.
-pub async fn cover(server: &PlexServer, key: u64, thumb: &str) -> Option<gdk::Texture> {
+pub async fn cover(server: &PlexServer, key: ItemId, thumb: &str) -> Option<gdk::Texture> {
     let scale = scale();
     let path = cache_dir(server).join(file_name(key, scale));
     if let Some(texture) = MEMORY.with_borrow(|cache| cache.textures.get(&path).cloned()) {

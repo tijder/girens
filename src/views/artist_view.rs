@@ -1,6 +1,7 @@
 //! An artist as one virtualised list: the artist, then every album with its
 //! tracks.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 use std::collections::HashMap;
 
@@ -35,7 +36,7 @@ mod imp {
         #[template_child]
         pub _shuffle_button: TemplateChild<gtk::Button>,
         pub store: OnceCell<gio::ListStore>,
-        pub rating_key: Cell<Option<u64>>,
+        pub rating_key: Cell<Option<ItemId>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
@@ -73,7 +74,7 @@ glib::wrapper! {
 
 impl ArtistView {
     /// What is currently displayed.
-    pub fn rating_key(&self) -> Option<u64> {
+    pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()
     }
 
@@ -82,7 +83,7 @@ impl ArtistView {
     }
 
     /// Loads and shows the artist with this rating key.
-    pub fn show(&self, rating_key: u64) {
+    pub fn show(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
         let store = imp.store.get().expect("set in constructed").clone();
@@ -97,7 +98,7 @@ impl ArtistView {
             vec![MusicRow::Loading],
         );
 
-        let target = (rating_key as i64).to_variant();
+        let target = rating_key.as_str().to_variant();
         imp._play_button.set_action_target_value(Some(&target));
         imp._play_button.set_action_name(Some("win.play-item"));
         imp._shuffle_button.set_action_target_value(Some(&target));
@@ -164,7 +165,7 @@ impl ArtistView {
                     ));
                 }
 
-                let mut by_album: HashMap<u64, Vec<Item>> = HashMap::new();
+                let mut by_album: HashMap<ItemId, Vec<Item>> = HashMap::new();
                 for track in tracks {
                     if let Some(album) = track.parent_rating_key {
                         by_album.entry(album).or_default().push(track);

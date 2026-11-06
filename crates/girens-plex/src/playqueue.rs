@@ -1,53 +1,11 @@
 //! Play queues: the server-side list of what plays next.
 
 use reqwest::Method;
-use serde::Deserialize;
-
 use crate::model::{Item, ItemKind, LibrarySection};
+pub use girens_model::PlayQueue;
+use girens_model::ItemId;
 use crate::server::{Envelope, LIBRARY_IDENTIFIER};
 use crate::{PlexServer, Result};
-
-#[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PlayQueue {
-    #[serde(rename = "playQueueID")]
-    pub id: u64,
-    /// `playQueueItemID` of the item to start with.
-    #[serde(rename = "playQueueSelectedItemID")]
-    pub selected_item_id: Option<u64>,
-    #[serde(default, rename = "playQueueShuffled")]
-    pub shuffled: bool,
-    #[serde(default, rename = "Metadata")]
-    pub items: Vec<Item>,
-}
-
-impl PlayQueue {
-    /// Id of a queue that only exists in this application.
-    pub const LOCAL: u64 = 0;
-
-    /// A queue the server does not know about, for playing offline copies.
-    pub fn local(items: Vec<Item>) -> Self {
-        Self {
-            id: Self::LOCAL,
-            selected_item_id: None,
-            shuffled: false,
-            items,
-        }
-    }
-
-    /// Whether the server keeps this queue.
-    pub fn is_local(&self) -> bool {
-        self.id == Self::LOCAL
-    }
-
-    /// Position of the selected item in `items`.
-    pub fn selected_index(&self) -> Option<usize> {
-        let selected = self.selected_item_id?;
-        self.items
-            .iter()
-            .position(|item| item.play_queue_item_id == Some(selected))
-    }
-}
 
 /// `video` or `audio`, as play queues want it.
 fn list_type(kind: ItemKind) -> &'static str {
@@ -134,12 +92,12 @@ impl PlexServer {
     }
 
     /// Fetches the current state of a queue.
-    pub async fn refresh_play_queue(&self, id: u64) -> Result<PlayQueue> {
+    pub async fn refresh_play_queue(&self, id: ItemId) -> Result<PlayQueue> {
         self.play_queue(Method::GET, &format!("/playQueues/{id}"), &[])
             .await
     }
 
-    pub async fn shuffle_play_queue(&self, id: u64, shuffle: bool) -> Result<PlayQueue> {
+    pub async fn shuffle_play_queue(&self, id: ItemId, shuffle: bool) -> Result<PlayQueue> {
         let action = if shuffle { "shuffle" } else { "unshuffle" };
         self.play_queue(Method::PUT, &format!("/playQueues/{id}/{action}"), &[])
             .await

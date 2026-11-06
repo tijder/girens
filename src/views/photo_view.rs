@@ -1,6 +1,7 @@
 //! One photo, as large as the window allows, with the others of its album
 //! one step away.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::prelude::*;
@@ -30,7 +31,7 @@ mod imp {
         /// The photos of the album, and which of them is shown.
         pub photos: RefCell<Vec<Item>>,
         pub index: Cell<usize>,
-        pub rating_key: Cell<Option<u64>>,
+        pub rating_key: Cell<Option<ItemId>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
@@ -131,7 +132,7 @@ impl Default for PhotoView {
 
 impl PhotoView {
     /// The photo this page was opened for.
-    pub fn rating_key(&self) -> Option<u64> {
+    pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()
     }
 
@@ -148,7 +149,7 @@ impl PhotoView {
 
     /// Shows the photo with this rating key, and finds the other photos of
     /// its album to step through.
-    pub fn show(&self, rating_key: u64) {
+    pub fn show(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
         imp.photos.borrow_mut().clear();

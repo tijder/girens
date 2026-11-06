@@ -96,7 +96,7 @@ async fn sections_and_sorts() {
         assert!(sections.iter().any(|section| section.kind == kind));
     }
 
-    let sorts = server.section_sorts(1).await.unwrap();
+    let sorts = server.section_sorts(1.into()).await.unwrap();
     assert!(sorts.iter().any(|sort| sort.key == "titleSort"));
 }
 
@@ -113,7 +113,7 @@ async fn a_section_page_reports_the_total() {
         .await;
 
     let page = server
-        .section_items(1, 0, 3, Some("titleSort:asc"))
+        .section_items(1.into(), 0, 3, Some("titleSort:asc"))
         .await
         .unwrap();
     assert_eq!(page.items.len(), 3);
@@ -131,7 +131,7 @@ async fn home_lists_parse() {
 
     assert!(!server.recently_added().await.unwrap().is_empty());
     assert!(!server.on_deck().await.unwrap().is_empty());
-    server.section_on_deck(2).await.unwrap();
+    server.section_on_deck(2.into()).await.unwrap();
 }
 
 #[tokio::test]
@@ -142,17 +142,17 @@ async fn show_hierarchy() {
     serve(&mock, "/library/metadata/1/allLeaves", "show_all_leaves").await;
     serve(&mock, "/library/metadata/2", "episode_metadata").await;
 
-    let show = server.item(1).await.unwrap();
+    let show = server.item(1.into()).await.unwrap();
     assert_eq!(show.kind, ItemKind::Show);
     assert!(show.leaf_count.is_some());
 
-    let seasons = server.children(1).await.unwrap();
+    let seasons = server.children(1.into()).await.unwrap();
     assert!(seasons.iter().all(|season| season.kind == ItemKind::Season));
 
-    let episodes = server.all_leaves(1).await.unwrap();
+    let episodes = server.all_leaves(1.into()).await.unwrap();
     assert!(!episodes.is_empty());
 
-    let episode = server.item(2).await.unwrap();
+    let episode = server.item(2.into()).await.unwrap();
     assert_eq!(episode.kind, ItemKind::Episode);
     assert!(episode.grandparent_rating_key.is_some());
     assert!(episode.season_episode().unwrap().starts_with('s'));
@@ -171,15 +171,15 @@ async fn music_hierarchy() {
     serve(&mock, "/library/metadata/3", "track_metadata").await;
     serve(&mock, "/library/sections/5/albums", "section_artist_albums").await;
 
-    assert_eq!(server.item(1).await.unwrap().kind, ItemKind::Artist);
-    let albums = server.children(1).await.unwrap();
+    assert_eq!(server.item(1.into()).await.unwrap().kind, ItemKind::Artist);
+    let albums = server.children(1.into()).await.unwrap();
     assert!(albums.iter().all(|album| album.kind == ItemKind::Album));
-    let tracks = server.children(2).await.unwrap();
+    let tracks = server.children(2.into()).await.unwrap();
     assert!(tracks.iter().all(|track| track.kind == ItemKind::Track));
-    let track = server.item(3).await.unwrap();
+    let track = server.item(3.into()).await.unwrap();
     assert!(track.kind.is_audio());
     assert!(track.parent_rating_key.is_some());
-    assert!(!server.section_albums(5).await.unwrap().is_empty());
+    assert!(!server.section_albums(5.into()).await.unwrap().is_empty());
 }
 
 #[tokio::test]
@@ -192,8 +192,8 @@ async fn playlists_use_their_composite_as_cover() {
     let playlist = &playlists[0];
     assert_eq!(playlist.kind, ItemKind::Playlist);
     assert_eq!(playlist.cover(), playlist.composite.as_deref());
-    assert!(!server.playlist_items(9).await.unwrap().is_empty());
-    let page = server.playlist_page(9, 0, 50).await.unwrap();
+    assert!(!server.playlist_items(9.into()).await.unwrap().is_empty());
+    let page = server.playlist_page(9.into(), 0, 50).await.unwrap();
     assert!(!page.items.is_empty());
     assert!(page.total >= page.items.len() as u32);
 }
@@ -225,8 +225,8 @@ async fn a_missing_item_is_not_found() {
         .mount(&mock)
         .await;
     assert!(matches!(
-        server.item(404).await.unwrap_err(),
-        Error::NotFound(404)
+        server.item(404.into()).await.unwrap_err(),
+        Error::NotFound(id) if id == 404.into()
     ));
 }
 
@@ -252,16 +252,16 @@ async fn watched_state_and_rating_requests() {
         .mount(&mock)
         .await;
 
-    server.mark_watched(42).await.unwrap();
-    server.mark_unwatched(42).await.unwrap();
-    server.rate(42, 8.0).await.unwrap();
+    server.mark_watched(42.into()).await.unwrap();
+    server.mark_unwatched(42.into()).await.unwrap();
+    server.rate(42.into(), 8.0).await.unwrap();
 }
 
 #[tokio::test]
 async fn playback_urls_and_timeline() {
     let (mock, server) = connect().await;
     serve(&mock, "/library/metadata/2", "episode_metadata").await;
-    let episode = server.item(2).await.unwrap();
+    let episode = server.item(2.into()).await.unwrap();
     let part = episode.parts().next().unwrap();
 
     let direct = server.part_url(part);
@@ -326,7 +326,7 @@ async fn playback_urls_and_timeline() {
 async fn an_invalid_resolution_is_left_out() {
     let (mock, server) = connect().await;
     serve(&mock, "/library/metadata/2", "episode_metadata").await;
-    let episode = server.item(2).await.unwrap();
+    let episode = server.item(2.into()).await.unwrap();
     let request = TranscodeRequest {
         session: "s".into(),
         video_resolution: Some("original".into()),
@@ -418,7 +418,7 @@ async fn an_interrupted_download_is_continued() {
 async fn an_item_survives_being_stored_and_read_back() {
     let (mock, server) = connect().await;
     serve(&mock, "/library/metadata/2", "episode_metadata").await;
-    let episode = server.item(2).await.unwrap();
+    let episode = server.item(2.into()).await.unwrap();
 
     let stored = serde_json::to_string(&episode).unwrap();
     let restored: girens_plex::model::Item = serde_json::from_str(&stored).unwrap();

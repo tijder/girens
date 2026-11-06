@@ -21,20 +21,13 @@ pub struct TranscodeRequest {
     pub offset: u64,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum PlaybackState {
-    Playing,
-    Paused,
-    Stopped,
-}
+pub use girens_model::PlaybackState;
 
-impl PlaybackState {
-    fn as_str(self) -> &'static str {
-        match self {
-            PlaybackState::Playing => "playing",
-            PlaybackState::Paused => "paused",
-            PlaybackState::Stopped => "stopped",
-        }
+fn state_name(state: PlaybackState) -> &'static str {
+    match state {
+        PlaybackState::Playing => "playing",
+        PlaybackState::Paused => "paused",
+        PlaybackState::Stopped => "stopped",
     }
 }
 
@@ -166,7 +159,7 @@ impl PlexServer {
             ("key", item.key.as_str()),
             ("identifier", LIBRARY_IDENTIFIER),
             ("time", position.as_str()),
-            ("state", state.as_str()),
+            ("state", state_name(state)),
             ("duration", duration.as_str()),
         ];
         if let Some(id) = &play_queue_item {

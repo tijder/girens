@@ -4,7 +4,9 @@ use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use url::Url;
 
-use crate::model::{Item, ItemKind, LibrarySection, Part, ServerIdentity, SortOption};
+use crate::model::{Item, ItemKind, LibrarySection, Part, SortOption};
+use crate::Page;
+use girens_model::ItemId;
 use crate::{Error, Result};
 
 pub(crate) const LIBRARY_IDENTIFIER: &str = "com.plexapp.plugins.library";
@@ -40,13 +42,11 @@ impl ClientInfo {
     }
 }
 
-/// A slice of a larger list.
-#[derive(Debug, Clone)]
-pub struct Page<T> {
-    pub items: Vec<T>,
-    pub offset: u32,
-    /// Size of the whole list on the server.
-    pub total: u32,
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ServerIdentity {
+    machine_identifier: String,
+    friendly_name: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -250,7 +250,7 @@ impl PlexServer {
         self.items("/library/onDeck", &[]).await
     }
 
-    pub async fn section_on_deck(&self, section: u64) -> Result<Vec<Item>> {
+    pub async fn section_on_deck(&self, section: ItemId) -> Result<Vec<Item>> {
         self.items(&format!("/library/sections/{section}/onDeck"), &[])
             .await
     }
@@ -258,7 +258,7 @@ impl PlexServer {
     /// One page of a section, optionally sorted (`titleSort:asc`).
     pub async fn section_items(
         &self,
-        section: u64,
+        section: ItemId,
         offset: u32,
         size: u32,
         sort: Option<&str>,
@@ -294,19 +294,19 @@ impl PlexServer {
         })
     }
 
-    pub async fn section_albums(&self, section: u64) -> Result<Vec<Item>> {
+    pub async fn section_albums(&self, section: ItemId) -> Result<Vec<Item>> {
         self.items(&format!("/library/sections/{section}/albums"), &[])
             .await
     }
 
-    pub async fn section_sorts(&self, section: u64) -> Result<Vec<SortOption>> {
+    pub async fn section_sorts(&self, section: ItemId) -> Result<Vec<SortOption>> {
         let envelope: Envelope<Directories<SortOption>> = self
             .get(&format!("/library/sections/{section}/sorts"), &[])
             .await?;
         Ok(envelope.container.directory)
     }
 
-    pub async fn item(&self, rating_key: u64) -> Result<Item> {
+    pub async fn item(&self, rating_key: ItemId) -> Result<Item> {
         self.items(&format!("/library/metadata/{rating_key}"), &[])
             .await?
             .into_iter()
@@ -315,20 +315,20 @@ impl PlexServer {
     }
 
     /// Seasons of a show, albums of an artist or tracks of an album.
-    pub async fn children(&self, rating_key: u64) -> Result<Vec<Item>> {
+    pub async fn children(&self, rating_key: ItemId) -> Result<Vec<Item>> {
         self.items(&format!("/library/metadata/{rating_key}/children"), &[])
             .await
     }
 
     /// One page of what is in a photo album, which may hold thousands of
     /// photos.
-    pub async fn children_page(&self, rating_key: u64, offset: u32, size: u32) -> Result<Page<Item>> {
+    pub async fn children_page(&self, rating_key: ItemId, offset: u32, size: u32) -> Result<Page<Item>> {
         let path = format!("/library/metadata/{rating_key}/children");
         self.page(&path, offset, size, None).await
     }
 
     /// All episodes of a show or all tracks of an artist.
-    pub async fn all_leaves(&self, rating_key: u64) -> Result<Vec<Item>> {
+    pub async fn all_leaves(&self, rating_key: ItemId) -> Result<Vec<Item>> {
         self.items(&format!("/library/metadata/{rating_key}/allLeaves"), &[])
             .await
     }
@@ -337,13 +337,13 @@ impl PlexServer {
         self.items("/playlists", &[]).await
     }
 
-    pub async fn playlist_items(&self, rating_key: u64) -> Result<Vec<Item>> {
+    pub async fn playlist_items(&self, rating_key: ItemId) -> Result<Vec<Item>> {
         self.items(&format!("/playlists/{rating_key}/items"), &[])
             .await
     }
 
     /// One page of a playlist, which may hold thousands of items.
-    pub async fn playlist_page(&self, rating_key: u64, offset: u32, size: u32) -> Result<Page<Item>> {
+    pub async fn playlist_page(&self, rating_key: ItemId, offset: u32, size: u32) -> Result<Page<Item>> {
         self.page(&format!("/playlists/{rating_key}/items"), offset, size, None)
             .await
     }
@@ -361,15 +361,15 @@ impl PlexServer {
 
     // Watched state and rating
 
-    pub async fn mark_watched(&self, rating_key: u64) -> Result<()> {
+    pub async fn mark_watched(&self, rating_key: ItemId) -> Result<()> {
         self.scrobble("/:/scrobble", rating_key).await
     }
 
-    pub async fn mark_unwatched(&self, rating_key: u64) -> Result<()> {
+    pub async fn mark_unwatched(&self, rating_key: ItemId) -> Result<()> {
         self.scrobble("/:/unscrobble", rating_key).await
     }
 
-    async fn scrobble(&self, path: &str, rating_key: u64) -> Result<()> {
+    async fn scrobble(&self, path: &str, rating_key: ItemId) -> Result<()> {
         let key = rating_key.to_string();
         self.command(
             Method::GET,
@@ -380,7 +380,7 @@ impl PlexServer {
     }
 
     /// `rating` runs from 0 to 10.
-    pub async fn rate(&self, rating_key: u64, rating: f32) -> Result<()> {
+    pub async fn rate(&self, rating_key: ItemId, rating: f32) -> Result<()> {
         let (key, rating) = (rating_key.to_string(), rating.to_string());
         self.command(
             Method::PUT,
@@ -396,17 +396,17 @@ impl PlexServer {
 
     // Stream selection (stored on the server per user)
 
-    pub async fn select_audio_stream(&self, part: &Part, stream_id: u64) -> Result<()> {
+    pub async fn select_audio_stream(&self, part: &Part, stream_id: ItemId) -> Result<()> {
         self.select_stream(part, "audioStreamID", stream_id).await
     }
 
     /// `None` turns subtitles off.
-    pub async fn select_subtitle_stream(&self, part: &Part, stream_id: Option<u64>) -> Result<()> {
-        self.select_stream(part, "subtitleStreamID", stream_id.unwrap_or(0))
+    pub async fn select_subtitle_stream(&self, part: &Part, stream_id: Option<ItemId>) -> Result<()> {
+        self.select_stream(part, "subtitleStreamID", stream_id.unwrap_or(ItemId::fixed("0")))
             .await
     }
 
-    async fn select_stream(&self, part: &Part, name: &str, stream_id: u64) -> Result<()> {
+    async fn select_stream(&self, part: &Part, name: &str, stream_id: ItemId) -> Result<()> {
         let stream_id = stream_id.to_string();
         self.command(
             Method::PUT,

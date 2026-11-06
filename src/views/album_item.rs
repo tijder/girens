@@ -94,7 +94,7 @@ impl AlbumItem {
         match clip {
             Some(clip) => {
                 imp._music_clip_button
-                    .set_action_target_value(Some(&(clip as i64).to_variant()));
+                    .set_action_target_value(Some(&clip.as_str().to_variant()));
                 imp._music_clip_button
                     .set_action_name(Some("win.play-item"));
             }

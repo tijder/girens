@@ -11,13 +11,13 @@ pub enum Location {
     Downloads,
     Section(LibrarySection),
     Search(String),
-    Show(u64),
-    Artist(u64),
-    Album(u64),
-    Playlist(u64),
+    Show(ItemId),
+    Artist(ItemId),
+    Album(ItemId),
+    Playlist(ItemId),
     /// What is in an album of photos.
-    PhotoAlbum(u64),
-    Photo(u64),
+    PhotoAlbum(ItemId),
+    Photo(ItemId),
     Player,
 }
 

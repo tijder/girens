@@ -2,6 +2,7 @@
 //! tracks. The rows are shared with the artist page, which lists several
 //! albums.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, OnceCell, RefCell};
 
 use adw::subclass::prelude::*;
@@ -40,7 +41,7 @@ pub enum MusicRow {
     /// An item of the playlist with this rating key; playing it continues
     /// with what follows it there.
     Entry {
-        playlist: u64,
+        playlist: ItemId,
         item: Box<Item>,
     },
     /// Shown while the page is fetched.
@@ -107,7 +108,7 @@ const PLAYLIST_PAGE: u32 = 200;
 
 /// The rows for items of the playlist `playlist`, the first of which is at
 /// `offset` in it.
-fn playlist_rows(playlist: u64, items: &[Item], offset: u32) -> Vec<MusicRow> {
+fn playlist_rows(playlist: ItemId, items: &[Item], offset: u32) -> Vec<MusicRow> {
     let rows = items.iter().enumerate().map(|(position, item)| {
         // A row shows a number and a title: here the place in the playlist,
         // and whose track or which episode it is.
@@ -185,11 +186,11 @@ fn music_store(list: &gtk::ListView) -> gio::ListStore {
             list,
             move |row: &MusicRow| match row {
                 MusicRow::Track(track) => {
-                    let key = (track.rating_key as i64).to_variant();
+                    let key = track.rating_key.as_str().to_variant();
                     let _ = list.activate_action("win.play-item", Some(&key));
                 }
                 MusicRow::Entry { playlist, item } => {
-                    let keys = (*playlist as i64, item.rating_key as i64).to_variant();
+                    let keys = (playlist.as_str(), item.rating_key.as_str()).to_variant();
                     let _ = list.activate_action("win.play-playlist-item", Some(&keys));
                 }
                 _ => {}
@@ -283,7 +284,7 @@ impl AlbumHeader {
                 ));
                 imp._artist_label.set_visible(true);
                 imp._artist_label.connect_activate_link(move |label, _| {
-                    let key = (artist as i64).to_variant();
+                    let key = artist.as_str().to_variant();
                     let _ = label.activate_action("win.show-artist-by-id", Some(&key));
                     glib::Propagation::Stop
                 });
@@ -291,9 +292,9 @@ impl AlbumHeader {
         }
 
         let menu = gio::Menu::new();
-        let add = |label: &str, action: &str, key: u64| {
+        let add = |label: &str, action: &str, key: ItemId| {
             let entry = gio::MenuItem::new(Some(label), None);
-            entry.set_action_and_target_value(Some(action), Some(&(key as i64).to_variant()));
+            entry.set_action_and_target_value(Some(action), Some(&key.as_str().to_variant()));
             menu.append_item(&entry);
         };
         if let (true, Some(artist)) = (link_to_artist, album.parent_rating_key) {
@@ -325,7 +326,7 @@ impl AlbumHeader {
 
         let menu = gio::Menu::new();
         let entry = gio::MenuItem::new(Some(&gettext("Sync")), None);
-        let key = (playlist.rating_key as i64).to_variant();
+        let key = playlist.rating_key.as_str().to_variant();
         entry.set_action_and_target_value(Some("win.sync-by-id"), Some(&key));
         menu.append_item(&entry);
         imp._menu_button.set_menu_model(Some(&menu));
@@ -341,7 +342,7 @@ impl AlbumHeader {
         let imp = self.imp();
         imp._title_label.set_text(&item.title);
         imp._subtitle_label.set_text(details);
-        let target = (item.rating_key as i64).to_variant();
+        let target = item.rating_key.as_str().to_variant();
         imp._play_button.set_action_target_value(Some(&target));
         imp._play_button.set_action_name(Some("win.play-item"));
         imp._shuffle_button.set_action_target_value(Some(&target));
@@ -349,7 +350,7 @@ impl AlbumHeader {
             .set_action_name(Some("win.shuffle-by-id"));
     }
 
-    fn load_cover(&self, key: u64, thumb: Option<String>) {
+    fn load_cover(&self, key: ItemId, thumb: Option<String>) {
         let header = self;
         let imp = self.imp();
         imp._cover_picture.set_paintable(gdk::Paintable::NONE);
@@ -381,7 +382,7 @@ mod imp {
         #[template_child]
         pub _list_view: TemplateChild<gtk::ListView>,
         pub store: OnceCell<gio::ListStore>,
-        pub rating_key: Cell<Option<u64>>,
+        pub rating_key: Cell<Option<ItemId>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
@@ -419,13 +420,13 @@ glib::wrapper! {
 
 impl AlbumView {
     /// What is currently displayed.
-    pub fn rating_key(&self) -> Option<u64> {
+    pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()
     }
 
     /// Loads and shows the playlist with this rating key. Its items come
     /// in a page at a time, as a playlist can be very long.
-    pub fn show_playlist(&self, rating_key: u64) {
+    pub fn show_playlist(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
         let store = imp.store.get().expect("set in constructed").clone();
@@ -507,7 +508,7 @@ impl AlbumView {
     }
 
     /// Loads and shows the album with this rating key.
-    pub fn show(&self, rating_key: u64) {
+    pub fn show(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
         let store = imp.store.get().expect("set in constructed").clone();

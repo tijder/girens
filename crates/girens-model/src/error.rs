@@ -1,11 +1,13 @@
 use reqwest::StatusCode;
 
+use crate::ItemId;
+
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// The token is missing, wrong or no longer valid.
-    #[error("the Plex server rejected the credentials")]
+    #[error("the server rejected the credentials")]
     Unauthorized,
     #[error("{url} answered with HTTP {status}")]
     Status { status: StatusCode, url: String },
@@ -20,8 +22,8 @@ pub enum Error {
     },
     #[error("invalid URL: {0}")]
     Url(#[from] url::ParseError),
-    #[error("no item with rating key {0}")]
-    NotFound(u64),
+    #[error("no item with id {0}")]
+    NotFound(ItemId),
     #[error("could not write {path}: {source}")]
     Io {
         path: String,
@@ -31,6 +33,9 @@ pub enum Error {
     /// The PIN of a Plex Home profile was refused.
     #[error("the PIN is not correct")]
     WrongPin,
+    /// The server answered, but not with what was asked for.
+    #[error("{0}")]
+    Server(String),
     /// None of the connections plex.tv lists for a server could be used.
     #[error("could not connect to {0}")]
     NoConnection(String),

@@ -182,7 +182,9 @@ async fn report(
 
 fn metadata(item: &Item) -> Metadata {
     let mut builder = Metadata::builder().title(item.title.clone());
-    if let Ok(id) = TrackId::try_from(format!("/nl/g4d/Girens/track/{}", item.rating_key)) {
+    // An object path takes no dashes, and the id may be a UUID.
+    let key = item.rating_key.as_str().replace(|c: char| !c.is_ascii_alphanumeric(), "_");
+    if let Ok(id) = TrackId::try_from(format!("/nl/g4d/Girens/track/{key}")) {
         builder = builder.trackid(id);
     }
     if let Some(duration) = item.duration {

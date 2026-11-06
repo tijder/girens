@@ -252,7 +252,7 @@ impl MediaControls {
                 if let (Some(album), Some(widget)) = (album, gesture.widget()) {
                     let _ = widget.activate_action(
                         "win.show-album-by-id",
-                        Some(&(album as i64).to_variant()),
+                        Some(&album.as_str().to_variant()),
                     );
                 }
             });

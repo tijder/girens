@@ -1,5 +1,6 @@
 //! Small formatting helpers shared by the views.
 
+use girens_plex::ItemId;
 use gtk::glib;
 
 /// `3:07` or `1:02:03` for a duration in milliseconds.
@@ -32,8 +33,9 @@ pub fn format_date(iso_date: &str) -> Option<String> {
 }
 
 /// The rating key at the end of `/library/metadata/<key>`.
-pub fn rating_key_from_path(path: &str) -> Option<u64> {
-    path.trim_end_matches('/').rsplit('/').next()?.parse().ok()
+pub fn rating_key_from_path(path: &str) -> Option<ItemId> {
+    let key: u64 = path.trim_end_matches('/').rsplit('/').next()?.parse().ok()?;
+    Some(key.into())
 }
 
 #[cfg(test)]
@@ -49,8 +51,8 @@ mod tests {
 
     #[test]
     fn rating_keys() {
-        assert_eq!(rating_key_from_path("/library/metadata/123"), Some(123));
-        assert_eq!(rating_key_from_path("/library/metadata/123/"), Some(123));
+        assert_eq!(rating_key_from_path("/library/metadata/123"), Some(123.into()));
+        assert_eq!(rating_key_from_path("/library/metadata/123/"), Some(123.into()));
         assert_eq!(rating_key_from_path("/library/sections"), None);
     }
 }

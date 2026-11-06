@@ -1,5 +1,6 @@
 //! A cover tile: poster, title, watched badge, progress and context menu.
 
+use girens_plex::ItemId;
 use std::cell::{Cell, RefCell};
 
 use adw::subclass::prelude::*;
@@ -139,9 +140,9 @@ struct Presentation {
     subtitle: Option<String>,
     image_height: i32,
     /// `win.` action and its rating key.
-    action: Option<(&'static str, u64)>,
+    action: Option<(&'static str, ItemId)>,
     /// Cache key and server path of the image.
-    image: Option<(u64, String)>,
+    image: Option<(ItemId, String)>,
 }
 
 fn present(item: &Item, in_show_view: bool) -> Presentation {
@@ -209,9 +210,9 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
     let menu = gio::Menu::new();
     // Labels are passed translated: xgettext only finds literal
     // `gettext("…")` calls.
-    let add = |label: &str, action: &str, key: u64| {
+    let add = |label: &str, action: &str, key: ItemId| {
         let entry = gio::MenuItem::new(Some(label), None);
-        entry.set_action_and_target_value(Some(action), Some(&(key as i64).to_variant()));
+        entry.set_action_and_target_value(Some(action), Some(&key.as_str().to_variant()));
         menu.append_item(&entry);
     };
     let video = matches!(
@@ -336,7 +337,7 @@ impl CoverBox {
 
         match presentation.action {
             Some((action, key)) => {
-                self.set_action_target_value(Some(&(key as i64).to_variant()));
+                self.set_action_target_value(Some(&key.as_str().to_variant()));
                 self.set_action_name(Some(action));
             }
             None => self.set_action_name(None),

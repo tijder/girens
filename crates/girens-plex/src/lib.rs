@@ -2,16 +2,14 @@
 //!
 //! Everything is async and independent of GTK.
 
-mod de;
-mod error;
-pub mod model;
+pub use girens_model::model;
 pub mod myplex;
 pub mod playback;
 pub mod playqueue;
 mod server;
 
-pub use error::{Error, Result};
-pub use server::{ClientInfo, Page, PlexServer};
+pub use girens_model::{Error, ItemId, Page, Result};
+pub use server::{ClientInfo, PlexServer};
 
 /// Downloads `url` (an image URL from [`PlexServer::image_url`] or an avatar).
 pub async fn download(url: &str) -> Result<Vec<u8>> {
