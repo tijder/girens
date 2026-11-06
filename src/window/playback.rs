@@ -65,11 +65,14 @@ impl PlexWindow {
         }
         // Without a connection only offline copies can play: the chosen one
         // and what follows it in the list.
-        let (PlayTarget::Item(key), Some(machine)) = (target, imp.session.machine_identifier())
-        else {
+        let (PlayTarget::Item(key), Some(machine), Some(user)) = (
+            target,
+            imp.session.machine_identifier(),
+            imp.session.user_key(),
+        ) else {
             return;
         };
-        let items = sync::offline_items(&machine);
+        let items = sync::offline_items(&machine, &user);
         match items.iter().position(|item| item.rating_key == key) {
             Some(index) => player.play_local(items[index..].to_vec()),
             None => crate::notify::message(&gettext(

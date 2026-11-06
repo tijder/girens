@@ -16,7 +16,10 @@ mod imp {
         pub _loading_text_label: TemplateChild<gtk::Label>,
         #[template_child]
         pub _logout_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _accounts_button: TemplateChild<gtk::Button>,
         pub on_logout: RefCell<Option<Box<dyn Fn()>>>,
+        pub on_accounts: RefCell<Option<Box<dyn Fn()>>>,
     }
 
     #[glib::object_subclass]
@@ -47,6 +50,15 @@ mod imp {
                     }
                 }
             ));
+            self._accounts_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    if let Some(callback) = view.imp().on_accounts.borrow().as_ref() {
+                        callback();
+                    }
+                }
+            ));
         }
     }
 
@@ -65,7 +77,18 @@ impl LoadingView {
         self.imp()._loading_text_label.set_text(text);
     }
 
+    /// Signing out of the account that is being connected.
     pub fn connect_logout(&self, callback: impl Fn() + 'static) {
         self.imp().on_logout.replace(Some(Box::new(callback)));
+    }
+
+    /// Going to the other accounts.
+    pub fn connect_accounts(&self, callback: impl Fn() + 'static) {
+        self.imp().on_accounts.replace(Some(Box::new(callback)));
+    }
+
+    /// Whether there are other accounts to go to.
+    pub fn set_accounts_visible(&self, visible: bool) {
+        self.imp()._accounts_button.set_visible(visible);
     }
 }

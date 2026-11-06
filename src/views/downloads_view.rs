@@ -66,10 +66,11 @@ impl DownloadsView {
     /// Reads the offline copies from the disk again.
     pub fn refresh(&self) {
         let list = &self.imp().list;
-        let items = Session::current()
-            .machine_identifier()
-            .map(|machine| sync::offline_items(&machine))
-            .unwrap_or_default();
+        let session = Session::current();
+        let items = match (session.machine_identifier(), session.user_key()) {
+            (Some(machine), Some(user)) => sync::offline_items(&machine, &user),
+            _ => Vec::new(),
+        };
         let empty = items.is_empty();
         list.set_items(items);
         list.set_empty_message(empty.then(|| gettext("Nothing downloaded yet")).as_deref());

@@ -379,6 +379,19 @@ impl PlexWindow {
             }
         ));
 
+        imp._login_view.connect_cancel(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move || {
+                glib::spawn_future_local(async move { window.cancel_login().await });
+            }
+        ));
+        imp._loading_view.connect_accounts(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move || window.show_accounts()
+        ));
+
         imp._loading_view.connect_logout(glib::clone!(
             #[weak(rename_to = window)]
             self,
@@ -417,6 +430,10 @@ impl PlexWindow {
                 }
                 glib::spawn_future_local(async move {
                     if window.connect_resource(&resource).await {
+                        // The other server's pages and playback make way.
+                        let servers = window.imp().servers.take();
+                        window.reset_for_user_change();
+                        window.imp().servers.replace(servers);
                         window.connected().await;
                     }
                 });
@@ -426,17 +443,7 @@ impl PlexWindow {
         imp._profile_button.connect_clicked(glib::clone!(
             #[weak(rename_to = window)]
             self,
-            move |_| {
-                let dialog = ProfileDialog::new(window.imp().session.account().as_ref());
-                dialog.connect_logout(glib::clone!(
-                    #[weak]
-                    window,
-                    move || {
-                        glib::spawn_future_local(async move { window.logout().await });
-                    }
-                ));
-                dialog.present(Some(&window));
-            }
+            move |_| window.show_accounts()
         ));
 
         imp._search_toggle_button
@@ -553,12 +560,56 @@ impl PlexWindow {
         ));
     }
 
+    /// `add-server <url> <token>`, `switch <n>` or `sign-out <n>`, where `n`
+    /// counts the accounts as the dialog lists them.
+    #[cfg(debug_assertions)]
+    pub fn debug_account(&self, step: &str) {
+        let mut words = step.split_whitespace().map(str::to_owned);
+        let (action, first, second) = (words.next(), words.next(), words.next());
+        let nth = |index: &Option<String>| {
+            let accounts = self.imp().session.accounts();
+            accounts
+                .get(index.as_ref()?.parse::<usize>().ok()?)
+                .map(|account| account.id.clone())
+        };
+        let window = self.clone();
+        match (action.as_deref(), nth(&first)) {
+            (Some("add-server"), _) => {
+                let (Some(url), Some(token)) = (first, second) else {
+                    return;
+                };
+                glib::spawn_future_local(async move {
+                    window.login(LoginRequest::Server { url, token }).await;
+                });
+            }
+            (Some("switch"), Some(id)) => {
+                glib::spawn_future_local(async move { window.switch_account(&id).await });
+            }
+            (Some("sign-out"), Some(id)) => {
+                glib::spawn_future_local(async move { window.sign_out(&id).await });
+            }
+            _ => eprintln!("GIRENS_DEBUG_ACCOUNT: cannot do {step:?}"),
+        }
+    }
+
     #[cfg(debug_assertions)]
     pub fn debug_open(&self, dialog: &str) {
         match dialog {
             "preferences" => views::preferences::present(self),
             "shortcuts" => self.show_shortcuts(),
             "about" => self.show_about(),
+            "accounts" => self.show_accounts(),
+            "pin" | "wrong-pin" => {
+                let (window, wrong) = (self.clone(), dialog == "wrong-pin");
+                glib::spawn_future_local(async move {
+                    let profile = crate::store::Profile {
+                        title: "Kids".into(),
+                        protected: true,
+                        ..Default::default()
+                    };
+                    window.ask_pin(&profile, wrong).await;
+                });
+            }
             "sync" => self
                 .imp()
                 .sync_dialog
@@ -607,12 +658,16 @@ impl PlexWindow {
     fn show_loading(&self, text: &str) {
         let imp = self.imp();
         imp._loading_view.set_text(text);
+        imp._loading_view
+            .set_accounts_visible(imp.session.accounts().len() > 1);
         imp.frame_stack.set_visible_child(&*imp._loading_view);
     }
 
     fn show_login(&self) {
         let imp = self.imp();
         imp._login_view.set_busy(false);
+        imp._login_view
+            .set_cancellable(imp.session.account_id().is_some());
         imp.frame_stack.set_visible_child(&*imp._login_view);
     }
 

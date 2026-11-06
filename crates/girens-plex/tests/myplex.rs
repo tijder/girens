@@ -76,10 +76,11 @@ async fn switching_gives_a_session_as_the_other_profile() {
         .await;
 
     let users = myplex.home_users().await.unwrap();
-    let profile = myplex.switch_user(&users[2], None).await.unwrap();
+    let profile = myplex.switch_user(&users[2].uuid, None).await.unwrap();
     assert_eq!(profile.account().uuid, "uuid-3");
     assert_eq!(profile.account().auth_token, "profile-token");
     assert!(profile.account().username.is_none());
+    assert_eq!(profile.account().title.as_deref(), Some("title-3"));
     assert!(profile.servers().await.unwrap().is_empty());
     // The account that switched is still signed in.
     assert_eq!(myplex.account().auth_token, "account-token");
@@ -105,11 +106,11 @@ async fn a_protected_profile_takes_its_pin() {
         .await;
 
     let users = myplex.home_users().await.unwrap();
-    let wrong = myplex.switch_user(&users[1], Some("0000")).await;
+    let wrong = myplex.switch_user(&users[1].uuid, Some("0000")).await;
     assert!(matches!(wrong, Err(Error::WrongPin)), "{wrong:?}");
-    let missing = myplex.switch_user(&users[1], None).await;
+    let missing = myplex.switch_user(&users[1].uuid, None).await;
     assert!(matches!(missing, Err(Error::WrongPin)), "{missing:?}");
-    assert!(myplex.switch_user(&users[1], Some("1234")).await.is_ok());
+    assert!(myplex.switch_user(&users[1].uuid, Some("1234")).await.is_ok());
 }
 
 #[tokio::test]
@@ -121,7 +122,7 @@ async fn a_profile_that_is_gone_is_not_a_wrong_pin() {
         .mount(&mock)
         .await;
     let users = myplex.home_users().await.unwrap();
-    let gone = myplex.switch_user(&users[1], Some("1234")).await;
+    let gone = myplex.switch_user(&users[1].uuid, Some("1234")).await;
     match gone {
         Err(Error::Status { status, url }) => {
             assert_eq!(status.as_u16(), 404);

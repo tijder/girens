@@ -25,7 +25,7 @@ fn entry(item: &Item) -> Value {
     })
 }
 
-async fn collect(server: &PlexServer) -> girens_plex::Result<Value> {
+async fn collect(server: &PlexServer, user: &str) -> girens_plex::Result<Value> {
     let mut sections = Map::new();
     for section in server.sections().await? {
         // Movies are not offered: opening one would start playing it.
@@ -57,14 +57,15 @@ async fn collect(server: &PlexServer) -> girens_plex::Result<Value> {
             }),
         );
     }
-    Ok(json!({ "sections": sections }))
+    Ok(json!({ "user": user, "sections": sections }))
 }
 
 /// How long a written file is considered up to date.
 const MAX_AGE: std::time::Duration = std::time::Duration::from_secs(6 * 60 * 60);
 
-/// Whether the file was written recently for this server.
-async fn is_fresh(server: &PlexServer) -> bool {
+/// Whether the file was written recently for this user of this server.
+/// What one profile may see is not offered to the next.
+async fn is_fresh(server: &PlexServer, user: &str) -> bool {
     let path = data_file();
     let recent = tokio::fs::metadata(&path)
         .await
@@ -73,17 +74,31 @@ async fn is_fresh(server: &PlexServer) -> bool {
     recent
         && tokio::fs::read_to_string(&path)
             .await
-            .is_ok_and(|data| data.contains(server.machine_identifier()))
+            .is_ok_and(|data| {
+                data.contains(server.machine_identifier())
+                    && serde_json::from_str::<Value>(&data)
+                        .is_ok_and(|data| data["user"].as_str() == Some(user))
+            })
 }
 
-/// Rebuilds the file for `server` in the background, unless it is recent.
-pub fn refresh(server: PlexServer) {
+/// Empties the file, so that nothing of someone who signed out is offered.
+pub fn clear() {
+    if let Err(err) = std::fs::write(data_file(), json!({ "sections": {} }).to_string()) {
+        eprintln!("Could not empty the search provider data: {err}");
+    }
+}
+
+/// Rebuilds the file for `user` of `server` in the background, unless it is
+/// recent.
+pub fn refresh(server: PlexServer, user: String) {
     glib::spawn_future_local(async move {
         let written = runtime::run(async move {
-            if is_fresh(&server).await {
+            if is_fresh(&server, &user).await {
                 return Ok(());
             }
-            let data = collect(&server).await.map_err(|err| err.to_string())?;
+            let data = collect(&server, &user)
+                .await
+                .map_err(|err| err.to_string())?;
             tokio::fs::write(data_file(), data.to_string())
                 .await
                 .map_err(|err| err.to_string())

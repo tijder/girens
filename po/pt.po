@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 22:22+0100\n"
+"POT-Creation-Date: 2026-11-06 07:38+0100\n"
 "PO-Revision-Date: 2024-02-15 19:02+0000\n"
 "Last-Translator: Thiago Fernandes <thiago@avila-fernandes.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/girens/girens/"
@@ -101,59 +101,60 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
-msgid "Logout"
+#: ../data/ui/loading_view.blp:33 ../data/ui/profile_dialog.blp:5
+#: ../data/ui/profile_dialog.blp:14
+msgid "Accounts"
 msgstr ""
 
-#: ../data/ui/login_view.blp:29
+#: ../data/ui/login_view.blp:34
 msgid "Username and password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:33
+#: ../data/ui/login_view.blp:38
 msgid "Login to Plex with an user acount"
 msgstr ""
 
-#: ../data/ui/login_view.blp:38
+#: ../data/ui/login_view.blp:43
 msgid "Sign in on plex.tv"
 msgstr ""
 
-#: ../data/ui/login_view.blp:39
+#: ../data/ui/login_view.blp:44
 msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr ""
 
-#: ../data/ui/login_view.blp:44
+#: ../data/ui/login_view.blp:49
 msgid "Sign in"
 msgstr ""
 
-#: ../data/ui/login_view.blp:53 ../data/ui/profile_dialog.blp:12
+#: ../data/ui/login_view.blp:58 ../data/ui/profile_dialog.blp:26
 msgid "Username"
 msgstr ""
 
-#: ../data/ui/login_view.blp:59
+#: ../data/ui/login_view.blp:64
 msgid "Password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:68
+#: ../data/ui/login_view.blp:73
 msgid "Login"
 msgstr ""
 
-#: ../data/ui/login_view.blp:79
+#: ../data/ui/login_view.blp:84
 msgid "URL and token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:84
+#: ../data/ui/login_view.blp:89
 msgid "Go to Plex server based on an URL"
 msgstr ""
 
-#: ../data/ui/login_view.blp:89
+#: ../data/ui/login_view.blp:94
 msgid "The URL to the Plex server with the port number"
 msgstr ""
 
-#: ../data/ui/login_view.blp:95
+#: ../data/ui/login_view.blp:100
 msgid "Token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:104
+#: ../data/ui/login_view.blp:109
 msgid "Connect"
 msgstr ""
 
@@ -245,15 +246,23 @@ msgstr ""
 msgid "Subtitle "
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
+#: ../data/ui/profile_dialog.blp:9
+msgid "Who is watching?"
+msgstr ""
+
+#: ../data/ui/profile_dialog.blp:17
+msgid "Add account…"
+msgstr ""
+
+#: ../data/ui/profile_dialog.blp:23
 msgid "Account info"
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:15
+#: ../data/ui/profile_dialog.blp:30
 msgid "Email"
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:18
+#: ../data/ui/profile_dialog.blp:34
 msgid "Subscription plan"
 msgstr ""
 
@@ -334,11 +343,11 @@ msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr ""
 
-#: ../data/ui/sync_dialog.blp:4
+#: ../data/ui/sync_dialog.blp:5
 msgid "Sync items"
 msgstr ""
 
-#: ../data/ui/sync_dialog.blp:34
+#: ../data/ui/sync_dialog.blp:47
 msgid "Ok"
 msgstr ""
 
@@ -350,19 +359,19 @@ msgstr ""
 msgid "Sync - settings"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:14
+#: ../data/ui/sync_settings.blp:19
 msgid "Convert"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:15
+#: ../data/ui/sync_settings.blp:20
 msgid "Converted sync can take a long time"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:23
+#: ../data/ui/sync_settings.blp:30
 msgid "Unwatched only"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:31
+#: ../data/ui/sync_settings.blp:40
 msgid "Max items"
 msgstr ""
 
@@ -446,35 +455,35 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:338
+#: ../src/player/mod.rs:341
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:346
+#: ../src/player/mod.rs:349
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:451
+#: ../src/player/mod.rs:458
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:646
+#: ../src/player/mod.rs:653
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1103
+#: ../src/player/mod.rs:1111
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/sync.rs:175
+#: ../src/sync.rs:394
 msgid "Sync failed"
 msgstr ""
 
-#: ../src/sync.rs:242
+#: ../src/sync.rs:473
 msgid "Could not download an item"
 msgstr ""
 
-#: ../src/sync.rs:302
+#: ../src/sync.rs:520
 msgid "Not enough disk space for the download"
 msgstr ""
 
@@ -536,7 +545,7 @@ msgstr ""
 msgid "Shuffle"
 msgstr ""
 
-#: ../src/views/cover_box.rs:280 ../src/window/playback.rs:123
+#: ../src/views/cover_box.rs:280 ../src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr ""
 
@@ -545,11 +554,11 @@ msgstr ""
 msgid "Downloads"
 msgstr ""
 
-#: ../src/views/downloads_view.rs:75
+#: ../src/views/downloads_view.rs:76
 msgid "Nothing downloaded yet"
 msgstr ""
 
-#: ../src/views/music_popover_menu.rs:184
+#: ../src/views/music_popover_menu.rs:190
 msgid "Could not rate the track"
 msgstr ""
 
@@ -593,6 +602,31 @@ msgstr ""
 
 #: ../src/views/preferences.rs:79
 msgid "Preferences"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:108
+msgid "In use"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:164
+msgid "Managed profile"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:169
+msgid "Protected with a PIN"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:201
+msgid "Plex account"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:202
+msgid "Server"
+msgstr ""
+
+#: ../src/views/profile_dialog.rs:226
+#, rust-format
+msgid "Sign out {}"
 msgstr ""
 
 #: ../src/views/search_view.rs:20
@@ -659,7 +693,7 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-#: ../src/views/section_view.rs:356 ../src/views/sidebar_box.rs:157
+#: ../src/views/section_view.rs:366 ../src/views/sidebar_box.rs:157
 msgid "Playlists"
 msgstr ""
 
@@ -685,31 +719,31 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: ../src/window/connection.rs:14
+#: ../src/window/connection.rs:16
 msgid "Starting Girens"
 msgstr ""
 
-#: ../src/window/connection.rs:20 ../src/window/connection.rs:73
-#: ../src/window/connection.rs:129
+#: ../src/window/connection.rs:27 ../src/window/connection.rs:82
+#: ../src/window/connection.rs:147
 #, rust-format
 msgid "Connecting to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:102
+#: ../src/window/connection.rs:116
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 
-#: ../src/window/connection.rs:135 ../src/window/connection.rs:178
-#: ../src/window/connection.rs:358
+#: ../src/window/connection.rs:153 ../src/window/connection.rs:201
+#: ../src/window/connection.rs:595
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: ../src/window/connection.rs:157
+#: ../src/window/connection.rs:180
 msgid "No servers found for this account."
 msgstr ""
 
-#: ../src/window/connection.rs:171
+#: ../src/window/connection.rs:194
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -717,37 +751,75 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: ../src/window/connection.rs:198
+#: ../src/window/connection.rs:223
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:246
+#: ../src/window/connection.rs:276
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/mod.rs:568
+#: ../src/window/connection.rs:423
+msgid "That PIN is not correct. Try again."
+msgstr ""
+
+#: ../src/window/connection.rs:425
+msgid "Enter the PIN of this profile."
+msgstr ""
+
+#: ../src/window/connection.rs:437
+msgid "PIN"
+msgstr ""
+
+#: ../src/window/connection.rs:442 ../src/window/connection.rs:526
+msgid "Cancel"
+msgstr ""
+
+#: ../src/window/connection.rs:443
+msgid "Continue"
+msgstr ""
+
+#: ../src/window/connection.rs:474
+msgid "Could not switch to this profile"
+msgstr ""
+
+#: ../src/window/connection.rs:521
+#, rust-format
+msgid "Sign out {}?"
+msgstr ""
+
+#: ../src/window/connection.rs:523
+msgid ""
+"The downloads and preferences of this account are removed from this device."
+msgstr ""
+
+#: ../src/window/connection.rs:527
+msgid "Logout"
+msgstr ""
+
+#: ../src/window/mod.rs:632
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:573
+#: ../src/window/mod.rs:637
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:576
+#: ../src/window/mod.rs:640
 msgid "Help with translating"
 msgstr ""
 
-#: ../src/window/playback.rs:83
+#: ../src/window/playback.rs:79
 msgid "This is not available without a connection to the server"
 msgstr ""
 
-#: ../src/window/playback.rs:120
+#: ../src/window/playback.rs:116
 msgid "Do you want resume watching or start from the beginning?"
 msgstr ""
 
-#: ../src/window/playback.rs:124
+#: ../src/window/playback.rs:120
 msgid "Resume"
 msgstr ""
 

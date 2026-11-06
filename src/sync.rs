@@ -1,10 +1,16 @@
 //! Offline copies: the list of items to keep on this device and the job
-//! that downloads them. The list lives in the config file of the Python
-//! version and the files keep their names (`<cache>/<server>/item_<key>`).
+//! that downloads them.
+//!
+//! The files are shared by everyone who uses a server on this device
+//! (`<cache>/<server>/item_<key>`, with the details of the item next to it in
+//! `item_<key>.json`). What each user wants is kept per user: the list of
+//! synced items in [`store`], and which copies that comes down to, with how
+//! far the user has watched them, in `<cache>/<server>/user_<user>.json`. A
+//! user sees only the own copies, and a file goes when nobody wants it.
 
 use std::cell::{Cell, RefCell};
-use std::collections::HashSet;
-use std::path::PathBuf;
+use std::collections::{BTreeMap, HashSet};
+use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
@@ -15,6 +21,7 @@ use girens_plex::playback::TranscodeRequest;
 use girens_plex::PlexServer;
 use gtk::prelude::*;
 use gtk::{gio, glib};
+use serde::{Deserialize, Serialize};
 
 use crate::session::Session;
 use crate::store::{self, SyncEntry};
@@ -52,20 +59,23 @@ pub fn local_path(server: &PlexServer, rating_key: u64) -> PathBuf {
     images::cache_dir(server).join(format!("item_{rating_key}"))
 }
 
-/// The offline copy of an item of the server with this identifier, if any.
-/// Works without a connection.
-pub fn local_file(machine_identifier: &str, rating_key: u64) -> Option<PathBuf> {
-    Some(images::cache_dir_of(machine_identifier).join(format!("item_{rating_key}")))
-        .filter(|path| path.exists())
+/// The offline copy `user` has of an item of the server with this
+/// identifier, if any. Works without a connection.
+pub fn local_file(machine_identifier: &str, user: &str, rating_key: u64) -> Option<PathBuf> {
+    let dir = images::cache_dir_of(machine_identifier);
+    if !Manifest::read(&dir, user).items.contains_key(&rating_key) {
+        return None;
+    }
+    Some(dir.join(format!("item_{rating_key}"))).filter(|path| path.exists())
 }
 
 /// The description of an offline copy, stored next to it so that it can be
 /// shown and played without the server.
-fn sidecar(dir: &std::path::Path, rating_key: u64) -> PathBuf {
+fn sidecar(dir: &Path, rating_key: u64) -> PathBuf {
     dir.join(format!("item_{rating_key}.json"))
 }
 
-fn write_sidecar(dir: &std::path::Path, item: &Item) {
+fn write_sidecar(dir: &Path, item: &Item) {
     match serde_json::to_string(item) {
         Ok(text) => {
             if let Err(err) = std::fs::write(sidecar(dir, item.rating_key), text) {
@@ -76,20 +86,209 @@ fn write_sidecar(dir: &std::path::Path, item: &Item) {
     }
 }
 
-/// The items with an offline copy for this server, as far as their details
-/// are known.
-pub fn offline_items(machine_identifier: &str) -> Vec<Item> {
-    let dir = images::cache_dir_of(machine_identifier);
-    let Ok(files) = std::fs::read_dir(&dir) else {
-        return Vec::new();
+/// How far a user is with an item, as the server told when it was synced.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+struct Watched {
+    view_offset: u64,
+    view_count: u32,
+    user_rating: Option<f32>,
+}
+
+impl Watched {
+    fn of(item: &Item) -> Self {
+        Self {
+            view_offset: item.view_offset,
+            view_count: item.view_count,
+            user_rating: item.user_rating,
+        }
+    }
+}
+
+/// The offline copies of one user on one server.
+#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+struct Manifest {
+    items: BTreeMap<u64, Watched>,
+}
+
+const MANIFEST_PREFIX: &str = "user_";
+
+impl Manifest {
+    fn path(dir: &Path, user: &str) -> PathBuf {
+        // A user key may hold characters that do not belong in a file name.
+        let name: String = user
+            .chars()
+            .map(|c| if c.is_ascii_alphanumeric() || c == '-' { c } else { '_' })
+            .collect();
+        dir.join(format!("{MANIFEST_PREFIX}{name}.json"))
+    }
+
+    fn read_file(path: &Path) -> Self {
+        std::fs::read_to_string(path)
+            .ok()
+            .and_then(|text| serde_json::from_str(&text).ok())
+            .unwrap_or_default()
+    }
+
+    fn read(dir: &Path, user: &str) -> Self {
+        Self::read_file(&Self::path(dir, user))
+    }
+
+    fn write(&self, dir: &Path, user: &str) {
+        let path = Self::path(dir, user);
+        let written = std::fs::create_dir_all(dir)
+            .and_then(|()| std::fs::write(&path, serde_json::to_string(self).unwrap_or_default()));
+        if let Err(err) = written {
+            eprintln!("Could not write {}: {err}", path.display());
+        }
+    }
+
+    /// The manifests of everyone with copies in `dir`.
+    fn files(dir: &Path) -> Vec<PathBuf> {
+        let Ok(files) = std::fs::read_dir(dir) else {
+            return Vec::new();
+        };
+        files
+            .flatten()
+            .map(|file| file.path())
+            .filter(|path| {
+                path.file_name()
+                    .and_then(|name| name.to_str())
+                    .is_some_and(|name| {
+                        name.starts_with(MANIFEST_PREFIX) && name.ends_with(".json")
+                    })
+            })
+            .collect()
+    }
+
+    /// The items anyone has a copy of in `dir`.
+    fn wanted_by_anyone(dir: &Path) -> HashSet<u64> {
+        Self::files(dir)
+            .iter()
+            .flat_map(|path| Self::read_file(path).items.into_keys())
+            .collect()
+    }
+}
+
+/// The rating key in the name of a copy, complete or partial, or of its
+/// description.
+fn copy_key(file_name: &str) -> Option<u64> {
+    let key = file_name.strip_prefix("item_")?;
+    key.strip_suffix(".tmp")
+        .or_else(|| key.strip_suffix(".json"))
+        .unwrap_or(key)
+        .parse()
+        .ok()
+}
+
+/// Removes the copies in `dir`, complete or partial, of items not in `keep`.
+fn prune(dir: &Path, keep: &HashSet<u64>) {
+    let Ok(files) = std::fs::read_dir(dir) else {
+        return;
     };
-    let mut items: Vec<Item> = files
-        .flatten()
-        .filter_map(|file| {
-            let name = file.file_name();
-            let key: u64 = name.to_str()?.strip_prefix("item_")?.parse().ok()?;
-            let text = std::fs::read_to_string(sidecar(&dir, key)).ok()?;
-            serde_json::from_str(&text).ok()
+    for file in files.flatten() {
+        let name = file.file_name();
+        let unwanted = name
+            .to_str()
+            .and_then(copy_key)
+            .is_some_and(|key| !keep.contains(&key));
+        if unwanted {
+            if let Err(err) = std::fs::remove_file(file.path()) {
+                eprintln!("Could not remove {}: {err}", file.path().display());
+            }
+        }
+    }
+}
+
+/// The complete copies in `dir`, whoever they are of.
+fn copies(dir: &Path) -> HashSet<u64> {
+    std::fs::read_dir(dir)
+        .map(|files| {
+            files
+                .flatten()
+                .filter_map(|file| {
+                    file.file_name()
+                        .to_str()?
+                        .strip_prefix("item_")?
+                        .parse()
+                        .ok()
+                })
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Makes the copies that were made before they were kept per user those of
+/// `user`. Does nothing once anyone has copies of their own.
+pub fn adopt_downloads(machine_identifier: &str, user: &str) {
+    adopt_downloads_in(&images::cache_dir_of(machine_identifier), user);
+}
+
+fn adopt_downloads_in(dir: &Path, user: &str) {
+    if !Manifest::files(dir).is_empty() {
+        return;
+    }
+    let items: BTreeMap<u64, Watched> = copies(dir)
+        .into_iter()
+        .map(|key| {
+            let watched = std::fs::read_to_string(sidecar(dir, key))
+                .ok()
+                .and_then(|text| serde_json::from_str::<Item>(&text).ok())
+                .map(|item| Watched::of(&item))
+                .unwrap_or_default();
+            (key, watched)
+        })
+        .collect();
+    if !items.is_empty() {
+        Manifest { items }.write(dir, user);
+    }
+}
+
+/// Forgets the offline copies of users that are gone, on every server, and
+/// removes the files nobody else wants.
+pub fn forget_users(users: &[String]) {
+    if users.is_empty() {
+        return;
+    }
+    let Ok(servers) = std::fs::read_dir(glib::user_cache_dir()) else {
+        return;
+    };
+    for server in servers.flatten() {
+        forget_users_in(&server.path(), users);
+    }
+}
+
+fn forget_users_in(dir: &Path, users: &[String]) {
+    let mut removed = false;
+    for user in users {
+        removed |= std::fs::remove_file(Manifest::path(dir, user)).is_ok();
+    }
+    if removed {
+        prune(dir, &Manifest::wanted_by_anyone(dir));
+    }
+}
+
+/// The items `user` has an offline copy of for this server, as far as their
+/// details are known.
+pub fn offline_items(machine_identifier: &str, user: &str) -> Vec<Item> {
+    offline_items_in(&images::cache_dir_of(machine_identifier), user)
+}
+
+fn offline_items_in(dir: &Path, user: &str) -> Vec<Item> {
+    let present = copies(dir);
+    let mut items: Vec<Item> = Manifest::read(dir, user)
+        .items
+        .into_iter()
+        .filter(|(key, _)| present.contains(key))
+        .filter_map(|(key, watched)| {
+            let text = std::fs::read_to_string(sidecar(dir, key)).ok()?;
+            let mut item: Item = serde_json::from_str(&text).ok()?;
+            // The details are shared; how far someone is, is not.
+            item.view_offset = watched.view_offset;
+            item.view_count = watched.view_count;
+            item.user_rating = watched.user_rating;
+            Some(item)
         })
         .collect();
     items.sort_by(|a, b| {
@@ -103,9 +302,15 @@ pub fn offline_items(machine_identifier: &str) -> Vec<Item> {
     items
 }
 
-/// The offline copy of an item, if there is one.
-pub fn downloaded(server: &PlexServer, rating_key: u64) -> Option<PathBuf> {
+/// The offline copy of an item, if there is one, whoever asked for it.
+fn downloaded(server: &PlexServer, rating_key: u64) -> Option<PathBuf> {
     Some(local_path(server, rating_key)).filter(|path| path.exists())
+}
+
+/// The active user and the server whose copies are meant.
+fn scope() -> Option<(String, String)> {
+    let session = Session::current();
+    Some((session.user_key()?, session.machine_identifier()?))
 }
 
 impl Sync {
@@ -113,28 +318,35 @@ impl Sync {
         CURRENT.with(Rc::clone)
     }
 
-    /// Whether the item has an offline copy.
+    /// Whether the active user has an offline copy of the item.
     pub fn is_downloaded(&self, rating_key: u64) -> bool {
         self.downloaded.borrow().contains(&rating_key)
     }
 
-    /// Looks on the disk which items have an offline copy.
-    pub fn rescan(&self, machine_identifier: &str) {
-        let keys = std::fs::read_dir(images::cache_dir_of(machine_identifier))
-            .map(|files| {
-                files
-                    .flatten()
-                    .filter_map(|file| {
-                        file.file_name()
-                            .to_str()?
-                            .strip_prefix("item_")?
-                            .parse()
-                            .ok()
-                    })
-                    .collect()
-            })
-            .unwrap_or_default();
+    /// Looks on the disk which items `user` has an offline copy of.
+    pub fn rescan(&self, machine_identifier: &str, user: &str) {
+        let dir = images::cache_dir_of(machine_identifier);
+        let present = copies(&dir);
+        let keys = Manifest::read(&dir, user)
+            .items
+            .into_keys()
+            .filter(|key| present.contains(key))
+            .collect();
         self.downloaded.replace(keys);
+    }
+
+    /// The items the active user wants to have offline of the server in
+    /// use.
+    pub fn entries(&self) -> Vec<SyncEntry> {
+        scope()
+            .map(|(user, machine)| store::sync_entries(&user, &machine))
+            .unwrap_or_default()
+    }
+
+    /// Forgets whose copies were looked up, when someone else takes over.
+    pub fn forget(&self) {
+        self.downloaded.borrow_mut().clear();
+        self.emit(Event::EntriesChanged);
     }
 
     pub fn connect(&self, listener: impl Fn(&Event) + 'static) {
@@ -149,20 +361,27 @@ impl Sync {
     }
 
     pub fn add(self: &Rc<Self>, entry: SyncEntry) {
-        store::add_sync_entry(&entry);
+        let Some((user, machine)) = scope() else {
+            return;
+        };
+        store::add_sync_entry(&user, &machine, &entry);
         self.emit(Event::EntriesChanged);
         self.run();
     }
 
     pub fn remove(&self, rating_key: u64) {
-        store::remove_sync_entry(rating_key);
+        let Some((user, machine)) = scope() else {
+            return;
+        };
+        store::remove_sync_entry(&user, &machine, rating_key);
         self.emit(Event::EntriesChanged);
     }
 
     /// Downloads what is missing and deletes copies that are no longer
     /// wanted. Does nothing while a run is in progress.
     pub fn run(self: &Rc<Self>) {
-        let Some(server) = Session::current().server() else {
+        let session = Session::current();
+        let (Some(server), Some(user)) = (session.server(), session.user_key()) else {
             return;
         };
         if self.busy.replace(true) {
@@ -171,7 +390,7 @@ impl Sync {
         self.emit(Event::Busy(true));
         let sync = self.clone();
         let task = glib::spawn_future_local(async move {
-            if let Err(err) = sync.run_once(&server).await {
+            if let Err(err) = sync.run_once(&server, &user).await {
                 crate::notify::failure(&crate::i18n::gettext("Sync failed"), &err);
             }
             sync.task.take();
@@ -198,9 +417,12 @@ impl Sync {
         self.emit(Event::Busy(false));
     }
 
-    async fn run_once(&self, server: &PlexServer) -> Result<(), girens_plex::Error> {
+    async fn run_once(&self, server: &PlexServer, user: &str) -> Result<(), girens_plex::Error> {
+        let dir = images::cache_dir(server);
         let mut wanted = HashSet::new();
-        for entry in store::sync_entries() {
+        // What the user has a copy of when this run is over.
+        let mut manifest = Manifest::default();
+        for entry in store::sync_entries(user, server.machine_identifier()) {
             let items = {
                 let server = server.clone();
                 runtime::run(async move { expand(&server, entry.rating_key).await }).await
@@ -223,18 +445,27 @@ impl Sync {
                 .take(entry.max_items.map_or(usize::MAX, |max| max as usize));
             for item in selected {
                 wanted.insert(item.rating_key);
-                let dir = images::cache_dir(server);
                 if downloaded(server, item.rating_key).is_some() {
-                    // Copies from before the details were stored get them now.
+                    // Copies from before the details were stored get them
+                    // now. The file may be there for someone else; it
+                    // serves this user as well.
                     if !sidecar(&dir, item.rating_key).exists() {
                         write_sidecar(&dir, &item);
                     }
+                    manifest.items.insert(item.rating_key, Watched::of(&item));
+                    self.downloaded.borrow_mut().insert(item.rating_key);
                 } else {
                     self.emit(Event::Downloading(Box::new(item.clone()), true));
                     let result = self.download(server, &item, entry.converted).await;
                     if result.is_ok() {
                         write_sidecar(&dir, &item);
+                        manifest.items.insert(item.rating_key, Watched::of(&item));
                         self.downloaded.borrow_mut().insert(item.rating_key);
+                        // So that the copy is the user's even when the
+                        // rest of the run is cancelled.
+                        let mut so_far = Manifest::read(&dir, user);
+                        so_far.items.insert(item.rating_key, Watched::of(&item));
+                        so_far.write(&dir, user);
                     }
                     self.emit(Event::Downloading(Box::new(item.clone()), false));
                     if let Err(err) = result {
@@ -247,27 +478,14 @@ impl Sync {
             }
         }
 
-        // Remove copies, complete or partial, of items that are no longer
-        // synced. A partial copy of a wanted item stays: the next run
-        // continues it.
-        if let Ok(files) = std::fs::read_dir(images::cache_dir(server)) {
-            for file in files.flatten() {
-                let name = file.file_name();
-                let Some(key) = name.to_str().and_then(|name| name.strip_prefix("item_")) else {
-                    continue;
-                };
-                let key = key
-                    .strip_suffix(".tmp")
-                    .or_else(|| key.strip_suffix(".json"))
-                    .unwrap_or(key);
-                if key.parse().is_ok_and(|key: u64| !wanted.contains(&key)) {
-                    if let Err(err) = std::fs::remove_file(file.path()) {
-                        eprintln!("Could not remove {}: {err}", file.path().display());
-                    }
-                }
-            }
-        }
-        self.rescan(server.machine_identifier());
+        manifest.write(&dir, user);
+        // Remove copies, complete or partial, of items that nobody syncs
+        // any more. A partial copy of an item this user wants stays: the
+        // next run continues it.
+        let mut keep = Manifest::wanted_by_anyone(&dir);
+        keep.extend(wanted);
+        prune(&dir, &keep);
+        self.rescan(server.machine_identifier(), user);
         Ok(())
     }
 }
@@ -381,4 +599,131 @@ fn free_space(dir: &std::path::Path) -> Option<u64> {
         .query_filesystem_info(gio::FILE_ATTRIBUTE_FILESYSTEM_FREE, gio::Cancellable::NONE)
         .ok()?;
     Some(info.attribute_uint64(gio::FILE_ATTRIBUTE_FILESYSTEM_FREE))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn with_dir(test: impl FnOnce(&Path)) {
+        let dir = std::env::temp_dir().join(format!(
+            "girens-sync-test-{}-{:?}",
+            std::process::id(),
+            std::thread::current().id()
+        ));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        test(&dir);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// A copy with its details, as a sync run leaves it.
+    fn copy(dir: &Path, rating_key: u64, view_offset: u64) {
+        std::fs::write(dir.join(format!("item_{rating_key}")), "media").unwrap();
+        let details = serde_json::json!({
+            "ratingKey": rating_key.to_string(),
+            "key": format!("/library/metadata/{rating_key}"),
+            "type": "movie",
+            "title": format!("Movie {rating_key}"),
+            "viewOffset": view_offset,
+        });
+        std::fs::write(sidecar(dir, rating_key), details.to_string()).unwrap();
+    }
+
+    fn manifest(dir: &Path, user: &str, keys: &[u64]) {
+        Manifest {
+            items: keys
+                .iter()
+                .map(|key| (*key, Watched::default()))
+                .collect(),
+        }
+        .write(dir, user);
+    }
+
+    fn titles(dir: &Path, user: &str) -> Vec<String> {
+        offline_items_in(dir, user)
+            .into_iter()
+            .map(|item| item.title)
+            .collect()
+    }
+
+    #[test]
+    fn copies_from_before_become_those_of_the_user_who_was_signed_in() {
+        with_dir(|dir| {
+            copy(dir, 1, 60_000);
+            copy(dir, 2, 0);
+            std::fs::write(dir.join("item_3.tmp"), "half").unwrap();
+            std::fs::write(dir.join("thumb_1"), "cover").unwrap();
+
+            adopt_downloads_in(dir, "me");
+            assert_eq!(titles(dir, "me"), ["Movie 1", "Movie 2"]);
+            assert_eq!(offline_items_in(dir, "me")[0].view_offset, 60_000);
+            assert!(titles(dir, "child").is_empty());
+
+            // Not again once someone has copies of their own.
+            copy(dir, 4, 0);
+            adopt_downloads_in(dir, "child");
+            assert!(titles(dir, "child").is_empty());
+            assert_eq!(titles(dir, "me"), ["Movie 1", "Movie 2"]);
+        });
+    }
+
+    #[test]
+    fn everyone_sees_the_own_copies_with_the_own_progress() {
+        with_dir(|dir| {
+            copy(dir, 1, 60_000);
+            copy(dir, 2, 0);
+            manifest(dir, "me", &[1, 2]);
+            let mut child = Manifest::default();
+            child.items.insert(
+                2,
+                Watched {
+                    view_offset: 5_000,
+                    view_count: 1,
+                    user_rating: None,
+                },
+            );
+            // Wanted, but the file is not there (yet).
+            child.items.insert(9, Watched::default());
+            child.write(dir, "child");
+
+            assert_eq!(titles(dir, "me"), ["Movie 1", "Movie 2"]);
+            // The progress in the shared details is someone else's.
+            assert_eq!(offline_items_in(dir, "me")[0].view_offset, 0);
+            let items = offline_items_in(dir, "child");
+            assert_eq!(items.len(), 1);
+            assert_eq!(items[0].title, "Movie 2");
+            assert_eq!(items[0].view_offset, 5_000);
+            assert_eq!(items[0].view_count, 1);
+        });
+    }
+
+    #[test]
+    fn a_file_stays_for_as_long_as_someone_wants_it() {
+        with_dir(|dir| {
+            for key in [1, 2, 3] {
+                copy(dir, key, 0);
+            }
+            std::fs::write(dir.join("item_3.tmp"), "half").unwrap();
+            std::fs::write(dir.join("thumb_1"), "cover").unwrap();
+            manifest(dir, "me", &[1, 2]);
+            manifest(dir, "child", &[2, 3]);
+            manifest(dir, "server:abc", &[1]);
+            assert!(Manifest::path(dir, "server:abc")
+                .to_string_lossy()
+                .ends_with("user_server_abc.json"));
+
+            forget_users_in(dir, &["me".to_owned()]);
+            assert!(titles(dir, "me").is_empty());
+            assert_eq!(copies(dir), HashSet::from([1, 2, 3]));
+
+            forget_users_in(dir, &["child".to_owned(), "nobody".to_owned()]);
+            assert_eq!(copies(dir), HashSet::from([1]));
+            assert!(!dir.join("item_3.tmp").exists());
+            assert!(!sidecar(dir, 2).exists());
+            // Covers are not copies.
+            assert!(dir.join("thumb_1").exists());
+            assert_eq!(titles(dir, "server:abc"), ["Movie 1"]);
+        });
+    }
 }

@@ -660,6 +660,7 @@ impl Inner {
         let session_state = Session::current();
         let server = session_state.server();
         let machine = session_state.machine_identifier().unwrap_or_default();
+        let user = session_state.user_key().unwrap_or_default();
         let prefer_clips = self.state.borrow().prefer_music_clips;
 
         // The play queue lists items without their streams, and a track may
@@ -683,7 +684,7 @@ impl Inner {
 
         let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
         let (session, url) = if let Some(path) =
-            crate::sync::local_file(&machine, loading.rating_key)
+            crate::sync::local_file(&machine, &user, loading.rating_key)
         {
             // An offline copy plays without the server.
             (None, path.to_string_lossy().into_owned())

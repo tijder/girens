@@ -5,8 +5,13 @@ template $login_view : Box {
   margin-top: 0;
   orientation: vertical;
 
-  Adw.HeaderBar {}
-
+  Adw.HeaderBar {
+    [start]
+    Button _cancel_button {
+      label: _("Cancel");
+      visible: false;
+    }
+  }
 
   Adw.Clamp {
     maximum-size: 500;

@@ -627,6 +627,7 @@ dependencies = [
  "libsecret",
  "mpris-server",
  "pkg-config",
+ "serde",
  "serde_json",
  "tokio",
 ]

@@ -203,6 +203,13 @@ impl SectionView {
         imp._section_flow.set_empty_message(None);
     }
 
+    /// Drops what is shown: it was loaded for someone else.
+    pub fn forget(&self) {
+        self.reset("");
+        self.imp().section.replace(None);
+        self.imp().playlists.set(false);
+    }
+
     /// Shows a library, with the sort order used last time.
     pub fn show_section(&self, section: &LibrarySection) {
         let imp = self.imp();
@@ -219,7 +226,8 @@ impl SectionView {
         imp.playlists.set(false);
         imp._section_controll_box.set_visible(true);
 
-        let (sort, direction) = match store::section_sort(&section.uuid) {
+        let user = Session::current().user_key().unwrap_or_default();
+        let (sort, direction) = match store::section_sort(&user, &section.uuid) {
             Some((sort, direction)) => (Some(sort), direction),
             None => (None, "desc".to_owned()),
         };
@@ -288,7 +296,9 @@ impl SectionView {
         };
         if let Some(sort) = imp.sort.borrow().as_ref() {
             let direction = if imp.descending.get() { "desc" } else { "asc" };
-            store::set_section_sort(&section.uuid, sort, direction);
+            if let Some(user) = Session::current().user_key() {
+                store::set_section_sort(&user, &section.uuid, sort, direction);
+            }
         }
         self.reset(&section.title);
         self.load_more();

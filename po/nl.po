@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 22:22+0100\n"
+"POT-Creation-Date: 2026-11-06 07:38+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -103,59 +103,60 @@ msgstr "Vorige"
 msgid "Next"
 msgstr "Volgende"
 
-#: ../data/ui/loading_view.blp:28 ../data/ui/profile_dialog.blp:22
-msgid "Logout"
-msgstr "Afmelden"
+#: ../data/ui/loading_view.blp:33 ../data/ui/profile_dialog.blp:5
+#: ../data/ui/profile_dialog.blp:14
+msgid "Accounts"
+msgstr "Accounts"
 
-#: ../data/ui/login_view.blp:29
+#: ../data/ui/login_view.blp:34
 msgid "Username and password"
 msgstr "Gebruikersnaam en wachtwoord"
 
-#: ../data/ui/login_view.blp:33
+#: ../data/ui/login_view.blp:38
 msgid "Login to Plex with an user acount"
 msgstr "Aanmelden bij Plex met een account"
 
-#: ../data/ui/login_view.blp:38
+#: ../data/ui/login_view.blp:43
 msgid "Sign in on plex.tv"
 msgstr "Aanmelden op plex.tv"
 
-#: ../data/ui/login_view.blp:39
+#: ../data/ui/login_view.blp:44
 msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr "Opent je browser; ook voor accounts met tweestapsverificatie"
 
-#: ../data/ui/login_view.blp:44
+#: ../data/ui/login_view.blp:49
 msgid "Sign in"
 msgstr "Aanmelden"
 
-#: ../data/ui/login_view.blp:53 ../data/ui/profile_dialog.blp:12
+#: ../data/ui/login_view.blp:58 ../data/ui/profile_dialog.blp:26
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: ../data/ui/login_view.blp:59
+#: ../data/ui/login_view.blp:64
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: ../data/ui/login_view.blp:68
+#: ../data/ui/login_view.blp:73
 msgid "Login"
 msgstr "Aanmelden"
 
-#: ../data/ui/login_view.blp:79
+#: ../data/ui/login_view.blp:84
 msgid "URL and token"
 msgstr "URL en token"
 
-#: ../data/ui/login_view.blp:84
+#: ../data/ui/login_view.blp:89
 msgid "Go to Plex server based on an URL"
 msgstr "Verbinden met een Plex-server via een URL"
 
-#: ../data/ui/login_view.blp:89
+#: ../data/ui/login_view.blp:94
 msgid "The URL to the Plex server with the port number"
 msgstr "De URL van de Plex-server, met poortnummer"
 
-#: ../data/ui/login_view.blp:95
+#: ../data/ui/login_view.blp:100
 msgid "Token"
 msgstr "Token"
 
-#: ../data/ui/login_view.blp:104
+#: ../data/ui/login_view.blp:109
 msgid "Connect"
 msgstr "Verbinden"
 
@@ -247,15 +248,23 @@ msgstr "Audio "
 msgid "Subtitle "
 msgstr "Ondertitel "
 
-#: ../data/ui/profile_dialog.blp:5 ../data/ui/profile_dialog.blp:10
+#: ../data/ui/profile_dialog.blp:9
+msgid "Who is watching?"
+msgstr "Wie kijkt er?"
+
+#: ../data/ui/profile_dialog.blp:17
+msgid "Add account…"
+msgstr "Account toevoegen…"
+
+#: ../data/ui/profile_dialog.blp:23
 msgid "Account info"
 msgstr "Accountinfo"
 
-#: ../data/ui/profile_dialog.blp:15
+#: ../data/ui/profile_dialog.blp:30
 msgid "Email"
 msgstr "E-mail"
 
-#: ../data/ui/profile_dialog.blp:18
+#: ../data/ui/profile_dialog.blp:34
 msgid "Subscription plan"
 msgstr "Abonnements­plan"
 
@@ -336,11 +345,11 @@ msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr "Muziekclips afspelen in plaats van audiotrack"
 
-#: ../data/ui/sync_dialog.blp:4
+#: ../data/ui/sync_dialog.blp:5
 msgid "Sync items"
 msgstr "Items synchroniseren"
 
-#: ../data/ui/sync_dialog.blp:34
+#: ../data/ui/sync_dialog.blp:47
 msgid "Ok"
 msgstr "Oké"
 
@@ -352,19 +361,19 @@ msgstr "Verwijderen"
 msgid "Sync - settings"
 msgstr "Synchronisatie - instellingen"
 
-#: ../data/ui/sync_settings.blp:14
+#: ../data/ui/sync_settings.blp:19
 msgid "Convert"
 msgstr "Converteren"
 
-#: ../data/ui/sync_settings.blp:15
+#: ../data/ui/sync_settings.blp:20
 msgid "Converted sync can take a long time"
 msgstr "Geconverteerde synchronisatie kan lang duren"
 
-#: ../data/ui/sync_settings.blp:23
+#: ../data/ui/sync_settings.blp:30
 msgid "Unwatched only"
 msgstr "Alleen onbekeken"
 
-#: ../data/ui/sync_settings.blp:31
+#: ../data/ui/sync_settings.blp:40
 msgid "Max items"
 msgstr "Max items"
 
@@ -448,35 +457,35 @@ msgstr "Geen afspeellijsten"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: ../src/player/mod.rs:338
+#: ../src/player/mod.rs:341
 msgid "Nothing to play"
 msgstr "Er is niets om af te spelen"
 
-#: ../src/player/mod.rs:346
+#: ../src/player/mod.rs:349
 msgid "Could not create a play queue"
 msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: ../src/player/mod.rs:451
+#: ../src/player/mod.rs:458
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: ../src/player/mod.rs:646
+#: ../src/player/mod.rs:653
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: ../src/player/mod.rs:1103
+#: ../src/player/mod.rs:1111
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
-#: ../src/sync.rs:175
+#: ../src/sync.rs:394
 msgid "Sync failed"
 msgstr "Synchroniseren is mislukt"
 
-#: ../src/sync.rs:242
+#: ../src/sync.rs:473
 msgid "Could not download an item"
 msgstr "Een item kon niet worden gedownload"
 
-#: ../src/sync.rs:302
+#: ../src/sync.rs:520
 msgid "Not enough disk space for the download"
 msgstr "Niet genoeg schijfruimte voor de download"
 
@@ -538,7 +547,7 @@ msgstr "Markeren als onafgespeeld"
 msgid "Shuffle"
 msgstr "Shufflen"
 
-#: ../src/views/cover_box.rs:280 ../src/window/playback.rs:123
+#: ../src/views/cover_box.rs:280 ../src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr "Starten vanaf het begin"
 
@@ -547,11 +556,11 @@ msgstr "Starten vanaf het begin"
 msgid "Downloads"
 msgstr "Downloads"
 
-#: ../src/views/downloads_view.rs:75
+#: ../src/views/downloads_view.rs:76
 msgid "Nothing downloaded yet"
 msgstr "Nog niets gedownload"
 
-#: ../src/views/music_popover_menu.rs:184
+#: ../src/views/music_popover_menu.rs:190
 msgid "Could not rate the track"
 msgstr "Het nummer kon niet worden beoordeeld"
 
@@ -598,6 +607,31 @@ msgstr "Afspelen"
 #: ../src/views/preferences.rs:79
 msgid "Preferences"
 msgstr "Voorkeuren"
+
+#: ../src/views/profile_dialog.rs:108
+msgid "In use"
+msgstr "In gebruik"
+
+#: ../src/views/profile_dialog.rs:164
+msgid "Managed profile"
+msgstr "Beheerd profiel"
+
+#: ../src/views/profile_dialog.rs:169
+msgid "Protected with a PIN"
+msgstr "Beveiligd met een pincode"
+
+#: ../src/views/profile_dialog.rs:201
+msgid "Plex account"
+msgstr "Plex-account"
+
+#: ../src/views/profile_dialog.rs:202
+msgid "Server"
+msgstr "Server"
+
+#: ../src/views/profile_dialog.rs:226
+#, rust-format
+msgid "Sign out {}"
+msgstr "{} afmelden"
 
 #: ../src/views/search_view.rs:20
 msgid "Movies"
@@ -663,7 +697,7 @@ msgstr "Media­hoogte"
 msgid "Duration"
 msgstr "Duur"
 
-#: ../src/views/section_view.rs:356 ../src/views/sidebar_box.rs:157
+#: ../src/views/section_view.rs:366 ../src/views/sidebar_box.rs:157
 msgid "Playlists"
 msgstr "Afspeel­lĳsten"
 
@@ -689,31 +723,31 @@ msgstr "Speler"
 msgid "Home"
 msgstr "Thuis"
 
-#: ../src/window/connection.rs:14
+#: ../src/window/connection.rs:16
 msgid "Starting Girens"
 msgstr "Girens wordt opgestart"
 
-#: ../src/window/connection.rs:20 ../src/window/connection.rs:73
-#: ../src/window/connection.rs:129
+#: ../src/window/connection.rs:27 ../src/window/connection.rs:82
+#: ../src/window/connection.rs:147
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
 
-#: ../src/window/connection.rs:102
+#: ../src/window/connection.rs:116
 msgid "Waiting for you to sign in in the browser…"
 msgstr "Wachten tot je bent aangemeld in de browser…"
 
-#: ../src/window/connection.rs:135 ../src/window/connection.rs:178
-#: ../src/window/connection.rs:358
+#: ../src/window/connection.rs:153 ../src/window/connection.rs:201
+#: ../src/window/connection.rs:595
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/window/connection.rs:157
+#: ../src/window/connection.rs:180
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/window/connection.rs:171
+#: ../src/window/connection.rs:194
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -724,15 +758,54 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/window/connection.rs:198
+#: ../src/window/connection.rs:223
 msgid "The server cannot be reached. Showing your downloads."
 msgstr "De server is niet bereikbaar. Je downloads worden getoond."
 
-#: ../src/window/connection.rs:246
+#: ../src/window/connection.rs:276
 msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
-#: ../src/window/mod.rs:568
+#: ../src/window/connection.rs:423
+msgid "That PIN is not correct. Try again."
+msgstr "Die pincode klopt niet. Probeer het opnieuw."
+
+#: ../src/window/connection.rs:425
+msgid "Enter the PIN of this profile."
+msgstr "Voer de pincode van dit profiel in."
+
+#: ../src/window/connection.rs:437
+msgid "PIN"
+msgstr "Pincode"
+
+#: ../src/window/connection.rs:442 ../src/window/connection.rs:526
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: ../src/window/connection.rs:443
+msgid "Continue"
+msgstr "Doorgaan"
+
+#: ../src/window/connection.rs:474
+msgid "Could not switch to this profile"
+msgstr "Kon niet naar dit profiel wisselen"
+
+#: ../src/window/connection.rs:521
+#, rust-format
+msgid "Sign out {}?"
+msgstr "{} afmelden?"
+
+#: ../src/window/connection.rs:523
+msgid ""
+"The downloads and preferences of this account are removed from this device."
+msgstr ""
+"De downloads en voorkeuren van dit account worden van dit apparaat verwijderd."
+
+#: ../src/window/connection.rs:527
+msgid "Logout"
+msgstr "Afmelden"
+
+#: ../src/window/mod.rs:632
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -740,23 +813,23 @@ msgstr ""
 "Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek "
 "af te spelen."
 
-#: ../src/window/mod.rs:573
+#: ../src/window/mod.rs:637
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:576
+#: ../src/window/mod.rs:640
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
-#: ../src/window/playback.rs:83
+#: ../src/window/playback.rs:79
 msgid "This is not available without a connection to the server"
 msgstr "Dit is niet beschikbaar zonder verbinding met de server"
 
-#: ../src/window/playback.rs:120
+#: ../src/window/playback.rs:116
 msgid "Do you want resume watching or start from the beginning?"
 msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 
-#: ../src/window/playback.rs:124
+#: ../src/window/playback.rs:120
 msgid "Resume"
 msgstr "Hervatten"
 

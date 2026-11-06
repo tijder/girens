@@ -42,7 +42,7 @@ async fn plex_home_profiles() {
         .iter()
         .find(|user| user.uuid == myplex.account().uuid)
         .expect("the account is one of its profiles");
-    let again = myplex.switch_user(own, None).await.unwrap();
+    let again = myplex.switch_user(&own.uuid, None).await.unwrap();
     assert_eq!(again.account().uuid, myplex.account().uuid);
     assert!(!again.account().auth_token.is_empty());
     // Both sessions work.

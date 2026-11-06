@@ -33,6 +33,7 @@ src/views/downloads_view.rs
 src/views/music_popover_menu.rs
 src/views/player_view.rs
 src/views/preferences.rs
+src/views/profile_dialog.rs
 src/views/search_view.rs
 src/views/section_view.rs
 src/views/show_view.rs

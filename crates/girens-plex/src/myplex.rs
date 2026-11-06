@@ -20,8 +20,12 @@ const HOME_USERS: &str = "/api/v2/home/users";
 pub struct Account {
     pub auth_token: String,
     pub uuid: String,
+    /// Managed profiles of a Plex Home have neither a username nor an
+    /// e-mail address.
     pub username: Option<String>,
     pub email: Option<String>,
+    /// The name to show.
+    pub title: Option<String>,
     /// Avatar URL.
     pub thumb: Option<String>,
     pub subscription: Option<Subscription>,
@@ -237,11 +241,9 @@ impl MyPlex {
     /// A session as another profile of the Home. `pin` is needed when the
     /// profile is [protected](HomeUser::protected); a wrong one gives
     /// [`Error::WrongPin`]. This session stays valid.
-    pub async fn switch_user(&self, user: &HomeUser, pin: Option<&str>) -> Result<Self> {
-        let mut url = url::Url::parse(&format!(
-            "{}{HOME_USERS}/{}/switch",
-            self.plex_tv, user.uuid
-        ))?;
+    pub async fn switch_user(&self, user_uuid: &str, pin: Option<&str>) -> Result<Self> {
+        let address = format!("{}{HOME_USERS}/{user_uuid}/switch", self.plex_tv);
+        let mut url = url::Url::parse(&address)?;
         if let Some(pin) = pin {
             url.query_pairs_mut().append_pair("pin", pin);
         }
@@ -260,14 +262,17 @@ impl MyPlex {
             return Err(Error::WrongPin);
         }
         if !status.is_success() {
-            // The address holds the PIN; it does not belong in a log.
-            let url = format!("{}{HOME_USERS}/{}/switch", self.plex_tv, user.uuid);
-            return Err(Error::Status { status, url });
+            // Without the PIN, which does not belong in a log.
+            return Err(Error::Status {
+                status,
+                url: address,
+            });
         }
-        let url = response.url().path().to_owned();
         let body = response.bytes().await?;
-        let account: Account =
-            serde_json::from_slice(&body).map_err(|source| Error::Decode { url, source })?;
+        let account: Account = serde_json::from_slice(&body).map_err(|source| Error::Decode {
+            url: address,
+            source,
+        })?;
         Self::with_account(account, &self.client, &self.plex_tv)
     }
 

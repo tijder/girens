@@ -9,7 +9,7 @@ use girens_plex::model::{Item, ItemKind};
 use gtk::{glib, CompositeTemplate};
 
 use crate::session::Session;
-use crate::store::{self, SyncEntry};
+use crate::store::SyncEntry;
 use crate::sync::{Event, Sync};
 use crate::{images, runtime};
 
@@ -214,7 +214,7 @@ impl SyncDialog {
     fn fill(&self) {
         let list = &self.imp()._item_box;
         list.remove_all();
-        for entry in store::sync_entries() {
+        for entry in Sync::current().entries() {
             list.append(&SyncItem::new(&entry));
         }
     }

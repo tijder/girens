@@ -2,27 +2,37 @@ using Gtk 4.0;
 using Adw 1;
 
 template $profile_dialog : Adw.PreferencesDialog {
-  title: _("Account info");
+  title: _("Accounts");
 
   Adw.PreferencesPage {
-    title: "Page";
-    Adw.PreferencesGroup {
+    Adw.PreferencesGroup _profiles_group {
+      title: _("Who is watching?");
+      visible: false;
+    }
+
+    Adw.PreferencesGroup _accounts_group {
+      title: _("Accounts");
+
+      Adw.ButtonRow _add_button {
+        title: _("Add account…");
+        start-icon-name: "list-add-symbolic";
+      }
+    }
+
+    Adw.PreferencesGroup _info_group {
       title: _("Account info");
+
       Adw.ActionRow _username_value_label {
         subtitle: _("Username");
       }
+
       Adw.ActionRow _email_value_label {
         subtitle: _("Email");
       }
+
       Adw.ActionRow _subscriptionplan_value_label {
         subtitle: _("Subscription plan");
-      }
-
-      Gtk.Button _logout_button {
-        label: _("Logout");
-        margin-top: 20;
       }
     }
   }
 }
-

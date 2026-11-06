@@ -28,6 +28,8 @@ mod imp {
     #[template(resource = "/nl/g4d/Girens/login_view.ui")]
     pub struct LoginView {
         #[template_child]
+        pub _cancel_button: TemplateChild<gtk::Button>,
+        #[template_child]
         pub _browser_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _username_entry: TemplateChild<adw::EntryRow>,
@@ -42,6 +44,7 @@ mod imp {
         #[template_child]
         pub _connect_url_button: TemplateChild<gtk::Button>,
         pub on_request: RefCell<Option<Box<dyn Fn(LoginRequest)>>>,
+        pub on_cancel: RefCell<Option<Box<dyn Fn()>>>,
     }
 
     #[glib::object_subclass]
@@ -71,6 +74,16 @@ mod imp {
                     move |_| view.set_error(false)
                 ));
             }
+
+            self._cancel_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    if let Some(callback) = view.imp().on_cancel.borrow().as_ref() {
+                        callback();
+                    }
+                }
+            ));
 
             self._browser_button.connect_clicked(glib::clone!(
                 #[weak]
@@ -143,6 +156,16 @@ impl LoginView {
     /// Called when the user submits one of the two forms.
     pub fn connect_request(&self, callback: impl Fn(LoginRequest) + 'static) {
         self.imp().on_request.replace(Some(Box::new(callback)));
+    }
+
+    /// Called when the user would rather stay with who is signed in.
+    pub fn connect_cancel(&self, callback: impl Fn() + 'static) {
+        self.imp().on_cancel.replace(Some(Box::new(callback)));
+    }
+
+    /// Whether there is someone signed in to go back to.
+    pub fn set_cancellable(&self, cancellable: bool) {
+        self.imp()._cancel_button.set_visible(cancellable);
     }
 
     /// Blocks the forms while a login attempt is running.

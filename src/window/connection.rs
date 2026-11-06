@@ -1,6 +1,8 @@
-//! Logging in, connecting to a server and noticing when it goes away.
+//! Logging in, switching between accounts and profiles, connecting to a
+//! server and noticing when it goes away.
 
 use super::*;
+use crate::store::Profile;
 
 /// Seconds between checks whether the sign-in in the browser was approved,
 /// and how often to check.
@@ -12,6 +14,11 @@ impl PlexWindow {
     pub(super) async fn start(&self) {
         let session = self.imp().session.clone();
         self.show_loading(&gettext("Starting Girens"));
+        session.prepare().await;
+        if session.account_id().is_none() {
+            self.show_login();
+            return;
+        }
 
         // Signing in to plex.tv and connecting to the server used last do not
         // depend on each other, so they run at the same time, and the
@@ -45,7 +52,9 @@ impl PlexWindow {
         }
 
         match stored {
-            Ok(true) => self.load_account_details().await,
+            // Unless the connection was dropped again because the profile
+            // it was made for could not be continued.
+            Ok(true) if session.server().is_some() => self.load_account_details().await,
             other => {
                 let unreachable = matches!(&other, Err(err) if err.is_network());
                 if let Err(err) = other {
@@ -82,8 +91,12 @@ impl PlexWindow {
             imp._login_view.set_error(!in_browser);
             return;
         }
+        // Whoever was signed in before makes way.
+        let server = session.server();
+        self.reset_for_user_change();
+        imp._login_view.reset();
 
-        if session.server().is_some() || self.connect_to_server().await {
+        if server.is_some() || self.connect_to_server().await {
             self.connected().await;
         }
     }
@@ -93,6 +106,7 @@ impl PlexWindow {
     async fn browser_login(&self) -> girens_plex::Result<()> {
         let imp = self.imp();
         let session = imp.session.clone();
+        let signed_in = session.account_id();
         let (url, pin) = session.start_browser_login().await?;
         gtk::UriLauncher::new(&url).launch(Some(self), gtk::gio::Cancellable::NONE, |result| {
             if let Err(err) = result {
@@ -110,6 +124,10 @@ impl PlexWindow {
                 .is_some_and(|child| child == *imp._loading_view.upcast_ref::<gtk::Widget>());
             if !waiting {
                 // Cancelled from the waiting page.
+                return Err(Error::Unauthorized);
+            }
+            if session.account_id() != signed_in {
+                // Another account was chosen meanwhile.
                 return Err(Error::Unauthorized);
             }
             if session.finish_browser_login(&pin).await? {
@@ -140,14 +158,19 @@ impl PlexWindow {
         self.connect_to_account_server().await
     }
 
-    /// Connects to the first server of the account that answers.
+    /// Connects to a server of the account: the one used last if it is
+    /// among them, or else the first that answers.
     pub(super) async fn connect_to_account_server(&self) -> bool {
         let session = self.imp().session.clone();
         if session.account().is_none() {
             return false;
         }
+        let last = session.machine_identifier();
         let servers = match session.servers().await {
-            Ok(servers) => servers,
+            Ok(mut servers) => {
+                servers.sort_by_key(|server| Some(&server.client_identifier) != last.as_ref());
+                servers
+            }
             Err(err) => {
                 eprintln!("Could not list the servers of the account: {err}");
                 return false;
@@ -185,11 +208,13 @@ impl PlexWindow {
     /// false when there are none, so that there is nothing to show.
     fn show_offline(&self) -> bool {
         let imp = self.imp();
-        let Some(machine) = imp.session.machine_identifier() else {
+        let (Some(machine), Some(user)) =
+            (imp.session.machine_identifier(), imp.session.user_key())
+        else {
             return false;
         };
-        Sync::current().rescan(&machine);
-        if sync::offline_items(&machine).is_empty() {
+        Sync::current().rescan(&machine, &user);
+        if sync::offline_items(&machine, &user).is_empty() {
             return false;
         }
         self.show_main();
@@ -206,10 +231,15 @@ impl PlexWindow {
     /// switches to the normal view when it answers.
     async fn reconnect_from_offline(&self) {
         let session = self.imp().session.clone();
+        let user = session.user_key();
         loop {
             glib::timeout_future_seconds(RECONNECT_INTERVAL).await;
-            if session.stored_server_url().is_none() {
-                // Logged out in the meantime.
+            if session.stored_server_url().is_none() || session.user_key() != user {
+                // Logged out, or someone else took over, in the meantime.
+                return;
+            }
+            if session.server().is_some() {
+                // Connected in another way.
                 return;
             }
             if matches!(session.connect_stored_server().await, Ok(true)) {
@@ -230,11 +260,11 @@ impl PlexWindow {
     /// only needs the server itself.
     pub(super) async fn show_library(&self) {
         let imp = self.imp();
-        let Some(server) = imp.session.server() else {
+        let (Some(server), Some(user)) = (imp.session.server(), imp.session.user_key()) else {
             return;
         };
         self.show_main();
-        Sync::current().rescan(server.machine_identifier());
+        Sync::current().rescan(server.machine_identifier(), &user);
 
         let sections = {
             let server = server.clone();
@@ -252,7 +282,7 @@ impl PlexWindow {
             .set_servers(&[server.friendly_name().unwrap_or_default()], Some(0));
 
         self.open_requested_item();
-        crate::search_data::refresh(server);
+        crate::search_data::refresh(server, user);
 
         #[cfg(debug_assertions)]
         {
@@ -300,7 +330,7 @@ impl PlexWindow {
         let imp = self.imp();
         let Some(url) = imp.session.account().and_then(|account| account.thumb) else {
             imp._avatar_image
-                .set_icon_name(Some("preferences-desktop-personal-symbolic"));
+                .set_icon_name(Some("avatar-default-symbolic"));
             return;
         };
         match runtime::run(async move { girens_plex::download(&url).await }).await {
@@ -312,15 +342,222 @@ impl PlexWindow {
         }
     }
 
-    pub(super) async fn logout(&self) {
+    /// Clears away what belongs to whoever was active: playback, a running
+    /// sync, the pages that were open and the list of libraries. Used when
+    /// another server, profile or account takes over.
+    pub(super) fn reset_for_user_change(&self) {
         let imp = self.imp();
-        imp.session.logout().await;
+        if let Some(player) = imp.player.get() {
+            // The play queue and a transcode belong to the session that
+            // started them.
+            player.stop();
+        }
+        Sync::current().cancel();
+        Sync::current().forget();
+        imp.history.borrow_mut().clear();
+        imp._section_view.forget();
         imp.servers.borrow_mut().clear();
         imp._sidebar_box.clear();
         imp._avatar_image
-            .set_icon_name(Some("preferences-desktop-personal-symbolic"));
+            .set_icon_name(Some("avatar-default-symbolic"));
+    }
+
+    /// Shows who is using Girens, to switch profile or account.
+    pub(super) fn show_accounts(&self) {
+        let session = self.imp().session.clone();
+        let dialog = ProfileDialog::new();
+        dialog.set_account(session.account().as_ref());
+        dialog.set_accounts(&session.accounts(), session.account_id().as_deref());
+        // As plex.tv listed them last, until it has answered.
+        let known = session
+            .stored_account()
+            .map(|stored| stored.profiles)
+            .unwrap_or_default();
+        dialog.set_profiles(&known, session.user_key().as_deref());
+
+        dialog.connect_profile(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |profile| {
+                glib::spawn_future_local(async move { window.switch_profile(profile).await });
+            }
+        ));
+        dialog.connect_account(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |id| {
+                glib::spawn_future_local(async move { window.switch_account(&id).await });
+            }
+        ));
+        dialog.connect_remove(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |id| {
+                glib::spawn_future_local(async move { window.ask_to_sign_out(&id).await });
+            }
+        ));
+        dialog.connect_add(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move || window.add_account()
+        ));
+        dialog.present(Some(self));
+
+        glib::spawn_future_local(glib::clone!(
+            #[weak]
+            dialog,
+            async move {
+                let account = session.account_id();
+                let profiles = session.profiles().await;
+                if session.account_id() == account && profiles != known {
+                    dialog.set_profiles(&profiles, session.user_key().as_deref());
+                }
+            }
+        ));
+    }
+
+    /// Asks for the PIN of a protected profile. `None` when the user gives
+    /// up.
+    pub(super) async fn ask_pin(&self, profile: &Profile, wrong: bool) -> Option<String> {
+        let body = if wrong {
+            gettext("That PIN is not correct. Try again.")
+        } else {
+            gettext("Enter the PIN of this profile.")
+        };
+        let dialog = adw::AlertDialog::new(Some(&profile.title), Some(&body));
+        let entry = gtk::Entry::builder()
+            .visibility(false)
+            .input_purpose(gtk::InputPurpose::Pin)
+            .max_length(4)
+            .max_width_chars(4)
+            .xalign(0.5)
+            .halign(gtk::Align::Center)
+            .activates_default(true)
+            .build();
+        entry.update_property(&[gtk::accessible::Property::Label(&gettext("PIN"))]);
+        if wrong {
+            entry.add_css_class("error");
+        }
+        dialog.set_extra_child(Some(&entry));
+        dialog.add_response("cancel", &gettext("Cancel"));
+        dialog.add_response("switch", &gettext("Continue"));
+        dialog.set_response_appearance("switch", adw::ResponseAppearance::Suggested);
+        dialog.set_default_response(Some("switch"));
+        dialog.set_close_response("cancel");
+        dialog.set_focus(Some(&entry));
+        let response = dialog.choose_future(Some(self)).await;
+        (response == "switch").then(|| entry.text().to_string())
+    }
+
+    /// Continues as another profile of the Plex Home.
+    pub(super) async fn switch_profile(&self, profile: Profile) {
+        let session = self.imp().session.clone();
+        let mut ask = profile.protected;
+        let mut wrong = false;
+        loop {
+            let pin = if ask {
+                match self.ask_pin(&profile, wrong).await {
+                    Some(pin) => Some(pin),
+                    None => return,
+                }
+            } else {
+                None
+            };
+            match session.switch_profile(&profile, pin).await {
+                Ok(()) => break,
+                // Also when the profile got a PIN since it was listed.
+                Err(Error::WrongPin) => {
+                    wrong = ask;
+                    ask = true;
+                }
+                Err(err) => {
+                    crate::notify::failure(&gettext("Could not switch to this profile"), &err);
+                    return;
+                }
+            }
+        }
+        self.reset_for_user_change();
+        if self.connect_to_server().await {
+            self.connected().await;
+        }
+    }
+
+    /// Continues with another account that is signed in.
+    pub(super) async fn switch_account(&self, id: &str) {
+        self.imp().session.switch_account(id);
+        self.reset_for_user_change();
+        self.start().await;
+    }
+
+    /// Offers to sign in with one more account; whoever is signed in stays
+    /// until that has worked.
+    fn add_account(&self) {
+        let imp = self.imp();
         imp._login_view.reset();
         self.show_login();
+    }
+
+    /// Returns from the sign-in page to who was signed in.
+    pub(super) async fn cancel_login(&self) {
+        if self.imp().session.server().is_some() {
+            self.show_main();
+        } else {
+            self.start().await;
+        }
+    }
+
+    /// Signs an account out after asking: what was kept for it goes too.
+    pub(super) async fn ask_to_sign_out(&self, id: &str) {
+        let Some(account) = self
+            .imp()
+            .session
+            .accounts()
+            .into_iter()
+            .find(|account| account.id == id)
+        else {
+            return;
+        };
+        let dialog = adw::AlertDialog::new(
+            Some(&gettext_f("Sign out {}?", &[&account.name])),
+            Some(&gettext(
+                "The downloads and preferences of this account are removed from this device.",
+            )),
+        );
+        dialog.add_response("cancel", &gettext("Cancel"));
+        dialog.add_response("logout", &gettext("Logout"));
+        dialog.set_response_appearance("logout", adw::ResponseAppearance::Destructive);
+        dialog.set_close_response("cancel");
+        if dialog.choose_future(Some(self)).await == "logout" {
+            self.sign_out(id).await;
+        }
+    }
+
+    /// Signs an account out. When it was in use, another one that is signed
+    /// in takes over, or else the sign-in page is shown.
+    pub(super) async fn sign_out(&self, id: &str) {
+        let imp = self.imp();
+        let session = imp.session.clone();
+        let was_active = session.account_id().as_deref() == Some(id);
+        session.remove_account(id).await;
+        if !was_active {
+            return;
+        }
+        self.reset_for_user_change();
+        crate::search_data::clear();
+        if session.account_id().is_some() {
+            self.start().await;
+        } else {
+            imp._login_view.reset();
+            self.show_login();
+        }
+    }
+
+    /// Signs out the account in use.
+    pub(super) async fn logout(&self) {
+        match self.imp().session.account_id() {
+            Some(id) => self.sign_out(&id).await,
+            None => self.show_login(),
+        }
     }
 
     /// Asks the server whether it is still there. If the login is no longer

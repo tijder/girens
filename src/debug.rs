@@ -69,8 +69,10 @@ const ACTIVATE_INTERVAL: u64 = 3;
 /// activated once the server is connected; several actions separated by `;`
 /// follow each other, to visit one page after another. With `GIRENS_DEBUG_SIDEBAR_ROW=3`
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
-/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync` that
-/// dialog is opened. Lets scripts open a page for a screenshot.
+/// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync|accounts|pin|wrong-pin` that
+/// dialog is opened; with `GIRENS_DEBUG_ACCOUNT="switch 1"` (or `sign-out 1`,
+/// `add-server <url> <token>`) that is done with the accounts, once. Lets
+/// scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {
         for (index, step) in spec.split(';').enumerate() {
@@ -93,6 +95,11 @@ pub fn after_connect(window: &crate::window::PlexWindow) {
                 }
             });
         }
+    }
+    // Switching connects again, which must not repeat the step.
+    static ACCOUNT_STEP: std::sync::Once = std::sync::Once::new();
+    if let Ok(step) = std::env::var("GIRENS_DEBUG_ACCOUNT") {
+        ACCOUNT_STEP.call_once(|| window.debug_account(&step));
     }
     if let Ok(dialog) = std::env::var("GIRENS_DEBUG_OPEN") {
         window.debug_open(&dialog);
