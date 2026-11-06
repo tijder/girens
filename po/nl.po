@@ -99,18 +99,22 @@ msgstr "Vorige"
 msgid "Next"
 msgstr "Volgende"
 
-#: ../data/ui/loading_view.blp:33 ../data/ui/profile_dialog.blp:5
+#: ../data/ui/loading_view.blp:36
+msgid "Open the page again"
+msgstr "Pagina opnieuw openen"
+
+#: ../data/ui/loading_view.blp:40
+msgid "Copy the link"
+msgstr "Link kopiëren"
+
+#: ../data/ui/loading_view.blp:54 ../data/ui/profile_dialog.blp:5
 #: ../data/ui/profile_dialog.blp:14
 msgid "Accounts"
 msgstr "Accounts"
 
-#: ../data/ui/login_view.blp:34
-msgid "Username and password"
-msgstr "Gebruikersnaam en wachtwoord"
-
-#: ../data/ui/login_view.blp:38
-msgid "Login to Plex with an user acount"
-msgstr "Aanmelden bij Plex met een account"
+#: ../data/ui/login_view.blp:40
+msgid "Plex"
+msgstr "Plex"
 
 #: ../data/ui/login_view.blp:43
 msgid "Sign in on plex.tv"
@@ -120,57 +124,53 @@ msgstr "Aanmelden op plex.tv"
 msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr "Opent je browser; ook voor accounts met tweestapsverificatie"
 
-#: ../data/ui/login_view.blp:49 ../data/ui/login_view.blp:137
-msgid "Sign in"
-msgstr "Aanmelden"
+#: ../data/ui/login_view.blp:58
+msgid "Username and password"
+msgstr "Gebruikersnaam en wachtwoord"
 
-#: ../data/ui/login_view.blp:58 ../data/ui/profile_dialog.blp:26
+#: ../data/ui/login_view.blp:61 ../data/ui/profile_dialog.blp:26
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: ../data/ui/login_view.blp:64
+#: ../data/ui/login_view.blp:66
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: ../data/ui/login_view.blp:73
-msgid "Login"
-msgstr "Aanmelden"
+#: ../data/ui/login_view.blp:81
+msgid "Server address and token"
+msgstr "Serveradres en token"
 
-#: ../data/ui/login_view.blp:84
-msgid "URL and token"
-msgstr "URL en token"
+#: ../data/ui/login_view.blp:82
+msgid "Without a plex.tv account"
+msgstr "Zonder plex.tv-account"
 
-#: ../data/ui/login_view.blp:89
-msgid "Go to Plex server based on an URL"
-msgstr "Verbinden met een Plex-server via een URL"
-
-#: ../data/ui/login_view.blp:94
+#: ../data/ui/login_view.blp:85
 msgid "The URL to the Plex server with the port number"
 msgstr "De URL van de Plex-server, met poortnummer"
 
-#: ../data/ui/login_view.blp:100
+#: ../data/ui/login_view.blp:90
 msgid "Token"
 msgstr "Token"
 
-#: ../data/ui/login_view.blp:109
+#: ../data/ui/login_view.blp:99
 msgid "Connect"
 msgstr "Verbinden"
 
-#: ../data/ui/login_view.blp:120
+#: ../data/ui/login_view.blp:106
 msgid "Ister"
 msgstr "Ister"
 
-#: ../data/ui/login_view.blp:125
+#: ../data/ui/login_view.blp:109
+msgid "The address of the Ister server"
+msgstr "Het adres van de Ister-server"
+
+#: ../data/ui/login_view.blp:114
 msgid "Sign in to an Ister server"
 msgstr "Aanmelden bij een Ister-server"
 
-#: ../data/ui/login_view.blp:126
+#: ../data/ui/login_view.blp:115
 msgid "Opens your browser to sign in"
 msgstr "Opent je browser om aan te melden"
-
-#: ../data/ui/login_view.blp:130
-msgid "The address of the Ister server"
-msgstr "Het adres van de Ister-server"
 
 #: ../data/ui/main_window.blp:37
 msgid "Account"
@@ -613,6 +613,14 @@ msgstr "Downloads"
 msgid "Nothing downloaded yet"
 msgstr "Nog niets gedownload"
 
+#: ../src/views/login_view.rs:203
+msgid "Add an account"
+msgstr "Account toevoegen"
+
+#: ../src/views/login_view.rs:205
+msgid "Sign in"
+msgstr "Aanmelden"
+
 #: ../src/views/music_popover_menu.rs:190
 msgid "Could not rate the track"
 msgstr "Het nummer kon niet worden beoordeeld"
@@ -820,27 +828,46 @@ msgstr "Thuis"
 msgid "Starting Girens"
 msgstr "Girens wordt opgestart"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:103
-#: ../src/window/connection.rs:167 ../src/window/connection.rs:214
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:140
+#: ../src/window/connection.rs:202 ../src/window/connection.rs:249
 #, rust-format
 msgid "Connecting to {}."
 msgstr "Verbinden met {}."
 
-#: ../src/window/connection.rs:137 ../src/window/connection.rs:184
-msgid "Waiting for you to sign in in the browser…"
-msgstr "Wachten tot je bent aangemeld in de browser…"
+#: ../src/window/connection.rs:104 ../src/window/connection.rs:109
+#, rust-format
+msgid "Could not reach plex.tv: {}"
+msgstr "Kan plex.tv niet bereiken: {}"
 
-#: ../src/window/connection.rs:222 ../src/window/connection.rs:270
-#: ../src/window/connection.rs:739
+#: ../src/window/connection.rs:108
+msgid "The username or password is not right."
+msgstr "De gebruikersnaam of het wachtwoord klopt niet."
+
+#: ../src/window/connection.rs:116
+msgid "The server does not accept this token."
+msgstr "De server accepteert dit token niet."
+
+#: ../src/window/connection.rs:117 ../src/window/connection.rs:126
+#, rust-format
+msgid "Could not connect to {}."
+msgstr "Kan geen verbinding maken met {}."
+
+#: ../src/window/connection.rs:129
+#, rust-format
+msgid "No Ister server was found at {}."
+msgstr "Er is geen Ister-server gevonden op {}."
+
+#: ../src/window/connection.rs:257 ../src/window/connection.rs:305
+#: ../src/window/connection.rs:774
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
 
-#: ../src/window/connection.rs:249
+#: ../src/window/connection.rs:284
 msgid "No servers found for this account."
 msgstr "Er zĳn geen servers gevonden voor dit account."
 
-#: ../src/window/connection.rs:263
+#: ../src/window/connection.rs:298
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -851,55 +878,55 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: ../src/window/connection.rs:309
+#: ../src/window/connection.rs:344
 msgid "The server cannot be reached. Showing your downloads."
 msgstr "De server is niet bereikbaar. Je downloads worden getoond."
 
-#: ../src/window/connection.rs:369
+#: ../src/window/connection.rs:404
 msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
-#: ../src/window/connection.rs:465
+#: ../src/window/connection.rs:500
 msgid "Who is watching?"
 msgstr "Wie kijkt er?"
 
-#: ../src/window/connection.rs:567
+#: ../src/window/connection.rs:602
 msgid "That PIN is not correct. Try again."
 msgstr "Die pincode klopt niet. Probeer het opnieuw."
 
-#: ../src/window/connection.rs:569
+#: ../src/window/connection.rs:604
 msgid "Enter the PIN of this profile."
 msgstr "Voer de pincode van dit profiel in."
 
-#: ../src/window/connection.rs:581
+#: ../src/window/connection.rs:616
 msgid "PIN"
 msgstr "Pincode"
 
-#: ../src/window/connection.rs:586 ../src/window/connection.rs:670
+#: ../src/window/connection.rs:621 ../src/window/connection.rs:705
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../src/window/connection.rs:587
+#: ../src/window/connection.rs:622
 msgid "Continue"
 msgstr "Doorgaan"
 
-#: ../src/window/connection.rs:618
+#: ../src/window/connection.rs:653
 msgid "Could not switch to this profile"
 msgstr "Kon niet naar dit profiel wisselen"
 
-#: ../src/window/connection.rs:665
+#: ../src/window/connection.rs:700
 #, rust-format
 msgid "Sign out {}?"
 msgstr "{} afmelden?"
 
-#: ../src/window/connection.rs:667
+#: ../src/window/connection.rs:702
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 "De downloads en voorkeuren van dit account worden van dit apparaat "
 "verwijderd."
 
-#: ../src/window/connection.rs:671
+#: ../src/window/connection.rs:706
 msgid "Logout"
 msgstr "Afmelden"
 
@@ -907,7 +934,7 @@ msgstr "Afmelden"
 msgid "This item is on a server that is not in use"
 msgstr "Dit item staat op een server die niet in gebruik is"
 
-#: ../src/window/mod.rs:700
+#: ../src/window/mod.rs:706
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -915,13 +942,17 @@ msgstr ""
 "Een GTK-client voor Plex om films, series en muziek uit je Plex-bibliotheek "
 "af te spelen."
 
-#: ../src/window/mod.rs:705
+#: ../src/window/mod.rs:711
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:708
+#: ../src/window/mod.rs:714
 msgid "Help with translating"
 msgstr "Help mee vertalen"
+
+#: ../src/window/mod.rs:744
+msgid "Waiting for you to sign in in the browser…"
+msgstr "Wachten tot je bent aangemeld in de browser…"
 
 #: ../src/window/playback.rs:79
 msgid "This is not available without a connection to the server"
@@ -934,6 +965,18 @@ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 #: ../src/window/playback.rs:120
 msgid "Resume"
 msgstr "Hervatten"
+
+#~ msgid "Login to Plex with an user acount"
+#~ msgstr "Aanmelden bij Plex met een account"
+
+#~ msgid "Login"
+#~ msgstr "Aanmelden"
+
+#~ msgid "URL and token"
+#~ msgstr "URL en token"
+
+#~ msgid "Go to Plex server based on an URL"
+#~ msgstr "Verbinden met een Plex-server via een URL"
 
 #~ msgid "Girens for Plex"
 #~ msgstr "Girens voor Plex"

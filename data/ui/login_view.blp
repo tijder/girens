@@ -2,7 +2,6 @@ using Gtk 4.0;
 using Adw 1;
 
 template $login_view : Box {
-  margin-top: 0;
   orientation: vertical;
 
   Adw.HeaderBar {
@@ -13,134 +12,118 @@ template $login_view : Box {
     }
   }
 
-  Adw.Clamp {
-    maximum-size: 500;
-    Box {
-      margin-top: 30;
-      orientation: vertical;
-      hexpand: true;
-      vexpand: true;
+  Adw.Banner _error_banner {}
 
-      StackSwitcher {
-        halign: center;
-        stack: stack;
-      }
+  ScrolledWindow {
+    vexpand: true;
+    hscrollbar-policy: never;
 
-      Stack stack {
-        transition-type: crossfade;
+    Adw.Clamp {
+      maximum-size: 500;
+      margin-start: 12;
+      margin-end: 12;
+      margin-top: 24;
+      margin-bottom: 24;
 
-        StackPage {
-        name: 'password';
-        title: _("Username and password");
-        child: Adw.PreferencesGroup {
-            margin-top: 10;
-            Adw.ActionRow {
-              title: _("Login to Plex with an user acount");
-              use-underline: true;
+      Box {
+        orientation: vertical;
+        spacing: 24;
+
+        Label _title_label {
+          label: _("Sign in");
+          styles [
+            "title-1",
+          ]
+        }
+
+        Adw.PreferencesGroup {
+          title: _("Plex");
+
+          Adw.ActionRow {
+            title: _("Sign in on plex.tv");
+            subtitle: _("Opens your browser; also for accounts with two-factor authentication");
+            activatable-widget: _browser_button;
+
+            Button _browser_button {
+              valign: center;
+              label: _("Sign in");
+
+              styles [
+                "suggested-action",
+              ]
             }
+          }
 
-            Adw.ActionRow {
-              title: _("Sign in on plex.tv");
-              subtitle: _("Opens your browser; also for accounts with two-factor authentication");
-              activatable-widget: _browser_button;
-
-              Button _browser_button {
-                valign: center;
-                label: _("Sign in");
-
-                styles [
-                  "suggested-action",
-                ]
-              }
-            }
+          Adw.ExpanderRow {
+            title: _("Username and password");
 
             Adw.EntryRow _username_entry {
               title: _("Username");
               input-purpose: name;
-              use-underline: true;
             }
 
             Adw.PasswordEntryRow _password_entry {
               title: _("Password");
-              input-purpose: password;
-              use-underline: true;
             }
 
             Adw.ActionRow {
-              use-underline: true;
               activatable-widget: _connect_user_button;
+
+              [suffix]
               Button _connect_user_button {
-                label: _("Login");
-                styles [
-                  "suggested-action",
-                ]
+                valign: center;
+                label: _("Sign in");
               }
             }
-          };
-        }
+          }
 
-        StackPage {
-        name: 'token';
-        title: _("URL and token");
-        child: Adw.PreferencesGroup {
-            margin-top: 10;
-
-            Adw.ActionRow {
-              title: _("Go to Plex server based on an URL");
-              use-underline: true;
-            }
+          Adw.ExpanderRow {
+            title: _("Server address and token");
+            subtitle: _("Without a plex.tv account");
 
             Adw.EntryRow _server_url_entry {
               title: _("The URL to the Plex server with the port number");
               input-purpose: url;
-              use-underline: true;
             }
 
             Adw.EntryRow _server_token_entry {
               title: _("Token");
-              input-purpose: name;
-              use-underline: true;
             }
 
             Adw.ActionRow {
-              use-underline: true;
               activatable-widget: _connect_url_button;
+
+              [suffix]
               Button _connect_url_button {
+                valign: center;
                 label: _("Connect");
-                styles [
-                  "suggested-action",
-                ]
               }
             }
-          };
+          }
         }
 
-        StackPage {
-        name: 'ister';
-        title: _("Ister");
-        child: Adw.PreferencesGroup {
-            margin-top: 10;
+        Adw.PreferencesGroup {
+          title: _("Ister");
 
-            Adw.ActionRow {
-              title: _("Sign in to an Ister server");
-              subtitle: _("Opens your browser to sign in");
-            }
+          Adw.EntryRow _ister_address_entry {
+            title: _("The address of the Ister server");
+            input-purpose: url;
+          }
 
-            Adw.EntryRow _ister_address_entry {
-              title: _("The address of the Ister server");
-              input-purpose: url;
-            }
+          Adw.ActionRow {
+            title: _("Sign in to an Ister server");
+            subtitle: _("Opens your browser to sign in");
+            activatable-widget: _connect_ister_button;
 
-            Adw.ActionRow {
-              activatable-widget: _connect_ister_button;
-              Button _connect_ister_button {
-                label: _("Sign in");
-                styles [
-                  "suggested-action",
-                ]
-              }
+            Button _connect_ister_button {
+              valign: center;
+              label: _("Sign in");
+
+              styles [
+                "suggested-action",
+              ]
             }
-          };
+          }
         }
       }
     }

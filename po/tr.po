@@ -97,17 +97,21 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:33 ../data/ui/profile_dialog.blp:5
+#: ../data/ui/loading_view.blp:36
+msgid "Open the page again"
+msgstr ""
+
+#: ../data/ui/loading_view.blp:40
+msgid "Copy the link"
+msgstr ""
+
+#: ../data/ui/loading_view.blp:54 ../data/ui/profile_dialog.blp:5
 #: ../data/ui/profile_dialog.blp:14
 msgid "Accounts"
 msgstr ""
 
-#: ../data/ui/login_view.blp:34
-msgid "Username and password"
-msgstr ""
-
-#: ../data/ui/login_view.blp:38
-msgid "Login to Plex with an user acount"
+#: ../data/ui/login_view.blp:40
+msgid "Plex"
 msgstr ""
 
 #: ../data/ui/login_view.blp:43
@@ -118,56 +122,52 @@ msgstr ""
 msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr ""
 
-#: ../data/ui/login_view.blp:49 ../data/ui/login_view.blp:137
-msgid "Sign in"
+#: ../data/ui/login_view.blp:58
+msgid "Username and password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:58 ../data/ui/profile_dialog.blp:26
+#: ../data/ui/login_view.blp:61 ../data/ui/profile_dialog.blp:26
 msgid "Username"
 msgstr ""
 
-#: ../data/ui/login_view.blp:64
+#: ../data/ui/login_view.blp:66
 msgid "Password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:73
-msgid "Login"
+#: ../data/ui/login_view.blp:81
+msgid "Server address and token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:84
-msgid "URL and token"
+#: ../data/ui/login_view.blp:82
+msgid "Without a plex.tv account"
 msgstr ""
 
-#: ../data/ui/login_view.blp:89
-msgid "Go to Plex server based on an URL"
-msgstr ""
-
-#: ../data/ui/login_view.blp:94
+#: ../data/ui/login_view.blp:85
 msgid "The URL to the Plex server with the port number"
 msgstr ""
 
-#: ../data/ui/login_view.blp:100
+#: ../data/ui/login_view.blp:90
 msgid "Token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:109
+#: ../data/ui/login_view.blp:99
 msgid "Connect"
 msgstr ""
 
-#: ../data/ui/login_view.blp:120
+#: ../data/ui/login_view.blp:106
 msgid "Ister"
 msgstr ""
 
-#: ../data/ui/login_view.blp:125
+#: ../data/ui/login_view.blp:109
+msgid "The address of the Ister server"
+msgstr ""
+
+#: ../data/ui/login_view.blp:114
 msgid "Sign in to an Ister server"
 msgstr ""
 
-#: ../data/ui/login_view.blp:126
+#: ../data/ui/login_view.blp:115
 msgid "Opens your browser to sign in"
-msgstr ""
-
-#: ../data/ui/login_view.blp:130
-msgid "The address of the Ister server"
 msgstr ""
 
 #: ../data/ui/main_window.blp:37
@@ -611,6 +611,14 @@ msgstr ""
 msgid "Nothing downloaded yet"
 msgstr ""
 
+#: ../src/views/login_view.rs:203
+msgid "Add an account"
+msgstr ""
+
+#: ../src/views/login_view.rs:205
+msgid "Sign in"
+msgstr ""
+
 #: ../src/views/music_popover_menu.rs:190
 msgid "Could not rate the track"
 msgstr ""
@@ -814,27 +822,46 @@ msgstr "Başlangıç"
 msgid "Starting Girens"
 msgstr "Girens Başlatılıyor"
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:103
-#: ../src/window/connection.rs:167 ../src/window/connection.rs:214
+#: ../src/window/connection.rs:30 ../src/window/connection.rs:140
+#: ../src/window/connection.rs:202 ../src/window/connection.rs:249
 #, rust-format
 msgid "Connecting to {}."
 msgstr "{} sunucusuna bağlanıyor."
 
-#: ../src/window/connection.rs:137 ../src/window/connection.rs:184
-msgid "Waiting for you to sign in in the browser…"
+#: ../src/window/connection.rs:104 ../src/window/connection.rs:109
+#, rust-format
+msgid "Could not reach plex.tv: {}"
 msgstr ""
 
-#: ../src/window/connection.rs:222 ../src/window/connection.rs:270
-#: ../src/window/connection.rs:739
+#: ../src/window/connection.rs:108
+msgid "The username or password is not right."
+msgstr ""
+
+#: ../src/window/connection.rs:116
+msgid "The server does not accept this token."
+msgstr ""
+
+#: ../src/window/connection.rs:117 ../src/window/connection.rs:126
+#, rust-format
+msgid "Could not connect to {}."
+msgstr ""
+
+#: ../src/window/connection.rs:129
+#, rust-format
+msgid "No Ister server was found at {}."
+msgstr ""
+
+#: ../src/window/connection.rs:257 ../src/window/connection.rs:305
+#: ../src/window/connection.rs:774
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "{} sunucusuna bağlanılamadı."
 
-#: ../src/window/connection.rs:249
+#: ../src/window/connection.rs:284
 msgid "No servers found for this account."
 msgstr "Bu hesap için sunucu bulunamadı."
 
-#: ../src/window/connection.rs:263
+#: ../src/window/connection.rs:298
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -845,53 +872,53 @@ msgstr ""
 "{1} bağlantı URLʼsi var.\n"
 "Biraz zaman alabilir."
 
-#: ../src/window/connection.rs:309
+#: ../src/window/connection.rs:344
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:369
+#: ../src/window/connection.rs:404
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/connection.rs:465
+#: ../src/window/connection.rs:500
 msgid "Who is watching?"
 msgstr ""
 
-#: ../src/window/connection.rs:567
+#: ../src/window/connection.rs:602
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: ../src/window/connection.rs:569
+#: ../src/window/connection.rs:604
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: ../src/window/connection.rs:581
+#: ../src/window/connection.rs:616
 msgid "PIN"
 msgstr ""
 
-#: ../src/window/connection.rs:586 ../src/window/connection.rs:670
+#: ../src/window/connection.rs:621 ../src/window/connection.rs:705
 msgid "Cancel"
 msgstr ""
 
-#: ../src/window/connection.rs:587
+#: ../src/window/connection.rs:622
 msgid "Continue"
 msgstr ""
 
-#: ../src/window/connection.rs:618
+#: ../src/window/connection.rs:653
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: ../src/window/connection.rs:665
+#: ../src/window/connection.rs:700
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: ../src/window/connection.rs:667
+#: ../src/window/connection.rs:702
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: ../src/window/connection.rs:671
+#: ../src/window/connection.rs:706
 msgid "Logout"
 msgstr ""
 
@@ -899,19 +926,23 @@ msgstr ""
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: ../src/window/mod.rs:700
+#: ../src/window/mod.rs:706
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:705
+#: ../src/window/mod.rs:711
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:708
+#: ../src/window/mod.rs:714
 msgid "Help with translating"
 msgstr "Çeviriye yardım edin"
+
+#: ../src/window/mod.rs:744
+msgid "Waiting for you to sign in in the browser…"
+msgstr ""
 
 #: ../src/window/playback.rs:79
 msgid "This is not available without a connection to the server"

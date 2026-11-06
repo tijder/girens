@@ -62,6 +62,16 @@ fn render(window: &gtk::Window) -> Option<gdk::Texture> {
     Some(window.renderer()?.render_texture(&node, None))
 }
 
+/// Does what `GIRENS_DEBUG_ACCOUNT` asks, once: switching connects again,
+/// which must not repeat the step. Also called when the sign-in page shows,
+/// to sign in from there.
+pub fn account_step(window: &crate::window::PlexWindow) {
+    static ACCOUNT_STEP: std::sync::Once = std::sync::Once::new();
+    if let Ok(step) = std::env::var("GIRENS_DEBUG_ACCOUNT") {
+        ACCOUNT_STEP.call_once(|| window.debug_account(&step));
+    }
+}
+
 /// With `GIRENS_DEBUG_LOGIN_URL=<file>` the page to sign in at is written to
 /// that file instead of opened in the browser, for a script to sign in.
 pub fn take_login_url(url: &str) -> bool {
@@ -125,11 +135,7 @@ pub fn after_connect(window: &crate::window::PlexWindow) {
             });
         }
     }
-    // Switching connects again, which must not repeat the step.
-    static ACCOUNT_STEP: std::sync::Once = std::sync::Once::new();
-    if let Ok(step) = std::env::var("GIRENS_DEBUG_ACCOUNT") {
-        ACCOUNT_STEP.call_once(|| window.debug_account(&step));
-    }
+    account_step(window);
     if let Ok(dialog) = std::env::var("GIRENS_DEBUG_OPEN") {
         window.debug_open(&dialog);
     }

@@ -422,6 +422,12 @@ impl PlexWindow {
                 glib::spawn_future_local(async move { window.cancel_login().await });
             }
         ));
+        // The sign-in that waits notices that its page was left.
+        imp._loading_view.connect_cancel(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move || window.show_login()
+        ));
         imp._loading_view.connect_accounts(glib::clone!(
             #[weak(rename_to = window)]
             self,
@@ -726,9 +732,20 @@ impl PlexWindow {
     fn show_loading(&self, text: &str) {
         let imp = self.imp();
         imp._loading_view.set_text(text);
+        imp._loading_view.set_waiting(None);
         imp._loading_view
             .set_accounts_visible(imp.session.accounts().len() > 1);
         imp.frame_stack.set_visible_child(&*imp._loading_view);
+    }
+
+    /// Shows that Girens waits for the user to sign in at `url` in the
+    /// browser, with a way to get to that page again and to give up.
+    fn show_waiting_for_browser(&self, url: &str) {
+        self.show_loading(&gettext("Waiting for you to sign in in the browser…"));
+        let view = &self.imp()._loading_view;
+        view.set_waiting(Some(url));
+        // Who is signed in already is not what this is about.
+        view.set_accounts_visible(false);
     }
 
     fn show_login(&self) {
@@ -737,6 +754,8 @@ impl PlexWindow {
         imp._login_view
             .set_cancellable(imp.session.account_id().is_some());
         imp.frame_stack.set_visible_child(&*imp._login_view);
+        #[cfg(debug_assertions)]
+        crate::debug::account_step(self);
     }
 
     fn show_main(&self) {

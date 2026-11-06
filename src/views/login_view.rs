@@ -1,11 +1,13 @@
-//! The sign-in page: plex.tv account, Plex server address and token, or
-//! the address of an Ister server.
+//! The sign-in page: a plex.tv account in the browser or by password, a
+//! Plex server by address and token, or an Ister server by its address.
 
 use std::cell::RefCell;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{glib, CompositeTemplate};
+
+use crate::i18n::gettext;
 
 /// What the user filled in.
 #[derive(Debug, Clone)]
@@ -53,7 +55,9 @@ mod imp {
         #[template_child]
         pub _connect_ister_button: TemplateChild<gtk::Button>,
         #[template_child]
-        pub stack: TemplateChild<gtk::Stack>,
+        pub _error_banner: TemplateChild<adw::Banner>,
+        #[template_child]
+        pub _title_label: TemplateChild<gtk::Label>,
         pub on_request: RefCell<Option<Box<dyn Fn(LoginRequest)>>>,
         pub on_cancel: RefCell<Option<Box<dyn Fn()>>>,
     }
@@ -82,7 +86,7 @@ mod imp {
                 entry.connect_changed(glib::clone!(
                     #[weak]
                     view,
-                    move |_| view.set_error(false)
+                    move |_| view.set_error(None)
                 ));
             }
 
@@ -190,9 +194,16 @@ impl LoginView {
         self.imp().on_cancel.replace(Some(Box::new(callback)));
     }
 
-    /// Whether there is someone signed in to go back to.
+    /// Whether there is someone signed in to go back to; the page then
+    /// adds an account rather than welcoming the first.
     pub fn set_cancellable(&self, cancellable: bool) {
-        self.imp()._cancel_button.set_visible(cancellable);
+        let imp = self.imp();
+        imp._cancel_button.set_visible(cancellable);
+        imp._title_label.set_label(&if cancellable {
+            gettext("Add an account")
+        } else {
+            gettext("Sign in")
+        });
     }
 
     /// Blocks the forms while a login attempt is running.
@@ -212,18 +223,16 @@ impl LoginView {
     pub fn offer_ister(&self, address: &str) {
         let imp = self.imp();
         imp._ister_address_entry.set_text(address);
-        imp.stack.set_visible_child_name("ister");
+        imp._ister_address_entry.grab_focus();
     }
 
-    /// Marks the fields after a failed attempt.
-    pub fn set_error(&self, error: bool) {
-        for entry in self.entries() {
-            if error {
-                entry.add_css_class("error");
-            } else {
-                entry.remove_css_class("error");
-            }
+    /// Tells why signing in did not work, or takes that away again.
+    pub fn set_error(&self, message: Option<&str>) {
+        let banner = &self.imp()._error_banner;
+        if let Some(message) = message {
+            banner.set_title(message);
         }
+        banner.set_revealed(message.is_some());
     }
 
     /// Clears what was typed, e.g. after logging out.
@@ -231,7 +240,7 @@ impl LoginView {
         for entry in self.entries() {
             entry.set_text("");
         }
-        self.set_error(false);
+        self.set_error(None);
         self.set_busy(false);
     }
 }

@@ -18,6 +18,17 @@ mod imp {
         pub _logout_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _accounts_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _waiting_box: TemplateChild<gtk::Box>,
+        #[template_child]
+        pub _open_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _copy_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _cancel_button: TemplateChild<gtk::Button>,
+        /// The page the user is signing in at, while waiting for that.
+        pub waiting_for: RefCell<Option<String>>,
+        pub on_cancel: RefCell<Option<Box<dyn Fn()>>>,
         pub on_logout: RefCell<Option<Box<dyn Fn()>>>,
         pub on_accounts: RefCell<Option<Box<dyn Fn()>>>,
     }
@@ -50,6 +61,43 @@ mod imp {
                     }
                 }
             ));
+            self._cancel_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    if let Some(callback) = view.imp().on_cancel.borrow().as_ref() {
+                        callback();
+                    }
+                }
+            ));
+            self._open_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    let Some(url) = view.imp().waiting_for.borrow().clone() else {
+                        return;
+                    };
+                    let window = view.root().and_downcast::<gtk::Window>();
+                    gtk::UriLauncher::new(&url).launch(
+                        window.as_ref(),
+                        gtk::gio::Cancellable::NONE,
+                        |result| {
+                            if let Err(err) = result {
+                                eprintln!("Could not open the browser: {err}");
+                            }
+                        },
+                    );
+                }
+            ));
+            self._copy_button.connect_clicked(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    if let Some(url) = view.imp().waiting_for.borrow().as_deref() {
+                        view.clipboard().set_text(url);
+                    }
+                }
+            ));
             self._accounts_button.connect_clicked(glib::clone!(
                 #[weak]
                 view,
@@ -75,6 +123,21 @@ glib::wrapper! {
 impl LoadingView {
     pub fn set_text(&self, text: &str) {
         self.imp()._loading_text_label.set_text(text);
+    }
+
+    /// Waits for the user to sign in at `url` in the browser: offers to
+    /// open that page again, to copy its address for another browser, and
+    /// to give up. `None` is the usual page again.
+    pub fn set_waiting(&self, url: Option<&str>) {
+        let imp = self.imp();
+        imp.waiting_for.replace(url.map(str::to_owned));
+        imp._waiting_box.set_visible(url.is_some());
+        imp._logout_button.set_visible(url.is_none());
+    }
+
+    /// Giving up the sign-in that is being waited for.
+    pub fn connect_cancel(&self, callback: impl Fn() + 'static) {
+        self.imp().on_cancel.replace(Some(Box::new(callback)));
     }
 
     /// Signing out of the account that is being connected.

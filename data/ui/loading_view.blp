@@ -21,7 +21,28 @@ template $loading_view : Box {
     Label _loading_text_label {
       label: "Loading text";
       margin-top: 10;
-      ellipsize: end;
+      wrap: true;
+      justify: center;
+      max-width-chars: 40;
+    }
+
+    Box _waiting_box {
+      visible: false;
+      orientation: vertical;
+      spacing: 10;
+      margin-top: 20;
+
+      Gtk.Button _open_button {
+        label: _("Open the page again");
+      }
+
+      Gtk.Button _copy_button {
+        label: _("Copy the link");
+      }
+
+      Gtk.Button _cancel_button {
+        label: _("Cancel");
+      }
     }
 
     Gtk.Button _logout_button {

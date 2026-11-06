@@ -94,7 +94,44 @@ impl PlexWindow {
         let session = imp.session.clone();
         imp._login_view.set_busy(true);
 
-        let in_browser = matches!(request, LoginRequest::Browser);
+        // What to say when it does not work, which depends on what was
+        // tried.
+        let explain: Box<dyn Fn(&Error) -> Option<String>> = match &request {
+            // Nothing was typed that could be wrong when signing in in the
+            // browser was cancelled or timed out.
+            LoginRequest::Browser => Box::new(|err| match err {
+                Error::Unauthorized => None,
+                err => Some(gettext_f("Could not reach plex.tv: {}", &[&err.to_string()])),
+            }),
+            LoginRequest::Account { .. } => Box::new(|err| {
+                Some(match err {
+                    Error::Unauthorized => gettext("The username or password is not right."),
+                    err => gettext_f("Could not reach plex.tv: {}", &[&err.to_string()]),
+                })
+            }),
+            LoginRequest::Server { url, .. } => {
+                let url = url.clone();
+                Box::new(move |err| {
+                    Some(match err {
+                        Error::Unauthorized => gettext("The server does not accept this token."),
+                        _ => gettext_f("Could not connect to {}.", &[&url]),
+                    })
+                })
+            }
+            LoginRequest::Ister { address } => {
+                let address = address.clone();
+                Box::new(move |err| match err {
+                    Error::Unauthorized => None,
+                    err if err.is_network() => {
+                        Some(gettext_f("Could not connect to {}.", &[&address]))
+                    }
+                    Error::Server(_) | Error::Status { .. } | Error::Decode { .. } => {
+                        Some(gettext_f("No Ister server was found at {}.", &[&address]))
+                    }
+                    err => Some(err.to_string()),
+                })
+            }
+        };
         let result = match request {
             LoginRequest::Browser => self.browser_login().await,
             LoginRequest::Ister { address } => self.ister_login(address).await,
@@ -107,9 +144,7 @@ impl PlexWindow {
         if let Err(err) = result {
             eprintln!("Login failed: {err}");
             self.show_login();
-            // Nothing was typed that could be wrong when signing in in the
-            // browser was cancelled or timed out.
-            imp._login_view.set_error(!in_browser);
+            imp._login_view.set_error(explain(&err).as_deref());
             return;
         }
         // Whoever was signed in before makes way.
@@ -134,7 +169,7 @@ impl PlexWindow {
                 eprintln!("Could not open the browser: {err}");
             }
         });
-        self.show_loading(&gettext("Waiting for you to sign in in the browser…"));
+        self.show_waiting_for_browser(&url);
 
         // plex.tv keeps a sign-in request for about fifteen minutes.
         for _ in 0..BROWSER_LOGIN_ATTEMPTS {
@@ -181,7 +216,7 @@ impl PlexWindow {
                 },
             );
         }
-        self.show_loading(&gettext("Waiting for you to sign in in the browser…"));
+        self.show_waiting_for_browser(&pending.url);
 
         let signed_in = session.account_id();
         let cancelled = async {
