@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 21:48+0100\n"
+"POT-Creation-Date: 2026-11-08 22:13+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -56,7 +56,7 @@ msgid "girens;plex;ister;media;player;"
 msgstr "girens;plex;ister;media;speler;"
 
 #: data/ui/album_header.blp:92 data/ui/artist_view.blp:82
-#: data/ui/media_box_music.blp:111 data/ui/media_box_video_bottom.blp:114
+#: data/ui/media_box_music.blp:111 data/ui/media_box_video_bottom.blp:123
 #: data/ui/section_view.blp:30 data/ui/show_view.blp:102
 msgid "Play"
 msgstr "Afspelen"
@@ -84,7 +84,8 @@ msgstr "Onbekeken"
 msgid "Available offline"
 msgstr "Offline beschikbaar"
 
-#: data/ui/discover_view.blp:20 data/ui/player_view.blp:161
+#: data/ui/discover_view.blp:20 data/ui/player_view.blp:215
+#: src/views/player_view.rs:892
 msgid "Continue watching"
 msgstr "Verder kijken"
 
@@ -101,12 +102,12 @@ msgid "Recently added Music"
 msgstr "Onlangs toegevoegde muziek"
 
 #: data/ui/list.blp:40 data/ui/media_box_music.blp:101
-#: data/ui/media_box_video_bottom.blp:105
+#: data/ui/media_box_video_bottom.blp:114
 msgid "Previous"
 msgstr "Vorige"
 
 #: data/ui/list.blp:55 data/ui/media_box_music.blp:120
-#: data/ui/media_box_video_bottom.blp:123
+#: data/ui/media_box_video_bottom.blp:132
 msgid "Next"
 msgstr "Volgende"
 
@@ -259,7 +260,7 @@ msgstr "Wachtrij"
 msgid "Stop"
 msgstr "Stoppen"
 
-#: data/ui/media_box_music.blp:140 data/ui/media_box_video_bottom.blp:83
+#: data/ui/media_box_music.blp:140 data/ui/media_box_video_bottom.blp:92
 msgid "Volume"
 msgstr "Volume"
 
@@ -268,14 +269,18 @@ msgid "Options"
 msgstr "Opties"
 
 #: data/ui/media_box_video_bottom.blp:76
+msgid "Chapters"
+msgstr "Hoofdstukken"
+
+#: data/ui/media_box_video_bottom.blp:85
 msgid "Audio and subtitles"
 msgstr "Audio en ondertiteling"
 
-#: data/ui/media_box_video_bottom.blp:96
+#: data/ui/media_box_video_bottom.blp:105
 msgid "Skip backward"
 msgstr "Terugspoelen"
 
-#: data/ui/media_box_video_bottom.blp:132
+#: data/ui/media_box_video_bottom.blp:141
 msgid "Skip forward"
 msgstr "Vooruitspoelen"
 
@@ -291,37 +296,49 @@ msgstr "Venster vullen"
 msgid "Repeat"
 msgstr "Herhalen"
 
-#: data/ui/player_view.blp:109 src/views/section_view.rs:25
+#: data/ui/player_view.blp:101
+msgid "Keep watching"
+msgstr "Verder kijken"
+
+#: data/ui/player_view.blp:110
+msgid "Play now"
+msgstr "Nu afspelen"
+
+#: data/ui/player_view.blp:160 src/views/section_view.rs:25
 msgid "Title"
 msgstr "Titel"
 
-#: data/ui/player_view.blp:114
+#: data/ui/player_view.blp:165
 msgid "Release date"
 msgstr "Uitgave­datum"
 
-#: data/ui/player_view.blp:119
+#: data/ui/player_view.blp:170
 msgid "Genre"
 msgstr "Genre"
 
-#: data/ui/player_view.blp:124 src/views/section_view.rs:31
+#: data/ui/player_view.blp:175 src/views/section_view.rs:31
 msgid "Duration"
 msgstr "Duur"
 
-#: data/ui/player_view.blp:129
+#: data/ui/player_view.blp:180
 msgid "Description"
 msgstr "Beschrĳving"
 
-#: data/ui/player_view.blp:142
+#: data/ui/player_view.blp:193
 msgid "Version"
 msgstr "Versie"
 
-#: data/ui/player_view.blp:146
+#: data/ui/player_view.blp:197
 msgid "Audio "
 msgstr "Audio "
 
-#: data/ui/player_view.blp:149
+#: data/ui/player_view.blp:200
 msgid "Subtitle "
 msgstr "Ondertitel "
+
+#: data/ui/player_view.blp:203 src/views/player_view.rs:408
+msgid "Speed"
+msgstr "Snelheid"
 
 #: data/ui/profile_dialog.blp:9 src/window/connection.rs:567
 msgid "Who is watching?"
@@ -417,45 +434,70 @@ msgstr "Intro of aftiteling overslaan"
 
 #: data/ui/shortcuts.blp:63
 msgctxt "shortcut window"
-msgid "Seek forwards"
-msgstr "Vooruit zoeken"
+msgid "Seek forwards 10 seconds"
+msgstr "10 seconden vooruit"
 
 #: data/ui/shortcuts.blp:68
 msgctxt "shortcut window"
-msgid "Seek backwards"
-msgstr "Achteruit zoeken"
+msgid "Seek backwards 10 seconds"
+msgstr "10 seconden achteruit"
 
 #: data/ui/shortcuts.blp:73
+msgctxt "shortcut window"
+msgid "Seek a minute"
+msgstr "Een minuut zoeken"
+
+#: data/ui/shortcuts.blp:78
+msgctxt "shortcut window"
+msgid "Seek 30 seconds"
+msgstr "30 seconden zoeken"
+
+#: data/ui/shortcuts.blp:83
+msgctxt "shortcut window"
+msgid "Previous or next chapter"
+msgstr "Vorig of volgend hoofdstuk"
+
+#: data/ui/shortcuts.blp:88
+msgctxt "shortcut window"
+msgid "Slower or faster"
+msgstr "Langzamer of sneller"
+
+#: data/ui/shortcuts.blp:93
 msgctxt "shortcut window"
 msgid "Volume up"
 msgstr "Volume omhoog"
 
-#: data/ui/shortcuts.blp:78
+#: data/ui/shortcuts.blp:98
 msgctxt "shortcut window"
 msgid "Volume down"
 msgstr "Volume omlaag"
 
-#: data/ui/shortcuts.blp:83
+#: data/ui/shortcuts.blp:103
+msgctxt "shortcut window"
+msgid "Mute"
+msgstr "Dempen"
+
+#: data/ui/shortcuts.blp:108
 msgctxt "shortcut window"
 msgid "Stop playing"
 msgstr "Stopen met afspelen"
 
-#: data/ui/shortcuts.blp:88
+#: data/ui/shortcuts.blp:113
 msgctxt "shortcut window"
 msgid "Fullscreen"
 msgstr "Volledig scherm"
 
-#: data/ui/shortcuts.blp:93
+#: data/ui/shortcuts.blp:118
 msgctxt "shortcut window"
 msgid "Fill the window with the video"
 msgstr "Venster vullen met de video"
 
-#: data/ui/shortcuts.blp:98
+#: data/ui/shortcuts.blp:123
 msgctxt "shortcut window"
 msgid "Show the controls"
 msgstr "Bediening tonen"
 
-#: data/ui/shortcuts.blp:103
+#: data/ui/shortcuts.blp:128
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr "Muziekclips afspelen in plaats van audiotrack"
@@ -576,27 +618,27 @@ msgstr "Geen afspeellijsten"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: src/player/mod.rs:394
+#: src/player/mod.rs:399
 msgid "Nothing to play"
 msgstr "Er is niets om af te spelen"
 
-#: src/player/mod.rs:402
+#: src/player/mod.rs:407
 msgid "Could not create a play queue"
 msgstr "De wachtrij kon niet worden aangemaakt"
 
-#: src/player/mod.rs:537
+#: src/player/mod.rs:608
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: src/player/mod.rs:751
+#: src/player/mod.rs:822
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
-#: src/player/mod.rs:1363
+#: src/player/mod.rs:1440
 msgid "Could not load the subtitles"
 msgstr "Kan de ondertitels niet laden"
 
-#: src/player/mod.rs:1475
+#: src/player/mod.rs:1552
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
@@ -625,7 +667,7 @@ msgstr "Aflevering {}"
 msgid "Track {}"
 msgstr "Nummer {}"
 
-#: src/session.rs:591
+#: src/session.rs:591 src/views/player_view.rs:564
 #, rust-format
 msgid "Chapter {}"
 msgstr "Hoofdstuk {}"
@@ -762,25 +804,35 @@ msgstr "Volgende foto"
 msgid "The photo has no picture"
 msgstr "De foto heeft geen afbeelding"
 
-#: src/views/player_view.rs:345
+#: src/views/player_view.rs:406
 msgid "Audio"
 msgstr "Audio"
 
-#: src/views/player_view.rs:346
+#: src/views/player_view.rs:407
 msgid "Subtitle"
 msgstr "Ondertiteling"
 
-#: src/views/player_view.rs:401
+#: src/views/player_view.rs:464
 msgid "Skip intro"
 msgstr "Intro overslaan"
 
-#: src/views/player_view.rs:402
-msgid "Next episode"
-msgstr "Volgende aflevering"
+#: src/views/player_view.rs:529
+#, rust-format
+msgid "Next in {0} s: {1}"
+msgstr "Over {0} s: {1}"
 
-#: src/views/player_view.rs:591
+#: src/views/player_view.rs:815
 msgid "None"
 msgstr "Geen"
+
+#: src/views/player_view.rs:890
+msgid "More of this season"
+msgstr "Meer uit dit seizoen"
+
+#: src/views/player_view.rs:958
+#, rust-format
+msgid "Speed {}×"
+msgstr "Snelheid {}×"
 
 #: src/views/preferences.rs:22
 msgid "Prefer music clips"
@@ -931,7 +983,6 @@ msgstr[0] "{} aflevering"
 msgstr[1] "{} afleveringen"
 
 #: src/views/sidebar_box.rs:152 src/views/sidebar_box.rs:192
-#: src/window/navigation.rs:244
 msgid "Player"
 msgstr "Speler"
 
@@ -989,7 +1040,7 @@ msgstr ""
 
 #: src/window/connection.rs:401
 msgid "The server cannot be reached. Showing your downloads until it is back."
-msgstr ""
+msgstr "De server is niet bereikbaar. Je downloads worden getoond tot hij terug is."
 "De server is niet bereikbaar. Je downloads worden getoond tot hij terug is."
 
 #: src/window/connection.rs:432
@@ -1108,6 +1159,9 @@ msgstr "Wilt u verder kĳken of vanaf het begin beginnen?"
 #: src/window/playback.rs:120
 msgid "Resume"
 msgstr "Hervatten"
+
+#~ msgid "Next episode"
+#~ msgstr "Volgende aflevering"
 
 #~ msgid "The home screen"
 #~ msgstr "Het startscherm"

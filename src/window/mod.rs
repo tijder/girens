@@ -1084,7 +1084,7 @@ impl PlexWindow {
             self,
             #[upgrade_or]
             glib::Propagation::Proceed,
-            move |_, key, _, _| {
+            move |_, key, _, state| {
                 let typing = gtk::prelude::RootExt::focus(&window)
                     .is_some_and(|widget| widget.is::<gtk::Text>());
                 if typing {
@@ -1097,7 +1097,7 @@ impl PlexWindow {
                         return glib::Propagation::Stop;
                     }
                 }
-                window.imp()._player_view.handle_key(key)
+                window.imp()._player_view.handle_key(key, state)
             }
         ));
         self.add_controller(keys);

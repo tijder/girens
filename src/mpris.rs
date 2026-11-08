@@ -171,6 +171,7 @@ async fn report(
             service.set_shuffle(player.is_shuffled()).await?;
         }
         Event::RepeatChanged(repeat) => service.set_loop_status(loop_status(*repeat)).await?,
+        Event::SpeedChanged(speed) => service.set_rate(*speed).await?,
         Event::AskResume(_) | Event::Segment(_) | Event::Subtitles(_) | Event::StreamsChanged => {}
         Event::Stopped => {
             service.set_playback_status(PlaybackStatus::Stopped).await?;

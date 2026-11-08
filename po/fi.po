@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 21:48+0100\n"
+"POT-Creation-Date: 2026-11-08 22:13+0100\n"
 "PO-Revision-Date: 2025-02-04 13:02+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/girens/girens/fi/"
@@ -54,7 +54,7 @@ msgid "girens;plex;ister;media;player;"
 msgstr ""
 
 #: data/ui/album_header.blp:92 data/ui/artist_view.blp:82
-#: data/ui/media_box_music.blp:111 data/ui/media_box_video_bottom.blp:114
+#: data/ui/media_box_music.blp:111 data/ui/media_box_video_bottom.blp:123
 #: data/ui/section_view.blp:30 data/ui/show_view.blp:102
 msgid "Play"
 msgstr ""
@@ -82,7 +82,8 @@ msgstr "Katsomaton"
 msgid "Available offline"
 msgstr ""
 
-#: data/ui/discover_view.blp:20 data/ui/player_view.blp:161
+#: data/ui/discover_view.blp:20 data/ui/player_view.blp:215
+#: src/views/player_view.rs:892
 msgid "Continue watching"
 msgstr ""
 
@@ -99,12 +100,12 @@ msgid "Recently added Music"
 msgstr ""
 
 #: data/ui/list.blp:40 data/ui/media_box_music.blp:101
-#: data/ui/media_box_video_bottom.blp:105
+#: data/ui/media_box_video_bottom.blp:114
 msgid "Previous"
 msgstr ""
 
 #: data/ui/list.blp:55 data/ui/media_box_music.blp:120
-#: data/ui/media_box_video_bottom.blp:123
+#: data/ui/media_box_video_bottom.blp:132
 msgid "Next"
 msgstr ""
 
@@ -257,7 +258,7 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: data/ui/media_box_music.blp:140 data/ui/media_box_video_bottom.blp:83
+#: data/ui/media_box_music.blp:140 data/ui/media_box_video_bottom.blp:92
 msgid "Volume"
 msgstr ""
 
@@ -266,14 +267,18 @@ msgid "Options"
 msgstr ""
 
 #: data/ui/media_box_video_bottom.blp:76
+msgid "Chapters"
+msgstr ""
+
+#: data/ui/media_box_video_bottom.blp:85
 msgid "Audio and subtitles"
 msgstr ""
 
-#: data/ui/media_box_video_bottom.blp:96
+#: data/ui/media_box_video_bottom.blp:105
 msgid "Skip backward"
 msgstr ""
 
-#: data/ui/media_box_video_bottom.blp:132
+#: data/ui/media_box_video_bottom.blp:141
 msgid "Skip forward"
 msgstr ""
 
@@ -289,37 +294,49 @@ msgstr ""
 msgid "Repeat"
 msgstr "Kertaa"
 
-#: data/ui/player_view.blp:109 src/views/section_view.rs:25
+#: data/ui/player_view.blp:101
+msgid "Keep watching"
+msgstr ""
+
+#: data/ui/player_view.blp:110
+msgid "Play now"
+msgstr ""
+
+#: data/ui/player_view.blp:160 src/views/section_view.rs:25
 msgid "Title"
 msgstr "Otsikko"
 
-#: data/ui/player_view.blp:114
+#: data/ui/player_view.blp:165
 msgid "Release date"
 msgstr "Julkaisupäivä"
 
-#: data/ui/player_view.blp:119
+#: data/ui/player_view.blp:170
 msgid "Genre"
 msgstr "Tyylilaji"
 
-#: data/ui/player_view.blp:124 src/views/section_view.rs:31
+#: data/ui/player_view.blp:175 src/views/section_view.rs:31
 msgid "Duration"
 msgstr "Kesto"
 
-#: data/ui/player_view.blp:129
+#: data/ui/player_view.blp:180
 msgid "Description"
 msgstr "Kuvaus"
 
-#: data/ui/player_view.blp:142
+#: data/ui/player_view.blp:193
 msgid "Version"
 msgstr ""
 
-#: data/ui/player_view.blp:146
+#: data/ui/player_view.blp:197
 msgid "Audio "
 msgstr "Ääni "
 
-#: data/ui/player_view.blp:149
+#: data/ui/player_view.blp:200
 msgid "Subtitle "
 msgstr "Tekstitys "
+
+#: data/ui/player_view.blp:203 src/views/player_view.rs:408
+msgid "Speed"
+msgstr ""
 
 #: data/ui/profile_dialog.blp:9 src/window/connection.rs:567
 msgid "Who is watching?"
@@ -414,46 +431,73 @@ msgid "Skip intro or credits"
 msgstr ""
 
 #: data/ui/shortcuts.blp:63
+#, fuzzy
 msgctxt "shortcut window"
-msgid "Seek forwards"
+msgid "Seek forwards 10 seconds"
 msgstr "Kelaa eteenpäin"
 
 #: data/ui/shortcuts.blp:68
+#, fuzzy
 msgctxt "shortcut window"
-msgid "Seek backwards"
+msgid "Seek backwards 10 seconds"
 msgstr "Kelaa taaksepäin"
 
 #: data/ui/shortcuts.blp:73
 msgctxt "shortcut window"
-msgid "Volume up"
+msgid "Seek a minute"
 msgstr ""
 
 #: data/ui/shortcuts.blp:78
 msgctxt "shortcut window"
-msgid "Volume down"
+msgid "Seek 30 seconds"
 msgstr ""
 
 #: data/ui/shortcuts.blp:83
 msgctxt "shortcut window"
-msgid "Stop playing"
-msgstr "Lopeta toisto"
+msgid "Previous or next chapter"
+msgstr ""
 
 #: data/ui/shortcuts.blp:88
 msgctxt "shortcut window"
-msgid "Fullscreen"
-msgstr "Koko näyttö"
+msgid "Slower or faster"
+msgstr ""
 
 #: data/ui/shortcuts.blp:93
 msgctxt "shortcut window"
-msgid "Fill the window with the video"
+msgid "Volume up"
 msgstr ""
 
 #: data/ui/shortcuts.blp:98
 msgctxt "shortcut window"
-msgid "Show the controls"
+msgid "Volume down"
 msgstr ""
 
 #: data/ui/shortcuts.blp:103
+msgctxt "shortcut window"
+msgid "Mute"
+msgstr ""
+
+#: data/ui/shortcuts.blp:108
+msgctxt "shortcut window"
+msgid "Stop playing"
+msgstr "Lopeta toisto"
+
+#: data/ui/shortcuts.blp:113
+msgctxt "shortcut window"
+msgid "Fullscreen"
+msgstr "Koko näyttö"
+
+#: data/ui/shortcuts.blp:118
+msgctxt "shortcut window"
+msgid "Fill the window with the video"
+msgstr ""
+
+#: data/ui/shortcuts.blp:123
+msgctxt "shortcut window"
+msgid "Show the controls"
+msgstr ""
+
+#: data/ui/shortcuts.blp:128
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr "Toista musiikkileikkeitä kappaleiden sijaan"
@@ -574,27 +618,27 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/player/mod.rs:394
+#: src/player/mod.rs:399
 msgid "Nothing to play"
 msgstr ""
 
-#: src/player/mod.rs:402
+#: src/player/mod.rs:407
 msgid "Could not create a play queue"
 msgstr ""
 
-#: src/player/mod.rs:537
+#: src/player/mod.rs:608
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: src/player/mod.rs:751
+#: src/player/mod.rs:822
 msgid "Could not start playback"
 msgstr ""
 
-#: src/player/mod.rs:1363
+#: src/player/mod.rs:1440
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: src/player/mod.rs:1475
+#: src/player/mod.rs:1552
 msgid "Could not change the stream"
 msgstr ""
 
@@ -621,7 +665,7 @@ msgstr ""
 msgid "Track {}"
 msgstr ""
 
-#: src/session.rs:591
+#: src/session.rs:591 src/views/player_view.rs:564
 #, rust-format
 msgid "Chapter {}"
 msgstr ""
@@ -758,25 +802,35 @@ msgstr ""
 msgid "The photo has no picture"
 msgstr ""
 
-#: src/views/player_view.rs:345
+#: src/views/player_view.rs:406
 msgid "Audio"
 msgstr ""
 
-#: src/views/player_view.rs:346
+#: src/views/player_view.rs:407
 msgid "Subtitle"
 msgstr ""
 
-#: src/views/player_view.rs:401
+#: src/views/player_view.rs:464
 msgid "Skip intro"
 msgstr ""
 
-#: src/views/player_view.rs:402
-msgid "Next episode"
+#: src/views/player_view.rs:529
+#, rust-format
+msgid "Next in {0} s: {1}"
 msgstr ""
 
-#: src/views/player_view.rs:591
+#: src/views/player_view.rs:815
 msgid "None"
 msgstr "Ei mitään"
+
+#: src/views/player_view.rs:890
+msgid "More of this season"
+msgstr ""
+
+#: src/views/player_view.rs:958
+#, rust-format
+msgid "Speed {}×"
+msgstr ""
 
 #: src/views/preferences.rs:22
 msgid "Prefer music clips"
@@ -925,7 +979,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/views/sidebar_box.rs:152 src/views/sidebar_box.rs:192
-#: src/window/navigation.rs:244
 msgid "Player"
 msgstr "Soitin"
 

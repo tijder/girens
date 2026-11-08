@@ -3,6 +3,9 @@
 //! [`MediaControls`] connects any number of them to the player, like
 //! `MediaBox` did in the Python version.
 
+/// How long the position slider has to rest before the player seeks.
+const SEEK_DELAY: std::time::Duration = std::time::Duration::from_millis(150);
+
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
@@ -120,6 +123,7 @@ media_box_widget!(video_top, MediaBoxVideoTop, "media_box_video_top", "/nl/g4d/G
 });
 
 media_box_widget!(video_bottom, MediaBoxVideoBottom, "media_box_video_bottom", "/nl/g4d/Girens/media_box_video_bottom.ui", {
+    _chapters_button: gtk::MenuButton,
     _scale_adjustment: gtk::Adjustment,
     _time_left_label: gtk::Label,
     _time_right_label: gtk::Label,
@@ -145,6 +149,11 @@ impl MediaBoxVideoBottom {
         }
         imp._skip_backward_button.set_visible(!narrow);
         imp._skip_forward_button.set_visible(!narrow);
+    }
+
+    /// The button that lists the chapters.
+    pub fn chapters_button(&self) -> gtk::MenuButton {
+        self.imp()._chapters_button.get()
     }
 
     /// The button that opens the audio and subtitle choice.
@@ -185,6 +194,8 @@ struct Inner {
     item: RefCell<Option<Item>>,
     /// Set while the position slider is moved by the player, not the user.
     updating_position: Cell<bool>,
+    /// Waits for the user to stop dragging the slider before seeking.
+    seek_timeout: RefCell<Option<glib::SourceId>>,
     cover_task: RefCell<Option<glib::JoinHandle<()>>>,
     on_fullscreen: RefCell<Option<Box<dyn Fn()>>>,
     on_windowed: RefCell<Option<Box<dyn Fn()>>>,
@@ -205,6 +216,7 @@ impl MediaControls {
             parts: RefCell::default(),
             item: RefCell::default(),
             updating_position: Cell::new(false),
+            seek_timeout: RefCell::default(),
             cover_task: RefCell::default(),
             on_fullscreen: RefCell::default(),
             on_windowed: RefCell::default(),
@@ -351,11 +363,24 @@ impl MediaControls {
                 return;
             }
             let duration = inner.duration();
-            if duration > 0 {
-                inner
-                    .player
-                    .seek_to((adjustment.value() * duration as f64) as u64);
+            if duration == 0 {
+                return;
             }
+            let position = (adjustment.value() * duration as f64) as u64;
+            // The time follows the slider at once; the seek waits until it
+            // rests, as every seek costs a transcoder its stride.
+            inner.show_time(position, duration);
+            if let Some(pending) = inner.seek_timeout.take() {
+                pending.remove();
+            }
+            let weak = Rc::downgrade(&inner);
+            let timeout = glib::timeout_add_local_once(SEEK_DELAY, move || {
+                if let Some(inner) = weak.upgrade() {
+                    inner.seek_timeout.take();
+                    inner.player.seek_to(position);
+                }
+            });
+            inner.seek_timeout.replace(Some(timeout));
         });
         let mut parts = self.inner.parts.borrow_mut();
         parts.adjustments.push(adjustment.clone());
@@ -466,7 +491,12 @@ impl Inner {
             Event::Paused(paused) => self.show_paused(*paused),
             Event::Position(position) => self.show_position(*position),
             Event::QueueChanged => self.show_queue_position(),
-            Event::AskResume(_) | Event::RepeatChanged(_) | Event::Segment(_) | Event::Subtitles(_) | Event::StreamsChanged => {}
+            Event::AskResume(_)
+            | Event::RepeatChanged(_)
+            | Event::SpeedChanged(_)
+            | Event::Segment(_)
+            | Event::Subtitles(_)
+            | Event::StreamsChanged => {}
         }
     }
 
@@ -556,6 +586,12 @@ impl Inner {
             }
         }
         self.updating_position.set(false);
+        drop(parts);
+        self.show_time(position, duration);
+    }
+
+    fn show_time(&self, position: u64, duration: u64) {
+        let parts = self.parts.borrow();
         let elapsed = util::format_duration(position);
         let left = format!(
             "-{}",

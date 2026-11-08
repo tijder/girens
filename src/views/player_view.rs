@@ -11,7 +11,7 @@ use girens_model::model::{Item, ItemKind, SegmentKind, StreamKind};
 use gtk::{gdk, glib, CompositeTemplate};
 
 use super::{List, MediaBoxVideoBottom, MediaBoxVideoTop, MediaControls};
-use crate::i18n::gettext;
+use crate::i18n::{gettext, gettext_f};
 use crate::player::render::VideoRenderer;
 use crate::player::{Event, Player, SubtitlePictures, CONTROLS_HIDE_DELAY};
 use crate::session::Session;
@@ -19,6 +19,10 @@ use crate::{runtime, util};
 
 /// Two clicks within this time toggle fullscreen.
 const DOUBLE_CLICK: f64 = 0.4;
+/// Seconds from the start of the credits until the next episode starts.
+const NEXT_COUNTDOWN: u32 = 15;
+/// The speeds offered, as the speed menu lists them.
+const SPEEDS: [f64; 6] = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
 mod imp {
     use super::*;
@@ -44,6 +48,26 @@ mod imp {
         pub _media_bottom: TemplateChild<MediaBoxVideoBottom>,
         #[template_child]
         pub _skip_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _scroll_controller: TemplateChild<gtk::EventControllerScroll>,
+        #[template_child]
+        pub _next_box: TemplateChild<gtk::Box>,
+        #[template_child]
+        pub _next_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _next_now_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _next_cancel_button: TemplateChild<gtk::Button>,
+        /// Counts down to the next episode during the credits.
+        pub next_countdown: RefCell<Option<glib::SourceId>>,
+        pub next_seconds: Cell<u32>,
+        /// The user chose to watch the credits of this item.
+        pub next_cancelled: Cell<bool>,
+        #[template_child]
+        pub _speed_box: TemplateChild<adw::ComboRow>,
+        pub updating_speed: Cell<bool>,
+        /// The title of what plays, for the header bar.
+        pub title: gtk::Label,
         #[template_child]
         pub _subtitle_picture: TemplateChild<gtk::Picture>,
         /// The sheets subtitle pictures are cut out of, by where they
@@ -134,14 +158,6 @@ glib::wrapper! {
 }
 
 /// Changes the stored volume (0–100), which the player follows.
-fn change_volume(step: i32) {
-    let settings = gtk::gio::Settings::new(crate::config::APP_ID);
-    let volume = (settings.int("volume-level") + step).clamp(0, 100);
-    if let Err(err) = settings.set_int("volume-level", volume) {
-        eprintln!("Could not save the volume: {err}");
-    }
-}
-
 /// `1 hr 42 min`, as shown in the details.
 fn duration_text(milliseconds: u64) -> String {
     let minutes = milliseconds / 60_000;
@@ -207,7 +223,7 @@ impl PlayerView {
             self,
             #[upgrade_or]
             glib::Propagation::Proceed,
-            move |_, key, _, _| view.handle_key(key)
+            move |_, key, _, state| view.handle_key(key, state)
         ));
         imp._motion_controller.connect_motion(glib::clone!(
             #[weak(rename_to = view)]
@@ -242,6 +258,51 @@ impl PlayerView {
             #[strong]
             player,
             move |_| player.skip_segment()
+        ));
+        imp._next_now_button.connect_clicked(glib::clone!(
+            #[strong]
+            player,
+            move |_| player.next()
+        ));
+        imp._next_cancel_button.connect_clicked(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |_| {
+                view.imp().next_cancelled.set(true);
+                view.stop_next_countdown();
+            }
+        ));
+        // The wheel over the video turns the volume.
+        imp._scroll_controller.connect_scroll(glib::clone!(
+            #[strong]
+            player,
+            move |_, _, dy| {
+                if !player.is_playing() {
+                    return glib::Propagation::Proceed;
+                }
+                let step = if dy < 0.0 { 5 } else { -5 };
+                player.set_volume(player.volume() + step);
+                glib::Propagation::Stop
+            }
+        ));
+        let speeds: Vec<String> = SPEEDS.iter().map(|speed| format!("{speed}×")).collect();
+        let speeds: Vec<&str> = speeds.iter().map(String::as_str).collect();
+        imp._speed_box.set_model(Some(&gtk::StringList::new(&speeds)));
+        imp._speed_box.set_selected(2);
+        imp._speed_box.connect_selected_notify(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |row| {
+                let imp = view.imp();
+                if imp.updating_speed.get() {
+                    return;
+                }
+                if let (Some(speed), Some(player)) =
+                    (SPEEDS.get(row.selected() as usize), imp.player.get())
+                {
+                    player.set_speed(*speed);
+                }
+            }
         ));
         imp._right_click.connect_released(glib::clone!(
             #[strong]
@@ -344,6 +405,7 @@ impl PlayerView {
         for (title, row) in [
             (gettext("Audio"), &imp._audio_box),
             (gettext("Subtitle"), &imp._subtitle_box),
+            (gettext("Speed"), &imp._speed_box),
         ] {
             let label = gtk::Label::builder().label(title).xalign(0.0).build();
             label.add_css_class("caption-heading");
@@ -392,20 +454,155 @@ impl PlayerView {
             .is_some_and(MediaControls::is_active)
     }
 
-    /// Offers to skip the intro, or to go on to the next item during the
-    /// credits when there is one.
+    /// Offers to skip the intro, or counts down to the next item during
+    /// the credits when there is one.
     fn offer_skip(&self, segment: Option<SegmentKind>) {
         let imp = self.imp();
         let has_next = imp.player.get().is_some_and(Player::has_next);
-        let label = match segment {
-            Some(SegmentKind::Intro) => Some(gettext("Skip intro")),
-            Some(SegmentKind::Outro) if has_next => Some(gettext("Next episode")),
-            _ => None,
-        };
-        if let Some(label) = &label {
-            imp._skip_button.set_label(label);
+        let intro = segment == Some(SegmentKind::Intro);
+        if intro {
+            imp._skip_button.set_label(&gettext("Skip intro"));
         }
-        imp._skip_button.set_visible(label.is_some());
+        imp._skip_button.set_visible(intro);
+        if segment == Some(SegmentKind::Outro) && has_next && !imp.next_cancelled.get() {
+            self.start_next_countdown();
+        } else {
+            self.stop_next_countdown();
+        }
+    }
+
+    /// The title of the item that follows in the queue.
+    fn next_title(&self) -> String {
+        let Some(player) = self.imp().player.get() else {
+            return String::new();
+        };
+        player
+            .queue_items()
+            .get(player.queue_index() + 1)
+            .map(|item| match (item.kind, item.season_episode()) {
+                (ItemKind::Episode, Some(number)) => format!("{number} - {}", item.title),
+                _ => item.title.clone(),
+            })
+            .unwrap_or_default()
+    }
+
+    fn start_next_countdown(&self) {
+        let imp = self.imp();
+        if imp.next_countdown.borrow().is_some() {
+            return;
+        }
+        imp.next_seconds.set(NEXT_COUNTDOWN);
+        self.show_next_countdown();
+        imp._next_box.set_visible(true);
+        let tick = glib::timeout_add_seconds_local(
+            1,
+            glib::clone!(
+                #[weak(rename_to = view)]
+                self,
+                #[upgrade_or]
+                glib::ControlFlow::Break,
+                move || {
+                    let imp = view.imp();
+                    let left = imp.next_seconds.get().saturating_sub(1);
+                    imp.next_seconds.set(left);
+                    if left == 0 {
+                        imp.next_countdown.take();
+                        imp._next_box.set_visible(false);
+                        if let Some(player) = imp.player.get() {
+                            player.next();
+                        }
+                        return glib::ControlFlow::Break;
+                    }
+                    view.show_next_countdown();
+                    glib::ControlFlow::Continue
+                }
+            ),
+        );
+        imp.next_countdown.replace(Some(tick));
+    }
+
+    fn show_next_countdown(&self) {
+        let imp = self.imp();
+        let seconds = imp.next_seconds.get().to_string();
+        let title = self.next_title();
+        imp._next_label.set_text(&gettext_f(
+            "Next in {0} s: {1}",
+            &[&seconds, &title],
+        ));
+    }
+
+    fn stop_next_countdown(&self) {
+        let imp = self.imp();
+        if let Some(tick) = imp.next_countdown.take() {
+            tick.remove();
+        }
+        imp._next_box.set_visible(false);
+    }
+
+    /// The title of what plays, for the header bar to follow.
+    pub fn title_label(&self) -> gtk::Label {
+        self.imp().title.clone()
+    }
+
+    /// Lists the chapters of `item` behind the chapters button, each
+    /// jumping to its start.
+    fn show_chapters(&self, item: &Item) {
+        let imp = self.imp();
+        let button = imp._media_bottom.chapters_button();
+        button.set_visible(!item.chapters.is_empty());
+        if item.chapters.is_empty() {
+            button.set_popover(gtk::Popover::NONE);
+            return;
+        }
+        let list = gtk::ListBox::new();
+        list.add_css_class("navigation-sidebar");
+        for chapter in &item.chapters {
+            let title = chapter
+                .tag
+                .clone()
+                .filter(|tag| !tag.is_empty())
+                .unwrap_or_else(|| gettext_f("Chapter {}", &[&chapter.index.to_string()]));
+            let row = adw::ActionRow::builder()
+                .title(glib::markup_escape_text(&title))
+                .subtitle(util::format_duration(chapter.start_time_offset))
+                .activatable(true)
+                .build();
+            let start = chapter.start_time_offset;
+            row.connect_activated(glib::clone!(
+                #[weak(rename_to = view)]
+                self,
+                move |row| {
+                    if let Some(player) = view.imp().player.get() {
+                        player.seek_to(start);
+                    }
+                    if let Some(popover) = row.ancestor(gtk::Popover::static_type()) {
+                        popover.downcast::<gtk::Popover>().unwrap().popdown();
+                    }
+                }
+            ));
+            list.append(&row);
+        }
+        let scrolled = gtk::ScrolledWindow::builder()
+            .child(&list)
+            .propagate_natural_height(true)
+            .max_content_height(400)
+            .hscrollbar_policy(gtk::PolicyType::Never)
+            .build();
+        let popover = gtk::Popover::builder().child(&scrolled).build();
+        popover.connect_show(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |_| view.stop_hide_timeout()
+        ));
+        popover.connect_closed(glib::clone!(
+            #[weak(rename_to = view)]
+            self,
+            move |_| {
+                view.stop_hide_timeout();
+                view.start_hide_timeout();
+            }
+        ));
+        button.set_popover(Some(&popover));
     }
 
     /// Draws subtitles that are pictures over the video, fetching the
@@ -508,11 +705,30 @@ impl PlayerView {
 
     fn on_player_event(&self, event: &Event) {
         match event {
-            Event::Started { video: true, .. } => {
-                if let Some(item) = self.imp().player.get().and_then(Player::loaded_item) {
-                    self.show_item(&item);
+            Event::Started { item, video } => {
+                let imp = self.imp();
+                imp.next_cancelled.set(false);
+                self.stop_next_countdown();
+                imp.title.set_label(&match item.kind {
+                    ItemKind::Episode => item.grandparent_title.clone().unwrap_or_default(),
+                    _ => item.title.clone(),
+                });
+                if *video {
+                    if let Some(item) = imp.player.get().and_then(Player::loaded_item) {
+                        self.show_item(&item);
+                    }
+                    self.show_controls();
                 }
-                self.show_controls();
+            }
+            Event::SpeedChanged(speed) => {
+                let imp = self.imp();
+                let index = SPEEDS
+                    .iter()
+                    .position(|known| (known - speed).abs() < 0.01)
+                    .map_or(gtk::INVALID_LIST_POSITION, |index| index as u32);
+                imp.updating_speed.set(true);
+                imp._speed_box.set_selected(index);
+                imp.updating_speed.set(false);
             }
             Event::Segment(segment) => self.offer_skip(*segment),
             // Also when it was chosen elsewhere than in the menus here.
@@ -524,6 +740,7 @@ impl PlayerView {
             Event::Subtitles(subtitles) => self.show_subtitles(subtitles.clone()),
             Event::Stopped => {
                 self.offer_skip(None);
+                self.stop_next_countdown();
                 self.show_subtitles(None);
                 self.imp().subtitle_sheets.borrow_mut().clear();
                 if self.imp().fullscreen.get() {
@@ -543,7 +760,13 @@ impl PlayerView {
             row.set_subtitle(text);
             row.set_visible(!text.is_empty());
         };
-        set(&imp._title_label, &item.title);
+        let title = match (item.kind, &item.grandparent_title, item.season_episode()) {
+            (ItemKind::Episode, Some(show), Some(number)) => {
+                format!("{show} · {number} · {}", item.title)
+            }
+            _ => item.title.clone(),
+        };
+        set(&imp._title_label, &title);
         set(
             &imp._release_datum_label,
             &item
@@ -564,6 +787,7 @@ impl PlayerView {
         );
 
         self.show_streams(item);
+        self.show_chapters(item);
         self.show_deck(item);
     }
 
@@ -649,22 +873,41 @@ impl PlayerView {
     }
 
     /// What is on deck in the library of the playing item.
+    /// Below an episode the rest of its season; below anything else what
+    /// is left to watch in its library.
     fn show_deck(&self, item: &Item) {
         let imp = self.imp();
         imp._deck_shows_box.clear();
+        let season = match item.kind {
+            ItemKind::Episode => item.parent_rating_key,
+            _ => None,
+        };
         let section = match item.kind {
             ItemKind::Clip | ItemKind::Track => None,
             _ => item.library_section_id,
         };
-        imp._label.set_visible(section.is_some());
-        let (Some(section), Some(server)) = (section, Session::current().server()) else {
+        imp._label.set_label(&if season.is_some() {
+            gettext("More of this season")
+        } else {
+            gettext("Continue watching")
+        });
+        imp._label.set_visible(season.is_some() || section.is_some());
+        let Some(server) = Session::current().server() else {
             return;
         };
         let task = glib::spawn_future_local(glib::clone!(
             #[weak(rename_to = view)]
             self,
             async move {
-                match runtime::run(async move { server.section_on_deck(section).await }).await {
+                let items = runtime::run(async move {
+                    match (season, section) {
+                        (Some(season), _) => server.children(season).await,
+                        (None, Some(section)) => server.section_on_deck(section).await,
+                        (None, None) => Ok(Vec::new()),
+                    }
+                })
+                .await;
+                match items {
                     Ok(items) => view.imp()._deck_shows_box.set_items(items),
                     Err(err) => crate::notify::failure(&crate::messages::load_on_deck(), &err),
                 }
@@ -679,13 +922,17 @@ impl PlayerView {
 
     /// Handles a playback shortcut. The window forwards keys that no other
     /// widget used, so the shortcuts work on every page.
-    pub fn handle_key(&self, key: gdk::Key) -> glib::Propagation {
+    pub fn handle_key(&self, key: gdk::Key, state: gdk::ModifierType) -> glib::Propagation {
         let Some(player) = self.imp().player.get() else {
             return glib::Propagation::Proceed;
         };
         if !player.is_playing() {
             return glib::Propagation::Proceed;
         }
+        if state.intersects(gdk::ModifierType::CONTROL_MASK | gdk::ModifierType::ALT_MASK) {
+            return glib::Propagation::Proceed;
+        }
+        let shift = state.contains(gdk::ModifierType::SHIFT_MASK);
         let video = self.is_playing_video();
         match key {
             gdk::Key::f | gdk::Key::F11 if video => self.toggle_fullscreen(),
@@ -696,11 +943,21 @@ impl PlayerView {
             gdk::Key::comma => player.previous(),
             gdk::Key::period => player.next(),
             gdk::Key::s => player.skip_segment(),
-            gdk::Key::bracketleft | gdk::Key::Left => player.seek_by(-10),
-            gdk::Key::bracketright | gdk::Key::Right => player.seek_by(30),
-            gdk::Key::Up => change_volume(5),
-            gdk::Key::Down => change_volume(-5),
-            gdk::Key::m => {
+            gdk::Key::Left => player.seek_by(if shift { -60 } else { -10 }),
+            gdk::Key::Right => player.seek_by(if shift { 60 } else { 10 }),
+            gdk::Key::bracketleft => player.seek_by(-30),
+            gdk::Key::bracketright => player.seek_by(30),
+            gdk::Key::Page_Up => player.seek_chapter(-1),
+            gdk::Key::Page_Down => player.seek_chapter(1),
+            gdk::Key::Up => player.set_volume(player.volume() + 5),
+            gdk::Key::Down => player.set_volume(player.volume() - 5),
+            gdk::Key::m => player.set_muted(!player.is_muted()),
+            gdk::Key::less | gdk::Key::greater => {
+                let step = if key == gdk::Key::less { -0.25 } else { 0.25 };
+                player.set_speed(player.speed() + step);
+                crate::notify::message(&gettext_f("Speed {}×", &[&player.speed().to_string()]));
+            }
+            gdk::Key::v => {
                 let settings = gtk::gio::Settings::new(crate::config::APP_ID);
                 let prefer = !settings.boolean("prefer-music-clips");
                 if let Err(err) = settings.set_boolean("prefer-music-clips", prefer) {

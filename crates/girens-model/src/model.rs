@@ -138,6 +138,9 @@ pub struct Item {
     /// The parts of the file one may want to skip.
     #[serde(default)]
     pub segments: Vec<Segment>,
+    /// Where the chapters begin, when the file has them.
+    #[serde(default, rename = "Chapter")]
+    pub chapters: Vec<Chapter>,
 
     #[serde(default, rename = "Genre")]
     pub genres: Vec<Tag>,
@@ -201,6 +204,20 @@ pub enum SegmentKind {
     Intro,
     /// The credits at the end.
     Outro,
+}
+
+/// A chapter of a file, in milliseconds from its start.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Chapter {
+    #[serde(default)]
+    pub index: u32,
+    #[serde(default)]
+    pub start_time_offset: u64,
+    #[serde(default)]
+    pub end_time_offset: u64,
+    /// The name, which not every file gives its chapters.
+    pub tag: Option<String>,
 }
 
 /// A stretch of a file, in milliseconds from its start.

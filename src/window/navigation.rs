@@ -241,7 +241,7 @@ impl PlexWindow {
             Location::Downloads => Ok(gettext("Downloads")),
             Location::Search(_) => Ok(gettext("Search")),
             Location::Photo(_) => Ok(gettext("Photo")),
-            Location::Player => Ok(gettext("Player")),
+            Location::Player => Err(imp._player_view.title_label()),
             Location::Section(_) | Location::PhotoAlbum(_) => Err(page
                 .downcast_ref::<views::SectionView>()
                 .expect("a library grid")

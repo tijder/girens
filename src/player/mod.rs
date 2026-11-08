@@ -88,6 +88,8 @@ pub enum Event {
     Subtitles(Option<SubtitlePictures>),
     /// Whether the item that is playing starts over when it ends.
     RepeatChanged(bool),
+    /// The playback speed, 1.0 being the normal one.
+    SpeedChanged(f64),
     /// Nothing is playing any more.
     Stopped,
 }
@@ -180,6 +182,8 @@ struct State {
     generation: u64,
     prefer_music_clips: bool,
     repeat: bool,
+    speed: f64,
+    muted: bool,
 }
 
 struct Inner {
@@ -242,6 +246,7 @@ impl Player {
             deinterlace: RefCell::default(),
             state: RefCell::new(State {
                 prefer_music_clips: settings.boolean("prefer-music-clips"),
+                speed: 1.0,
                 ..State::default()
             }),
             settings,
@@ -503,6 +508,72 @@ impl Player {
                 .set_mpv("playback-time", segment.end as f64 / 1000.0),
             None => {}
         }
+    }
+
+    /// The chapters of the loaded item, in milliseconds into it.
+    pub fn chapters(&self) -> Vec<girens_model::model::Chapter> {
+        self.inner
+            .state
+            .borrow()
+            .current
+            .as_ref()
+            .map(|playing| playing.loading.chapters.clone())
+            .unwrap_or_default()
+    }
+
+    /// Jumps to the start of the chapter `steps` further on (or back, when
+    /// negative); backwards first goes to the start of the current one.
+    pub fn seek_chapter(&self, steps: i32) {
+        let chapters = self.chapters();
+        if chapters.is_empty() {
+            return;
+        }
+        let position = self.position();
+        // Leeway so that "previous" from just after a start goes further back.
+        let current = chapters
+            .iter()
+            .rposition(|chapter| chapter.start_time_offset + 2000 <= position)
+            .map_or(-1, |index| index as i32);
+        let target = (current + steps).clamp(0, chapters.len() as i32 - 1);
+        self.seek_to(chapters[target as usize].start_time_offset);
+    }
+
+    pub fn speed(&self) -> f64 {
+        self.inner.state.borrow().speed
+    }
+
+    /// Plays at `speed` times the normal pace, between 0.5 and 2.
+    pub fn set_speed(&self, speed: f64) {
+        let speed = (speed * 100.0).round() / 100.0;
+        let speed = speed.clamp(0.5, 2.0);
+        self.inner.set_mpv("speed", speed);
+        let changed = std::mem::replace(&mut self.inner.state.borrow_mut().speed, speed) != speed;
+        if changed {
+            self.inner.emit(Event::SpeedChanged(speed));
+        }
+    }
+
+    pub fn is_muted(&self) -> bool {
+        self.inner.state.borrow().muted
+    }
+
+    pub fn set_muted(&self, muted: bool) {
+        self.inner.set_mpv("mute", muted);
+        self.inner.state.borrow_mut().muted = muted;
+    }
+
+    /// Sets the volume in percent, right away in mpv and remembered in
+    /// the settings, which the volume buttons follow.
+    pub fn set_volume(&self, volume: i32) {
+        let volume = volume.clamp(0, 100);
+        self.inner.set_mpv("volume", i64::from(volume));
+        if let Err(err) = self.inner.settings.set_int("volume-level", volume) {
+            eprintln!("Could not save the volume: {err}");
+        }
+    }
+
+    pub fn volume(&self) -> i32 {
+        self.inner.settings.int("volume-level")
     }
 
     pub fn set_repeat(&self, repeat: bool) {
@@ -878,6 +949,12 @@ impl Inner {
         };
         self.set_mpv("demuxer-lavf-o", demuxer.as_str());
         self.apply_volume();
+        let (speed, muted) = {
+            let state = self.state.borrow();
+            (state.speed, state.muted)
+        };
+        self.set_mpv("speed", speed);
+        self.set_mpv("mute", muted);
         // Stay paused until mpv is ready and the start position is set.
         self.set_pause(true);
         mpv.command("loadfile", &[url.as_str(), "replace"])

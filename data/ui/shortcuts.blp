@@ -60,13 +60,33 @@ Adw.ShortcutsDialog shortcuts {
     }
 
     Adw.ShortcutsItem {
-      title: C_("shortcut window", "Seek forwards");
-      accelerator: "bracketright Right";
+      title: C_("shortcut window", "Seek forwards 10 seconds");
+      accelerator: "Right";
     }
 
     Adw.ShortcutsItem {
-      title: C_("shortcut window", "Seek backwards");
-      accelerator: "bracketleft Left";
+      title: C_("shortcut window", "Seek backwards 10 seconds");
+      accelerator: "Left";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Seek a minute");
+      accelerator: "<Shift>Left <Shift>Right";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Seek 30 seconds");
+      accelerator: "bracketleft bracketright";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Previous or next chapter");
+      accelerator: "Page_Up Page_Down";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Slower or faster");
+      accelerator: "less greater";
     }
 
     Adw.ShortcutsItem {
@@ -77,6 +97,11 @@ Adw.ShortcutsDialog shortcuts {
     Adw.ShortcutsItem {
       title: C_("shortcut window", "Volume down");
       accelerator: "Down";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Mute");
+      accelerator: "m";
     }
 
     Adw.ShortcutsItem {
@@ -101,7 +126,7 @@ Adw.ShortcutsDialog shortcuts {
 
     Adw.ShortcutsItem {
       title: C_("shortcut window", "Play musicclips instead of audio track");
-      accelerator: "m";
+      accelerator: "v";
     }
   }
 }

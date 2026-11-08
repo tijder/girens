@@ -71,6 +71,15 @@ template $media_box_video_bottom : Adw.Bin {
         hexpand: true;
       }
 
+      MenuButton _chapters_button {
+        icon-name: "go-jump-symbolic";
+        tooltip-text: _("Chapters");
+        width-request: 50;
+        height-request: 50;
+        direction: up;
+        visible: false;
+      }
+
       MenuButton _tracks_button {
         icon-name: "media-view-subtitles-symbolic";
         tooltip-text: _("Audio and subtitles");

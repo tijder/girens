@@ -76,3 +76,8 @@ button:hover > box > overlay > .cover-menu-button,
   border-radius: 9999px;
   padding: 6px 14px;
 }
+
+/* The "next episode" notice over the video, shaped like the osd buttons. */
+label.next-up {
+  padding: 6px 14px;
+}

@@ -307,8 +307,11 @@ impl PlexServer {
     }
 
     pub async fn item(&self, rating_key: ItemId) -> Result<Item> {
-        self.items(&format!("/library/metadata/{rating_key}"), &[])
-            .await?
+        self.items(
+            &format!("/library/metadata/{rating_key}"),
+            &[("includeChapters", "1")],
+        )
+        .await?
             .into_iter()
             .next()
             .ok_or(Error::NotFound(rating_key))
