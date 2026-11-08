@@ -54,6 +54,10 @@ template $PlexWindow : Adw.ApplicationWindow {
       content: Adw.ToolbarView {
         [top]
         Adw.HeaderBar content_header {
+          title-widget: Adw.WindowTitle _page_title {
+            title: "Girens";
+          };
+
           Button _back_button {
             visible: false;
             icon-name: "go-previous-symbolic";
@@ -102,6 +106,11 @@ template $PlexWindow : Adw.ApplicationWindow {
         // Right content
         content: Box _content_box_wrapper {
           orientation: vertical;
+
+          Adw.Banner _offline_banner {
+            button-label: _("Try again");
+          }
+
           Box content {
             hexpand: true;
             orientation: vertical;

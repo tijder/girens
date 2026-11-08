@@ -169,6 +169,11 @@ impl Default for SectionView {
 }
 
 impl SectionView {
+    /// The title of what is shown, for the header bar to follow.
+    pub fn title_label(&self) -> gtk::Label {
+        self.imp()._title_label.get()
+    }
+
     /// Called with the library, its sort order and whether to shuffle when
     /// the play or shuffle button is used.
     pub fn connect_play(&self, callback: impl Fn(LibrarySection, Option<String>, bool) + 'static) {

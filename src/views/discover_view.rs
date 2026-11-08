@@ -180,7 +180,7 @@ impl DiscoverView {
                     &seasons_row.0,
                     &seasons_row.1,
                     // Plex lists the new seasons and episodes, Ister the shows.
-                    of(&[ItemKind::Episode, ItemKind::Season, ItemKind::Show]),
+                    one_per_show(of(&[ItemKind::Episode, ItemKind::Season, ItemKind::Show])),
                 );
                 Self::fill(&movies_row.0, &movies_row.1, of(&[ItemKind::Movie]));
                 Self::fill(&music_row.0, &music_row.1, of(&[ItemKind::Album]));
@@ -190,5 +190,56 @@ impl DiscoverView {
         if let Some(previous) = imp.refresh_task.replace(Some(task)) {
             previous.abort();
         }
+    }
+}
+
+/// Keeps the newest season or episode of each show, so that a show with
+/// several new seasons does not fill the row by itself.
+fn one_per_show(items: Vec<Item>) -> Vec<Item> {
+    let mut seen = std::collections::HashSet::new();
+    items
+        .into_iter()
+        .filter(|item| {
+            let show = match item.kind {
+                ItemKind::Episode => item.grandparent_rating_key,
+                ItemKind::Season => item.parent_rating_key,
+                _ => None,
+            }
+            .unwrap_or(item.rating_key);
+            seen.insert(show)
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use girens_model::ItemId;
+
+    fn item(kind: ItemKind, key: u64, parent: Option<u64>, grandparent: Option<u64>) -> Item {
+        Item {
+            kind,
+            rating_key: ItemId::from(key),
+            parent_rating_key: parent.map(ItemId::from),
+            grandparent_rating_key: grandparent.map(ItemId::from),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn a_show_appears_once_among_the_recently_added() {
+        let items = vec![
+            item(ItemKind::Season, 12, Some(1), None),
+            item(ItemKind::Season, 13, Some(1), None),
+            item(ItemKind::Episode, 25, Some(21), Some(2)),
+            item(ItemKind::Season, 14, Some(1), None),
+            item(ItemKind::Show, 3, None, None),
+            item(ItemKind::Episode, 26, Some(22), Some(2)),
+        ];
+        let keys: Vec<ItemId> = one_per_show(items)
+            .iter()
+            .map(|item| item.rating_key)
+            .collect();
+        assert_eq!(keys, [12, 25, 3].map(ItemId::from));
     }
 }

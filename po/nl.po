@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 21:34+0100\n"
+"POT-Creation-Date: 2026-11-08 21:48+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -84,7 +84,7 @@ msgstr "Onbekeken"
 msgid "Available offline"
 msgstr "Offline beschikbaar"
 
-#: data/ui/discover_view.blp:20 data/ui/player_view.blp:159
+#: data/ui/discover_view.blp:20 data/ui/player_view.blp:161
 msgid "Continue watching"
 msgstr "Verder kijken"
 
@@ -119,11 +119,11 @@ msgid "Copy the link"
 msgstr "Link kopiëren"
 
 #: data/ui/loading_view.blp:74 data/ui/login_view.blp:10
-#: src/window/connection.rs:648 src/window/connection.rs:732
+#: src/window/connection.rs:689 src/window/connection.rs:773
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: data/ui/loading_view.blp:79 src/window/connection.rs:733
+#: data/ui/loading_view.blp:79 src/window/connection.rs:774
 msgid "Sign out"
 msgstr "Afmelden"
 
@@ -206,43 +206,48 @@ msgstr "Opent je browser om aan te melden"
 msgid "Account"
 msgstr "Account"
 
-#: data/ui/main_window.blp:60
+#: data/ui/main_window.blp:64
 msgid "Back"
 msgstr "Terug"
 
-#: data/ui/main_window.blp:66
+#: data/ui/main_window.blp:70
 msgid "Toggle Sidebar"
 msgstr "Zijbalk tonen/verbergen"
 
-#: data/ui/main_window.blp:70
+#: data/ui/main_window.blp:74 src/window/navigation.rs:242
 msgid "Search"
 msgstr "Zoeken"
 
-#: data/ui/main_window.blp:77 data/ui/sync_dialog.blp:32
+#: data/ui/main_window.blp:81 data/ui/sync_dialog.blp:32
 #: data/ui/sync_dialog.blp:33 data/ui/sync_settings.blp:46
 #: data/ui/sync_settings.blp:47 src/views/album_view.rs:308
 #: src/views/album_view.rs:337 src/views/cover_box.rs:280
 msgid "Sync"
 msgstr "Synchroniseren"
 
-#: data/ui/main_window.blp:84 src/views/downloads_view.rs:32
+#: data/ui/main_window.blp:88 src/views/downloads_view.rs:32
 #: src/views/sidebar_box.rs:164 src/views/sidebar_box.rs:197
+#: src/window/navigation.rs:241
 msgid "Downloads"
 msgstr "Downloads"
 
-#: data/ui/main_window.blp:94
+#: data/ui/main_window.blp:98
 msgid "Main menu"
 msgstr "Hoofdmenu"
 
-#: data/ui/main_window.blp:170 src/views/preferences.rs:102
+#: data/ui/main_window.blp:111 src/window/connection.rs:403
+msgid "Try again"
+msgstr "Opnieuw proberen"
+
+#: data/ui/main_window.blp:179 src/views/preferences.rs:102
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: data/ui/main_window.blp:176
+#: data/ui/main_window.blp:185
 msgid "Shortcuts"
 msgstr "Sneltoetsen"
 
-#: data/ui/main_window.blp:182
+#: data/ui/main_window.blp:191
 msgid "About Girens"
 msgstr "Over Girens"
 
@@ -286,39 +291,39 @@ msgstr "Venster vullen"
 msgid "Repeat"
 msgstr "Herhalen"
 
-#: data/ui/player_view.blp:107 src/views/section_view.rs:25
+#: data/ui/player_view.blp:109 src/views/section_view.rs:25
 msgid "Title"
 msgstr "Titel"
 
-#: data/ui/player_view.blp:112
+#: data/ui/player_view.blp:114
 msgid "Release date"
 msgstr "Uitgave­datum"
 
-#: data/ui/player_view.blp:117
+#: data/ui/player_view.blp:119
 msgid "Genre"
 msgstr "Genre"
 
-#: data/ui/player_view.blp:122 src/views/section_view.rs:31
+#: data/ui/player_view.blp:124 src/views/section_view.rs:31
 msgid "Duration"
 msgstr "Duur"
 
-#: data/ui/player_view.blp:127
+#: data/ui/player_view.blp:129
 msgid "Description"
 msgstr "Beschrĳving"
 
-#: data/ui/player_view.blp:140
+#: data/ui/player_view.blp:142
 msgid "Version"
 msgstr "Versie"
 
-#: data/ui/player_view.blp:144
+#: data/ui/player_view.blp:146
 msgid "Audio "
 msgstr "Audio "
 
-#: data/ui/player_view.blp:147
+#: data/ui/player_view.blp:149
 msgid "Subtitle "
 msgstr "Ondertitel "
 
-#: data/ui/profile_dialog.blp:9 src/window/connection.rs:527
+#: data/ui/profile_dialog.blp:9 src/window/connection.rs:567
 msgid "Who is watching?"
 msgstr "Wie kijkt er?"
 
@@ -352,70 +357,105 @@ msgstr "Sorteren"
 
 #: data/ui/shortcuts.blp:6
 msgctxt "shortcut window"
+msgid "General"
+msgstr "Algemeen"
+
+#: data/ui/shortcuts.blp:9
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Zoeken"
+
+#: data/ui/shortcuts.blp:14
+msgctxt "shortcut window"
+msgid "Back"
+msgstr "Terug"
+
+#: data/ui/shortcuts.blp:19
+msgctxt "shortcut window"
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
+#: data/ui/shortcuts.blp:24
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: data/ui/shortcuts.blp:29
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Sneltoetsen"
+
+#: data/ui/shortcuts.blp:34
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Afsluiten"
+
+#: data/ui/shortcuts.blp:40
+msgctxt "shortcut window"
 msgid "Playback"
 msgstr "Afspelen"
 
-#: data/ui/shortcuts.blp:9
+#: data/ui/shortcuts.blp:43
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr "Afspelen/pauzeren"
 
-#: data/ui/shortcuts.blp:14
+#: data/ui/shortcuts.blp:48
 msgctxt "shortcut window"
 msgid "Previous"
 msgstr "Vorige"
 
-#: data/ui/shortcuts.blp:19
+#: data/ui/shortcuts.blp:53
 msgctxt "shortcut window"
 msgid "Next"
 msgstr "Volgende"
 
-#: data/ui/shortcuts.blp:24
+#: data/ui/shortcuts.blp:58
 msgctxt "shortcut window"
 msgid "Skip intro or credits"
 msgstr "Intro of aftiteling overslaan"
 
-#: data/ui/shortcuts.blp:29
+#: data/ui/shortcuts.blp:63
 msgctxt "shortcut window"
 msgid "Seek forwards"
 msgstr "Vooruit zoeken"
 
-#: data/ui/shortcuts.blp:34
+#: data/ui/shortcuts.blp:68
 msgctxt "shortcut window"
 msgid "Seek backwards"
 msgstr "Achteruit zoeken"
 
-#: data/ui/shortcuts.blp:39
+#: data/ui/shortcuts.blp:73
 msgctxt "shortcut window"
 msgid "Volume up"
 msgstr "Volume omhoog"
 
-#: data/ui/shortcuts.blp:44
+#: data/ui/shortcuts.blp:78
 msgctxt "shortcut window"
 msgid "Volume down"
 msgstr "Volume omlaag"
 
-#: data/ui/shortcuts.blp:49
+#: data/ui/shortcuts.blp:83
 msgctxt "shortcut window"
 msgid "Stop playing"
 msgstr "Stopen met afspelen"
 
-#: data/ui/shortcuts.blp:54
+#: data/ui/shortcuts.blp:88
 msgctxt "shortcut window"
 msgid "Fullscreen"
 msgstr "Volledig scherm"
 
-#: data/ui/shortcuts.blp:59
+#: data/ui/shortcuts.blp:93
 msgctxt "shortcut window"
 msgid "Fill the window with the video"
 msgstr "Venster vullen met de video"
 
-#: data/ui/shortcuts.blp:64
+#: data/ui/shortcuts.blp:98
 msgctxt "shortcut window"
 msgid "Show the controls"
 msgstr "Bediening tonen"
 
-#: data/ui/shortcuts.blp:69
+#: data/ui/shortcuts.blp:103
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr "Muziekclips afspelen in plaats van audiotrack"
@@ -722,23 +762,23 @@ msgstr "Volgende foto"
 msgid "The photo has no picture"
 msgstr "De foto heeft geen afbeelding"
 
-#: src/views/player_view.rs:343
+#: src/views/player_view.rs:345
 msgid "Audio"
 msgstr "Audio"
 
-#: src/views/player_view.rs:344
+#: src/views/player_view.rs:346
 msgid "Subtitle"
 msgstr "Ondertiteling"
 
-#: src/views/player_view.rs:399
+#: src/views/player_view.rs:401
 msgid "Skip intro"
 msgstr "Intro overslaan"
 
-#: src/views/player_view.rs:400
+#: src/views/player_view.rs:402
 msgid "Next episode"
 msgstr "Volgende aflevering"
 
-#: src/views/player_view.rs:585
+#: src/views/player_view.rs:591
 msgid "None"
 msgstr "Geen"
 
@@ -871,18 +911,19 @@ msgstr "Gebruikers­beoordeling"
 msgid "Media height"
 msgstr "Media­hoogte"
 
-#: src/views/section_view.rs:422 src/views/sidebar_box.rs:158
+#: src/views/section_view.rs:427 src/views/sidebar_box.rs:158
+#: src/window/navigation.rs:240
 msgid "Playlists"
 msgstr "Afspeel­lĳsten"
 
-#: src/views/show_view.rs:215
+#: src/views/show_view.rs:220
 #, rust-format
 msgid "{} season"
 msgid_plural "{} seasons"
 msgstr[0] "{} seizoen"
 msgstr[1] "{} seizoenen"
 
-#: src/views/show_view.rs:219
+#: src/views/show_view.rs:224
 #, rust-format
 msgid "{} episode"
 msgid_plural "{} episodes"
@@ -890,10 +931,11 @@ msgstr[0] "{} aflevering"
 msgstr[1] "{} afleveringen"
 
 #: src/views/sidebar_box.rs:152 src/views/sidebar_box.rs:192
+#: src/window/navigation.rs:244
 msgid "Player"
 msgstr "Speler"
 
-#: src/views/sidebar_box.rs:156
+#: src/views/sidebar_box.rs:156 src/window/navigation.rs:239
 msgid "Home"
 msgstr "Thuis"
 
@@ -925,7 +967,7 @@ msgid "Signing in to plex.tv…"
 msgstr "Aanmelden op plex.tv…"
 
 #: src/window/connection.rs:284 src/window/connection.rs:332
-#: src/window/connection.rs:801
+#: src/window/connection.rs:842
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr "Verbinden met {} mislukt."
@@ -945,47 +987,53 @@ msgstr ""
 "Er zĳn {1} verbindings-URL's.\n"
 "Dit kan even duren."
 
-#: src/window/connection.rs:371
-msgid "The server cannot be reached. Showing your downloads."
-msgstr "De server is niet bereikbaar. Je downloads worden getoond."
+#: src/window/connection.rs:401
+msgid "The server cannot be reached. Showing your downloads until it is back."
+msgstr ""
+"De server is niet bereikbaar. Je downloads worden getoond tot hij terug is."
 
-#: src/window/connection.rs:431
+#: src/window/connection.rs:432
+#, rust-format
+msgid "Connecting to {}…"
+msgstr "Verbinden met {}…"
+
+#: src/window/connection.rs:471
 msgid "Could not load the libraries"
 msgstr "De bibliotheken konden niet worden geladen"
 
-#: src/window/connection.rs:629
+#: src/window/connection.rs:670
 msgid "That PIN is not correct. Try again."
 msgstr "Die pincode klopt niet. Probeer het opnieuw."
 
-#: src/window/connection.rs:631
+#: src/window/connection.rs:672
 msgid "Enter the PIN of this profile."
 msgstr "Voer de pincode van dit profiel in."
 
-#: src/window/connection.rs:643
+#: src/window/connection.rs:684
 msgid "PIN"
 msgstr "Pincode"
 
-#: src/window/connection.rs:649
+#: src/window/connection.rs:690
 msgid "Continue"
 msgstr "Doorgaan"
 
-#: src/window/connection.rs:680
+#: src/window/connection.rs:721
 msgid "Could not switch to this profile"
 msgstr "Kon niet naar dit profiel wisselen"
 
-#: src/window/connection.rs:727
+#: src/window/connection.rs:768
 #, rust-format
 msgid "Sign out {}?"
 msgstr "{} afmelden?"
 
-#: src/window/connection.rs:729
+#: src/window/connection.rs:770
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 "De downloads en voorkeuren van dit account worden van dit apparaat "
 "verwijderd."
 
-#: src/window/connection.rs:838
+#: src/window/connection.rs:879
 msgid ""
 "The username or password is not right. An account with two-factor "
 "authentication also needs its verification code."
@@ -993,34 +1041,34 @@ msgstr ""
 "De gebruikersnaam of het wachtwoord klopt niet. Een account met "
 "tweestapsverificatie heeft ook zijn verificatiecode nodig."
 
-#: src/window/connection.rs:841
+#: src/window/connection.rs:882
 msgid "The username, password or verification code is not right."
 msgstr "De gebruikersnaam, het wachtwoord of de verificatiecode klopt niet."
 
-#: src/window/connection.rs:844
+#: src/window/connection.rs:885
 #, rust-format
 msgid "Could not reach plex.tv: {}"
 msgstr "Kan plex.tv niet bereiken: {}"
 
-#: src/window/connection.rs:847
+#: src/window/connection.rs:888
 msgid "The server does not accept this token."
 msgstr "De server accepteert dit token niet."
 
-#: src/window/connection.rs:850 src/window/connection.rs:853
+#: src/window/connection.rs:891 src/window/connection.rs:894
 #, rust-format
 msgid "Could not connect to {}."
 msgstr "Kan geen verbinding maken met {}."
 
-#: src/window/connection.rs:858
+#: src/window/connection.rs:899
 #, rust-format
 msgid "No Ister server was found at {}."
 msgstr "Er is geen Ister-server gevonden op {}."
 
-#: src/window/mod.rs:343
+#: src/window/mod.rs:359
 msgid "This item is on a server that is not in use"
 msgstr "Dit item staat op een server die niet in gebruik is"
 
-#: src/window/mod.rs:766
+#: src/window/mod.rs:789
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -1029,11 +1077,11 @@ msgstr ""
 "af te spelen."
 
 #. Translators put their names here.
-#: src/window/mod.rs:771
+#: src/window/mod.rs:794
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:774
+#: src/window/mod.rs:797
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
@@ -1041,9 +1089,13 @@ msgstr "Help mee vertalen"
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:807
+#: src/window/mod.rs:830
 msgid "Waiting for you to sign in in the browser…"
 msgstr "Wachten tot je bent aangemeld in de browser…"
+
+#: src/window/navigation.rs:243
+msgid "Photo"
+msgstr "Foto"
 
 #: src/window/playback.rs:79
 msgid "This is not available without a connection to the server"

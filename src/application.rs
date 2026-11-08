@@ -34,6 +34,26 @@ mod imp {
         fn constructed(&self) {
             self.parent_constructed();
             let app = self.obj();
+
+            let quit = gio::SimpleAction::new("quit", None);
+            quit.connect_activate(glib::clone!(
+                #[weak]
+                app,
+                move |_, _| {
+                    // Closing the window ends playback properly first.
+                    match app.active_window() {
+                        Some(window) => window.close(),
+                        None => app.quit(),
+                    }
+                }
+            ));
+            app.add_action(&quit);
+            app.set_accels_for_action("app.quit", &["<Primary>q"]);
+            app.set_accels_for_action("win.search", &["<Primary>f"]);
+            app.set_accels_for_action("win.back", &["<Alt>Left"]);
+            app.set_accels_for_action("win.preferences", &["<Primary>comma"]);
+            app.set_accels_for_action("win.shortcuts", &["<Primary>question"]);
+            app.set_accels_for_action("win.main-menu", &["F10"]);
             app.add_main_option(
                 "show-id",
                 glib::Char::from(b's'),

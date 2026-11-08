@@ -95,11 +95,13 @@ template $player_view : Adw.Bin {
           orientation: horizontal;
           spacing: 12;
 
-          ListBox {
+          ListBox _details_list {
             styles["boxed-list"]
             selection-mode: none;
             hexpand: true;
             valign: start;
+            // Until something plays there is nothing to tell.
+            visible: false;
 
             // The name of a detail above its value.
             Adw.ActionRow _title_label {

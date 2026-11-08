@@ -44,4 +44,5 @@ src/views/show_view.rs
 src/views/sidebar_box.rs
 src/window/connection.rs
 src/window/mod.rs
+src/window/navigation.rs
 src/window/playback.rs

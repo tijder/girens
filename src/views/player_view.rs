@@ -63,6 +63,8 @@ mod imp {
         #[template_child]
         pub _title_label: TemplateChild<adw::ActionRow>,
         #[template_child]
+        pub _details_list: TemplateChild<gtk::ListBox>,
+        #[template_child]
         pub _release_datum_label: TemplateChild<adw::ActionRow>,
         #[template_child]
         pub _genre_label: TemplateChild<adw::ActionRow>,
@@ -449,7 +451,10 @@ impl PlayerView {
                             view.imp().subtitle_sheets.borrow_mut().insert(sheet, texture);
                         }
                         Err(err) => {
-                            eprintln!("Could not load the subtitles: {err}");
+                            crate::notify::failure(
+                                &gettext("Could not load the subtitles"),
+                                &err,
+                            );
                             return;
                         }
                     }
@@ -533,6 +538,7 @@ impl PlayerView {
 
     fn show_item(&self, item: &Item) {
         let imp = self.imp();
+        imp._details_list.set_visible(true);
         let set = |row: &adw::ActionRow, text: &str| {
             row.set_subtitle(text);
             row.set_visible(!text.is_empty());

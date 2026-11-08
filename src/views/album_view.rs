@@ -395,6 +395,9 @@ mod imp {
         pub store: OnceCell<gio::ListStore>,
         pub rating_key: Cell<Option<ItemId>>,
         pub task: RefCell<Option<glib::JoinHandle<()>>>,
+        /// The title of the album or playlist, for the header bar; the
+        /// header row of the list comes and goes with scrolling.
+        pub title: gtk::Label,
     }
 
     #[glib::object_subclass]
@@ -430,6 +433,11 @@ glib::wrapper! {
 }
 
 impl AlbumView {
+    /// The title of what is shown, for the header bar to follow.
+    pub fn title_label(&self) -> gtk::Label {
+        self.imp().title.clone()
+    }
+
     /// What is currently displayed.
     pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()
@@ -440,6 +448,7 @@ impl AlbumView {
     pub fn show_playlist(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
+        imp.title.set_label("");
         let store = imp.store.get().expect("set in constructed").clone();
         row_list::replace_from(&store, 0, vec![MusicRow::Loading]);
         let Some(server) = Session::current().server() else {
@@ -486,6 +495,7 @@ impl AlbumView {
                         return;
                     }
                 };
+                view.imp().title.set_label(&playlist.title);
                 let total = first.total;
                 let mut rows = vec![MusicRow::Playlist {
                     // What the server lists, which for a list that fills
@@ -524,6 +534,7 @@ impl AlbumView {
     pub fn show(&self, rating_key: ItemId) {
         let imp = self.imp();
         imp.rating_key.set(Some(rating_key));
+        imp.title.set_label("");
         let store = imp.store.get().expect("set in constructed").clone();
         row_list::replace_from(&store, 0, vec![MusicRow::Loading]);
         let Some(server) = Session::current().server() else {
@@ -539,6 +550,7 @@ impl AlbumView {
                 .await;
                 match loaded {
                     Ok((album, tracks)) => {
+                        view.imp().title.set_label(&album.title);
                         row_list::replace_from(&store, 0, album_rows(&album, &tracks, true))
                     }
                     Err(err) => {

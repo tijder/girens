@@ -3,6 +3,40 @@ using Adw 1;
 
 Adw.ShortcutsDialog shortcuts {
   Adw.ShortcutsSection {
+    title: C_("shortcut window", "General");
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Search");
+      accelerator: "<Primary>f";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Back");
+      accelerator: "<Alt>Left";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Main menu");
+      accelerator: "F10";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Preferences");
+      accelerator: "<Primary>comma";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Keyboard shortcuts");
+      accelerator: "<Primary>question";
+    }
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Quit");
+      accelerator: "<Primary>q";
+    }
+  }
+
+  Adw.ShortcutsSection {
     title: C_("shortcut window", "Playback");
 
     Adw.ShortcutsItem {

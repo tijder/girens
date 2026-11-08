@@ -73,6 +73,11 @@ glib::wrapper! {
 }
 
 impl ArtistView {
+    /// The title of what is shown, for the header bar to follow.
+    pub fn title_label(&self) -> gtk::Label {
+        self.imp()._title_label.get()
+    }
+
     /// What is currently displayed.
     pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()

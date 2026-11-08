@@ -367,9 +367,7 @@ impl PlexWindow {
         }
         self.show_main();
         imp._sidebar_box.set_offline();
-        crate::notify::message(&gettext(
-            "The server cannot be reached. Showing your downloads.",
-        ));
+        self.show_offline_banner();
         #[cfg(debug_assertions)]
         crate::debug::after_connect(self);
         true
@@ -390,10 +388,51 @@ impl PlexWindow {
                 // Connected in another way.
                 return;
             }
-            if matches!(session.connect_stored_server().await, Ok(true)) {
-                self.connected().await;
+            if self.try_reconnect().await {
                 return;
             }
+        }
+    }
+
+    /// Says above the downloads that the server is away and is tried again.
+    fn show_offline_banner(&self) {
+        let banner = &self.imp()._offline_banner;
+        banner.set_title(&gettext(
+            "The server cannot be reached. Showing your downloads until it is back.",
+        ));
+        banner.set_button_label(Some(&gettext("Try again")));
+        banner.set_revealed(true);
+    }
+
+    /// One attempt to reach the server again from the downloads, unless
+    /// one is running already. Shows the libraries when it answers.
+    async fn try_reconnect(&self) -> bool {
+        let imp = self.imp();
+        if imp.reconnecting.replace(true) {
+            return false;
+        }
+        let connected = matches!(imp.session.connect_stored_server().await, Ok(true));
+        imp.reconnecting.set(false);
+        if connected {
+            self.connected().await;
+        }
+        connected
+    }
+
+    /// The user asks from the banner to try the server now.
+    pub(super) async fn reconnect_now(&self) {
+        let imp = self.imp();
+        let Some(url) = imp.session.stored_server_url() else {
+            return;
+        };
+        if imp.reconnecting.get() {
+            return;
+        }
+        imp._offline_banner
+            .set_title(&gettext_f("Connecting to {}…", &[&url]));
+        imp._offline_banner.set_button_label(None);
+        if !self.try_reconnect().await {
+            self.show_offline_banner();
         }
     }
 
@@ -412,6 +451,7 @@ impl PlexWindow {
             return;
         };
         self.show_main();
+        imp._offline_banner.set_revealed(false);
         Sync::current().rescan(server.machine_identifier(), &user);
         // What was watched from offline copies while the server was away.
         glib::spawn_future_local({
@@ -553,6 +593,7 @@ impl PlexWindow {
         }
         imp.servers.borrow_mut().clear();
         imp._sidebar_box.clear();
+        imp._offline_banner.set_revealed(false);
         imp._avatar_image
             .set_icon_name(Some("avatar-default-symbolic"));
     }

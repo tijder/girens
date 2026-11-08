@@ -55,6 +55,12 @@ mod imp {
         #[template_child]
         pub _back_button: TemplateChild<gtk::Button>,
         #[template_child]
+        pub _page_title: TemplateChild<adw::WindowTitle>,
+        #[template_child]
+        pub _offline_banner: TemplateChild<adw::Banner>,
+        #[template_child]
+        pub _menu_button: TemplateChild<gtk::MenuButton>,
+        #[template_child]
         pub _avatar_image: TemplateChild<gtk::Image>,
 
         #[template_child(id = "_viewStack_pages")]
@@ -126,6 +132,11 @@ mod imp {
         pub history: RefCell<Vec<Location>>,
         /// Set while the connection to the server is being checked or restored.
         pub checking_connection: Cell<bool>,
+        /// Set while the server is tried again from the downloads.
+        pub reconnecting: Cell<bool>,
+        /// Keeps the title of the page in the header bar, for the pages
+        /// whose title is only known once they are loaded.
+        pub title_binding: RefCell<Option<glib::Binding>>,
         pub layout_timeout: RefCell<Option<glib::SourceId>>,
     }
 
@@ -140,6 +151,9 @@ mod imp {
                 _sidebar_box: TemplateChild::default(),
                 _profile_button: TemplateChild::default(),
                 _back_button: TemplateChild::default(),
+                _page_title: TemplateChild::default(),
+                _offline_banner: TemplateChild::default(),
+                _menu_button: TemplateChild::default(),
                 _avatar_image: TemplateChild::default(),
                 page_stack: TemplateChild::default(),
                 _discover_view: TemplateChild::default(),
@@ -179,6 +193,8 @@ mod imp {
                 search_timeout: RefCell::new(None),
                 history: RefCell::default(),
                 checking_connection: Cell::new(false),
+                reconnecting: Cell::new(false),
+                title_binding: RefCell::new(None),
                 layout_timeout: RefCell::new(None),
             }
         }
@@ -564,6 +580,13 @@ impl PlexWindow {
                 views::preferences::present(&window);
             }
         ));
+        imp._offline_banner.connect_button_clicked(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |_| {
+                glib::spawn_future_local(async move { window.reconnect_now().await });
+            }
+        ));
         imp._about_button.connect_activated(glib::clone!(
             #[weak(rename_to = window)]
             self,
@@ -881,6 +904,25 @@ impl PlexWindow {
         add("shuffle-by-id", |window, key| {
             window.play(PlayTarget::Item(key), true, StartMode::Ask)
         });
+
+        // What the keyboard shortcuts and the menu reach.
+        let plain = |name: &str, handler: fn(&Self)| {
+            let action = gio::SimpleAction::new(name, None);
+            action.connect_activate(glib::clone!(
+                #[weak(rename_to = window)]
+                self,
+                move |_, _| handler(&window)
+            ));
+            self.add_action(&action);
+        };
+        plain("search", |window| {
+            let button = &window.imp()._search_toggle_button;
+            button.set_active(!button.is_active());
+        });
+        plain("back", |window| window.go_back());
+        plain("preferences", views::preferences::present);
+        plain("shortcuts", |window| window.show_shortcuts());
+        plain("main-menu", |window| window.imp()._menu_button.popup());
 
         // The ids of a playlist and of the item in it to start at.
         let action = gio::SimpleAction::new("play-playlist-item", glib::VariantTy::new("(ss)").ok());

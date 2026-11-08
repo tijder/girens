@@ -64,23 +64,25 @@ impl PlexWindow {
             move |_, _, _, _| window.go_back()
         ));
         self.add_controller(back_click);
+    }
 
-        let shortcuts = gtk::ShortcutController::new();
-        shortcuts.set_scope(gtk::ShortcutScope::Global);
-        shortcuts.add_shortcut(gtk::Shortcut::new(
-            gtk::ShortcutTrigger::parse_string("<Alt>Left"),
-            Some(gtk::CallbackAction::new(glib::clone!(
-                #[weak(rename_to = window)]
-                self,
-                #[upgrade_or]
-                glib::Propagation::Proceed,
-                move |_, _| {
-                    window.go_back();
-                    glib::Propagation::Stop
-                }
-            ))),
-        ));
-        self.add_controller(shortcuts);
+    /// Puts the name of the page in the header bar: a fixed one, or the
+    /// title of the item the page shows once that is loaded.
+    fn set_page_title(&self, title: Result<String, gtk::Label>) {
+        let imp = self.imp();
+        if let Some(binding) = imp.title_binding.take() {
+            binding.unbind();
+        }
+        match title {
+            Ok(text) => imp._page_title.set_title(&text),
+            Err(label) => {
+                let binding = label
+                    .bind_property("label", &*imp._page_title, "title")
+                    .sync_create()
+                    .build();
+                imp.title_binding.replace(Some(binding));
+            }
+        }
     }
 
     /// Shows the results of a search for `query`.
@@ -233,6 +235,21 @@ impl PlexWindow {
             Location::Player => imp._player_view.get().upcast(),
         };
         imp.page_stack.set_visible_child(&page);
+        self.set_page_title(match location {
+            Location::Home => Ok(gettext("Home")),
+            Location::Playlists => Ok(gettext("Playlists")),
+            Location::Downloads => Ok(gettext("Downloads")),
+            Location::Search(_) => Ok(gettext("Search")),
+            Location::Photo(_) => Ok(gettext("Photo")),
+            Location::Player => Ok(gettext("Player")),
+            Location::Section(_) | Location::PhotoAlbum(_) => Err(page
+                .downcast_ref::<views::SectionView>()
+                .expect("a library grid")
+                .title_label()),
+            Location::Show(_) => Err(imp._show_view.title_label()),
+            Location::Artist(_) => Err(imp._artist_view.title_label()),
+            Location::Album(_) | Location::Playlist(_) => Err(imp._album_view.title_label()),
+        });
         imp._sidebar_box
             .show_selected(location.destination().as_ref());
         imp._back_button.set_visible(imp.history.borrow().len() > 1);
