@@ -110,9 +110,26 @@ impl PlexWindow {
 
         let attempt = request.clone();
         let result = match request {
-            LoginRequest::Browser => self.browser_login().await,
+            LoginRequest::Browser => match self.browser_login().await {
+                Ok(true) => Ok(()),
+                Ok(false) => {
+                    self.show_login();
+                    imp._login_view.set_error(Some(&gettext(
+                        "The sign-in on plex.tv took too long. Try again.",
+                    )));
+                    return;
+                }
+                Err(err) => Err(err),
+            },
             LoginRequest::Ister { address } => self.ister_login(address).await,
-            LoginRequest::Account { login, password } => session.login(login, password).await,
+            LoginRequest::Account {
+                login,
+                password,
+                verification_code,
+            } => {
+                self.show_loading(&gettext("Signing in to plex.tv…"));
+                session.login(login, password, verification_code).await
+            }
             LoginRequest::Server { url, token } => {
                 self.show_loading(&gettext_f("Connecting to {}.", &[&url]));
                 session.connect_url(url, token).await
@@ -136,18 +153,30 @@ impl PlexWindow {
     }
 
     /// Signs in through the browser: opens plex.tv and waits until the user
-    /// has approved there. Logging out from the waiting page cancels it.
-    async fn browser_login(&self) -> girens_model::Result<()> {
+    /// has approved there, or has typed the code of the pin at plex.tv/link
+    /// on another device. Logging out from the waiting page cancels it.
+    /// `Ok(false)` when plex.tv forgot the pin before the user got to it.
+    async fn browser_login(&self) -> girens_model::Result<bool> {
         let imp = self.imp();
         let session = imp.session.clone();
         let signed_in = session.account_id();
         let (url, pin) = session.start_browser_login().await?;
-        gtk::UriLauncher::new(&url).launch(Some(self), gtk::gio::Cancellable::NONE, |result| {
-            if let Err(err) = result {
-                eprintln!("Could not open the browser: {err}");
-            }
-        });
-        self.show_waiting_for_browser(&url);
+        #[cfg(debug_assertions)]
+        let opened = crate::debug::take_login_url(&url);
+        #[cfg(not(debug_assertions))]
+        let opened = false;
+        if !opened {
+            gtk::UriLauncher::new(&url).launch(
+                Some(self),
+                gtk::gio::Cancellable::NONE,
+                |result| {
+                    if let Err(err) = result {
+                        eprintln!("Could not open the browser: {err}");
+                    }
+                },
+            );
+        }
+        self.show_waiting_for_browser(&url, Some(&pin.code));
 
         // plex.tv keeps a sign-in request for about fifteen minutes.
         for _ in 0..BROWSER_LOGIN_ATTEMPTS {
@@ -164,13 +193,26 @@ impl PlexWindow {
                 // Another account was chosen meanwhile.
                 return Err(Error::Unauthorized);
             }
-            if session.finish_browser_login(&pin).await? {
-                // The user is still looking at the browser.
-                self.present();
-                return Ok(());
+            match session.finish_browser_login(&pin).await {
+                Ok(true) => {
+                    // The user is still looking at the browser.
+                    self.present();
+                    return Ok(true);
+                }
+                Ok(false) => {}
+                // A hiccup on the way to plex.tv does not undo the sign-in
+                // in progress: the next check may well get through.
+                Err(err) if err.is_network() => {
+                    eprintln!("Could not check the sign-in on plex.tv: {err}");
+                }
+                // plex.tv has forgotten the pin.
+                Err(Error::Status { status, .. }) if status.as_u16() == 404 => {
+                    return Ok(false);
+                }
+                Err(err) => return Err(err),
             }
         }
-        Err(Error::Unauthorized)
+        Ok(false)
     }
 
     /// Signs in to an Ister server: opens the page of its provider in the
@@ -196,7 +238,7 @@ impl PlexWindow {
                 },
             );
         }
-        self.show_waiting_for_browser(&pending.url);
+        self.show_waiting_for_browser(&pending.url, None);
 
         let signed_in = session.account_id();
         let cancelled = async {
@@ -787,9 +829,17 @@ impl PlexWindow {
 fn explain_failed_login(request: &LoginRequest, err: &Error) -> Option<String> {
     match (request, err) {
         (LoginRequest::Browser | LoginRequest::Ister { .. }, Error::Unauthorized) => None,
-        (LoginRequest::Account { .. }, Error::Unauthorized) => {
-            Some(gettext("The username or password is not right."))
-        }
+        (
+            LoginRequest::Account {
+                verification_code, ..
+            },
+            Error::Unauthorized,
+        ) if verification_code.is_empty() => Some(gettext(
+            "The username or password is not right. An account with two-factor authentication also needs its verification code.",
+        )),
+        (LoginRequest::Account { .. }, Error::Unauthorized) => Some(gettext(
+            "The username, password or verification code is not right.",
+        )),
         (LoginRequest::Browser | LoginRequest::Account { .. }, err) => {
             Some(gettext_f("Could not reach plex.tv: {}", &[&err.to_string()]))
         }
@@ -820,6 +870,12 @@ mod tests {
         let account = LoginRequest::Account {
             login: "me".into(),
             password: "secret".into(),
+            verification_code: String::new(),
+        };
+        let with_code = LoginRequest::Account {
+            login: "me".into(),
+            password: "secret".into(),
+            verification_code: "123456".into(),
         };
         let server = LoginRequest::Server {
             url: "http://nas:32400".into(),
@@ -835,7 +891,11 @@ mod tests {
         assert_eq!(explain_failed_login(&ister, &Error::Unauthorized), None);
         assert_eq!(
             explain_failed_login(&account, &Error::Unauthorized).as_deref(),
-            Some("The username or password is not right.")
+            Some("The username or password is not right. An account with two-factor authentication also needs its verification code.")
+        );
+        assert_eq!(
+            explain_failed_login(&with_code, &Error::Unauthorized).as_deref(),
+            Some("The username, password or verification code is not right.")
         );
         assert_eq!(
             explain_failed_login(&server, &Error::Unauthorized).as_deref(),

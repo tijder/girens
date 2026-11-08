@@ -650,6 +650,11 @@ impl PlexWindow {
                     window.login(LoginRequest::Server { url, token }).await;
                 });
             }
+            (Some("add-plex"), _) => {
+                glib::spawn_future_local(async move {
+                    window.login(LoginRequest::Browser).await;
+                });
+            }
             (Some("add-ister"), _) => {
                 let Some(address) = first else {
                     return;
@@ -795,11 +800,14 @@ impl PlexWindow {
     }
 
     /// Shows that Girens waits for the user to sign in at `url` in the
-    /// browser, with a way to get to that page again and to give up.
-    fn show_waiting_for_browser(&self, url: &str) {
+    /// browser, with a way to get to that page again and to give up. With
+    /// a `code`, that can be typed at plex.tv/link on another device
+    /// instead.
+    fn show_waiting_for_browser(&self, url: &str, code: Option<&str>) {
         self.show_loading(&gettext("Waiting for you to sign in in the browser…"));
         let view = &self.imp()._loading_view;
         view.set_waiting(Some(url));
+        view.set_link_code(code.map(|code| ("plex.tv/link", code)));
         // Who is signed in already is not what this is about.
         view.set_accounts_visible(false);
     }

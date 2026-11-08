@@ -1,7 +1,7 @@
 //! The sign-in page: a plex.tv account in the browser or by password, a
 //! Plex server by address and token, or an Ister server by its address.
 
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
@@ -20,6 +20,9 @@ pub enum LoginRequest {
     Account {
         login: String,
         password: String,
+        /// Of the authenticator, for an account with two-factor
+        /// authentication; empty otherwise.
+        verification_code: String,
     },
     Server {
         url: String,
@@ -46,6 +49,8 @@ mod imp {
         #[template_child]
         pub _password_entry: TemplateChild<adw::PasswordEntryRow>,
         #[template_child]
+        pub _code_entry: TemplateChild<adw::EntryRow>,
+        #[template_child]
         pub _connect_user_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _server_url_entry: TemplateChild<adw::EntryRow>,
@@ -68,6 +73,8 @@ mod imp {
         pub _title_label: TemplateChild<gtk::Label>,
         pub on_request: RefCell<Option<Box<dyn Fn(LoginRequest)>>>,
         pub on_cancel: RefCell<Option<Box<dyn Fn()>>>,
+        /// While a login attempt runs the forms are blocked.
+        pub busy: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -94,19 +101,40 @@ mod imp {
                 entry.connect_changed(glib::clone!(
                     #[weak]
                     view,
-                    move |_| view.set_error(None)
+                    move |_| {
+                        view.set_error(None);
+                        view.update_buttons();
+                    }
                 ));
             }
 
             self._cancel_button.connect_clicked(glib::clone!(
                 #[weak]
                 view,
-                move |_| {
-                    if let Some(callback) = view.imp().on_cancel.borrow().as_ref() {
-                        callback();
-                    }
-                }
+                move |_| view.cancel()
             ));
+            // Escape goes back too, when there is somewhere to go back to.
+            let escape = gtk::Shortcut::new(
+                gtk::ShortcutTrigger::parse_string("Escape"),
+                Some(gtk::CallbackAction::new(glib::clone!(
+                    #[weak]
+                    view,
+                    #[upgrade_or]
+                    glib::Propagation::Proceed,
+                    move |_, _| {
+                        if view.is_mapped() && view.imp()._cancel_button.is_visible() {
+                            view.cancel();
+                            glib::Propagation::Stop
+                        } else {
+                            glib::Propagation::Proceed
+                        }
+                    }
+                ))),
+            );
+            let shortcuts = gtk::ShortcutController::new();
+            shortcuts.set_scope(gtk::ShortcutScope::Global);
+            shortcuts.add_shortcut(escape);
+            view.add_controller(shortcuts);
 
             self._browser_button.connect_clicked(glib::clone!(
                 #[weak]
@@ -119,23 +147,41 @@ mod imp {
                 view,
                 move || {
                     let imp = view.imp();
+                    if !view.account_filled_in() {
+                        return;
+                    }
                     view.request(LoginRequest::Account {
-                        login: imp._username_entry.text().into(),
+                        login: imp._username_entry.text().trim().into(),
                         password: imp._password_entry.text().into(),
+                        verification_code: imp._code_entry.text().trim().into(),
                     });
                 }
             );
             let submit = submit_account.clone();
             self._connect_user_button.connect_clicked(move |_| submit());
+            // Enter goes on to the next field; from the last two it signs
+            // in, as the code is only there for some.
+            self._username_entry.connect_entry_activated(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    view.imp()._password_entry.grab_focus();
+                }
+            ));
             let submit = submit_account.clone();
             self._password_entry
                 .connect_entry_activated(move |_| submit());
+            let submit = submit_account.clone();
+            self._code_entry.connect_entry_activated(move |_| submit());
 
             let submit_server = glib::clone!(
                 #[weak]
                 view,
                 move || {
                     let imp = view.imp();
+                    if !view.server_filled_in() {
+                        return;
+                    }
                     view.request(LoginRequest::Server {
                         url: imp._server_url_entry.text().trim().into(),
                         token: imp._server_token_entry.text().trim().into(),
@@ -144,6 +190,13 @@ mod imp {
             );
             let submit = submit_server.clone();
             self._connect_url_button.connect_clicked(move |_| submit());
+            self._server_url_entry.connect_entry_activated(glib::clone!(
+                #[weak]
+                view,
+                move |_| {
+                    view.imp()._server_token_entry.grab_focus();
+                }
+            ));
             self._server_token_entry
                 .connect_entry_activated(move |_| submit_server());
 
@@ -180,11 +233,12 @@ glib::wrapper! {
 }
 
 impl LoginView {
-    fn entries(&self) -> [adw::EntryRow; 5] {
+    fn entries(&self) -> [adw::EntryRow; 6] {
         let imp = self.imp();
         [
             imp._username_entry.get(),
             imp._password_entry.get().upcast(),
+            imp._code_entry.get(),
             imp._server_url_entry.get(),
             imp._server_token_entry.get(),
             imp._ister_address_entry.get(),
@@ -195,6 +249,37 @@ impl LoginView {
         if let Some(callback) = self.imp().on_request.borrow().as_ref() {
             callback(request);
         }
+    }
+
+    fn cancel(&self) {
+        if let Some(callback) = self.imp().on_cancel.borrow().as_ref() {
+            callback();
+        }
+    }
+
+    fn account_filled_in(&self) -> bool {
+        let imp = self.imp();
+        !imp._username_entry.text().trim().is_empty() && !imp._password_entry.text().is_empty()
+    }
+
+    fn server_filled_in(&self) -> bool {
+        let imp = self.imp();
+        !imp._server_url_entry.text().trim().is_empty()
+            && !imp._server_token_entry.text().trim().is_empty()
+    }
+
+    /// Each form can only be sent once it is filled in, and not while a
+    /// login attempt runs.
+    fn update_buttons(&self) {
+        let imp = self.imp();
+        let free = !imp.busy.get();
+        imp._browser_button.set_sensitive(free);
+        imp._connect_user_button
+            .set_sensitive(free && self.account_filled_in());
+        imp._connect_url_button
+            .set_sensitive(free && self.server_filled_in());
+        imp._connect_ister_button
+            .set_sensitive(free && !self.ister_address().is_empty());
     }
 
     /// Called when the user submits one of the two forms.
@@ -221,14 +306,11 @@ impl LoginView {
 
     /// Blocks the forms while a login attempt is running.
     pub fn set_busy(&self, busy: bool) {
-        let imp = self.imp();
-        imp._browser_button.set_sensitive(!busy);
-        imp._connect_user_button.set_sensitive(!busy);
-        imp._connect_url_button.set_sensitive(!busy);
-        imp._connect_ister_button.set_sensitive(!busy);
+        self.imp().busy.set(busy);
         for entry in self.entries() {
             entry.set_sensitive(!busy);
         }
+        self.update_buttons();
     }
 
     /// Opens the form for an Ister server with its address filled in, to
@@ -258,6 +340,7 @@ impl LoginView {
                 self,
                 move || {
                     view.imp().ister_lookup.take();
+                    view.set_ister_looking();
                     if let Some(callback) = view.imp().on_ister_address.borrow().as_ref() {
                         callback(address);
                     }
@@ -297,6 +380,14 @@ impl LoginView {
             None => gettext("Opens your browser to sign in"),
         };
         imp._ister_row.set_subtitle(&glib::markup_escape_text(&subtitle));
+    }
+
+    /// Tells that the address is being looked up.
+    fn set_ister_looking(&self) {
+        self.set_ister_found(None);
+        self.imp()
+            ._ister_row
+            .set_subtitle(&glib::markup_escape_text(&gettext("Looking up the server…")));
     }
 
     /// Tells why signing in did not work, or takes that away again.

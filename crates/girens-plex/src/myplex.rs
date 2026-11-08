@@ -12,6 +12,9 @@ const SIGN_IN: &str = "https://plex.tv/api/v2/users/signin";
 const USER: &str = "/api/v2/user";
 const PINS: &str = "https://plex.tv/api/v2/pins";
 const AUTH_PAGE: &str = "https://app.plex.tv/auth";
+/// Where the user can type the code of a [`Pin`] instead of opening its
+/// [`Pin::auth_url`].
+pub const LINK_PAGE: &str = "https://plex.tv/link";
 const RESOURCES: &str = "/api/v2/resources?includeHttps=1&includeRelay=1";
 const HOME_USERS: &str = "/api/v2/home/users";
 
@@ -116,7 +119,9 @@ impl Resource {
 
 /// A pending sign-in through the browser: the user approves it on plex.tv,
 /// after which the pin yields an account token. This also works for accounts
-/// with two-factor authentication.
+/// with two-factor authentication. The [code](Self::code) is short enough to
+/// type at [`LINK_PAGE`] on another device, for when the browser is not on
+/// this one.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Pin {
@@ -150,16 +155,29 @@ pub struct MyPlex {
 }
 
 impl MyPlex {
-    /// Signs in with a username or e-mail address and a password.
-    pub async fn sign_in(login: &str, password: &str, client: &ClientInfo) -> Result<Self> {
+    /// Signs in with a username or e-mail address and a password. An account
+    /// with two-factor authentication also needs the `verification_code`
+    /// of its authenticator; without it plex.tv answers as to a wrong
+    /// password.
+    pub async fn sign_in(
+        login: &str,
+        password: &str,
+        verification_code: Option<&str>,
+        client: &ClientInfo,
+    ) -> Result<Self> {
         let http = reqwest::Client::builder()
             .default_headers(client.headers(None))
             .build()?;
-        let body = url::form_urlencoded::Serializer::new(String::new())
-            .append_pair("login", login)
-            .append_pair("password", password)
-            .append_pair("rememberMe", "true")
-            .finish();
+        let body = {
+            let mut form = url::form_urlencoded::Serializer::new(String::new());
+            form.append_pair("login", login)
+                .append_pair("password", password)
+                .append_pair("rememberMe", "true");
+            if let Some(code) = verification_code.filter(|code| !code.is_empty()) {
+                form.append_pair("verificationCode", code);
+            }
+            form.finish()
+        };
         let account: Account = send(
             http.post(SIGN_IN)
                 .header(
@@ -172,13 +190,16 @@ impl MyPlex {
         Self::with_account(account, client, PLEX_TV)
     }
 
-    /// Starts a sign-in through the browser. Open [`Pin::auth_url`] and call
-    /// [`Self::check_pin`] until it returns a session.
+    /// Starts a sign-in through the browser. Open [`Pin::auth_url`], or have
+    /// the user type [`Pin::code`] at [`LINK_PAGE`], and call
+    /// [`Self::check_pin`] until it returns a session. The pin is kept for
+    /// about fifteen minutes.
     pub async fn create_pin(client: &ClientInfo) -> Result<Pin> {
         let http = reqwest::Client::builder()
             .default_headers(client.headers(None))
             .build()?;
-        send(http.post(format!("{PINS}?strong=true"))).await
+        // Not a strong pin: those are too long to type at the link page.
+        send(http.post(format!("{PINS}?strong=false"))).await
     }
 
     /// The session, once the user has approved `pin` in the browser.

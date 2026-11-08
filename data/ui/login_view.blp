@@ -66,6 +66,11 @@ template $login_view : Box {
               title: _("Password");
             }
 
+            Adw.EntryRow _code_entry {
+              title: _("Verification code, for two-factor authentication");
+              input-purpose: digits;
+            }
+
             Adw.ActionRow {
               activatable-widget: _connect_user_button;
 
@@ -73,6 +78,7 @@ template $login_view : Box {
               Button _connect_user_button {
                 valign: center;
                 label: _("Sign in");
+                sensitive: false;
               }
             }
           }
@@ -97,6 +103,7 @@ template $login_view : Box {
               Button _connect_url_button {
                 valign: center;
                 label: _("Connect");
+                sensitive: false;
               }
             }
           }
@@ -118,6 +125,7 @@ template $login_view : Box {
             Button _connect_ister_button {
               valign: center;
               label: _("Sign in");
+              sensitive: false;
 
               styles [
                 "suggested-action",

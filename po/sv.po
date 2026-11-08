@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:13+0100\n"
+"POT-Creation-Date: 2026-11-08 21:34+0100\n"
 "PO-Revision-Date: 2022-10-31 11:06+0000\n"
 "Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/girens/girens/sv/"
@@ -19,869 +19,914 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.14.2-dev\n"
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:7
+#: data/nl.g4d.Girens.appdata.xml.in:5 data/nl.g4d.Girens.desktop.in:2
+msgid "Girens"
+msgstr ""
+
+#: data/nl.g4d.Girens.appdata.xml.in:7
 msgid "Watch what is on your Plex or Ister server"
 msgstr ""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:11
+#: data/nl.g4d.Girens.appdata.xml.in:11
 msgid ""
 "Girens is a media player for Plex and Ister servers. You can watch and "
 "listen to your music, shows and movies with this GTK app."
 msgstr ""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:20
+#: data/nl.g4d.Girens.appdata.xml.in:20
 msgid "The show screen"
 msgstr ""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:24
+#: data/nl.g4d.Girens.appdata.xml.in:24
 msgid "The album screen"
 msgstr ""
 
-#: ../data/nl.g4d.Girens.appdata.xml.in:28
+#: data/nl.g4d.Girens.appdata.xml.in:28
 msgid "The artist screen"
 msgstr ""
 
-#: ../data/nl.g4d.Girens.desktop.in:2
-msgid "Girens"
-msgstr ""
-
-#: ../data/nl.g4d.Girens.desktop.in:3
+#: data/nl.g4d.Girens.desktop.in:3
 msgid "Play the movies, shows and music of your Plex or Ister server"
 msgstr ""
 
-#: ../data/nl.g4d.Girens.desktop.in:10
+#: data/nl.g4d.Girens.desktop.in:10
 msgid "girens;plex;ister;media;player;"
 msgstr ""
 
-#: ../data/ui/album_header.blp:92 ../data/ui/artist_view.blp:82
-#: ../data/ui/media_box_music.blp:111 ../data/ui/media_box_video_bottom.blp:114
-#: ../data/ui/section_view.blp:30 ../data/ui/show_view.blp:102
+#: data/ui/album_header.blp:92 data/ui/artist_view.blp:82
+#: data/ui/media_box_music.blp:111 data/ui/media_box_video_bottom.blp:114
+#: data/ui/section_view.blp:30 data/ui/show_view.blp:102
 msgid "Play"
 msgstr ""
 
-#: ../data/ui/album_header.blp:113 ../data/ui/cover_box.blp:72
+#: data/ui/album_header.blp:103 data/ui/artist_view.blp:93
+#: data/ui/music_popover_menu.blp:58 data/ui/section_view.blp:37
+#: data/ui/show_view.blp:113 src/views/cover_box.rs:286
+msgid "Shuffle"
+msgstr ""
+
+#: data/ui/album_header.blp:113 data/ui/cover_box.blp:72
 msgid "More"
 msgstr ""
 
-#: ../data/ui/album_item.blp:44
+#: data/ui/album_item.blp:44
 msgid "Play music clip"
 msgstr ""
 
-#: ../data/ui/cover_box.blp:90
+#: data/ui/cover_box.blp:61 data/ui/sync_item.blp:25
+#: src/views/section_view.rs:27
+msgid "Unwatched"
+msgstr ""
+
+#: data/ui/cover_box.blp:90
 msgid "Available offline"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:20 ../data/ui/player_view.blp:159
+#: data/ui/discover_view.blp:20 data/ui/player_view.blp:159
 msgid "Continue watching"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:33
+#: data/ui/discover_view.blp:33
 msgid "Recently added Shows"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:46
+#: data/ui/discover_view.blp:46
 msgid "Recently added Movies"
 msgstr ""
 
-#: ../data/ui/discover_view.blp:59
+#: data/ui/discover_view.blp:59
 msgid "Recently added Music"
 msgstr ""
 
-#: ../data/ui/list.blp:40 ../data/ui/media_box_music.blp:101
-#: ../data/ui/media_box_video_bottom.blp:105
+#: data/ui/list.blp:40 data/ui/media_box_music.blp:101
+#: data/ui/media_box_video_bottom.blp:105
 msgid "Previous"
 msgstr ""
 
-#: ../data/ui/list.blp:55 ../data/ui/media_box_music.blp:120
-#: ../data/ui/media_box_video_bottom.blp:123
+#: data/ui/list.blp:55 data/ui/media_box_music.blp:120
+#: data/ui/media_box_video_bottom.blp:123
 msgid "Next"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:45
+#: data/ui/loading_view.blp:66
 msgid "Open the page again"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:49
+#: data/ui/loading_view.blp:70
 msgid "Copy the link"
 msgstr ""
 
-#: ../data/ui/loading_view.blp:63 ../data/ui/profile_dialog.blp:5
-#: ../data/ui/profile_dialog.blp:14
+#: data/ui/loading_view.blp:74 data/ui/login_view.blp:10
+#: src/window/connection.rs:648 src/window/connection.rs:732
+msgid "Cancel"
+msgstr ""
+
+#: data/ui/loading_view.blp:79 src/window/connection.rs:733
+msgid "Sign out"
+msgstr ""
+
+#: data/ui/loading_view.blp:84 data/ui/profile_dialog.blp:5
+#: data/ui/profile_dialog.blp:14
 msgid "Accounts"
 msgstr ""
 
-#: ../data/ui/login_view.blp:40
+#: data/ui/login_view.blp:33 data/ui/login_view.blp:49
+#: data/ui/login_view.blp:80 data/ui/login_view.blp:127
+#: src/views/login_view.rs:303
+msgid "Sign in"
+msgstr ""
+
+#: data/ui/login_view.blp:40
 msgid "Plex"
 msgstr ""
 
-#: ../data/ui/login_view.blp:43
+#: data/ui/login_view.blp:43
 msgid "Sign in on plex.tv"
 msgstr ""
 
-#: ../data/ui/login_view.blp:44
+#: data/ui/login_view.blp:44
 msgid "Opens your browser; also for accounts with two-factor authentication"
 msgstr ""
 
-#: ../data/ui/login_view.blp:58
+#: data/ui/login_view.blp:58
 msgid "Username and password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:61 ../data/ui/profile_dialog.blp:26
+#: data/ui/login_view.blp:61 data/ui/profile_dialog.blp:26
 msgid "Username"
 msgstr ""
 
-#: ../data/ui/login_view.blp:66
+#: data/ui/login_view.blp:66
 msgid "Password"
 msgstr ""
 
-#: ../data/ui/login_view.blp:81
+#: data/ui/login_view.blp:70
+msgid "Verification code, for two-factor authentication"
+msgstr ""
+
+#: data/ui/login_view.blp:87
 msgid "Server address and token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:82
+#: data/ui/login_view.blp:88
 msgid "Without a plex.tv account"
 msgstr ""
 
-#: ../data/ui/login_view.blp:85
+#: data/ui/login_view.blp:91
 msgid "The URL to the Plex server with the port number"
 msgstr ""
 
-#: ../data/ui/login_view.blp:90
+#: data/ui/login_view.blp:96
 msgid "Token"
 msgstr ""
 
-#: ../data/ui/login_view.blp:99
+#: data/ui/login_view.blp:105
 msgid "Connect"
 msgstr ""
 
-#: ../data/ui/login_view.blp:106
+#: data/ui/login_view.blp:113
 msgid "Ister"
 msgstr ""
 
-#: ../data/ui/login_view.blp:109
+#: data/ui/login_view.blp:116
 msgid "The address of the Ister server"
 msgstr ""
 
-#: ../data/ui/login_view.blp:114
+#: data/ui/login_view.blp:121
 msgid "Sign in to an Ister server"
 msgstr ""
 
-#: ../data/ui/main_window.blp:37
+#: data/ui/login_view.blp:122 src/views/login_view.rs:380
+msgid "Opens your browser to sign in"
+msgstr ""
+
+#: data/ui/main_window.blp:37
 msgid "Account"
 msgstr ""
 
-#: ../data/ui/main_window.blp:60
+#: data/ui/main_window.blp:60
 msgid "Back"
 msgstr ""
 
-#: ../data/ui/main_window.blp:66
+#: data/ui/main_window.blp:66
 msgid "Toggle Sidebar"
 msgstr ""
 
-#: ../data/ui/main_window.blp:70
+#: data/ui/main_window.blp:70
 msgid "Search"
 msgstr ""
 
-#: ../data/ui/main_window.blp:94
+#: data/ui/main_window.blp:77 data/ui/sync_dialog.blp:32
+#: data/ui/sync_dialog.blp:33 data/ui/sync_settings.blp:46
+#: data/ui/sync_settings.blp:47 src/views/album_view.rs:308
+#: src/views/album_view.rs:337 src/views/cover_box.rs:280
+msgid "Sync"
+msgstr ""
+
+#: data/ui/main_window.blp:84 src/views/downloads_view.rs:32
+#: src/views/sidebar_box.rs:164 src/views/sidebar_box.rs:197
+msgid "Downloads"
+msgstr ""
+
+#: data/ui/main_window.blp:94
 msgid "Main menu"
 msgstr ""
 
-#: ../data/ui/main_window.blp:176
+#: data/ui/main_window.blp:170 src/views/preferences.rs:102
+msgid "Preferences"
+msgstr ""
+
+#: data/ui/main_window.blp:176
 msgid "Shortcuts"
 msgstr ""
 
-#: ../data/ui/main_window.blp:182
+#: data/ui/main_window.blp:182
 msgid "About Girens"
 msgstr ""
 
-#: ../data/ui/media_box_music.blp:77 ../data/ui/media_box_video_bottom.blp:64
+#: data/ui/media_box_music.blp:77 data/ui/media_box_video_bottom.blp:64
 msgid "Play queue"
 msgstr ""
 
-#: ../data/ui/media_box_music.blp:129 ../data/ui/media_box_video_top.blp:46
+#: data/ui/media_box_music.blp:129 data/ui/media_box_video_top.blp:46
 msgid "Stop"
 msgstr ""
 
-#: ../data/ui/media_box_music.blp:140 ../data/ui/media_box_video_bottom.blp:83
+#: data/ui/media_box_music.blp:140 data/ui/media_box_video_bottom.blp:83
 msgid "Volume"
 msgstr ""
 
-#: ../data/ui/media_box_music.blp:151
+#: data/ui/media_box_music.blp:151
 msgid "Options"
 msgstr ""
 
-#: ../data/ui/media_box_video_bottom.blp:76
+#: data/ui/media_box_video_bottom.blp:76
 msgid "Audio and subtitles"
 msgstr ""
 
-#: ../data/ui/media_box_video_bottom.blp:96
+#: data/ui/media_box_video_bottom.blp:96
 msgid "Skip backward"
 msgstr ""
 
-#: ../data/ui/media_box_video_bottom.blp:132
+#: data/ui/media_box_video_bottom.blp:132
 msgid "Skip forward"
 msgstr ""
 
-#: ../data/ui/media_box_video_top.blp:11
+#: data/ui/media_box_video_top.blp:11
 msgid "Fullscreen"
 msgstr ""
 
-#: ../data/ui/media_box_video_top.blp:19
+#: data/ui/media_box_video_top.blp:19
 msgid "Fill window"
 msgstr ""
 
-#: ../data/ui/music_popover_menu.blp:67
+#: data/ui/music_popover_menu.blp:67
 msgid "Repeat"
 msgstr ""
 
-#: ../data/ui/player_view.blp:112
+#: data/ui/player_view.blp:107 src/views/section_view.rs:25
+msgid "Title"
+msgstr ""
+
+#: data/ui/player_view.blp:112
 msgid "Release date"
 msgstr ""
 
-#: ../data/ui/player_view.blp:117
+#: data/ui/player_view.blp:117
 msgid "Genre"
 msgstr ""
 
-#: ../data/ui/player_view.blp:127
+#: data/ui/player_view.blp:122 src/views/section_view.rs:31
+msgid "Duration"
+msgstr ""
+
+#: data/ui/player_view.blp:127
 msgid "Description"
 msgstr ""
 
-#: ../data/ui/player_view.blp:140
+#: data/ui/player_view.blp:140
 msgid "Version"
 msgstr ""
 
-#: ../data/ui/player_view.blp:144
+#: data/ui/player_view.blp:144
 msgid "Audio "
 msgstr ""
 
-#: ../data/ui/player_view.blp:147
+#: data/ui/player_view.blp:147
 msgid "Subtitle "
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:17
+#: data/ui/profile_dialog.blp:9 src/window/connection.rs:527
+msgid "Who is watching?"
+msgstr ""
+
+#: data/ui/profile_dialog.blp:17
 msgid "Add account…"
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:23
+#: data/ui/profile_dialog.blp:23
 msgid "Account info"
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:30
+#: data/ui/profile_dialog.blp:30
 msgid "Email"
 msgstr ""
 
-#: ../data/ui/profile_dialog.blp:34
+#: data/ui/profile_dialog.blp:34
 msgid "Subscription plan"
 msgstr ""
 
-#: ../data/ui/search_view.blp:42
+#: data/ui/search_view.blp:42
 msgid "No results found"
 msgstr ""
 
-#: ../data/ui/search_view.blp:43
+#: data/ui/search_view.blp:43
 msgid "Try a different search"
 msgstr ""
 
-#: ../data/ui/section_view.blp:46
+#: data/ui/section_view.blp:46
 msgid "Order"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:6
+#: data/ui/shortcuts.blp:6
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:9
+#: data/ui/shortcuts.blp:9
 msgctxt "shortcut window"
 msgid "Play/Pause"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:14
+#: data/ui/shortcuts.blp:14
 msgctxt "shortcut window"
 msgid "Previous"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:19
+#: data/ui/shortcuts.blp:19
 msgctxt "shortcut window"
 msgid "Next"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:24
+#: data/ui/shortcuts.blp:24
 msgctxt "shortcut window"
 msgid "Skip intro or credits"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:29
+#: data/ui/shortcuts.blp:29
 msgctxt "shortcut window"
 msgid "Seek forwards"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:34
+#: data/ui/shortcuts.blp:34
 msgctxt "shortcut window"
 msgid "Seek backwards"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:39
+#: data/ui/shortcuts.blp:39
 msgctxt "shortcut window"
 msgid "Volume up"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:44
+#: data/ui/shortcuts.blp:44
 msgctxt "shortcut window"
 msgid "Volume down"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:49
+#: data/ui/shortcuts.blp:49
 msgctxt "shortcut window"
 msgid "Stop playing"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:54
+#: data/ui/shortcuts.blp:54
 msgctxt "shortcut window"
 msgid "Fullscreen"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:59
+#: data/ui/shortcuts.blp:59
 msgctxt "shortcut window"
 msgid "Fill the window with the video"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:64
+#: data/ui/shortcuts.blp:64
 msgctxt "shortcut window"
 msgid "Show the controls"
 msgstr ""
 
-#: ../data/ui/shortcuts.blp:69
+#: data/ui/shortcuts.blp:69
 msgctxt "shortcut window"
 msgid "Play musicclips instead of audio track"
 msgstr ""
 
-#: ../data/ui/sync_dialog.blp:5
+#: data/ui/sync_dialog.blp:5
 msgid "Sync items"
 msgstr ""
 
-#: ../data/ui/sync_item.blp:38
+#: data/ui/sync_item.blp:38
 msgid "Remove"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:5
+#: data/ui/sync_settings.blp:5
 msgid "Sync - settings"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:19
+#: data/ui/sync_settings.blp:19
 msgid "Convert"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:20
+#: data/ui/sync_settings.blp:20
 msgid "Converted sync can take a long time"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:30
+#: data/ui/sync_settings.blp:30
 msgid "Unwatched only"
 msgstr ""
 
-#: ../data/ui/sync_settings.blp:40
+#: data/ui/sync_settings.blp:40
 msgid "Max items"
 msgstr ""
 
-#: ../data/ui/theme_switcher.blp:25
+#: data/ui/theme_switcher.blp:25
 msgid "Follow system style"
 msgstr ""
 
-#: ../data/ui/theme_switcher.blp:39
+#: data/ui/theme_switcher.blp:39
 msgid "Light style"
 msgstr ""
 
-#: ../data/ui/theme_switcher.blp:53
+#: data/ui/theme_switcher.blp:53
 msgid "Dark style"
 msgstr ""
 
-#: ../src/messages.rs:10
+#: src/messages.rs:10
 msgid "Could not open the item"
 msgstr ""
 
-#: ../src/messages.rs:14
+#: src/messages.rs:14
 msgid "Could not load the item"
 msgstr ""
 
-#: ../src/messages.rs:18
+#: src/messages.rs:18
 msgid "Could not change the watched state"
 msgstr ""
 
-#: ../src/messages.rs:22
+#: src/messages.rs:22
 msgid "Could not load on deck"
 msgstr ""
 
-#: ../src/messages.rs:26
+#: src/messages.rs:26
 msgid "Could not load recently added"
 msgstr ""
 
-#: ../src/messages.rs:30
+#: src/messages.rs:30
 msgid "Could not load the sort options"
 msgstr ""
 
-#: ../src/messages.rs:34
+#: src/messages.rs:34
 msgid "Could not load the library"
 msgstr ""
 
-#: ../src/messages.rs:38
+#: src/messages.rs:38
 msgid "Could not load the playlists"
 msgstr ""
 
-#: ../src/messages.rs:42
+#: src/messages.rs:42
 msgid "Search failed"
 msgstr ""
 
-#: ../src/messages.rs:46
+#: src/messages.rs:46
 msgid "Could not load the show"
 msgstr ""
 
-#: ../src/messages.rs:50
+#: src/messages.rs:50
 msgid "Could not load the episodes"
 msgstr ""
 
-#: ../src/messages.rs:54
+#: src/messages.rs:54
 msgid "Could not load the artist"
 msgstr ""
 
-#: ../src/messages.rs:58
+#: src/messages.rs:58
 msgid "Could not load a synced item"
 msgstr ""
 
-#: ../src/messages.rs:62
+#: src/messages.rs:62
 msgid "Could not load the album"
 msgstr ""
 
-#: ../src/messages.rs:66
+#: src/messages.rs:66
 msgid "Could not load the photo"
 msgstr ""
 
-#: ../src/messages.rs:70
+#: src/messages.rs:70
 msgid "Could not load the playlist"
 msgstr ""
 
-#: ../src/messages.rs:74
+#: src/messages.rs:74
 msgid "This library is empty"
 msgstr ""
 
-#: ../src/messages.rs:78
+#: src/messages.rs:78
 msgid "No playlists"
 msgstr ""
 
-#: ../src/notify.rs:56
+#: src/notify.rs:56
 msgid "Retry"
 msgstr ""
 
-#: ../src/player/mod.rs:394
+#: src/player/mod.rs:394
 msgid "Nothing to play"
 msgstr ""
 
-#: ../src/player/mod.rs:402
+#: src/player/mod.rs:402
 msgid "Could not create a play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:537
+#: src/player/mod.rs:537
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: ../src/player/mod.rs:751
+#: src/player/mod.rs:751
 msgid "Could not start playback"
 msgstr ""
 
-#: ../src/player/mod.rs:1363
+#: src/player/mod.rs:1363
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: ../src/player/mod.rs:1475
+#: src/player/mod.rs:1475
 msgid "Could not change the stream"
 msgstr ""
 
-#: ../src/session.rs:497
+#: src/session.rs:504
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 
-#: ../src/session.rs:498
+#: src/session.rs:505
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: ../src/session.rs:581
+#: src/session.rs:588
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: ../src/session.rs:582
+#: src/session.rs:589
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: ../src/session.rs:583
+#: src/session.rs:590
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: ../src/session.rs:584
+#: src/session.rs:591
 #, rust-format
 msgid "Chapter {}"
 msgstr ""
 
-#: ../src/session.rs:585
+#: src/session.rs:592
 msgid "Unknown"
 msgstr ""
 
-#: ../src/session.rs:587
+#. Subtitles that are pictures rather than text; {} is their name.
+#: src/session.rs:594
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
 
-#: ../src/sync.rs:516
+#: src/sync.rs:516
 msgid "Sync failed"
 msgstr ""
 
-#: ../src/sync.rs:602
+#: src/sync.rs:602
 msgid "Could not download an item"
 msgstr ""
 
-#: ../src/sync.rs:649
+#: src/sync.rs:649
 msgid "Not enough disk space for the download"
 msgstr ""
 
-#: ../src/views/album_view.rs:53
+#. / `12 songs`.
+#: src/views/album_view.rs:53
 #, rust-format
 msgid "{} song"
 msgid_plural "{} songs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/album_view.rs:58
+#. / `3 albums`.
+#: src/views/album_view.rs:58
 #, rust-format
 msgid "{} album"
 msgid_plural "{} albums"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/album_view.rs:63
+#. / `40 items`, for a playlist: it may hold videos as well as music.
+#: src/views/album_view.rs:63
 #, rust-format
 msgid "{} item"
 msgid_plural "{} items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/album_view.rs:70
+#: src/views/album_view.rs:70
 #, rust-format
 msgid "{} min"
 msgstr ""
 
-#: ../src/views/album_view.rs:73
+#: src/views/album_view.rs:73
 #, rust-format
 msgid "{0} h {1} min"
 msgstr ""
 
-#: ../src/views/album_view.rs:163
+#: src/views/album_view.rs:163
 #, rust-format
 msgid "Disc {}"
 msgstr ""
 
-#: ../src/views/album_view.rs:302 ../src/views/cover_box.rs:236
-#: ../src/views/cover_box.rs:243
+#: src/views/album_view.rs:302 src/views/cover_box.rs:236
+#: src/views/cover_box.rs:243
 msgid "Go to artist view"
 msgstr ""
 
-#: ../src/views/album_view.rs:308 ../src/views/album_view.rs:337
-#: ../src/views/cover_box.rs:280
-msgid "Sync"
-msgstr ""
-
-#: ../src/views/album_view.rs:324
+#: src/views/album_view.rs:324
 msgid "This playlist is empty"
 msgstr ""
 
-#: ../src/views/cover_box.rs:229
+#: src/views/cover_box.rs:229
 msgid "Go to album view"
 msgstr ""
 
-#: ../src/views/cover_box.rs:259
+#: src/views/cover_box.rs:259
 msgid "Go to show view"
 msgstr ""
 
-#: ../src/views/cover_box.rs:264
+#: src/views/cover_box.rs:264
 msgid "Mark as Played"
 msgstr ""
 
-#: ../src/views/cover_box.rs:271
+#: src/views/cover_box.rs:271
 msgid "Mark as Unplayed"
 msgstr ""
 
-#: ../src/views/cover_box.rs:286
-msgid "Shuffle"
-msgstr ""
-
-#: ../src/views/cover_box.rs:290 ../src/window/playback.rs:119
+#: src/views/cover_box.rs:290 src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr ""
 
-#: ../src/views/downloads_view.rs:32 ../src/views/sidebar_box.rs:164
-#: ../src/views/sidebar_box.rs:197
-msgid "Downloads"
-msgstr ""
-
-#: ../src/views/downloads_view.rs:76
+#: src/views/downloads_view.rs:76
 msgid "Nothing downloaded yet"
 msgstr ""
 
-#: ../src/views/login_view.rs:216
+#: src/views/loading_view.rs:163
+#, rust-format
+msgid "Or go to {} on another device and enter this code:"
+msgstr ""
+
+#: src/views/login_view.rs:301
 msgid "Add an account"
 msgstr ""
 
-#: ../src/views/login_view.rs:218
-msgid "Sign in"
-msgstr ""
-
-#: ../src/views/login_view.rs:291
+#: src/views/login_view.rs:374
 #, rust-format
 msgid "Found {}. Opens your browser to sign in"
 msgstr ""
 
-#: ../src/views/login_view.rs:295
+#: src/views/login_view.rs:378
 msgid "No Ister server answers at this address"
 msgstr ""
 
-#: ../src/views/login_view.rs:297
-msgid "Opens your browser to sign in"
+#: src/views/login_view.rs:390
+msgid "Looking up the server…"
 msgstr ""
 
-#: ../src/views/music_popover_menu.rs:190
+#: src/views/music_popover_menu.rs:190
 msgid "Could not rate the track"
 msgstr ""
 
-#: ../src/views/photo_view.rs:73
+#: src/views/photo_view.rs:73
 msgid "Previous photo"
 msgstr ""
 
-#: ../src/views/photo_view.rs:76
+#: src/views/photo_view.rs:76
 msgid "Next photo"
 msgstr ""
 
-#: ../src/views/photo_view.rs:290
+#: src/views/photo_view.rs:290
 msgid "The photo has no picture"
 msgstr ""
 
-#: ../src/views/player_view.rs:343
+#: src/views/player_view.rs:343
 msgid "Audio"
 msgstr ""
 
-#: ../src/views/player_view.rs:344
+#: src/views/player_view.rs:344
 msgid "Subtitle"
 msgstr ""
 
-#: ../src/views/player_view.rs:399
+#: src/views/player_view.rs:399
 msgid "Skip intro"
 msgstr ""
 
-#: ../src/views/player_view.rs:400
+#: src/views/player_view.rs:400
 msgid "Next episode"
 msgstr ""
 
-#: ../src/views/player_view.rs:585
+#: src/views/player_view.rs:585
 msgid "None"
 msgstr ""
 
-#: ../src/views/preferences.rs:22
+#: src/views/preferences.rs:22
 msgid "Prefer music clips"
 msgstr ""
 
-#: ../src/views/preferences.rs:24
+#: src/views/preferences.rs:24
 msgid ""
 "When playing music and the track has a music clip, play that instead of the "
 "audio."
 msgstr ""
 
-#: ../src/views/preferences.rs:32
+#: src/views/preferences.rs:32
 msgid "Transcode media"
 msgstr ""
 
-#: ../src/views/preferences.rs:33
+#: src/views/preferences.rs:33
 msgid "Transcode media instead of playing directly."
 msgstr ""
 
-#: ../src/views/preferences.rs:42
+#: src/views/preferences.rs:42
 msgid "Resolution"
 msgstr ""
 
-#: ../src/views/preferences.rs:57
+#: src/views/preferences.rs:57
 msgid "The server in use decides this itself"
 msgstr ""
 
-#: ../src/views/preferences.rs:78
+#: src/views/preferences.rs:78
 msgid "Playback"
 msgstr ""
 
-#: ../src/views/preferences.rs:85
+#: src/views/preferences.rs:85
 msgid "Ask who is watching"
 msgstr ""
 
-#: ../src/views/preferences.rs:87
+#: src/views/preferences.rs:87
 msgid ""
 "Choose the profile of the Plex Home at every start, instead of continuing as "
 "the one used last."
 msgstr ""
 
-#: ../src/views/preferences.rs:94
+#: src/views/preferences.rs:94
 msgid "Profiles"
 msgstr ""
 
-#: ../src/views/preferences.rs:102
-msgid "Preferences"
-msgstr ""
-
-#: ../src/views/profile_dialog.rs:108
+#: src/views/profile_dialog.rs:108
 msgid "In use"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:164
+#: src/views/profile_dialog.rs:164
 msgid "Managed profile"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:169
+#: src/views/profile_dialog.rs:169
 msgid "Protected with a PIN"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:201
+#: src/views/profile_dialog.rs:201
 msgid "Plex account"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:202
+#: src/views/profile_dialog.rs:202
 msgid "Server"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:203
+#: src/views/profile_dialog.rs:203
 msgid "Ister account"
 msgstr ""
 
-#: ../src/views/profile_dialog.rs:227
+#: src/views/profile_dialog.rs:227
 #, rust-format
 msgid "Sign out {}"
 msgstr ""
 
-#: ../src/views/search_view.rs:20
+#: src/views/search_view.rs:20
 msgid "Movies"
 msgstr ""
 
-#: ../src/views/search_view.rs:21
+#: src/views/search_view.rs:21
 msgid "Shows"
 msgstr ""
 
-#: ../src/views/search_view.rs:22
+#: src/views/search_view.rs:22
 msgid "Seasons"
 msgstr ""
 
-#: ../src/views/search_view.rs:23
+#: src/views/search_view.rs:23
 msgid "Episodes"
 msgstr ""
 
-#: ../src/views/search_view.rs:24
+#: src/views/search_view.rs:24
 msgid "Artists"
 msgstr ""
 
-#: ../src/views/search_view.rs:25
+#: src/views/search_view.rs:25
 msgid "Albums"
 msgstr ""
 
-#: ../src/views/section_view.rs:22
+#: src/views/section_view.rs:22
 msgid "Added at"
 msgstr ""
 
-#: ../src/views/section_view.rs:23
+#: src/views/section_view.rs:23
 msgid "Last viewed at"
 msgstr ""
 
-#: ../src/views/section_view.rs:24
+#: src/views/section_view.rs:24
 msgid "Originally available at"
 msgstr ""
 
-#: ../src/views/section_view.rs:25
-msgid "Title"
-msgstr ""
-
-#: ../src/views/section_view.rs:26
+#: src/views/section_view.rs:26
 msgid "Rating"
 msgstr ""
 
-#: ../src/views/section_view.rs:27
-msgid "Unwatched"
-msgstr ""
-
-#: ../src/views/section_view.rs:28
+#: src/views/section_view.rs:28
 msgid "View count"
 msgstr ""
 
-#: ../src/views/section_view.rs:29
+#: src/views/section_view.rs:29
 msgid "User rating"
 msgstr ""
 
-#: ../src/views/section_view.rs:30
+#: src/views/section_view.rs:30
 msgid "Media height"
 msgstr ""
 
-#: ../src/views/section_view.rs:31
-msgid "Duration"
-msgstr ""
-
-#: ../src/views/section_view.rs:422 ../src/views/sidebar_box.rs:158
+#: src/views/section_view.rs:422 src/views/sidebar_box.rs:158
 msgid "Playlists"
 msgstr ""
 
-#: ../src/views/show_view.rs:215
+#: src/views/show_view.rs:215
 #, rust-format
 msgid "{} season"
 msgid_plural "{} seasons"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/show_view.rs:219
+#: src/views/show_view.rs:219
 #, rust-format
 msgid "{} episode"
 msgid_plural "{} episodes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/views/sidebar_box.rs:152 ../src/views/sidebar_box.rs:192
+#: src/views/sidebar_box.rs:152 src/views/sidebar_box.rs:192
 msgid "Player"
 msgstr ""
 
-#: ../src/views/sidebar_box.rs:156
+#: src/views/sidebar_box.rs:156
 msgid "Home"
 msgstr ""
 
-#: ../src/window/connection.rs:16
+#: src/window/connection.rs:16
 msgid "Starting Girens"
 msgstr ""
 
-#: ../src/window/connection.rs:30 ../src/window/connection.rs:117
-#: ../src/window/connection.rs:182 ../src/window/connection.rs:234
+#: src/window/connection.rs:30 src/window/connection.rs:134
+#: src/window/connection.rs:224 src/window/connection.rs:276
 #, rust-format
 msgid "Connecting to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:95
+#: src/window/connection.rs:95
 #, rust-format
 msgid "Your session at {} has ended."
 msgstr ""
 
-#: ../src/window/connection.rs:100
+#: src/window/connection.rs:100
 msgid "Sign in again"
 msgstr ""
 
-#: ../src/window/connection.rs:242 ../src/window/connection.rs:290
-#: ../src/window/connection.rs:759
+#: src/window/connection.rs:118
+msgid "The sign-in on plex.tv took too long. Try again."
+msgstr ""
+
+#: src/window/connection.rs:130
+msgid "Signing in to plex.tv…"
+msgstr ""
+
+#: src/window/connection.rs:284 src/window/connection.rs:332
+#: src/window/connection.rs:801
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: ../src/window/connection.rs:269
+#: src/window/connection.rs:311
 msgid "No servers found for this account."
 msgstr ""
 
-#: ../src/window/connection.rs:283
+#: src/window/connection.rs:325
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -889,110 +934,109 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: ../src/window/connection.rs:329
+#: src/window/connection.rs:371
 msgid "The server cannot be reached. Showing your downloads."
 msgstr ""
 
-#: ../src/window/connection.rs:389
+#: src/window/connection.rs:431
 msgid "Could not load the libraries"
 msgstr ""
 
-#: ../src/window/connection.rs:485
-msgid "Who is watching?"
-msgstr ""
-
-#: ../src/window/connection.rs:587
+#: src/window/connection.rs:629
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: ../src/window/connection.rs:589
+#: src/window/connection.rs:631
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: ../src/window/connection.rs:601
+#: src/window/connection.rs:643
 msgid "PIN"
 msgstr ""
 
-#: ../src/window/connection.rs:606 ../src/window/connection.rs:690
-msgid "Cancel"
-msgstr ""
-
-#: ../src/window/connection.rs:607
+#: src/window/connection.rs:649
 msgid "Continue"
 msgstr ""
 
-#: ../src/window/connection.rs:638
+#: src/window/connection.rs:680
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: ../src/window/connection.rs:685
+#: src/window/connection.rs:727
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: ../src/window/connection.rs:687
+#: src/window/connection.rs:729
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: ../src/window/connection.rs:691
-msgid "Sign out"
+#: src/window/connection.rs:838
+msgid ""
+"The username or password is not right. An account with two-factor "
+"authentication also needs its verification code."
 msgstr ""
 
-#: ../src/window/connection.rs:791
-msgid "The username or password is not right."
+#: src/window/connection.rs:841
+msgid "The username, password or verification code is not right."
 msgstr ""
 
-#: ../src/window/connection.rs:794
+#: src/window/connection.rs:844
 #, rust-format
 msgid "Could not reach plex.tv: {}"
 msgstr ""
 
-#: ../src/window/connection.rs:797
+#: src/window/connection.rs:847
 msgid "The server does not accept this token."
 msgstr ""
 
-#: ../src/window/connection.rs:800 ../src/window/connection.rs:803
+#: src/window/connection.rs:850 src/window/connection.rs:853
 #, rust-format
 msgid "Could not connect to {}."
 msgstr ""
 
-#: ../src/window/connection.rs:808
+#: src/window/connection.rs:858
 #, rust-format
 msgid "No Ister server was found at {}."
 msgstr ""
 
-#: ../src/window/mod.rs:343
+#: src/window/mod.rs:343
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: ../src/window/mod.rs:761
+#: src/window/mod.rs:766
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
-#: ../src/window/mod.rs:766
+#. Translators put their names here.
+#: src/window/mod.rs:771
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/window/mod.rs:769
+#: src/window/mod.rs:774
 msgid "Help with translating"
 msgstr ""
 
-#: ../src/window/mod.rs:800
+#. / Shows that Girens waits for the user to sign in at `url` in the
+#. / browser, with a way to get to that page again and to give up. With
+#. / a `code`, that can be typed at plex.tv/link on another device
+#. / instead.
+#: src/window/mod.rs:807
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 
-#: ../src/window/playback.rs:79
+#: src/window/playback.rs:79
 msgid "This is not available without a connection to the server"
 msgstr ""
 
-#: ../src/window/playback.rs:116
+#: src/window/playback.rs:116
 msgid "Do you want to resume watching or start from the beginning?"
 msgstr ""
 
-#: ../src/window/playback.rs:120
+#: src/window/playback.rs:120
 msgid "Resume"
 msgstr ""
 

@@ -31,6 +31,10 @@ mod imp {
         pub _copy_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub _cancel_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _code_hint_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _code_label: TemplateChild<gtk::Label>,
         /// The page the user is signing in at, while waiting for that.
         pub waiting_for: RefCell<Option<String>>,
         pub on_cancel: RefCell<Option<Box<dyn Fn()>>>,
@@ -147,6 +151,25 @@ impl LoadingView {
         imp.waiting_for.replace(url.map(str::to_owned));
         imp._waiting_box.set_visible(url.is_some());
         imp._logout_button.set_visible(url.is_none());
+        self.set_link_code(None);
+    }
+
+    /// Also offers to type `code` at `page` on another device, for when
+    /// the browser is not on this one. Cleared by [`Self::set_waiting`].
+    pub fn set_link_code(&self, code: Option<(&str, &str)>) {
+        let imp = self.imp();
+        if let Some((page, code)) = code {
+            imp._code_hint_label.set_text(&crate::i18n::gettext_f(
+                "Or go to {} on another device and enter this code:",
+                &[page],
+            ));
+            imp._code_label.set_markup(&format!(
+                "<span letter_spacing=\"6144\" font_family=\"monospace\">{}</span>",
+                glib::markup_escape_text(code)
+            ));
+        }
+        imp._code_hint_label.set_visible(code.is_some());
+        imp._code_label.set_visible(code.is_some());
     }
 
     /// Instead of being busy, offers the one thing to do next, as a button

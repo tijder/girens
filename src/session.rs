@@ -412,10 +412,17 @@ impl Session {
         });
     }
 
-    pub async fn login(&self, login: String, password: String) -> Result<()> {
+    pub async fn login(
+        &self,
+        login: String,
+        password: String,
+        verification_code: String,
+    ) -> Result<()> {
         let client = self.client.clone();
-        let myplex =
-            runtime::run(async move { MyPlex::sign_in(&login, &password, &client).await }).await?;
+        let myplex = runtime::run(async move {
+            MyPlex::sign_in(&login, &password, Some(&verification_code), &client).await
+        })
+        .await?;
         self.add_account(myplex).await;
         Ok(())
     }

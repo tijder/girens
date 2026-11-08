@@ -110,7 +110,7 @@ const ACTIVATE_INTERVAL: u64 = 3;
 /// that sidebar row is selected; with `GIRENS_DEBUG_SEARCH=text` that is
 /// searched for; with `GIRENS_DEBUG_OPEN=preferences|shortcuts|about|sync|accounts|login|pin|wrong-pin` that
 /// dialog is opened; with `GIRENS_DEBUG_ACCOUNT="switch 1"` (or `sign-out 1`,
-/// `add-server <url> <token>`, `add-ister <address>`) that is done with the accounts, once. Lets
+/// `add-server <url> <token>`, `add-ister <address>`, `add-plex`) that is done with the accounts, once. Lets
 /// scripts open a page for a screenshot.
 pub fn after_connect(window: &crate::window::PlexWindow) {
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_ACTIVATE") {

@@ -80,7 +80,7 @@ async fn a_browser_sign_in_can_be_started() {
     };
     let pin = MyPlex::create_pin(&client).await.unwrap();
     assert!(pin.id > 0);
-    assert!(pin.code.len() > 4, "strong pins are long");
+    assert_eq!(pin.code.len(), 4, "a code to type at plex.tv/link");
     assert!(pin.auth_token.is_none());
     assert!(pin
         .auth_url(&client)

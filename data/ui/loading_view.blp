@@ -41,6 +41,27 @@ template $loading_view : Box {
       spacing: 10;
       margin-top: 20;
 
+      Label _code_hint_label {
+        visible: false;
+        wrap: true;
+        justify: center;
+        max-width-chars: 40;
+
+        styles [
+          "dim-label",
+        ]
+      }
+
+      Label _code_label {
+        visible: false;
+        use-markup: true;
+        margin-bottom: 10;
+
+        styles [
+          "title-1",
+        ]
+      }
+
       Gtk.Button _open_button {
         label: _("Open the page again");
       }
