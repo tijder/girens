@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 18:05+0100\n"
+"POT-Creation-Date: 2026-11-16 18:17+0100\n"
 "PO-Revision-Date: 2024-10-25 14:16+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/girens/girens/es/"
@@ -787,7 +787,15 @@ msgstr ""
 msgid "Looking up the server…"
 msgstr ""
 
-#: src/views/music_popover_menu.rs:190
+#. A star says nothing to someone who cannot see it.
+#: src/views/music_popover_menu.rs:90
+#, rust-format
+msgid "{} star"
+msgid_plural "{} stars"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/views/music_popover_menu.rs:193
 msgid "Could not rate the track"
 msgstr ""
 
@@ -1111,18 +1119,18 @@ msgstr "No se encontraron servidores para esta cuenta."
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: src/window/mod.rs:789
+#: src/window/mod.rs:800
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
 #. Translators put their names here.
-#: src/window/mod.rs:794
+#: src/window/mod.rs:805
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:797
+#: src/window/mod.rs:808
 msgid "Help with translating"
 msgstr "Ayudar con la traducción"
 
@@ -1130,7 +1138,7 @@ msgstr "Ayudar con la traducción"
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:830
+#: src/window/mod.rs:841
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 

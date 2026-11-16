@@ -1155,14 +1155,14 @@ impl Inner {
         let started = match self.state.borrow().current.as_ref() {
             Some(playing) => playing.started,
             None => {
-                log::warn!("mpv error: {code:?}");
+                log::warn!("mpv error {code}");
                 return;
             }
         };
         if started {
-            log::warn!("Playback broke off: {code:?}");
+            log::warn!("Playback broke off: mpv error {code}");
         } else {
-            let detail = format!("{code:?}");
+            let detail = format!("mpv error {code}");
             crate::notify::failure(&crate::i18n::gettext("Could not start playback"), &detail);
         }
         self.on_end_file(true);

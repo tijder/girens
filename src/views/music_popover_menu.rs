@@ -86,6 +86,9 @@ impl MusicPopoverMenu {
             &imp._star_5_button,
         ];
         for (button, stars) in buttons.into_iter().zip(1u8..) {
+            // A star says nothing to someone who cannot see it.
+            let name = crate::i18n::ngettext_f("{} star", "{} stars", u32::from(stars));
+            button.set_tooltip_text(Some(&name));
             button.connect_clicked(glib::clone!(
                 #[weak]
                 menu,

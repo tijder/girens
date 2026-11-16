@@ -405,13 +405,24 @@ impl PlexWindow {
             settings.int("window-size-width"),
             settings.int("window-size-height"),
         );
+        if settings.boolean("window-maximized") {
+            self.maximize();
+        }
     }
 
     fn save_size(&self) {
+        let settings = &self.imp().settings;
+        // Fullscreen is for a video, not how the window is to come back.
+        if !self.is_fullscreen() {
+            if let Err(err) = settings.set_boolean("window-maximized", self.is_maximized()) {
+                log::warn!("Could not save window-maximized: {err}");
+            }
+        }
+        // The size to return to from filling the screen is the one from
+        // before.
         if self.is_fullscreen() || self.is_maximized() {
             return;
         }
-        let settings = &self.imp().settings;
         let (width, height) = self.default_size();
         for (key, value) in [("window-size-width", width), ("window-size-height", height)] {
             if let Err(err) = settings.set_int(key, value) {

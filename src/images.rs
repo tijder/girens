@@ -171,8 +171,8 @@ pub async fn cached(machine_identifier: &str, key: ItemId) -> Option<gdk::Textur
 
 /// A cached cover of the item, whatever its resolution; for other programs
 /// such as the desktop's media controls.
-pub fn cached_cover(server: &Server, key: ItemId) -> Option<PathBuf> {
-    let dir = cache_dir(server);
+pub fn cached_cover(machine_identifier: &str, key: ItemId) -> Option<PathBuf> {
+    let dir = cache_dir_of(machine_identifier);
     let shown = SHOWN.with_borrow(|shown| shown.get(&(dir.clone(), key)).cloned());
     shown
         .filter(|path| path.exists())
@@ -209,6 +209,19 @@ fn remove_unused(dir: &Path, keep: &std::collections::HashSet<ItemId>, unused_af
     }
 }
 
+/// What whoever fetches the file at `path` holds meanwhile. Turns nobody
+/// holds any more are forgotten.
+fn turn_for(path: &Path) -> std::sync::Arc<tokio::sync::Mutex<()>> {
+    type Turns = HashMap<PathBuf, std::sync::Arc<tokio::sync::Mutex<()>>>;
+    static TURNS: OnceLock<std::sync::Mutex<Turns>> = OnceLock::new();
+    let mut turns = TURNS
+        .get_or_init(Default::default)
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+    turns.retain(|_, turn| std::sync::Arc::strong_count(turn) > 1);
+    turns.entry(path.to_path_buf()).or_default().clone()
+}
+
 /// The image `thumb` (an item's `thumb`, `composite`, …), cached under `key`.
 /// Returns `None` when it cannot be loaded; the reason is logged.
 pub async fn cover(server: &Server, key: ItemId, thumb: &str) -> Option<gdk::Texture> {
@@ -227,6 +240,11 @@ pub async fn cover(server: &Server, key: ItemId, thumb: &str) -> Option<gdk::Tex
     // Checking the disk, downloading and decoding all happen off the main
     // thread.
     let loaded = runtime::run(async move {
+        // The same cover is often asked for twice at once (an item that is
+        // both new and being watched): the second waits for the first and
+        // then finds the file, instead of both writing it.
+        let turn = turn_for(&file);
+        let _turn = turn.lock().await;
         if !tokio::fs::try_exists(&file).await.unwrap_or(false) {
             static LIMIT: OnceLock<Semaphore> = OnceLock::new();
             let _permit = LIMIT

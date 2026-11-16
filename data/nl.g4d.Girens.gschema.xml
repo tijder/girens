@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="nl.g4d.Girens" path="/nl/g4d/Girens/" gettext-domain="girens">
+    <key type="b" name="window-maximized">
+      <default>false</default>
+      <summary>Whether the window was maximized</summary>
+      <description>Whether the window filled the screen when it was closed.</description>
+    </key>
     <key type="i" name="window-size-width">
         <default>360</default>
         <summary>Window size width</summary>

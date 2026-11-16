@@ -10,6 +10,9 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 /// on the whole answer: a download takes as long as it takes.
 pub const READ_TIMEOUT: Duration = Duration::from_secs(60);
 
+/// How often a connection that is not in use is checked to be still there.
+const KEEPALIVE: Duration = Duration::from_secs(30);
+
 /// What every HTTP client of Girens starts from: without these limits a
 /// server that accepts a connection and then says nothing is waited for
 /// forever.
@@ -17,6 +20,10 @@ pub fn client_builder() -> reqwest::ClientBuilder {
     reqwest::Client::builder()
         .connect_timeout(CONNECT_TIMEOUT)
         .read_timeout(READ_TIMEOUT)
+        // A connection that is kept for the next request can die unnoticed
+        // (a router that forgot it, a server that restarted): asking after
+        // it finds out before a request is sent into the void.
+        .tcp_keepalive(KEEPALIVE)
 }
 
 fn client() -> &'static reqwest::Client {

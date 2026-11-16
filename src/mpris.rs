@@ -149,11 +149,21 @@ async fn report(
 ) -> mpris_server::zbus::Result<()> {
     match event {
         Event::Started { item, .. } => {
-            service.set_metadata(metadata(item)).await?;
+            let known = metadata(item);
+            let has_cover = known.art_url().is_some();
+            service.set_metadata(known).await?;
             service.set_playback_status(PlaybackStatus::Playing).await?;
             service.set_can_go_next(player.has_next()).await?;
             service.set_can_go_previous(player.has_previous()).await?;
             service.set_shuffle(player.is_shuffled()).await?;
+            // A cover that was never shown before is fetched now, and added
+            // unless something else plays by then.
+            if !has_cover && fetch_cover(item).await {
+                let current = player.current_item().map(|current| current.rating_key);
+                if current == Some(item.rating_key) {
+                    service.set_metadata(metadata(item)).await?;
+                }
+            }
         }
         Event::Paused(paused) => {
             service
@@ -218,16 +228,27 @@ fn metadata(item: &Item) -> Metadata {
         // Plex rates from 0 to 10, MPRIS from 0 to 1.
         builder = builder.user_rating(f64::from(rating) / 10.0);
     }
-    // Covers are cached under the key of the item they belong to (the show
-    // for an episode); see `views::cover_box`.
-    if let Some(server) = Session::current().server() {
-        let key = match item.kind {
-            ItemKind::Episode => item.grandparent_rating_key.unwrap_or(item.rating_key),
-            _ => item.rating_key,
-        };
-        if let Some(path) = images::cached_cover(&server, key) {
+    if let Some(machine) = Session::current().machine_identifier() {
+        if let Some(path) = images::cached_cover(&machine, cover_key(item)) {
             builder = builder.art_url(gio::File::for_path(path).uri().to_string());
         }
     }
     builder.build()
+}
+
+/// Covers are cached under the key of the item they belong to (the show
+/// for an episode); see `views::media_box`.
+fn cover_key(item: &Item) -> girens_model::ItemId {
+    match item.kind {
+        ItemKind::Episode => item.grandparent_rating_key.unwrap_or(item.rating_key),
+        _ => item.rating_key,
+    }
+}
+
+/// Fetches the cover of `item` into the cache; whether it is there now.
+async fn fetch_cover(item: &Item) -> bool {
+    let (Some(server), Some(thumb)) = (Session::current().server(), item.cover()) else {
+        return false;
+    };
+    images::cover(&server, cover_key(item), thumb).await.is_some()
 }
