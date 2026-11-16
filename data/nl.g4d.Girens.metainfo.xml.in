@@ -3,7 +3,9 @@
 <component type="desktop-application">
   <id>nl.g4d.Girens</id>
   <name>Girens</name>
-  <developer_name translate="no">Gerben Droogers</developer_name>
+  <developer id="nl.g4d">
+    <name translate="no">Gerben Droogers</name>
+  </developer>
   <summary>Watch what is on your Plex or Ister server</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>

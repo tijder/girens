@@ -131,6 +131,31 @@ async fn connecting_tells_who_and_where() {
 }
 
 #[tokio::test]
+async fn a_token_the_server_refuses_before_its_time_is_renewed_once() {
+    let mock = serve(300).await;
+    let (server, kept) = connect(&mock).await;
+    // The server no longer takes the token, though it is not old yet.
+    Mock::given(method("POST"))
+        .and(path("/api/graphql"))
+        .and(header("authorization", "Bearer access-for-refresh-1"))
+        .respond_with(ResponseTemplate::new(401))
+        .mount(&mock)
+        .await;
+    assert!(!server.sections().await.unwrap().is_empty());
+    assert_eq!(*kept.lock().unwrap(), ["refresh-2"]);
+
+    // One that refuses the new token too has ended the session.
+    Mock::given(method("POST"))
+        .and(path("/api/graphql"))
+        .respond_with(ResponseTemplate::new(401))
+        .mount(&mock)
+        .await;
+    assert!(matches!(server.sections().await, Err(Error::Unauthorized)));
+    // Asked for one more token, not for one after another.
+    assert_eq!(*kept.lock().unwrap(), ["refresh-2", "refresh-3"]);
+}
+
+#[tokio::test]
 async fn an_address_that_is_no_ister_server_is_refused() {
     let mock = MockServer::start().await;
     Mock::given(method("GET"))

@@ -384,16 +384,18 @@ fn offline_items_in(dir: &Path, user: &str) -> Vec<Item> {
 
 /// Remembers how far `user` is in an offline copy, so that it resumes there
 /// without the server too. `duration` tells when it is watched to the end.
-/// The server is still to be told; see [`progress_sent`].
+/// The server is still to be told: the offset that is returned (`None`
+/// when the user has no copy of the item) is what to call [`progress_sent`]
+/// with once it knows.
 pub fn record_progress(
     machine_identifier: &str,
     user: &str,
     rating_key: ItemId,
     position: u64,
     duration: Option<u64>,
-) {
+) -> Option<u64> {
     let dir = images::cache_dir_of(machine_identifier);
-    record_progress_in(&dir, user, rating_key, position, duration);
+    record_progress_in(&dir, user, rating_key, position, duration)
 }
 
 fn record_progress_in(
@@ -402,11 +404,9 @@ fn record_progress_in(
     rating_key: ItemId,
     position: u64,
     duration: Option<u64>,
-) {
+) -> Option<u64> {
     let mut manifest = Manifest::read(dir, user);
-    let Some(watched) = manifest.items.get_mut(&rating_key) else {
-        return;
-    };
+    let watched = manifest.items.get_mut(&rating_key)?;
     let finished = duration
         .is_some_and(|duration| duration > 0 && position as f64 >= duration as f64 * WATCHED_FRACTION);
     let known = *watched;
@@ -417,20 +417,25 @@ fn record_progress_in(
         watched.view_offset = position;
     }
     watched.unsent = true;
+    let offset = watched.view_offset;
     if *watched != known {
         manifest.write(dir, user);
     }
+    Some(offset)
 }
 
-/// Notes that the server knows how far `user` is in an offline copy.
-pub fn progress_sent(machine_identifier: &str, user: &str, rating_key: ItemId) {
-    progress_sent_in(&images::cache_dir_of(machine_identifier), user, rating_key);
+/// Notes that the server knows that `user` is at `offset` in an offline
+/// copy. Answers do not always come in the order of the questions: when
+/// the user has moved on since, there is still something to tell.
+pub fn progress_sent(machine_identifier: &str, user: &str, rating_key: ItemId, offset: u64) {
+    let dir = images::cache_dir_of(machine_identifier);
+    progress_sent_in(&dir, user, rating_key, offset);
 }
 
-fn progress_sent_in(dir: &Path, user: &str, rating_key: ItemId) {
+fn progress_sent_in(dir: &Path, user: &str, rating_key: ItemId, offset: u64) {
     let mut manifest = Manifest::read(dir, user);
     if let Some(watched) = manifest.items.get_mut(&rating_key) {
-        if std::mem::take(&mut watched.unsent) {
+        if watched.view_offset == offset && std::mem::take(&mut watched.unsent) {
             manifest.write(dir, user);
         }
     }
@@ -470,7 +475,7 @@ pub async fn push_progress(server: &Server, user: &str) {
             .await
         };
         match sent {
-            Ok(()) => progress_sent_in(&dir, user, key),
+            Ok(()) => progress_sent_in(&dir, user, key, watched.view_offset),
             Err(err) => {
                 log::warn!("Could not tell the server how far item {key} was watched: {err}");
                 // The others will not get through either.
@@ -907,10 +912,14 @@ mod tests {
             manifest(dir, "child", &[ItemId::from(1)]);
 
             // Half way through the first, to the end of the second.
-            record_progress_in(dir, "me", ItemId::from(1), 30 * 60_000, Some(60 * 60_000));
-            record_progress_in(dir, "me", ItemId::from(2), 56 * 60_000, Some(60 * 60_000));
+            let hour = Some(60 * 60_000);
+            assert_eq!(
+                record_progress_in(dir, "me", ItemId::from(1), 30 * 60_000, hour),
+                Some(30 * 60_000)
+            );
+            assert_eq!(record_progress_in(dir, "me", ItemId::from(2), 56 * 60_000, hour), Some(0));
             // Not a copy of this user: nothing to remember.
-            record_progress_in(dir, "me", ItemId::from(3), 1_000, None);
+            assert_eq!(record_progress_in(dir, "me", ItemId::from(3), 1_000, None), None);
 
             let items = offline_items_in(dir, "me");
             assert_eq!(items[0].view_offset, 30 * 60_000);
@@ -931,7 +940,10 @@ mod tests {
             let known = Manifest::read(dir, "me").items[&ItemId::from(1)];
             assert_eq!(known.updated(&stale).view_offset, 30 * 60_000);
 
-            progress_sent_in(dir, "me", ItemId::from(1));
+            // The answer to an earlier report does not count for this one.
+            progress_sent_in(dir, "me", ItemId::from(1), 25 * 60_000);
+            assert_eq!(unsent_progress(dir, "me").len(), 2);
+            progress_sent_in(dir, "me", ItemId::from(1), 30 * 60_000);
             let unsent = unsent_progress(dir, "me");
             assert_eq!(unsent.len(), 1);
             assert_eq!(unsent[0].0.rating_key, ItemId::from(2));

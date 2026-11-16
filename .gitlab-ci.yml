@@ -5,6 +5,39 @@ include:
 variables:
     BUNDLE: "nl.g4d.Girens.flatpak"
 
+# The tests and Clippy by themselves: an answer within minutes, where the
+# Flatpak below first builds FFmpeg and mpv.
+cargo:
+    image: fedora:latest
+    variables:
+        CARGO_HOME: "$CI_PROJECT_DIR/.cargo-home"
+    cache:
+        key: cargo
+        paths:
+            - .cargo-home/registry
+            - target
+    before_script:
+        - dnf install -y cargo clippy gcc pkgconf-pkg-config gtk4-devel libadwaita-devel libsecret-devel mpv-devel openssl-devel glib2-devel gettext-devel
+    script:
+        - cargo test --workspace --locked
+        - cargo clippy --workspace --all-targets --locked -- -D warnings
+
+# Known vulnerabilities in the crates Girens is built from. A new advisory
+# is no fault of the change under test, so it warns rather than fails.
+audit:
+    image: rust:latest
+    allow_failure: true
+    variables:
+        CARGO_HOME: "$CI_PROJECT_DIR/.cargo-home"
+    cache:
+        key: cargo-audit
+        paths:
+            - .cargo-home/bin
+            - .cargo-home/registry
+    script:
+        - test -x "$CARGO_HOME/bin/cargo-audit" || cargo install --locked cargo-audit
+        - "$CARGO_HOME/bin/cargo-audit audit"
+
 flatpak:
     variables:
         MANIFEST_PATH: "nl.g4d.Girens.yaml"

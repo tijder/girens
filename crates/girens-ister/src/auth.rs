@@ -17,6 +17,8 @@ use url::Url;
 
 /// The client every Ister player signs in as; it has no secret.
 const CLIENT_ID: &str = "ister";
+/// How long whoever connects to the port of a sign-in gets to say what for.
+const REQUEST_TIMEOUT: Duration = Duration::from_secs(5);
 /// A token is replaced when it has less than this left.
 const EXPIRY_MARGIN: Duration = Duration::from_secs(30);
 
@@ -30,16 +32,30 @@ pub struct WellKnown {
     pub api_url: String,
 }
 
-/// `http` for this computer and bare addresses, `https` for anything else,
-/// unless the address says which.
+/// `http` for this computer and for what is only known at home (a bare IP
+/// address, a name without a dot or one that ends in `.local` and the
+/// like), `https` for anything else, unless the address says which.
 fn with_scheme(address: &str) -> String {
     let address = address.trim().trim_end_matches('/');
     if address.contains("://") {
         return address.to_owned();
     }
-    let host = address.split(['/', ':']).next().unwrap_or_default();
-    let local = host == "localhost" || host.parse::<std::net::Ipv4Addr>().is_ok();
-    format!("{}://{address}", if local { "http" } else { "https" })
+    // An IPv6 address is written between brackets in an address, so that
+    // its colons are not taken for the one before a port.
+    if address.parse::<std::net::Ipv6Addr>().is_ok() {
+        return format!("http://[{address}]");
+    }
+    let host = match address.strip_prefix('[') {
+        Some(rest) => rest.split(']').next().unwrap_or_default(),
+        None => address.split(['/', ':']).next().unwrap_or_default(),
+    };
+    let host = host.to_ascii_lowercase();
+    let at_home = host.parse::<std::net::IpAddr>().is_ok()
+        || !host.contains('.')
+        || [".local", ".lan", ".internal", ".home.arpa"]
+            .iter()
+            .any(|ending| host.ends_with(ending));
+    format!("{}://{address}", if at_home { "http" } else { "https" })
 }
 
 /// Asks the server at `address` (as the user typed it) who it is.
@@ -175,7 +191,13 @@ pub async fn revoke(http: &reqwest::Client, provider: &Provider, refresh: &str) 
         ("token", refresh),
         ("token_type_hint", "refresh_token"),
     ];
-    http.post(endpoint).form(&form).send().await?;
+    let status = http.post(endpoint).form(&form).send().await?.status();
+    if !status.is_success() {
+        return Err(Error::Status {
+            status,
+            url: endpoint.clone(),
+        });
+    }
     Ok(())
 }
 
@@ -318,12 +340,18 @@ impl Login {
         let (mut stream, _) = self.listener.accept().await.map_err(io)?;
         let mut buffer = vec![0u8; 8192];
         let mut length = 0;
-        // The first line holds everything that matters.
-        while length < buffer.len() && !buffer[..length].contains(&b'\n') {
-            match stream.read(&mut buffer[length..]).await {
-                Ok(0) | Err(_) => break,
-                Ok(read) => length += read,
+        // The first line holds everything that matters. Whoever connects
+        // and then says nothing does not keep the browser waiting.
+        let first_line = async {
+            while length < buffer.len() && !buffer[..length].contains(&b'\n') {
+                match stream.read(&mut buffer[length..]).await {
+                    Ok(0) | Err(_) => break,
+                    Ok(read) => length += read,
+                }
             }
+        };
+        if tokio::time::timeout(REQUEST_TIMEOUT, first_line).await.is_err() {
+            return Ok(None);
         }
         let request = String::from_utf8_lossy(&buffer[..length]);
         let target = request.split_whitespace().nth(1).unwrap_or_default();
@@ -405,5 +433,11 @@ mod tests {
         assert_eq!(with_scheme("192.168.1.5/api/"), "http://192.168.1.5/api");
         assert_eq!(with_scheme("media.example.org"), "https://media.example.org");
         assert_eq!(with_scheme(" http://nas.lan/ "), "http://nas.lan");
+        assert_eq!(with_scheme("nas:8080"), "http://nas:8080");
+        assert_eq!(with_scheme("media.local/api"), "http://media.local/api");
+        assert_eq!(with_scheme("Server.LAN"), "http://Server.LAN");
+        assert_eq!(with_scheme("[fd00::5]:8080"), "http://[fd00::5]:8080");
+        assert_eq!(with_scheme("fd00::5"), "http://[fd00::5]");
+        assert_eq!(with_scheme("local.example.org:8443"), "https://local.example.org:8443");
     }
 }

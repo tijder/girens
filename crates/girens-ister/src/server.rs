@@ -251,9 +251,12 @@ impl IsterServer {
 
     // Requests
 
-    async fn access_token(&self) -> Result<String> {
+    /// The token to ask with. `rejected` is one the server just refused:
+    /// unless someone else renewed it meanwhile, it is replaced whatever
+    /// its age.
+    async fn access_token(&self, rejected: Option<&str>) -> Result<String> {
         let mut tokens = self.inner.tokens.lock().await;
-        if !tokens.is_fresh() {
+        if !tokens.is_fresh() || rejected == Some(tokens.access.as_str()) {
             // One at a time: the provider may accept a refresh token once.
             let renewed =
                 auth::refresh(&self.inner.http, &self.inner.provider, &tokens.refresh).await?;
@@ -267,19 +270,31 @@ impl IsterServer {
 
     async fn request<T: DeserializeOwned>(&self, document: &str, variables: Value) -> Result<T> {
         let url = format!("{}/graphql", self.inner.well_known.api_url);
-        let token = self.access_token().await?;
-        let response = self
-            .inner
-            .http
-            .post(&url)
-            .bearer_auth(token)
-            .json(&json!({ "query": document, "variables": variables }))
-            .send()
-            .await?;
+        let body = json!({ "query": document, "variables": variables });
+        let mut token = self.access_token(None).await?;
+        let mut renewed = false;
+        let response = loop {
+            let response = self
+                .inner
+                .http
+                .post(&url)
+                .bearer_auth(&token)
+                .json(&body)
+                .send()
+                .await?;
+            if response.status() != reqwest::StatusCode::UNAUTHORIZED {
+                break response;
+            }
+            // A token can be withdrawn before its time, and the clocks of
+            // the server and this computer need not agree. Once with a new
+            // one; a session that has really ended fails at the provider.
+            if renewed {
+                return Err(Error::Unauthorized);
+            }
+            token = self.access_token(Some(&token)).await?;
+            renewed = true;
+        };
         let status = response.status();
-        if status == reqwest::StatusCode::UNAUTHORIZED {
-            return Err(Error::Unauthorized);
-        }
         if !status.is_success() {
             return Err(Error::Status { status, url });
         }

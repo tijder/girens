@@ -35,8 +35,8 @@ impl Inner {
             session_state.user_key(),
         ) {
             (true, Some(machine), Some(user)) => {
-                crate::sync::record_progress(&machine, &user, key, position, item.duration);
-                Some((machine, user))
+                crate::sync::record_progress(&machine, &user, key, position, item.duration)
+                    .map(|offset| (machine, user, offset))
             }
             _ => None,
         };
@@ -53,8 +53,8 @@ impl Inner {
             })
             .await;
             match (result, copy) {
-                (Ok(()), Some((machine, user))) => {
-                    crate::sync::progress_sent(&machine, &user, key);
+                (Ok(()), Some((machine, user, offset))) => {
+                    crate::sync::progress_sent(&machine, &user, key, offset);
                 }
                 (Ok(()), None) => {}
                 (Err(err), _) => log::warn!("Could not report the playback position: {err}"),

@@ -1,4 +1,4 @@
-data/nl.g4d.Girens.appdata.xml.in
+data/nl.g4d.Girens.metainfo.xml.in
 data/nl.g4d.Girens.desktop.in
 data/ui/album_header.blp
 data/ui/album_item.blp
@@ -26,6 +26,7 @@ data/ui/theme_switcher.blp
 src/messages.rs
 src/notify.rs
 src/player/mod.rs
+src/player/streams.rs
 src/session.rs
 src/sync.rs
 src/views/album_view.rs

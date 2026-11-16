@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 22:13+0100\n"
+"POT-Creation-Date: 2026-11-16 18:05+0100\n"
 "PO-Revision-Date: 2024-05-02 22:07+0000\n"
 "Last-Translator: Fernando Lopes "
 "<118869201+plasmus777@users.noreply.github.com>\n"
@@ -20,29 +20,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.5.3-dev\n"
 
-#: data/nl.g4d.Girens.appdata.xml.in:5 data/nl.g4d.Girens.desktop.in:2
+#: data/nl.g4d.Girens.metainfo.xml.in:5 data/nl.g4d.Girens.desktop.in:2
 msgid "Girens"
 msgstr ""
 
-#: data/nl.g4d.Girens.appdata.xml.in:7
+#: data/nl.g4d.Girens.metainfo.xml.in:9
 msgid "Watch what is on your Plex or Ister server"
 msgstr ""
 
-#: data/nl.g4d.Girens.appdata.xml.in:11
+#: data/nl.g4d.Girens.metainfo.xml.in:13
 msgid ""
 "Girens is a media player for Plex and Ister servers. You can watch and "
 "listen to your music, shows and movies with this GTK app."
 msgstr ""
 
-#: data/nl.g4d.Girens.appdata.xml.in:20
+#: data/nl.g4d.Girens.metainfo.xml.in:22
 msgid "The show screen"
 msgstr ""
 
-#: data/nl.g4d.Girens.appdata.xml.in:24
+#: data/nl.g4d.Girens.metainfo.xml.in:26
 msgid "The album screen"
 msgstr ""
 
-#: data/nl.g4d.Girens.appdata.xml.in:28
+#: data/nl.g4d.Girens.metainfo.xml.in:30
 msgid "The artist screen"
 msgstr ""
 
@@ -119,11 +119,11 @@ msgid "Copy the link"
 msgstr ""
 
 #: data/ui/loading_view.blp:74 data/ui/login_view.blp:10
-#: src/window/connection.rs:689 src/window/connection.rs:773
+#: src/window/connection.rs:719 src/window/connection.rs:803
 msgid "Cancel"
 msgstr ""
 
-#: data/ui/loading_view.blp:79 src/window/connection.rs:774
+#: data/ui/loading_view.blp:79 src/window/connection.rs:804
 msgid "Sign out"
 msgstr ""
 
@@ -235,7 +235,7 @@ msgstr ""
 msgid "Main menu"
 msgstr ""
 
-#: data/ui/main_window.blp:111 src/window/connection.rs:403
+#: data/ui/main_window.blp:111 src/window/connection.rs:430
 msgid "Try again"
 msgstr ""
 
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Speed"
 msgstr ""
 
-#: data/ui/profile_dialog.blp:9 src/window/connection.rs:567
+#: data/ui/profile_dialog.blp:9 src/window/connection.rs:597
 msgid "Who is watching?"
 msgstr ""
 
@@ -617,77 +617,77 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/player/mod.rs:399
+#: src/player/mod.rs:401
 msgid "Nothing to play"
 msgstr ""
 
-#: src/player/mod.rs:407
+#: src/player/mod.rs:409
 msgid "Could not create a play queue"
 msgstr ""
 
-#: src/player/mod.rs:608
+#: src/player/mod.rs:610
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: src/player/mod.rs:822
+#: src/player/mod.rs:824 src/player/mod.rs:1166
 msgid "Could not start playback"
 msgstr ""
 
-#: src/player/mod.rs:1440
+#: src/player/streams.rs:152
 msgid "Could not load the subtitles"
 msgstr ""
 
-#: src/player/mod.rs:1552
+#: src/player/streams.rs:264
 msgid "Could not change the stream"
 msgstr ""
 
-#: src/session.rs:504
+#: src/session.rs:513
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 
-#: src/session.rs:505
+#: src/session.rs:514
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: src/session.rs:588
+#: src/session.rs:597
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: src/session.rs:589
+#: src/session.rs:598
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: src/session.rs:590
+#: src/session.rs:599
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: src/session.rs:591 src/views/player_view.rs:564
+#: src/session.rs:600 src/views/player_view.rs:564
 #, rust-format
 msgid "Chapter {}"
 msgstr ""
 
-#: src/session.rs:592
+#: src/session.rs:601
 msgid "Unknown"
 msgstr ""
 
 #. Subtitles that are pictures rather than text; {} is their name.
-#: src/session.rs:594
+#: src/session.rs:603
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
 
-#: src/sync.rs:516
+#: src/sync.rs:581
 msgid "Sync failed"
 msgstr ""
 
-#: src/sync.rs:602
+#: src/sync.rs:667
 msgid "Could not download an item"
 msgstr ""
 
-#: src/sync.rs:649
+#: src/sync.rs:716
 msgid "Not enough disk space for the download"
 msgstr ""
 
@@ -983,44 +983,44 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/window/connection.rs:16
+#: src/window/connection.rs:59
 msgid "Starting Girens"
 msgstr ""
 
-#: src/window/connection.rs:30 src/window/connection.rs:134
-#: src/window/connection.rs:224 src/window/connection.rs:276
+#: src/window/connection.rs:73 src/window/connection.rs:161
+#: src/window/connection.rs:251 src/window/connection.rs:303
 #, rust-format
 msgid "Connecting to {}."
 msgstr ""
 
-#: src/window/connection.rs:95
+#: src/window/connection.rs:122
 #, rust-format
 msgid "Your session at {} has ended."
 msgstr ""
 
-#: src/window/connection.rs:100
+#: src/window/connection.rs:127
 msgid "Sign in again"
 msgstr ""
 
-#: src/window/connection.rs:118
+#: src/window/connection.rs:145
 msgid "The sign-in on plex.tv took too long. Try again."
 msgstr ""
 
-#: src/window/connection.rs:130
+#: src/window/connection.rs:157
 msgid "Signing in to plex.tv…"
 msgstr ""
 
-#: src/window/connection.rs:284 src/window/connection.rs:332
-#: src/window/connection.rs:842
+#: src/window/connection.rs:311 src/window/connection.rs:359
+#: src/window/connection.rs:872
 #, rust-format
 msgid "Connecting to {} failed."
 msgstr ""
 
-#: src/window/connection.rs:311
+#: src/window/connection.rs:338
 msgid "No servers found for this account."
 msgstr ""
 
-#: src/window/connection.rs:325
+#: src/window/connection.rs:352
 #, rust-format
 msgid ""
 "Connecting to {0}.\n"
@@ -1028,74 +1028,74 @@ msgid ""
 "This may take a while."
 msgstr ""
 
-#: src/window/connection.rs:401
+#: src/window/connection.rs:428
 msgid "The server cannot be reached. Showing your downloads until it is back."
 msgstr ""
 
-#: src/window/connection.rs:432
+#: src/window/connection.rs:459
 #, rust-format
 msgid "Connecting to {}…"
 msgstr ""
 
-#: src/window/connection.rs:471
+#: src/window/connection.rs:501
 msgid "Could not load the libraries"
 msgstr ""
 
-#: src/window/connection.rs:670
+#: src/window/connection.rs:700
 msgid "That PIN is not correct. Try again."
 msgstr ""
 
-#: src/window/connection.rs:672
+#: src/window/connection.rs:702
 msgid "Enter the PIN of this profile."
 msgstr ""
 
-#: src/window/connection.rs:684
+#: src/window/connection.rs:714
 msgid "PIN"
 msgstr ""
 
-#: src/window/connection.rs:690
+#: src/window/connection.rs:720
 msgid "Continue"
 msgstr ""
 
-#: src/window/connection.rs:721
+#: src/window/connection.rs:751
 msgid "Could not switch to this profile"
 msgstr ""
 
-#: src/window/connection.rs:768
+#: src/window/connection.rs:798
 #, rust-format
 msgid "Sign out {}?"
 msgstr ""
 
-#: src/window/connection.rs:770
+#: src/window/connection.rs:800
 msgid ""
 "The downloads and preferences of this account are removed from this device."
 msgstr ""
 
-#: src/window/connection.rs:879
+#: src/window/connection.rs:909
 msgid ""
 "The username or password is not right. An account with two-factor "
 "authentication also needs its verification code."
 msgstr ""
 
-#: src/window/connection.rs:882
+#: src/window/connection.rs:912
 msgid "The username, password or verification code is not right."
 msgstr ""
 
-#: src/window/connection.rs:885
+#: src/window/connection.rs:915
 #, rust-format
 msgid "Could not reach plex.tv: {}"
 msgstr ""
 
-#: src/window/connection.rs:888
+#: src/window/connection.rs:918
 msgid "The server does not accept this token."
 msgstr ""
 
-#: src/window/connection.rs:891 src/window/connection.rs:894
+#: src/window/connection.rs:921 src/window/connection.rs:924
 #, rust-format
 msgid "Could not connect to {}."
 msgstr ""
 
-#: src/window/connection.rs:899
+#: src/window/connection.rs:929
 #, rust-format
 msgid "No Ister server was found at {}."
 msgstr ""
