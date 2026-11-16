@@ -961,7 +961,7 @@ impl PlayerView {
                 let settings = gtk::gio::Settings::new(crate::config::APP_ID);
                 let prefer = !settings.boolean("prefer-music-clips");
                 if let Err(err) = settings.set_boolean("prefer-music-clips", prefer) {
-                    eprintln!("Could not save the music clip preference: {err}");
+                    log::warn!("Could not save the music clip preference: {err}");
                 }
             }
             gdk::Key::Escape if self.imp().fullscreen.get() => self.toggle_fullscreen(),

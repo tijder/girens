@@ -30,6 +30,17 @@ fn main() -> glib::ExitCode {
     #[cfg(debug_assertions)]
     debug::mark_start();
 
+    // What goes wrong is told through GLib's log: warnings show in the
+    // terminal and the journal, the rest with `G_MESSAGES_DEBUG=girens` (or
+    // `all`, which adds the crates Girens is built from).
+    static LOGGER: glib::GlibLogger = glib::GlibLogger::new(
+        glib::GlibLoggerFormat::Plain,
+        glib::GlibLoggerDomain::CrateTarget,
+    );
+    if log::set_logger(&LOGGER).is_ok() {
+        log::set_max_level(log::LevelFilter::Debug);
+    }
+
     // SAFETY: no other thread exists yet, so nothing reads the locale concurrently.
     unsafe {
         gettextrs::setlocale(LocaleCategory::LcAll, "");
@@ -39,7 +50,7 @@ fn main() -> glib::ExitCode {
     // Keep GTK from resetting LC_NUMERIC when it initialises.
     gtk::disable_setlocale();
     if let Err(err) = gettextrs::bindtextdomain(config::GETTEXT_PACKAGE, config::LOCALEDIR) {
-        eprintln!("Could not bind the text domain: {err}");
+        log::warn!("Could not bind the text domain: {err}");
     }
     let _ = gettextrs::bind_textdomain_codeset(config::GETTEXT_PACKAGE, "UTF-8");
     let _ = gettextrs::textdomain(config::GETTEXT_PACKAGE);
@@ -48,7 +59,7 @@ fn main() -> glib::ExitCode {
     match gio::Resource::load(&resource_path) {
         Ok(resource) => gio::resources_register(&resource),
         Err(err) => {
-            eprintln!("Could not load {resource_path}: {err}");
+            log::error!("Could not load {resource_path}: {err}");
             return glib::ExitCode::FAILURE;
         }
     }

@@ -129,7 +129,7 @@ impl VideoRenderer {
         area.connect_realize(move |_| {
             if let Some(inner) = weak.upgrade() {
                 if let Err(err) = inner.realize() {
-                    eprintln!("Could not set up video rendering: {err}");
+                    log::warn!("Could not set up video rendering: {err}");
                 }
             }
         });
@@ -159,7 +159,7 @@ impl VideoRenderer {
 
         if area.is_realized() {
             if let Err(err) = inner.realize() {
-                eprintln!("Could not set up video rendering: {err}");
+                log::warn!("Could not set up video rendering: {err}");
             }
         }
 
@@ -257,7 +257,7 @@ impl Inner {
             .render::<Rc<GlResolver>>(framebuffer, width, height, true)
         {
             Ok(()) => self.frames_rendered.set(self.frames_rendered.get() + 1),
-            Err(err) => eprintln!("mpv could not render a frame: {err}"),
+            Err(err) => log::warn!("mpv could not render a frame: {err}"),
         }
     }
 }

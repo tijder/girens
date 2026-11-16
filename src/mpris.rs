@@ -50,7 +50,7 @@ pub fn start(player: &Player, window: &gtk::Window) {
         {
             Ok(service) => Rc::new(service),
             Err(err) => {
-                eprintln!("MPRIS is unavailable: {err}");
+                log::warn!("MPRIS is unavailable: {err}");
                 return;
             }
         };
@@ -79,7 +79,7 @@ pub fn start(player: &Player, window: &gtk::Window) {
                 let (service, fullscreen) = (reporting.clone(), window.is_fullscreen());
                 glib::spawn_future_local(async move {
                     if let Err(err) = service.set_fullscreen(fullscreen).await {
-                        eprintln!("Could not update MPRIS: {err}");
+                        log::warn!("Could not update MPRIS: {err}");
                     }
                 });
             });
@@ -113,7 +113,7 @@ pub fn start(player: &Player, window: &gtk::Window) {
         service.connect_set_volume(move |_, volume| {
             let percent = (volume * 100.0).round().clamp(0.0, 100.0) as i32;
             if let Err(err) = stored.set_int("volume-level", percent) {
-                eprintln!("Could not save the volume: {err}");
+                log::warn!("Could not save the volume: {err}");
             }
         });
         // The volume is also changed in the window.
@@ -122,7 +122,7 @@ pub fn start(player: &Player, window: &gtk::Window) {
             let (service, volume) = (reporting.clone(), volume(settings));
             glib::spawn_future_local(async move {
                 if let Err(err) = service.set_volume(volume).await {
-                    eprintln!("Could not update MPRIS: {err}");
+                    log::warn!("Could not update MPRIS: {err}");
                 }
             });
         });
@@ -133,7 +133,7 @@ pub fn start(player: &Player, window: &gtk::Window) {
             let (service, event, player) = (reporting.clone(), event.clone(), observed.clone());
             glib::spawn_future_local(async move {
                 if let Err(err) = report(&service, &event, &player).await {
-                    eprintln!("Could not update MPRIS: {err}");
+                    log::warn!("Could not update MPRIS: {err}");
                 }
             });
         });

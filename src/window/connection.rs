@@ -4,6 +4,49 @@
 use super::*;
 use crate::store::Profile;
 
+/// What to do at start, once the account and the server of last time were
+/// tried.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AfterStart {
+    /// Nobody can be continued as: ask to sign in.
+    SignIn,
+    /// The libraries are showing; only the details of the account are left.
+    Connected,
+    /// The server no longer accepts the session; an Ister server is signed
+    /// in to again.
+    SessionEnded,
+    /// The server cannot be reached; offline copies can still be watched.
+    Unreachable,
+    /// Look for a server of the account.
+    FindServer,
+}
+
+/// Decides what follows from how signing in to plex.tv (`account`) and
+/// connecting to the server used last (`stored`) went. `knows_server` tells
+/// whether a server is remembered, `connected` whether one is in use now.
+fn after_start(
+    account: &girens_model::Result<bool>,
+    stored: &girens_model::Result<bool>,
+    knows_server: bool,
+    connected: bool,
+) -> AfterStart {
+    match account {
+        // Without plex.tv account there has to be a server to go by.
+        Ok(false) if !knows_server => return AfterStart::SignIn,
+        Err(Error::Unauthorized) => return AfterStart::SignIn,
+        // plex.tv is unreachable; the server itself may still be.
+        Ok(_) | Err(_) => {}
+    }
+    match stored {
+        // Unless the connection was dropped again because the profile it
+        // was made for could not be continued.
+        Ok(true) if connected => AfterStart::Connected,
+        Err(Error::Unauthorized) => AfterStart::SessionEnded,
+        Err(err) if err.is_network() => AfterStart::Unreachable,
+        _ => AfterStart::FindServer,
+    }
+}
+
 /// Seconds between checks whether the sign-in in the browser was approved,
 /// and how often to check.
 const BROWSER_LOGIN_INTERVAL: u32 = 2;
@@ -43,36 +86,20 @@ impl PlexWindow {
             return;
         }
 
-        match account {
-            Ok(true) => {}
-            Ok(false) => {
-                if session.stored_server_url().is_none() {
-                    self.show_login();
-                    return;
-                }
+        for result in [&account, &stored] {
+            if let Err(err) = result {
+                log::warn!("Could not continue the session of last time: {err}");
             }
-            Err(Error::Unauthorized) => {
-                self.show_login();
-                return;
-            }
-            // plex.tv is unreachable; the server itself may still be.
-            Err(err) => eprintln!("Could not sign in to plex.tv: {err}"),
         }
-
-        match stored {
-            // Unless the connection was dropped again because the profile
-            // it was made for could not be continued.
-            Ok(true) if session.server().is_some() => self.load_account_details().await,
-            // The session at an Ister server ran out: sign in again there.
-            Err(Error::Unauthorized) if self.offer_ister_login() => {}
-            other => {
-                let unreachable = matches!(&other, Err(err) if err.is_network());
-                if let Err(err) = other {
-                    eprintln!("Could not connect to the server used last: {err}");
-                }
-                if unreachable && self.show_offline() {
-                    self.reconnect_from_offline().await;
-                } else if self.connect_to_account_server().await {
+        let knows_server = session.stored_server_url().is_some();
+        let connected = session.server().is_some();
+        match after_start(&account, &stored, knows_server, connected) {
+            AfterStart::SignIn => self.show_login(),
+            AfterStart::Connected => self.load_account_details().await,
+            AfterStart::SessionEnded if self.offer_ister_login() => {}
+            AfterStart::Unreachable if self.show_offline() => self.reconnect_from_offline().await,
+            AfterStart::SessionEnded | AfterStart::Unreachable | AfterStart::FindServer => {
+                if self.connect_to_account_server().await {
                     self.connected().await;
                 }
             }
@@ -136,7 +163,7 @@ impl PlexWindow {
             }
         };
         if let Err(err) = result {
-            eprintln!("Login failed: {err}");
+            log::warn!("Login failed: {err}");
             self.show_login();
             imp._login_view
                 .set_error(explain_failed_login(&attempt, &err).as_deref());
@@ -171,7 +198,7 @@ impl PlexWindow {
                 gtk::gio::Cancellable::NONE,
                 |result| {
                     if let Err(err) = result {
-                        eprintln!("Could not open the browser: {err}");
+                        log::warn!("Could not open the browser: {err}");
                     }
                 },
             );
@@ -203,7 +230,7 @@ impl PlexWindow {
                 // A hiccup on the way to plex.tv does not undo the sign-in
                 // in progress: the next check may well get through.
                 Err(err) if err.is_network() => {
-                    eprintln!("Could not check the sign-in on plex.tv: {err}");
+                    log::warn!("Could not check the sign-in on plex.tv: {err}");
                 }
                 // plex.tv has forgotten the pin.
                 Err(Error::Status { status, .. }) if status.as_u16() == 404 => {
@@ -233,7 +260,7 @@ impl PlexWindow {
                 gtk::gio::Cancellable::NONE,
                 |result| {
                     if let Err(err) = result {
-                        eprintln!("Could not open the browser: {err}");
+                        log::warn!("Could not open the browser: {err}");
                     }
                 },
             );
@@ -280,7 +307,7 @@ impl PlexWindow {
                 // The session at an Ister server ran out: sign in again.
                 Err(Error::Unauthorized) if self.offer_ister_login() => return false,
                 Err(err) => {
-                    eprintln!("Could not connect to {url}: {err}");
+                    log::warn!("Could not connect to {url}: {err}");
                     self.show_loading(&gettext_f("Connecting to {} failed.", &[&url]));
                 }
             }
@@ -303,7 +330,7 @@ impl PlexWindow {
                 servers
             }
             Err(err) => {
-                eprintln!("Could not list the servers of the account: {err}");
+                log::warn!("Could not list the servers of the account: {err}");
                 return false;
             }
         };
@@ -328,7 +355,7 @@ impl PlexWindow {
         match self.imp().session.connect_resource(resource).await {
             Ok(()) => true,
             Err(err) => {
-                eprintln!("Could not connect to {}: {err}", resource.name);
+                log::warn!("Could not connect to {}: {err}", resource.name);
                 self.show_loading(&gettext_f("Connecting to {} failed.", &[&resource.name]));
                 false
             }
@@ -447,6 +474,9 @@ impl PlexWindow {
     /// only needs the server itself.
     pub(super) async fn show_library(&self) {
         let imp = self.imp();
+        if let Some(server) = imp.session.server() {
+            crate::images::tidy(&server);
+        }
         let (Some(server), Some(user)) = (imp.session.server(), imp.session.user_key()) else {
             return;
         };
@@ -495,7 +525,7 @@ impl PlexWindow {
             return;
         };
         let servers = session.servers().await.unwrap_or_else(|err| {
-            eprintln!("Could not list the servers of the account: {err}");
+            log::warn!("Could not list the servers of the account: {err}");
             Vec::new()
         });
         if !servers.is_empty() {
@@ -541,9 +571,9 @@ impl PlexWindow {
         match downloaded {
             Ok(bytes) => match gdk::Texture::from_bytes(&glib::Bytes::from_owned(bytes)) {
                 Ok(texture) => imp._avatar_image.set_paintable(Some(&texture)),
-                Err(err) => eprintln!("Could not decode the avatar: {err}"),
+                Err(err) => log::warn!("Could not decode the avatar: {err}"),
             },
-            Err(err) => eprintln!("Could not download the avatar: {err}"),
+            Err(err) => log::warn!("Could not download the avatar: {err}"),
         }
     }
 
@@ -560,7 +590,7 @@ impl PlexWindow {
                 return true;
             }
             Err(err) => {
-                eprintln!("Could not sign in to plex.tv: {err}");
+                log::warn!("Could not sign in to plex.tv: {err}");
                 return false;
             }
         }
@@ -904,6 +934,44 @@ fn explain_failed_login(request: &LoginRequest, err: &Error) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn what_follows_the_start_depends_on_who_answered() {
+        use AfterStart::*;
+        // Any error of the HTTP client will do.
+        let network = || Error::from(reqwest::Client::new().get("no address").build().unwrap_err());
+        let cases: [(girens_model::Result<bool>, girens_model::Result<bool>, bool, bool, AfterStart); 11] = [
+            // Everything answered.
+            (Ok(true), Ok(true), true, true, Connected),
+            // A server entered by address has no plex.tv account.
+            (Ok(false), Ok(true), true, true, Connected),
+            // Nothing to continue with.
+            (Ok(false), Ok(false), false, false, SignIn),
+            // The token of the account is no longer accepted, even though
+            // the server still answers.
+            (Err(Error::Unauthorized), Ok(true), true, true, SignIn),
+            // plex.tv is down but the server is not.
+            (Err(network()), Ok(true), true, true, Connected),
+            // The connection was made for a profile that could not be
+            // continued, and was dropped.
+            (Ok(true), Ok(true), true, false, FindServer),
+            // Signed in, but no server yet or no token for it.
+            (Ok(true), Ok(false), false, false, FindServer),
+            (Ok(true), Ok(false), true, false, FindServer),
+            // The session at the server ran out.
+            (Ok(false), Err(Error::Unauthorized), true, false, SessionEnded),
+            // Nothing can be reached.
+            (Err(network()), Err(network()), true, false, Unreachable),
+            (Ok(true), Err(Error::Server("broken".into())), true, false, FindServer),
+        ];
+        for (account, stored, knows_server, connected, expected) in cases {
+            assert_eq!(
+                after_start(&account, &stored, knows_server, connected),
+                expected,
+                "{account:?} {stored:?} {knows_server} {connected}"
+            );
+        }
+    }
 
     #[test]
     fn a_failed_sign_in_is_explained_by_what_was_tried() {

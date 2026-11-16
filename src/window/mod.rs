@@ -415,7 +415,7 @@ impl PlexWindow {
         let (width, height) = self.default_size();
         for (key, value) in [("window-size-width", width), ("window-size-height", height)] {
             if let Err(err) = settings.set_int(key, value) {
-                eprintln!("Could not save {key}: {err}");
+                log::warn!("Could not save {key}: {err}");
             }
         }
     }
@@ -804,7 +804,7 @@ impl PlexWindow {
         let builder =
             gtk::Builder::from_resource(&format!("{}/shortcuts.ui", config::RESOURCE_PREFIX));
         let Some(shortcuts) = builder.object::<adw::Dialog>("shortcuts") else {
-            eprintln!("The shortcuts dialog is missing from the resources");
+            log::warn!("The shortcuts dialog is missing from the resources");
             return;
         };
         shortcuts.present(Some(self));

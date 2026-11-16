@@ -71,7 +71,7 @@ mod imp {
             };
             if self.settings.string("color-scheme") != scheme {
                 if let Err(err) = self.settings.set_string("color-scheme", scheme) {
-                    eprintln!("Could not save the color scheme: {err}");
+                    log::warn!("Could not save the color scheme: {err}");
                 }
             }
         }

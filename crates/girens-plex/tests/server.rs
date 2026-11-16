@@ -381,22 +381,40 @@ async fn a_download_is_written_completely_or_not_at_all() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
+/// What an earlier attempt left behind for `name` in a folder of its own:
+/// the first `length` bytes of `body`, of the version `etag` of the file.
+fn interrupted(name: &str, body: &[u8], length: usize, etag: Option<&str>) -> std::path::PathBuf {
+    let dir = std::env::temp_dir().join(format!("girens-plex-{name}-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    std::fs::write(dir.join("item.tmp"), &body[..length]).unwrap();
+    if let Some(etag) = etag {
+        std::fs::write(dir.join("item.tmp.etag"), etag).unwrap();
+    }
+    dir.join("item")
+}
+
+fn file_body() -> Vec<u8> {
+    (0..=255u8).cycle().take(10_000).collect()
+}
+
 #[tokio::test]
 async fn an_interrupted_download_is_continued() {
-    let body: Vec<u8> = (0..=255u8).cycle().take(10_000).collect();
+    let body = file_body();
     let mock = MockServer::start().await;
     Mock::given(method("GET"))
         .and(path("/file"))
         .and(header("range", "bytes=4000-"))
-        .respond_with(ResponseTemplate::new(206).set_body_bytes(body[4000..].to_vec()))
+        .and(header("if-range", "\"v1\""))
+        .respond_with(
+            ResponseTemplate::new(206)
+                .insert_header("etag", "\"v1\"")
+                .set_body_bytes(body[4000..].to_vec()),
+        )
         .expect(1)
         .mount(&mock)
         .await;
-    let dir = std::env::temp_dir().join(format!("girens-plex-resume-{}", std::process::id()));
-    std::fs::create_dir_all(&dir).unwrap();
-    let target = dir.join("item_2");
-    // What an earlier attempt left behind.
-    std::fs::write(dir.join("item_2.tmp"), &body[..4000]).unwrap();
+    let target = interrupted("resume", &body, 4000, Some("\"v1\""));
 
     let reported = std::sync::Arc::new(std::sync::Mutex::new((0u64, None)));
     let seen = reported.clone();
@@ -411,7 +429,93 @@ async fn an_interrupted_download_is_continued() {
 
     assert_eq!(std::fs::read(&target).unwrap(), body);
     assert_eq!(*reported.lock().unwrap(), (10_000, Some(10_000)));
-    std::fs::remove_dir_all(&dir).unwrap();
+    // Nothing of the attempt stays beside the copy.
+    assert_eq!(std::fs::read_dir(target.parent().unwrap()).unwrap().count(), 1);
+    std::fs::remove_dir_all(target.parent().unwrap()).unwrap();
+}
+
+#[tokio::test]
+async fn a_file_that_changed_on_the_server_is_downloaded_again() {
+    let body = file_body();
+    let mock = MockServer::start().await;
+    // The server no longer has the version the part is of: it sends all of
+    // the new one.
+    Mock::given(method("GET"))
+        .and(path("/file"))
+        .respond_with(
+            ResponseTemplate::new(200)
+                .insert_header("etag", "\"v2\"")
+                .set_body_bytes(body.clone()),
+        )
+        .mount(&mock)
+        .await;
+    let url = format!("{}/file", mock.uri());
+
+    let old = vec![9u8; 4000];
+    let target = interrupted("changed", &old, 4000, Some("\"v1\""));
+    girens_plex::download_to_file_with_progress(&url, &target, true, |_, _| {})
+        .await
+        .unwrap();
+    assert_eq!(std::fs::read(&target).unwrap(), body);
+    std::fs::remove_dir_all(target.parent().unwrap()).unwrap();
+
+    // A part of which nobody knows the version is not continued: no range
+    // is asked for.
+    let target = interrupted("unknown", &old, 4000, None);
+    girens_plex::download_to_file_with_progress(&url, &target, true, |_, _| {})
+        .await
+        .unwrap();
+    assert_eq!(std::fs::read(&target).unwrap(), body);
+    let asked_for_a_range = mock
+        .received_requests()
+        .await
+        .unwrap()
+        .iter()
+        .skip(1)
+        .any(|request| request.headers.contains_key("range"));
+    assert!(!asked_for_a_range);
+    std::fs::remove_dir_all(target.parent().unwrap()).unwrap();
+}
+
+#[tokio::test]
+async fn a_part_the_server_cannot_continue_does_not_block_the_download() {
+    let body = file_body();
+    let mock = MockServer::start().await;
+    Mock::given(method("GET"))
+        .and(path("/file"))
+        .and(wiremock::matchers::header_exists("range"))
+        .respond_with(ResponseTemplate::new(416).insert_header("content-range", "bytes */10000"))
+        .mount(&mock)
+        .await;
+    Mock::given(method("GET"))
+        .and(path("/file"))
+        .respond_with(
+            ResponseTemplate::new(200)
+                .insert_header("etag", "\"v1\"")
+                .set_body_bytes(body.clone()),
+        )
+        .with_priority(10)
+        .mount(&mock)
+        .await;
+    let url = format!("{}/file", mock.uri());
+
+    // Everything was there, only the last step was missing.
+    let target = interrupted("whole", &body, 10_000, Some("\"v1\""));
+    girens_plex::download_to_file_with_progress(&url, &target, true, |_, _| {})
+        .await
+        .unwrap();
+    assert_eq!(std::fs::read(&target).unwrap(), body);
+    assert_eq!(mock.received_requests().await.unwrap().len(), 1);
+    std::fs::remove_dir_all(target.parent().unwrap()).unwrap();
+
+    // More than the file holds: it starts over.
+    let long = vec![9u8; 12_000];
+    let target = interrupted("long", &long, 12_000, Some("\"v1\""));
+    girens_plex::download_to_file_with_progress(&url, &target, true, |_, _| {})
+        .await
+        .unwrap();
+    assert_eq!(std::fs::read(&target).unwrap(), body);
+    std::fs::remove_dir_all(target.parent().unwrap()).unwrap();
 }
 
 #[tokio::test]

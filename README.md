@@ -8,7 +8,7 @@ To stay signed in to an Ister server after the session in the browser has ended,
 
 ## Why this app
 
-There are more Plex clients that can be used on Linux. For example the Plex website and the [Plex media Player](https://www.plex.tv/apps-devices/#modal-devices-plex-media-player). Those Plex clients are lacking functions which I like to have. For example: a responsive layout (so you can use it on a small screen), function to download media items to the device and GTK+ is awesome.
+Plex has a website and players of its own, and Ister has a web player. Girens adds what those lack on a Linux desktop or phone: a layout that adapts to a small screen, copies to watch without a connection, and an interface that fits in with GNOME (GTK 4 and libadwaita).
 
 ## How to install
 
@@ -18,15 +18,18 @@ Flatpak is the recommended installation method. You can get Girens Flatpak on Fl
 <img src="https://flathub.org/assets/badges/flathub-badge-i-en.png" width="190px" />
 </a>
 
-Or download the latest development [flatpak](https://gitlab.gnome.org/tijder/girens/-/jobs/artifacts/master/raw/nl.g4d.Girens.flatpak?job=flatpak) from gitlab. Then install that flatpak with:
+The Rust version is on the `beta` branch of Flathub:
+
 ```bash
-flatpak install nl.g4d.girens.flatpak
+flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+flatpak install flathub-beta nl.g4d.Girens
 ```
 
 ## Password Storage
 
-Girens uses [Secret Service](https://www.freedesktop.org/wiki/Specifications/secret-storage-spec/)
-to store the password so you should have something providing 
+Girens never stores a password. The tokens it gets after signing in are kept in the
+[Secret Service](https://www.freedesktop.org/wiki/Specifications/secret-storage-spec/),
+so you should have something providing 
 that service on your system. If you're using GNOME or KDE
 this should work for you out of the box with gnome-keyring or
 ksecretservice.
@@ -54,7 +57,10 @@ flatpak build --socket=wayland --socket=fallback-x11 --share=ipc --share=network
 `meson test -C builddir-rust-meson` (run the same way) runs the Rust tests
 and Clippy.
 
-## Update depedencies
+What goes wrong is written to the log as a warning; start Girens with
+`G_MESSAGES_DEBUG=all` to see the rest too.
+
+## Update dependencies
 
 ```bash
 flatpak run org.flathub.flatpak-external-data-checker nl.g4d.Girens.yaml --edit-only

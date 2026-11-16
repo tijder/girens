@@ -64,7 +64,7 @@ pub fn present(parent: &impl IsA<gtk::Widget>) {
                 return;
             };
             if let Err(err) = settings.set_string("transcode-media-to-resolution", value) {
-                eprintln!("Could not save the transcode resolution: {err}");
+                log::warn!("Could not save the transcode resolution: {err}");
             }
         }
     ));

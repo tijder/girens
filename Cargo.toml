@@ -21,10 +21,12 @@ girens-ister = { path = "crates/girens-ister" }
 girens-model = { path = "crates/girens-model" }
 girens-plex = { path = "crates/girens-plex" }
 gtk = { package = "gtk4", version = "0.11", features = ["v4_16"] }
+glib = { version = "0.22", features = ["log"] }
 adw = { package = "libadwaita", version = "0.9", features = ["v1_6"] }
 gettext-rs = { version = "0.8", features = ["gettext-system"] }
 libmpv2 = { version = "7", features = ["render"] }
 libloading = "0.9"
+log = "0.4"
 libsecret = "0.9"
 serde = { version = "1", features = ["derive"] }
 reqwest = "0.13"

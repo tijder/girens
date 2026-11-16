@@ -48,7 +48,7 @@ pub fn message(text: &str) {
 
 /// Like [`failure`], with a button that calls `retry`.
 pub fn failure_with_retry(text: &str, detail: &dyn Display, retry: impl Fn() + 'static) {
-    eprintln!("{text}: {detail}");
+    log::warn!("{text}: {detail}");
     OVERLAY.with_borrow(|overlay| {
         if let Some(overlay) = overlay {
             let toast = adw::Toast::new(text);
@@ -64,7 +64,7 @@ pub fn failure_with_retry(text: &str, detail: &dyn Display, retry: impl Fn() + '
 /// Reports a failure: `text` (already translated) for the user, `detail` for
 /// the terminal.
 pub fn failure(text: &str, detail: &dyn Display) {
-    eprintln!("{text}: {detail}");
+    log::warn!("{text}: {detail}");
     message(text);
     notify_failure();
 }

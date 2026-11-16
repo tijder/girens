@@ -279,7 +279,7 @@ impl Server {
                     offset: 0,
                 };
                 if let Err(err) = server.transcode_decision(item, &request).await {
-                    eprintln!("The server did not accept the transcode request: {err}");
+                    log::warn!("The server did not accept the transcode request: {err}");
                 }
                 Ok(Opened {
                     url: server.transcode_url(item, &request).to_string(),

@@ -115,7 +115,7 @@ pub struct PlexServer {
 impl PlexServer {
     /// Connects to `base_url` and verifies the token.
     pub async fn connect(base_url: &str, token: &str, client: &ClientInfo) -> Result<Self> {
-        let http = reqwest::Client::builder()
+        let http = girens_model::net::client_builder()
             .default_headers(client.headers(Some(token)))
             .build()?;
         Self::connect_with(http, base_url, token).await

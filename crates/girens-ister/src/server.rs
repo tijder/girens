@@ -347,7 +347,7 @@ impl IsterServer {
                     *current = (token, Instant::now());
                 }
             }
-            Err(err) => eprintln!("Could not renew the token for media: {err}"),
+            Err(err) => log::warn!("Could not renew the token for media: {err}"),
         }
     }
 

@@ -101,7 +101,7 @@ mod imp {
                         gtk::gio::Cancellable::NONE,
                         |result| {
                             if let Err(err) = result {
-                                eprintln!("Could not open the browser: {err}");
+                                log::warn!("Could not open the browser: {err}");
                             }
                         },
                     );

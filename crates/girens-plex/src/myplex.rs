@@ -165,7 +165,7 @@ impl MyPlex {
         verification_code: Option<&str>,
         client: &ClientInfo,
     ) -> Result<Self> {
-        let http = reqwest::Client::builder()
+        let http = girens_model::net::client_builder()
             .default_headers(client.headers(None))
             .build()?;
         let body = {
@@ -195,7 +195,7 @@ impl MyPlex {
     /// [`Self::check_pin`] until it returns a session. The pin is kept for
     /// about fifteen minutes.
     pub async fn create_pin(client: &ClientInfo) -> Result<Pin> {
-        let http = reqwest::Client::builder()
+        let http = girens_model::net::client_builder()
             .default_headers(client.headers(None))
             .build()?;
         // Not a strong pin: those are too long to type at the link page.
@@ -204,7 +204,7 @@ impl MyPlex {
 
     /// The session, once the user has approved `pin` in the browser.
     pub async fn check_pin(pin: &Pin, client: &ClientInfo) -> Result<Option<Self>> {
-        let http = reqwest::Client::builder()
+        let http = girens_model::net::client_builder()
             .default_headers(client.headers(None))
             .build()?;
         let pin: Pin = send(http.get(format!("{PINS}/{}", pin.id))).await?;
@@ -222,7 +222,7 @@ impl MyPlex {
     /// [`Self::with_token`] against another address than plex.tv, for tests.
     #[doc(hidden)]
     pub async fn with_token_at(plex_tv: &str, token: &str, client: &ClientInfo) -> Result<Self> {
-        let http = reqwest::Client::builder()
+        let http = girens_model::net::client_builder()
             .default_headers(client.headers(Some(token)))
             .build()?;
         let account: Account = send(http.get(format!("{plex_tv}{USER}"))).await?;
@@ -230,7 +230,7 @@ impl MyPlex {
     }
 
     fn with_account(account: Account, client: &ClientInfo, plex_tv: &str) -> Result<Self> {
-        let http = reqwest::Client::builder()
+        let http = girens_model::net::client_builder()
             .default_headers(client.headers(Some(&account.auth_token)))
             .build()?;
         Ok(Self {

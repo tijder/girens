@@ -83,8 +83,9 @@ async fn is_fresh(server: &Server, user: &str) -> bool {
 
 /// Empties the file, so that nothing of someone who signed out is offered.
 pub fn clear() {
-    if let Err(err) = std::fs::write(data_file(), json!({ "sections": {} }).to_string()) {
-        eprintln!("Could not empty the search provider data: {err}");
+    let empty = json!({ "sections": {} }).to_string();
+    if let Err(err) = crate::util::write_atomic(&data_file(), empty.as_bytes(), false) {
+        log::warn!("Could not empty the search provider data: {err}");
     }
 }
 
@@ -99,13 +100,17 @@ pub fn refresh(server: Server, user: String) {
             let data = collect(&server, &user)
                 .await
                 .map_err(|err| err.to_string())?;
-            tokio::fs::write(data_file(), data.to_string())
-                .await
-                .map_err(|err| err.to_string())
+            // In one step: the search provider may read it at any moment.
+            tokio::task::spawn_blocking(move || {
+                crate::util::write_atomic(&data_file(), data.to_string().as_bytes(), false)
+            })
+            .await
+            .map_err(|err| err.to_string())?
+            .map_err(|err| err.to_string())
         })
         .await;
         if let Err(err) = written {
-            eprintln!("Could not update the search provider data: {err}");
+            log::warn!("Could not update the search provider data: {err}");
         }
     });
 }

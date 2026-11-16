@@ -25,6 +25,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::session::Session;
 use crate::store::{self, SyncEntry};
+use crate::util::{id_file_name, id_from_file_name, write_atomic};
 use crate::{config, images, runtime};
 
 #[derive(Debug, Clone)]
@@ -56,7 +57,7 @@ thread_local! {
 
 /// Where the offline copy of an item is, or would be, stored.
 pub fn local_path(server: &Server, rating_key: ItemId) -> PathBuf {
-    images::cache_dir(server).join(format!("item_{rating_key}"))
+    copy_path(&images::cache_dir(server), rating_key)
 }
 
 /// The offline copy `user` has of an item of the server with this
@@ -66,23 +67,29 @@ pub fn local_file(machine_identifier: &str, user: &str, rating_key: ItemId) -> O
     if !Manifest::read(&dir, user).items.contains_key(&rating_key) {
         return None;
     }
-    Some(dir.join(format!("item_{rating_key}"))).filter(|path| path.exists())
+    Some(copy_path(&dir, rating_key)).filter(|path| path.exists())
+}
+
+/// Where the copy of an item is kept in the folder of its server.
+fn copy_path(dir: &Path, rating_key: ItemId) -> PathBuf {
+    dir.join(format!("item_{}", id_file_name(rating_key)))
 }
 
 /// The description of an offline copy, stored next to it so that it can be
 /// shown and played without the server.
 fn sidecar(dir: &Path, rating_key: ItemId) -> PathBuf {
-    dir.join(format!("item_{rating_key}.json"))
+    dir.join(format!("item_{}.json", id_file_name(rating_key)))
 }
 
 fn write_sidecar(dir: &Path, item: &Item) {
     match serde_json::to_string(item) {
         Ok(text) => {
-            if let Err(err) = std::fs::write(sidecar(dir, item.rating_key), text) {
-                eprintln!("Could not store the details of {}: {err}", item.rating_key);
+            let path = sidecar(dir, item.rating_key);
+            if let Err(err) = write_atomic(&path, text.as_bytes(), false) {
+                log::warn!("Could not store the details of {}: {err}", item.rating_key);
             }
         }
-        Err(err) => eprintln!("Could not store the details of {}: {err}", item.rating_key),
+        Err(err) => log::warn!("Could not store the details of {}: {err}", item.rating_key),
     }
 }
 
@@ -123,13 +130,21 @@ impl Watched {
 }
 
 /// The offline copies of one user on one server.
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 struct Manifest {
     items: BTreeMap<ItemId, Watched>,
 }
 
 const MANIFEST_PREFIX: &str = "user_";
+
+thread_local! {
+    /// The manifests as they were read or written last. While something
+    /// plays, the position is noted every few seconds; that should not go
+    /// to the disk to read what this program wrote there itself.
+    static MANIFESTS: RefCell<std::collections::HashMap<PathBuf, Manifest>> =
+        RefCell::default();
+}
 
 impl Manifest {
     fn path(dir: &Path, user: &str) -> PathBuf {
@@ -142,10 +157,22 @@ impl Manifest {
     }
 
     fn read_file(path: &Path) -> Self {
-        std::fs::read_to_string(path)
+        if let Some(known) = MANIFESTS.with_borrow(|known| known.get(path).cloned()) {
+            return known;
+        }
+        let manifest: Self = std::fs::read_to_string(path)
             .ok()
             .and_then(|text| serde_json::from_str(&text).ok())
-            .unwrap_or_default()
+            .unwrap_or_default();
+        MANIFESTS.with_borrow_mut(|known| known.insert(path.to_path_buf(), manifest.clone()));
+        manifest
+    }
+
+    /// Removes the manifest of `user`; whether there was one.
+    fn remove(dir: &Path, user: &str) -> bool {
+        let path = Self::path(dir, user);
+        MANIFESTS.with_borrow_mut(|known| known.remove(&path));
+        std::fs::remove_file(path).is_ok()
     }
 
     fn read(dir: &Path, user: &str) -> Self {
@@ -154,11 +181,27 @@ impl Manifest {
 
     fn write(&self, dir: &Path, user: &str) {
         let path = Self::path(dir, user);
-        let written = std::fs::create_dir_all(dir)
-            .and_then(|()| std::fs::write(&path, serde_json::to_string(self).unwrap_or_default()));
+        let written = serde_json::to_string(self)
+            .map_err(std::io::Error::other)
+            .and_then(|text| write_atomic(&path, text.as_bytes(), false));
         if let Err(err) = written {
-            eprintln!("Could not write {}: {err}", path.display());
+            log::warn!("Could not write {}: {err}", path.display());
         }
+        MANIFESTS.with_borrow_mut(|known| known.insert(path, self.clone()));
+    }
+
+    /// What to keep at the end of a sync run that planned `self`. `before`
+    /// is the manifest as the run found it and `latest` as it is now: what
+    /// changed in between was watched while the run was busy, and is newer
+    /// than what the run heard from the server.
+    fn merged(mut self, before: &Self, latest: &Self) -> Self {
+        for (key, watched) in &mut self.items {
+            match latest.items.get(key) {
+                Some(now) if before.items.get(key) != Some(now) => *watched = *now,
+                _ => {}
+            }
+        }
+        self
     }
 
     /// The manifests of everyone with copies in `dir`.
@@ -192,11 +235,11 @@ impl Manifest {
 /// description.
 fn copy_key(file_name: &str) -> Option<ItemId> {
     let key = file_name.strip_prefix("item_")?;
-    key.strip_suffix(".tmp")
-        .or_else(|| key.strip_suffix(".json"))
-        .unwrap_or(key)
-        .parse()
-        .ok()
+    let key = [".tmp.etag", ".tmp", ".json"]
+        .into_iter()
+        .find_map(|suffix| key.strip_suffix(suffix))
+        .unwrap_or(key);
+    id_from_file_name(key)
 }
 
 /// Removes the copies in `dir`, complete or partial, of items not in `keep`.
@@ -219,7 +262,7 @@ fn prune(dir: &Path, keep: &HashSet<ItemId>) {
                 std::fs::remove_file(&path)
             };
             if let Err(err) = removed {
-                eprintln!("Could not remove {}: {err}", file.path().display());
+                log::warn!("Could not remove {}: {err}", file.path().display());
             }
         }
     }
@@ -234,12 +277,26 @@ fn copies(dir: &Path) -> HashSet<ItemId> {
                 .filter_map(|file| {
                     // Not the description or the partial copy beside it.
                     let name = file.file_name();
-                    let key = name.to_str()?.strip_prefix("item_")?;
-                    (!key.contains('.')).then(|| ItemId::new(key))
+                    id_from_file_name(name.to_str()?.strip_prefix("item_")?)
                 })
                 .collect()
         })
         .unwrap_or_default()
+}
+
+/// The keys covers are kept under for the copies in `dir`: an item has its
+/// own, or that of its album or show.
+pub fn cover_keys_in(dir: &Path) -> HashSet<ItemId> {
+    copies(dir)
+        .into_iter()
+        .flat_map(|key| {
+            let item = std::fs::read_to_string(sidecar(dir, key))
+                .ok()
+                .and_then(|text| serde_json::from_str::<Item>(&text).ok());
+            let parents = item.map(|item| [item.parent_rating_key, item.grandparent_rating_key]);
+            std::iter::once(key).chain(parents.into_iter().flatten().flatten())
+        })
+        .collect()
 }
 
 /// Makes the copies that were made before they were kept per user those of
@@ -285,7 +342,7 @@ pub fn forget_users(users: &[String]) {
 fn forget_users_in(dir: &Path, users: &[String]) {
     let mut removed = false;
     for user in users {
-        removed |= std::fs::remove_file(Manifest::path(dir, user)).is_ok();
+        removed |= Manifest::remove(dir, user);
     }
     if removed {
         prune(dir, &Manifest::wanted_by_anyone(dir));
@@ -352,6 +409,7 @@ fn record_progress_in(
     };
     let finished = duration
         .is_some_and(|duration| duration > 0 && position as f64 >= duration as f64 * WATCHED_FRACTION);
+    let known = *watched;
     if finished {
         watched.view_offset = 0;
         watched.view_count = watched.view_count.max(1);
@@ -359,7 +417,9 @@ fn record_progress_in(
         watched.view_offset = position;
     }
     watched.unsent = true;
-    manifest.write(dir, user);
+    if *watched != known {
+        manifest.write(dir, user);
+    }
 }
 
 /// Notes that the server knows how far `user` is in an offline copy.
@@ -412,7 +472,7 @@ pub async fn push_progress(server: &Server, user: &str) {
         match sent {
             Ok(()) => progress_sent_in(&dir, user, key),
             Err(err) => {
-                eprintln!("Could not tell the server how far item {key} was watched: {err}");
+                log::warn!("Could not tell the server how far item {key} was watched: {err}");
                 // The others will not get through either.
                 if err.is_network() {
                     return;
@@ -559,7 +619,7 @@ impl Sync {
             let items = match items {
                 Ok(items) => items,
                 Err(girens_model::Error::NotFound(key)) => {
-                    eprintln!("Synced item {key} no longer exists on the server");
+                    log::warn!("Synced item {key} no longer exists on the server");
                     continue;
                 }
                 // Without the full list nothing may be deleted below.
@@ -593,7 +653,7 @@ impl Sync {
                         // So that the copy is the user's even when the
                         // rest of the run is cancelled.
                         let mut so_far = Manifest::read(&dir, user);
-                        so_far.items.insert(item.rating_key, Watched::of(&item));
+                        so_far.items.entry(item.rating_key).or_insert(watched(&item));
                         so_far.write(&dir, user);
                     }
                     self.emit(Event::Downloading(Box::new(item.clone()), false));
@@ -607,7 +667,9 @@ impl Sync {
             }
         }
 
-        manifest.write(&dir, user);
+        manifest
+            .merged(&before, &Manifest::read(&dir, user))
+            .write(&dir, user);
         // Remove copies, complete or partial, of items that nobody syncs
         // any more. A partial copy of an item this user wants stays: the
         // next run continues it.
@@ -716,7 +778,7 @@ impl Sync {
             .await;
             if let Some(session) = &source.session {
                 if let Err(err) = server.end_stream(&item, session).await {
-                    eprintln!("Could not end the transcode session: {err}");
+                    log::warn!("Could not end the transcode session: {err}");
                 }
             }
             result
@@ -757,7 +819,7 @@ mod tests {
 
     /// A copy with its details, as a sync run leaves it.
     fn copy(dir: &Path, rating_key: u64, view_offset: u64) {
-        std::fs::write(dir.join(format!("item_{rating_key}")), "media").unwrap();
+        std::fs::write(copy_path(dir, rating_key.into()), "media").unwrap();
         let details = serde_json::json!({
             "ratingKey": rating_key.to_string(),
             "key": format!("/library/metadata/{rating_key}"),
@@ -878,6 +940,63 @@ mod tests {
             assert_eq!(known.view_offset, 30 * 60_000);
             assert_eq!(known.updated(&stale).view_offset, 0);
         });
+    }
+
+    #[test]
+    fn what_is_watched_during_a_sync_run_outlives_it() {
+        let seen = |view_offset, unsent| Watched {
+            view_offset,
+            unsent,
+            ..Watched::default()
+        };
+        let manifest = |items: &[(u64, Watched)]| Manifest {
+            items: items.iter().map(|(key, watched)| ((*key).into(), *watched)).collect(),
+        };
+        // As the run found it, and what it means to keep after asking the
+        // server: 4 is new, 5 is no longer wanted.
+        let before = manifest(&[(1, seen(10, false)), (2, seen(20, false)), (5, seen(0, false))]);
+        let planned = manifest(&[
+            (1, seen(11, false)),
+            (2, seen(20, false)),
+            (3, seen(0, false)),
+            (4, seen(0, false)),
+        ]);
+        // Meanwhile 2 was watched on, and 3 was downloaded and begun.
+        let latest = manifest(&[
+            (1, seen(10, false)),
+            (2, seen(99, true)),
+            (3, seen(7, false)),
+            (5, seen(0, false)),
+        ]);
+        assert_eq!(
+            planned.merged(&before, &latest),
+            manifest(&[
+                (1, seen(11, false)),
+                (2, seen(99, true)),
+                (3, seen(7, false)),
+                (4, seen(0, false)),
+            ])
+        );
+    }
+
+    #[test]
+    fn a_copy_cannot_be_kept_outside_the_folder_of_its_server() {
+        with_dir(|dir| {
+            let odd: ItemId = "../outside".into();
+            assert_eq!(copy_path(dir, odd).parent(), Some(dir));
+            assert_eq!(sidecar(dir, odd).parent(), Some(dir));
+            std::fs::write(copy_path(dir, odd), "media").unwrap();
+            std::fs::write(beside(&copy_path(dir, odd), ".tmp.etag"), "v1").unwrap();
+            assert_eq!(copies(dir), HashSet::from([odd]));
+            prune(dir, &HashSet::new());
+            assert_eq!(std::fs::read_dir(dir).unwrap().count(), 0);
+        });
+    }
+
+    fn beside(path: &Path, suffix: &str) -> PathBuf {
+        let mut name = path.as_os_str().to_owned();
+        name.push(suffix);
+        name.into()
     }
 
     #[test]

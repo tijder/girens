@@ -5,6 +5,8 @@
 //! decided by an explicit [`EndAction`] instead of a set of flags.
 
 pub mod render;
+mod reporting;
+mod streams;
 
 use girens_model::ItemId;
 use std::cell::{OnceCell, RefCell};
@@ -568,7 +570,7 @@ impl Player {
         let volume = volume.clamp(0, 100);
         self.inner.set_mpv("volume", i64::from(volume));
         if let Err(err) = self.inner.settings.set_int("volume-level", volume) {
-            eprintln!("Could not save the volume: {err}");
+            log::warn!("Could not save the volume: {err}");
         }
     }
 
@@ -639,11 +641,11 @@ impl Player {
                     .update_timeline(&item, position, PlaybackState::Stopped, session.as_deref())
                     .await
                 {
-                    eprintln!("Could not report the playback position: {err}");
+                    log::warn!("Could not report the playback position: {err}");
                 }
                 if let Some(session) = &session {
                     if let Err(err) = server.end_stream(&loading, session).await {
-                        eprintln!("Could not end the transcode session: {err}");
+                        log::warn!("Could not end the transcode session: {err}");
                     }
                 }
             };
@@ -695,7 +697,7 @@ impl Inner {
         let mpv = Arc::new(create_mpv().map_err(|err| format!("could not start mpv: {err}"))?);
         if let Some(mode) = self.deinterlace.borrow().as_deref() {
             if let Err(err) = mpv.set_property("deinterlace", mode) {
-                eprintln!("Could not set deinterlacing: {err}");
+                log::warn!("Could not set deinterlacing: {err}");
             }
         }
         if let Some(callback) = self.on_mpv_created.borrow().as_ref() {
@@ -720,13 +722,13 @@ impl Inner {
     fn command(&self, name: &str, args: &[&str]) {
         // Without mpv nothing is playing, so there is nothing to command.
         if let Some(Err(err)) = self.mpv.get().map(|mpv| mpv.command(name, args)) {
-            eprintln!("mpv {name} failed: {err}");
+            log::warn!("mpv {name} failed: {err}");
         }
     }
 
     fn set_mpv<T: libmpv2::SetData>(&self, name: &str, value: T) {
         if let Some(Err(err)) = self.mpv.get().map(|mpv| mpv.set_property(name, value)) {
-            eprintln!("Could not set mpv property {name}: {err}");
+            log::warn!("Could not set mpv property {name}: {err}");
         }
     }
 
@@ -985,11 +987,12 @@ impl Inner {
                     _ => {}
                 },
                 Ok(MpvEvent::PlaybackRestart) => self.on_playback_restart(),
-                Ok(MpvEvent::EndFile(reason)) => {
-                    self.on_end_file(format!("{reason:?}").contains("Error"))
-                }
+                Ok(MpvEvent::EndFile(_)) => self.on_end_file(false),
                 Ok(_) => {}
-                Err(err) => eprintln!("mpv error: {err}"),
+                // A file that ends because of an error comes as that error,
+                // not as an end.
+                Err(libmpv2::Error::Raw(code)) => self.on_failure(code),
+                Err(err) => log::warn!("mpv error: {err}"),
             }
         }
     }
@@ -1146,6 +1149,25 @@ impl Inner {
         }
     }
 
+    /// mpv gave up on the file: it could not be opened, or broke off for
+    /// good.
+    fn on_failure(self: &Rc<Self>, code: libmpv2::MpvError) {
+        let started = match self.state.borrow().current.as_ref() {
+            Some(playing) => playing.started,
+            None => {
+                log::warn!("mpv error: {code:?}");
+                return;
+            }
+        };
+        if started {
+            log::warn!("Playback broke off: {code:?}");
+        } else {
+            let detail = format!("{code:?}");
+            crate::notify::failure(&crate::i18n::gettext("Could not start playback"), &detail);
+        }
+        self.on_end_file(true);
+    }
+
     fn on_end_file(self: &Rc<Self>, failed: bool) {
         let Some(playing) = self.state.borrow_mut().current.take() else {
             return;
@@ -1170,119 +1192,7 @@ impl Inner {
         }
     }
 
-    // Reporting to the server
-
-    fn report_timeline(&self, playback: PlaybackState) {
-        let state = self.state.borrow();
-        if let Some(playing) = state.current.as_ref() {
-            self.send_timeline(playing, playback);
-        }
-    }
-
-    fn send_timeline(&self, playing: &Playing, playback: PlaybackState) {
-        let session_state = Session::current();
-        // Progress is reported for the queue entry, with the duration of what
-        // is actually playing.
-        let mut item = playing.item.clone();
-        item.duration = playing.loading.duration.or(item.duration);
-        // Servers count from the start of the file.
-        let position = ((playing.position + playing.base) * 1000.0) as u64;
-
-        // An offline copy of a video remembers the position itself, for
-        // when the server cannot be asked.
-        let key = item.rating_key;
-        let copy = match (
-            matches!(item.kind, ItemKind::Movie | ItemKind::Episode),
-            session_state.machine_identifier(),
-            session_state.user_key(),
-        ) {
-            (true, Some(machine), Some(user)) => {
-                crate::sync::record_progress(&machine, &user, key, position, item.duration);
-                Some((machine, user))
-            }
-            _ => None,
-        };
-
-        let Some(server) = session_state.server() else {
-            return;
-        };
-        let session = playing.session.clone();
-        glib::spawn_future_local(async move {
-            let result = runtime::run(async move {
-                server
-                    .update_timeline(&item, position, playback, session.as_deref())
-                    .await
-            })
-            .await;
-            match (result, copy) {
-                (Ok(()), Some((machine, user))) => {
-                    crate::sync::progress_sent(&machine, &user, key);
-                }
-                (Ok(()), None) => {}
-                (Err(err), _) => eprintln!("Could not report the playback position: {err}"),
-            }
-        });
-    }
-
-    /// Tells the server it can stop transcoding for what was playing.
-    fn end_transcode_session(&self, playing: &Playing) {
-        let (Some(server), Some(session)) = (Session::current().server(), playing.session.clone())
-        else {
-            return;
-        };
-        let loading = playing.loading.clone();
-        glib::spawn_future_local(async move {
-            let result =
-                runtime::run(
-                    async move { server.end_stream(&loading, &session).await },
-                )
-                .await;
-            if let Err(err) = result {
-                eprintln!("Could not end the transcode session: {err}");
-            }
-        });
-    }
-
-    /// Tells a server that would otherwise think the player gone that it
-    /// is only paused.
-    fn report_when_paused(&self) {
-        let wanted = Session::current()
-            .server()
-            .is_some_and(|server| server.wants_reports_when_paused());
-        let paused = self
-            .state
-            .borrow()
-            .current
-            .as_ref()
-            .is_some_and(|playing| playing.started && playing.paused);
-        if wanted && paused {
-            self.report_timeline(PlaybackState::Paused);
-        }
-    }
-
-    fn ping_session(&self) {
-        let (Some(server), Some((loading, session))) = (
-            Session::current().server(),
-            self.state.borrow().current.as_ref().and_then(|playing| {
-                playing
-                    .session
-                    .clone()
-                    .map(|session| (playing.loading.clone(), session))
-            }),
-        ) else {
-            return;
-        };
-        glib::spawn_future_local(async move {
-            let result =
-                runtime::run(
-                    async move { server.keep_stream(&loading, &session).await },
-                )
-                .await;
-            if let Err(err) = result {
-                eprintln!("Could not keep the transcode session alive: {err}");
-            }
-        });
-    }
+    // The queue
 
     fn refresh_queue(self: &Rc<Self>) {
         let (Some(server), Some(id)) = (
@@ -1300,283 +1210,7 @@ impl Inner {
         glib::spawn_future_local(async move {
             match runtime::run(async move { server.refresh_play_queue(id).await }).await {
                 Ok(queue) => inner.replace_queue(queue),
-                Err(err) => eprintln!("Could not refresh the play queue: {err}"),
-            }
-        });
-    }
-
-    // Audio and subtitle streams
-
-    fn on_tracks_available(self: &Rc<Self>) {
-        let apply = {
-            let mut state = self.state.borrow_mut();
-            match state.current.as_mut() {
-                // A transcoded stream already contains only what was selected.
-                Some(playing)
-                    if playing.session.is_none()
-                        && !playing.loading.kind.is_audio()
-                        && !playing.tracks_applied =>
-                {
-                    playing.tracks_applied = true;
-                    true
-                }
-                _ => false,
-            }
-        };
-        if apply {
-            self.apply_streams();
-        }
-    }
-
-    /// Makes mpv use the streams that are selected on the server.
-    fn apply_streams(self: &Rc<Self>) {
-        let (Some(server), Some(loading)) = (
-            Session::current().server(),
-            self.state
-                .borrow()
-                .current
-                .as_ref()
-                .map(|playing| playing.loading.clone()),
-        ) else {
-            return;
-        };
-        let tracks = self.mpv_tracks();
-        let find = |kind: &str, matches: &dyn Fn(&MpvTrack) -> bool| {
-            tracks
-                .iter()
-                .find(|track| track.kind == kind && matches(track))
-                .map(|track| track.id)
-        };
-
-        if let Some(stream) = loading.selected_stream(StreamKind::Audio) {
-            let id = if server.streams_in_order() {
-                // The stream offers the audio of the file one by one.
-                loading
-                    .streams(StreamKind::Audio)
-                    .position(|other| other.id == stream.id)
-                    .and_then(|position| {
-                        tracks
-                            .iter()
-                            .filter(|track| track.kind == "audio")
-                            .nth(position)
-                    })
-                    .map(|track| track.id)
-            } else {
-                let index = stream.index.map(i64::from);
-                find("audio", &|track| index.is_some() && track.ff_index == index)
-            };
-            if let Some(id) = id {
-                self.set_mpv("aid", id);
-            }
-        }
-
-        let subtitle = loading.selected_stream(StreamKind::Subtitle);
-        let pictures = subtitle.filter(|stream| stream.pictures);
-        self.use_pictures(&server, loading.rating_key, pictures);
-        match subtitle {
-            None => self.set_mpv("sid", "no"),
-            // Drawn by the player itself, over the video.
-            Some(stream) if stream.pictures => self.set_mpv("sid", "no"),
-            Some(stream) => match stream.key.as_deref() {
-                // A sidecar file: mpv loads it from the server, titled with
-                // the stream id so that it is recognised next time.
-                Some(key) => {
-                    let title = stream.id.to_string();
-                    match find("sub", &|track| track.title.as_deref() == Some(&title)) {
-                        Some(id) => self.set_mpv("sid", id),
-                        None => self.command(
-                            "sub-add",
-                            &[&server.download_url(key), "select", &title],
-                        ),
-                    }
-                }
-                None => {
-                    let index = stream.index.map(i64::from);
-                    if let Some(id) =
-                        find("sub", &|track| index.is_some() && track.ff_index == index)
-                    {
-                        self.set_mpv("sid", id);
-                    }
-                }
-            },
-        }
-    }
-
-    /// Fetches the pictures of `stream` to draw them while playing, or
-    /// stops drawing any when another kind of subtitles was chosen.
-    fn use_pictures(
-        self: &Rc<Self>,
-        server: &crate::backend::Server,
-        item: ItemId,
-        stream: Option<&girens_model::model::Stream>,
-    ) {
-        let wanted = stream.and_then(|stream| Some((stream.id, stream.key.clone()?)));
-        let had_any = {
-            let mut state = self.state.borrow_mut();
-            let Some(playing) = state.current.as_mut() else {
-                return;
-            };
-            let loaded = playing.pictures.as_ref().map(|(id, _)| *id);
-            if loaded.is_some() && loaded == wanted.as_ref().map(|(id, _)| *id) {
-                return;
-            }
-            playing.pictures = None;
-            !std::mem::take(&mut playing.shown).is_empty()
-        };
-        if had_any {
-            self.emit(Event::Subtitles(None));
-        }
-        let Some((id, key)) = wanted else {
-            return;
-        };
-        let (inner, server) = (self.clone(), server.clone());
-        glib::spawn_future_local(async move {
-            let fetched =
-                runtime::run(async move { server.picture_subtitles(&key).await }).await;
-            let pictures = match fetched {
-                Ok(pictures) => Rc::new(pictures),
-                Err(err) => {
-                    crate::notify::failure(
-                        &crate::i18n::gettext("Could not load the subtitles"),
-                        &err,
-                    );
-                    return;
-                }
-            };
-            let mut state = inner.state.borrow_mut();
-            // Unless something else plays by now, or other subtitles were
-            // chosen.
-            let still_wanted = state.current.as_ref().is_some_and(|playing| {
-                playing.loading.rating_key == item
-                    && playing
-                        .loading
-                        .selected_stream(StreamKind::Subtitle)
-                        .is_some_and(|stream| stream.id == id)
-            });
-            if let (true, Some(playing)) = (still_wanted, state.current.as_mut()) {
-                playing.pictures = Some((id, pictures));
-            }
-        });
-    }
-
-    /// Tells which subtitle pictures are on screen at `time`, in seconds
-    /// into the file, when that changed.
-    fn show_pictures(&self, time: f64) {
-        let changed = {
-            let mut state = self.state.borrow_mut();
-            let Some(playing) = state.current.as_mut() else {
-                return;
-            };
-            let Some((_, pictures)) = playing.pictures.clone() else {
-                return;
-            };
-            let active = pictures.active_at((time.max(0.0) * 1000.0) as u64);
-            if active == playing.shown {
-                return;
-            }
-            playing.shown.clone_from(&active);
-            (!active.is_empty()).then(|| {
-                let cues = active
-                    .into_iter()
-                    .filter_map(|cue| Some((pictures.sheets.get(cue.sheet)?.clone(), cue)))
-                    .collect();
-                (pictures, cues)
-            })
-        };
-        let subtitles = changed.map(|(pictures, cues)| {
-            let canvas = (pictures.width, pictures.height);
-            let aspect = self
-                .mpv
-                .get()
-                .and_then(|mpv| mpv.get_property::<f64>("video-params/aspect").ok())
-                .filter(|aspect| *aspect > 0.0)
-                .unwrap_or(f64::from(canvas.0) / f64::from(canvas.1.max(1.0)));
-            SubtitlePictures {
-                canvas,
-                aspect,
-                cues,
-            }
-        });
-        self.emit(Event::Subtitles(subtitles));
-    }
-
-    fn mpv_tracks(&self) -> Vec<MpvTrack> {
-        let Some(mpv) = self.mpv.get() else {
-            return Vec::new();
-        };
-        let count = mpv.get_property::<i64>("track-list/count").unwrap_or(0);
-        (0..count)
-            .filter_map(|index| {
-                let property = |name: &str| format!("track-list/{index}/{name}");
-                Some(MpvTrack {
-                    kind: mpv.get_property::<String>(&property("type")).ok()?,
-                    id: mpv.get_property::<i64>(&property("id")).ok()?,
-                    ff_index: mpv.get_property::<i64>(&property("ff-index")).ok(),
-                    title: mpv.get_property::<String>(&property("title")).ok(),
-                })
-            })
-            .collect()
-    }
-
-    /// Stores the choice on the server and applies it: directly for direct
-    /// play, by restarting the stream when transcoding.
-    fn select_stream(self: Rc<Self>, kind: StreamKind, stream_id: Option<ItemId>) {
-        let (Some(server), Some(loading)) = (
-            Session::current().server(),
-            self.state
-                .borrow()
-                .current
-                .as_ref()
-                .map(|playing| playing.loading.clone()),
-        ) else {
-            return;
-        };
-        let Some(part) = loading.parts().next().cloned() else {
-            return;
-        };
-        glib::spawn_future_local(async move {
-            let key = loading.rating_key;
-            let updated = runtime::run(async move {
-                match (kind, stream_id) {
-                    (StreamKind::Audio, Some(id)) => server.select_audio_stream(&part, id).await?,
-                    (StreamKind::Subtitle, id) => server.select_subtitle_stream(&part, id).await?,
-                    _ => {}
-                }
-                server.item(key).await
-            })
-            .await;
-            let updated = match updated {
-                Ok(updated) => updated,
-                Err(err) => {
-                    crate::notify::failure(
-                        &crate::i18n::gettext("Could not change the stream"),
-                        &err,
-                    );
-                    return;
-                }
-            };
-
-            let mut updated = updated;
-            self.prefer_version(&mut updated);
-            let transcoding = {
-                let mut state = self.state.borrow_mut();
-                match state.current.as_mut() {
-                    Some(playing) if playing.loading.rating_key == key => {
-                        playing.loading = updated;
-                        Some((playing.session.is_some(), playing.position))
-                    }
-                    _ => None,
-                }
-            };
-            if transcoding.is_some() {
-                self.emit(Event::StreamsChanged);
-            }
-            match transcoding {
-                Some((true, position)) => {
-                    self.end_with(EndAction::Restart((position * 1000.0) as u64))
-                }
-                Some((false, _)) => self.apply_streams(),
-                None => {}
+                Err(err) => log::warn!("Could not refresh the play queue: {err}"),
             }
         });
     }
@@ -1655,12 +1289,6 @@ fn create_mpv() -> Result<Mpv, libmpv2::Error> {
     Ok(mpv)
 }
 
-struct MpvTrack {
-    kind: String,
-    id: i64,
-    ff_index: Option<i64>,
-    title: Option<String>,
-}
 
 /// A fixed delay before the cursor and controls hide, shared by the views.
 pub const CONTROLS_HIDE_DELAY: Duration = Duration::from_secs(3);

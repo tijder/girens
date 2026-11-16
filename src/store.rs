@@ -28,11 +28,20 @@ thread_local! {
         const { std::cell::RefCell::new(None) };
 }
 
+thread_local! {
+    /// The file as it was read or written last, so that asking for a sort
+    /// order or a list does not go to the disk every time. Girens is the
+    /// only one to write the file, and does so from the main thread.
+    static CACHE: std::cell::RefCell<Option<(std::path::PathBuf, Map<String, Value>)>> =
+        const { std::cell::RefCell::new(None) };
+}
+
 /// Makes the calling test use `path` as the config file, or the real one
 /// again with `None`.
 #[cfg(test)]
 pub fn use_test_file(path: Option<std::path::PathBuf>) {
     TEST_FILE.set(path);
+    CACHE.set(None);
 }
 
 fn config_file() -> std::path::PathBuf {
@@ -43,26 +52,65 @@ fn config_file() -> std::path::PathBuf {
     crate::session::config_file()
 }
 
+/// What the text of the file holds; `None` when it is not what Girens
+/// writes.
+fn parse(text: &str) -> Option<Map<String, Value>> {
+    let Some(line) = text.lines().next().filter(|line| !line.trim().is_empty()) else {
+        // Empty is how a file starts.
+        return Some(Map::new());
+    };
+    match serde_json::from_str::<Value>(line) {
+        Ok(Value::Object(map)) => Some(map),
+        _ => None,
+    }
+}
+
 fn read() -> Map<String, Value> {
-    std::fs::read_to_string(config_file())
-        .ok()
-        .and_then(|text| serde_json::from_str::<Value>(text.lines().next()?).ok())
-        .and_then(|value| match value {
-            Value::Object(map) => Some(map),
-            _ => None,
-        })
-        .unwrap_or_default()
+    let path = config_file();
+    let cached = CACHE.with_borrow(|cache| {
+        cache
+            .as_ref()
+            .filter(|(of, _)| *of == path)
+            .map(|(_, config)| config.clone())
+    });
+    if let Some(config) = cached {
+        return config;
+    }
+    let config = match std::fs::read_to_string(&path) {
+        Ok(text) => parse(&text).unwrap_or_else(|| {
+            // Kept beside it rather than overwritten by the next change:
+            // it may still be mended by hand.
+            let mut aside = path.clone().into_os_string();
+            aside.push(".unreadable");
+            match std::fs::rename(&path, &aside) {
+                Ok(()) => log::warn!(
+                    "{} could not be read and was moved to {}",
+                    path.display(),
+                    std::path::Path::new(&aside).display()
+                ),
+                Err(err) => log::warn!("{} could not be read: {err}", path.display()),
+            }
+            Map::new()
+        }),
+        Err(err) => {
+            if err.kind() != std::io::ErrorKind::NotFound {
+                log::warn!("Could not read {}: {err}", path.display());
+            }
+            Map::new()
+        }
+    };
+    CACHE.set(Some((path, config.clone())));
+    config
 }
 
 fn write(config: &Map<String, Value>) {
     let path = config_file();
-    if let Some(dir) = path.parent() {
-        let _ = std::fs::create_dir_all(dir);
-    }
     let text = Value::Object(config.clone()).to_string();
-    if let Err(err) = std::fs::write(&path, text) {
-        eprintln!("Could not write {}: {err}", path.display());
+    if let Err(err) = crate::util::write_atomic(&path, text.as_bytes(), true) {
+        log::warn!("Could not write {}: {err}", path.display());
     }
+    // Also when writing failed: this run goes on with what was meant.
+    CACHE.set(Some((path, config.clone())));
 }
 
 /// The object at `path`, created along the way.
@@ -455,9 +503,9 @@ mod tests {
             std::thread::current().id()
         ));
         std::fs::write(&path, PYTHON_CONFIG).unwrap();
-        TEST_FILE.set(Some(path.clone()));
+        use_test_file(Some(path.clone()));
         test();
-        TEST_FILE.set(None);
+        use_test_file(None);
         let _ = std::fs::remove_file(path);
     }
 
@@ -650,6 +698,30 @@ mod tests {
             assert_eq!(accounts().len(), 1);
             // Old tokens of the Python version are not touched.
             assert_eq!(legacy_token("abc").as_deref(), Some("secret-token"));
+        });
+    }
+
+    #[test]
+    fn a_file_that_cannot_be_read_is_kept_aside() {
+        with_config(|| {
+            let path = config_file();
+            let mut aside = path.clone().into_os_string();
+            aside.push(".unreadable");
+            let aside = std::path::PathBuf::from(aside);
+            // Half a file, as a crash while writing used to leave it.
+            std::fs::write(&path, &PYTHON_CONFIG[..40]).unwrap();
+            use_test_file(Some(path.clone()));
+
+            assert!(accounts().is_empty());
+            assert_eq!(std::fs::read_to_string(&aside).unwrap(), &PYTHON_CONFIG[..40]);
+            // What is stored from here on is a whole file again.
+            set_section_sort("me", "uuid-1", "titleSort", "asc");
+            use_test_file(Some(path.clone()));
+            assert_eq!(
+                section_sort("me", "uuid-1"),
+                Some(("titleSort".to_owned(), "asc".to_owned()))
+            );
+            let _ = std::fs::remove_file(aside);
         });
     }
 

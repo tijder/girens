@@ -55,6 +55,8 @@ pub struct Session {
 }
 
 const PLEX_TV: &str = "https://plex.tv";
+/// The longest any request to an Ister server is given by itself.
+const ISTER_READ_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(300);
 
 thread_local! {
     static CURRENT: RefCell<Option<Rc<Session>>> = const { RefCell::new(None) };
@@ -86,7 +88,7 @@ impl Session {
         if identifier.is_empty() {
             identifier = glib::uuid_string_random().to_string();
             if let Err(err) = settings.set_string("client-identifier", &identifier) {
-                eprintln!("Could not save the client identifier: {err}");
+                log::warn!("Could not save the client identifier: {err}");
             }
         }
         let session = Rc::new(Self {
@@ -188,7 +190,7 @@ impl Session {
             return;
         }
         if let Err(err) = self.settings.set_string(key, value) {
-            eprintln!("Could not save {key}: {err}");
+            log::warn!("Could not save {key}: {err}");
         }
     }
 
@@ -196,7 +198,7 @@ impl Session {
         match secrets::lookup(key).await {
             Ok(Some(token)) => return Some(token),
             Ok(None) => {}
-            Err(err) => eprintln!("Could not read from the keyring: {err}"),
+            Err(err) => log::warn!("Could not read from the keyring: {err}"),
         }
         // The Python version wrote tokens to its config file when no Secret
         // Service was available. Such a token moves to the keyring as soon
@@ -205,7 +207,7 @@ impl Session {
         let attributes = vec![("uuid", key.to_owned())];
         match secrets::store("Girens token", attributes, token.clone()).await {
             Ok(()) => store::remove_legacy_token(key),
-            Err(err) => eprintln!("Could not move a token into the keyring: {err}"),
+            Err(err) => log::warn!("Could not move a token into the keyring: {err}"),
         }
         Some(token)
     }
@@ -224,7 +226,7 @@ impl Session {
         if !known {
             attributes.push(("uuid", key.clone()));
             if let Err(err) = secrets::store(label, attributes, token).await {
-                eprintln!("Could not store a token in the keyring: {err}");
+                log::warn!("Could not store a token in the keyring: {err}");
                 return;
             }
         }
@@ -255,14 +257,14 @@ impl Session {
                     )
                     .await;
                     if let Err(err) = secrets::clear(machine).await {
-                        eprintln!("Could not remove a token from the keyring: {err}");
+                        log::warn!("Could not remove a token from the keyring: {err}");
                     }
                 }
                 Ok(None) => {}
                 // Without keyring nothing can be moved now; try again next
                 // time.
                 Err(err) => {
-                    eprintln!("Could not read from the keyring: {err}");
+                    log::warn!("Could not read from the keyring: {err}");
                     return;
                 }
             }
@@ -299,23 +301,32 @@ impl Session {
         self.state.borrow().profile.is_some()
     }
 
-    /// Signs in to the account in use without continuing as anyone, so that
-    /// a profile can be chosen with [`Self::switch_profile`]. `Ok(false)`
-    /// means there is no plex.tv account to restore.
-    pub async fn restore_account_to_choose(&self) -> Result<bool> {
+    /// Signs in at plex.tv with the token kept for the account in use.
+    /// `None` when that is not a plex.tv account, or has no token.
+    async fn sign_in_stored(&self) -> Result<Option<(store::Account, MyPlex)>> {
         let Some(stored) = self
             .stored_account()
             .filter(|stored| stored.kind == AccountKind::Plex)
         else {
-            return Ok(false);
+            return Ok(None);
         };
         let Some(token) = self.token(&stored.id).await else {
-            return Ok(false);
+            return Ok(None);
         };
         let (client, plex_tv) = (self.client.clone(), self.plex_tv.clone());
         let account =
             runtime::run(async move { MyPlex::with_token_at(&plex_tv, &token, &client).await })
                 .await?;
+        Ok(Some((stored, account)))
+    }
+
+    /// Signs in to the account in use without continuing as anyone, so that
+    /// a profile can be chosen with [`Self::switch_profile`]. `Ok(false)`
+    /// means there is no plex.tv account to restore.
+    pub async fn restore_account_to_choose(&self) -> Result<bool> {
+        let Some((stored, account)) = self.sign_in_stored().await? else {
+            return Ok(false);
+        };
         // Someone else may have become active while plex.tv was asked;
         // this account must not end up as theirs.
         if self.account_id().as_deref() != Some(&stored.id) {
@@ -333,21 +344,10 @@ impl Session {
     /// and the profile that was active. `Ok(false)` means there is no
     /// plex.tv account to restore.
     pub async fn restore_account(&self) -> Result<bool> {
-        let Some(stored) = self
-            .stored_account()
-            .filter(|stored| stored.kind == AccountKind::Plex)
-        else {
-            return Ok(false);
-        };
-        let Some(token) = self.token(&stored.id).await else {
+        let Some((stored, account)) = self.sign_in_stored().await? else {
             return Ok(false);
         };
         let (client, plex_tv) = (self.client.clone(), self.plex_tv.clone());
-        let account = runtime::run({
-            let (client, plex_tv) = (client.clone(), plex_tv.clone());
-            async move { MyPlex::with_token_at(&plex_tv, &token, &client).await }
-        })
-        .await?;
 
         let other_profile = stored.profile.clone().filter(|uuid| *uuid != stored.id);
         let profile = match other_profile {
@@ -366,7 +366,7 @@ impl Session {
                     Ok(profile) => profile,
                     Err(err) if err.is_network() => return Err(err),
                     Err(err) => {
-                        eprintln!("Could not continue as the profile used last: {err}");
+                        log::warn!("Could not continue as the profile used last: {err}");
                         // Its own profile is what the account falls back
                         // to, unless that takes a PIN nobody has given.
                         let own_is_protected = stored
@@ -482,7 +482,16 @@ impl Session {
 
     fn http() -> reqwest::Client {
         static CLIENT: std::sync::OnceLock<reqwest::Client> = std::sync::OnceLock::new();
-        CLIENT.get_or_init(reqwest::Client::new).clone()
+        CLIENT
+            .get_or_init(|| {
+                girens_model::net::client_builder()
+                    // An Ister server makes parts of a stream when they are
+                    // asked for, and may be silent for as long as that takes.
+                    .read_timeout(ISTER_READ_TIMEOUT)
+                    .build()
+                    .unwrap_or_default()
+            })
+            .clone()
     }
 
     /// The name of the Ister server at `address`, to tell the user what was
@@ -678,7 +687,7 @@ impl Session {
         })
         .await;
         if let Err(err) = ended {
-            eprintln!("Could not sign out at the provider: {err}");
+            log::warn!("Could not sign out at the provider: {err}");
         }
     }
 
@@ -806,7 +815,7 @@ impl Session {
                 profiles
             }
             Err(err) => {
-                eprintln!("Could not list the profiles of the Plex Home: {err}");
+                log::warn!("Could not list the profiles of the Plex Home: {err}");
                 stored.profiles
             }
         }
@@ -867,7 +876,7 @@ impl Session {
         keys.dedup();
         for key in keys {
             if let Err(err) = secrets::clear(&key).await {
-                eprintln!("Could not remove a token from the keyring: {err}");
+                log::warn!("Could not remove a token from the keyring: {err}");
             }
         }
         let gone = store::remove_account(id);

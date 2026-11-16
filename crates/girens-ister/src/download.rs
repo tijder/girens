@@ -32,6 +32,25 @@ fn file_name(address: &str) -> &str {
     path.rsplit('/').next().unwrap_or(path)
 }
 
+/// The name to keep a file of a stream under, inside the folder of the
+/// copy. The server chooses the addresses: one that names no file, or the
+/// folder itself or the one above it, is refused.
+fn local_name(address: &str) -> Result<String> {
+    let name = file_name(address);
+    let plain = !name.is_empty()
+        && name != "."
+        && name != ".."
+        && !name.contains(['\\', '\0'])
+        && name != MASTER;
+    if plain {
+        Ok(name.to_owned())
+    } else {
+        Err(Error::Server(format!(
+            "the stream names a file that cannot be kept: {name:?}"
+        )))
+    }
+}
+
 /// The value of `name="…"` in a line of a playlist.
 fn attribute<'a>(line: &'a str, name: &str) -> Option<&'a str> {
     let start = line.find(&format!("{name}=\""))? + name.len() + 2;
@@ -58,7 +77,7 @@ fn localise_master(text: &str, base: &Url) -> Result<(String, Vec<(String, Url)>
             // Only the chosen variant, with the line that names its list.
             if index == variant {
                 if let Some(address) = lines.get(index + 1) {
-                    let name = file_name(address).to_owned();
+                    let name = local_name(address)?;
                     local.push_str(line);
                     local.push('\n');
                     local.push_str(&name);
@@ -73,7 +92,7 @@ fn localise_master(text: &str, base: &Url) -> Result<(String, Vec<(String, Url)>
             let wanted = line.contains("TYPE=AUDIO")
                 && (audio_group.is_none() || attribute(line, "GROUP-ID") == audio_group);
             if let (true, Some(address)) = (wanted, attribute(line, "URI")) {
-                let name = file_name(address).to_owned();
+                let name = local_name(address)?;
                 local.push_str(&line.replace(address, &name));
                 local.push('\n');
                 lists.push((name, base.join(address)?));
@@ -96,7 +115,7 @@ fn localise_list(text: &str, base: &Url) -> Result<(String, Vec<(String, Url)>)>
         if line.is_empty() || line.starts_with('#') {
             local.push_str(line);
         } else {
-            let name = file_name(line).to_owned();
+            let name = local_name(line)?;
             local.push_str(&name);
             parts.push((name, base.join(line)?));
         }
@@ -176,18 +195,24 @@ impl IsterServer {
             let (false, Some(key)) = (stream.pictures, stream.key.as_deref()) else {
                 continue;
             };
-            let language = stream.language_code.as_deref().unwrap_or("und");
-            let path = dir.join(format!("sub_{language}_{}.srt", stream.id));
+            // Both come from the server and end up in a file name.
+            let plain = |text: &str| -> String {
+                text.chars()
+                    .map(|c| if c.is_ascii_alphanumeric() || c == '-' { c } else { '-' })
+                    .collect()
+            };
+            let language = plain(stream.language_code.as_deref().unwrap_or("und"));
+            let path = dir.join(format!("sub_{language}_{}.srt", plain(stream.id.as_str())));
             match Url::parse(&self.download_url(key)) {
                 Ok(address) => match self.fetch(&address).await {
                     Ok(bytes) => {
                         if let Err(err) = tokio::fs::write(&path, bytes).await {
-                            eprintln!("Could not keep subtitles: {err}");
+                            log::warn!("Could not keep subtitles: {err}");
                         }
                     }
-                    Err(err) => eprintln!("Could not fetch subtitles: {err}"),
+                    Err(err) => log::warn!("Could not fetch subtitles: {err}"),
                 },
-                Err(err) => eprintln!("Could not fetch subtitles: {err}"),
+                Err(err) => log::warn!("Could not fetch subtitles: {err}"),
             }
         }
 
@@ -223,6 +248,18 @@ mod tests {
         assert!(!local.contains("token") && !local.contains("480p") && !local.contains("copy"));
         assert!(local.contains("URI=\"stream_audio_1_192k.m3u8\""));
         assert!(local.contains("\nstream_video_720p.m3u8\n"));
+    }
+
+    #[test]
+    fn a_stream_cannot_name_files_outside_its_folder() {
+        let base = Url::parse("http://node/hls/file/list.m3u8").unwrap();
+        for line in ["..", "parts/..?token=t", "parts/", "master.m3u8"] {
+            let text = format!("#EXTM3U\n#EXTINF:5,\n{line}\n");
+            assert!(localise_list(&text, &base).is_err(), "{line}");
+        }
+        // Folders in the address do not come along.
+        let (local, parts) = localise_list("../../etc/seg_1.ts\n", &base).unwrap();
+        assert_eq!((local.as_str(), parts[0].0.as_str()), ("seg_1.ts\n", "seg_1.ts"));
     }
 
     #[test]
