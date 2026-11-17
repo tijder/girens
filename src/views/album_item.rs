@@ -25,6 +25,8 @@ mod imp {
         pub _playing_image: TemplateChild<gtk::Image>,
         #[template_child]
         pub _music_clip_button: TemplateChild<gtk::Button>,
+        /// Rating key of the track the row shows.
+        pub track: std::cell::Cell<Option<girens_model::ItemId>>,
     }
 
     #[glib::object_subclass]
@@ -69,13 +71,8 @@ impl AlbumItem {
             imp._index_label.remove_css_class("unplayed");
         }
         imp._title_label.set_text(&track.title);
-        if crate::player::now_playing() == Some(track.rating_key) {
-            imp._title_label.add_css_class("now-playing");
-            imp._index_stack.set_visible_child(&*imp._playing_image);
-        } else {
-            imp._title_label.remove_css_class("now-playing");
-            imp._index_stack.set_visible_child(&*imp._index_label);
-        }
+        imp.track.set(Some(track.rating_key));
+        self.mark_playing();
         imp._index_label.set_text(
             &track
                 .index
@@ -99,6 +96,19 @@ impl AlbumItem {
                     .set_action_name(Some("win.play-item"));
             }
             None => imp._music_clip_button.set_action_name(None),
+        }
+    }
+
+    /// Marks the row when its track is the one that is playing.
+    pub fn mark_playing(&self) {
+        let imp = self.imp();
+        let track = imp.track.get();
+        if track.is_some() && crate::player::now_playing() == track {
+            imp._title_label.add_css_class("now-playing");
+            imp._index_stack.set_visible_child(&*imp._playing_image);
+        } else {
+            imp._title_label.remove_css_class("now-playing");
+            imp._index_stack.set_visible_child(&*imp._index_label);
         }
     }
 }

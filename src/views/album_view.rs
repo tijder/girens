@@ -130,13 +130,20 @@ fn playlist_rows(playlist: ItemId, items: &[Item], offset: u32) -> Vec<MusicRow>
 /// Makes `list` show [`MusicRow`]s and returns its store.
 pub fn setup_music_list(list: &gtk::ListView) -> gio::ListStore {
     let store = music_store(list);
-    // Rebinds the visible rows so that the mark of the playing track moves.
+    // Moves the mark of the playing track. The rows in view are told so
+    // themselves: the list does not bind a row again for an item it already
+    // shows, so announcing a change of the store would leave them as they are.
     crate::player::connect_now_playing(glib::clone!(
         #[weak]
-        store,
+        list,
         move || {
-            let count = store.n_items();
-            store.items_changed(0, count, count);
+            let mut cell = list.first_child();
+            while let Some(widget) = cell {
+                if let Some(item) = widget.first_child().and_downcast::<AlbumItem>() {
+                    item.mark_playing();
+                }
+                cell = widget.next_sibling();
+            }
         }
     ));
     store
