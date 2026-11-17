@@ -505,10 +505,17 @@ impl Session {
     }
 
     /// Finds the Ister server at `address` and prepares signing in to it in
-    /// the browser. When someone is signed in already, the provider is told
-    /// to ask who it is this time, so that another user can be added.
+    /// the browser. When someone is signed in to that server already, the
+    /// provider is told to ask who it is this time, so that another user can
+    /// be added. An account elsewhere (plex.tv, another Ister server) is no
+    /// reason to: the browser may then simply still be signed in.
     pub async fn start_ister_login(&self, address: String) -> Result<IsterLogin> {
-        let ask_again = self.account_id().is_some();
+        let signed_in_at: Vec<String> = self
+            .accounts()
+            .into_iter()
+            .filter(|account| account.kind == AccountKind::Ister)
+            .filter_map(|account| account.server.map(|server| server.uuid))
+            .collect();
         let pages = girens_ister::auth::Pages {
             signed_in: gettext("You are signed in. You can close this page and return to Girens."),
             failed: gettext("Signing in did not work. Return to Girens to try again."),
@@ -517,6 +524,8 @@ impl Session {
             let http = Self::http();
             let well_known = girens_ister::auth::discover(&http, &address).await?;
             let provider = Provider::fetch(&http, &well_known.openid_url).await?;
+            let ask_again =
+                signed_in_at.contains(&girens_ister::machine_identifier(&well_known.api_url));
             let login = girens_ister::auth::Login::start(provider.clone(), ask_again, pages).await?;
             Ok(IsterLogin {
                 url: login.url.clone(),
@@ -1370,9 +1379,20 @@ mod tests {
             let settings = settings();
             let session = Session::new(&settings, "http://127.0.0.1:1");
 
+            // An account elsewhere is no reason for the provider to ask again.
+            store::save_account(&store::Account {
+                id: "ister:another.example_api:someone".into(),
+                kind: AccountKind::Ister,
+                server: Some(StoredServer {
+                    uuid: "another.example_api".into(),
+                    url: "another.example".into(),
+                }),
+                ..Default::default()
+            });
+            session.use_account("ister:another.example_api:someone");
             let pending = session.start_ister_login(server.uri()).await.unwrap();
-            // Nobody is signed in yet, so the provider need not ask again.
             assert!(!pending.url.contains("prompt="));
+            store::remove_account("ister:another.example_api:someone");
             let page = pending.url.clone();
             let (signed_in, ()) = tokio::join!(
                 session.finish_ister_login(pending),
@@ -1404,7 +1424,7 @@ mod tests {
             assert_eq!(secret(&id).as_deref(), Some("refresh-2"));
 
             // A session that ran out asks to sign in again, and a second
-            // sign-in has the provider ask who it is.
+            // sign-in to the same server has the provider ask who it is.
             secrets::TEST_KEYRING
                 .with_borrow_mut(|keyring| keyring.insert(id.clone(), "long gone".into()));
             let expired = Session::new(&settings, "http://127.0.0.1:1");
