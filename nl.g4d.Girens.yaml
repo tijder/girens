@@ -32,24 +32,29 @@ modules:
     cleanup:
       - /include
       - /lib/pkgconfig
-      - /share/ffmpeg/examples
+      - /share/ffmpeg
     config-opts:
       - --enable-shared
       - --disable-static
-      - --enable-gnutls
       - --disable-doc
-      - --disable-ffplay
-      - --enable-version3
-      - --enable-demuxer=dash
-      - --enable-libxml2
       - --disable-programs
+      - --disable-avdevice
       - --disable-encoders
       - --disable-muxers
+      - --enable-gnutls
+      # The DASH streams of the Plex transcoder.
+      - --enable-libxml2
+      - --enable-demuxer=dash
+      # FFmpeg's own AV1 decoder only works with a GPU that decodes AV1.
+      - --enable-libdav1d
     sources:
       - type: git
         url: https://github.com/FFmpeg/FFmpeg
-        tag: n9.0.1
-        commit: bf1b838f2ab88b4f8fd83443325c782ea0e0f7fa
+        tag: n9.0.2
+        commit: 946fcce07b6dcd0331c8cc609192aeff5e1924f8
+        x-checker-data:
+          type: git
+          tag-pattern: ^n([\d.]+)$
   - name: libmpv
     cleanup:
       - /include
@@ -58,18 +63,25 @@ modules:
     config-opts:
       - -Dbuild-date=false
       - -Dlibmpv=true
+      - -Dcplayer=false
       - -Dmanpage-build=disabled
       - -Dcdda=disabled
       - -Ddvbin=disabled
       - -Ddvdnav=disabled
-      - -Dlibarchive=enabled
+      - -Dlibarchive=disabled
       - -Dshaderc=disabled
       - -Dvulkan=disabled
+      # What Girens cannot do without: fail here rather than at run time.
+      - -Dgl=enabled
+      - -Degl=enabled
+      - -Dvaapi=enabled
+      - -Dpulse=enabled
+      - -Dpipewire=enabled
     sources:
       - type: git
         url: https://github.com/mpv-player/mpv
-        tag: v0.41.0
-        commit: 41f6a645068483470267271e1d09966ca3b9f413
+        tag: v0.42.0
+        commit: b0841e8c4d156b8403dc1876c4cbd9011eb583f3
         x-checker-data:
           type: git
     modules:
@@ -89,59 +101,25 @@ modules:
               project-id: 1560
               stable-only: true
               url-template: https://github.com/libass/libass/releases/download/$version/libass-$version.tar.xz
-        modules:
-          - name: fribidi
-            cleanup:
-              - /bin
-              - /include
-              - /lib/pkgconfig
-              - /lib/*.la
-              - /share/man
-            sources:
-              - type: archive
-                url: https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz
-                sha256: 1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c
-                x-checker-data:
-                  type: anitya
-                  project-id: 857
-                  stable-only: true
-                  url-template: https://github.com/fribidi/fribidi/releases/download/v$version/fribidi-$version.tar.xz
-          - name: libplacebo
-            buildsystem: meson
-            config-opts:
-              - -Dvulkan=enabled
-              - -Dshaderc=disabled
-            cleanup:
-              - /lib/pkgconfig
-              - /include
-            sources:
-              - type: git
-                url: https://code.videolan.org/videolan/libplacebo.git
-                tag: v7.360.1
-                commit: cee9b076f2c63104ccfd497fa79c39a867293ec4
-                x-checker-data:
-                  type: git
-            modules:
-              - name: glslang
-                buildsystem: cmake-ninja
-                builddir: true
-                config-opts:
-                  - -DBUILD_SHARED_LIBS=ON
-                  - -DENABLE_OPT=OFF
-                cleanup:
-                  - /bin
-                  - /lib/cmake
-                  - /include
-                sources:
-                  - type: archive
-                    archive-type: tar
-                    url: https://github.com/KhronosGroup/glslang/archive/refs/tags/16.5.0.tar.gz
-                    sha256: 01af17195fbeb59e39e31e9506de35bb39dfd35807ea0c9a1a99d7d1183ddd45
-                    x-checker-data:
-                      type: anitya
-                      project-id: 205796
-                      stable-only: true
-                      url-template: https://github.com/KhronosGroup/glslang/archive/refs/tags/$version.tar.gz
+      # mpv renders through OpenGL here, so libplacebo needs no Vulkan and
+      # no shader compiler.
+      - name: libplacebo
+        buildsystem: meson
+        config-opts:
+          - -Dvulkan=disabled
+          - -Dglslang=disabled
+          - -Dshaderc=disabled
+          - -Ddemos=false
+        cleanup:
+          - /lib/pkgconfig
+          - /include
+        sources:
+          - type: git
+            url: https://code.videolan.org/videolan/libplacebo.git
+            tag: v7.387.0
+            commit: 275f7dea27924cdd34ab2e6c20e448b6bc4fab65
+            x-checker-data:
+              type: git
   - name: girens
     buildsystem: meson
     config-opts:
