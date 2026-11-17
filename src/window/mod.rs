@@ -757,7 +757,9 @@ impl PlexWindow {
             (Some("position"), _) => eprintln!(
                 "player: {} ms into {:?}",
                 player.position(),
-                player.loaded_item().map(|item| item.title)
+                player
+                    .loaded_item()
+                    .map(|item| format!("{} ({})", item.title, item.rating_key))
             ),
             _ => eprintln!("GIRENS_DEBUG_PLAYER: cannot do {command:?}"),
         }
@@ -1101,8 +1103,8 @@ impl PlexWindow {
 
     fn apply_width(&self, width: i32) {
         let imp = self.imp();
-        // Two tiles next to each other in a narrow window.
-        let cover_width = |margin: i32| if width < 450 { width / 2 - margin } else { 200 };
+        // At least two tiles next to each other, also in a narrow window.
+        let cover_width = |margin: i32| (width / 2 - margin).min(views::COVER_WIDTH);
         imp._discover_view.set_cover_width(cover_width(20));
         imp._section_view.set_cover_width(cover_width(30));
         imp._search_view.set_cover_width(cover_width(30));

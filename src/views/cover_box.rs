@@ -29,6 +29,8 @@ mod imp {
         #[template_child]
         pub _cover_image: TemplateChild<gtk::Picture>,
         #[template_child]
+        pub _cover_frame: TemplateChild<gtk::Box>,
+        #[template_child]
         pub _placeholder_image: TemplateChild<gtk::Image>,
         #[template_child]
         pub popover_menu: TemplateChild<gtk::PopoverMenu>,
@@ -42,6 +44,11 @@ mod imp {
         pub _right_click: TemplateChild<gtk::GestureClick>,
         /// Inside a show page episodes show their own still and no link back.
         pub in_show_view: Cell<bool>,
+        /// The shape of the picture of the item on show.
+        pub shape: Cell<Shape>,
+        /// Told whether the picture of a video turned out to be wider than
+        /// tall, once it is loaded; see [`CoverBox::connect_picture_loaded`].
+        pub on_picture_loaded: RefCell<Option<Box<dyn Fn(bool)>>>,
         pub image_task: RefCell<Option<glib::JoinHandle<()>>>,
         /// The item on show, kept for the context menu.
         pub item: RefCell<Option<Item>>,
@@ -136,11 +143,35 @@ impl Default for CoverBox {
     }
 }
 
+/// The shape of the picture on a tile.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum Shape {
+    /// Taller than wide, like the poster of a film.
+    #[default]
+    Poster,
+    /// Like the cover of an album.
+    Square,
+    /// A frame of a video. The tile is wider than the others, or little of
+    /// the frame would be left.
+    Wide,
+}
+
+impl Shape {
+    /// Width and height of the picture on a tile of the usual `width`.
+    pub fn size(self, width: i32) -> (i32, i32) {
+        match self {
+            Shape::Poster => (width, width * 3 / 2),
+            Shape::Square => (width, width),
+            Shape::Wide => (width * 8 / 5, width * 9 / 10),
+        }
+    }
+}
+
 /// What a tile shows for an item of each kind.
 struct Presentation {
     title: String,
     subtitle: Option<String>,
-    image_height: i32,
+    shape: Shape,
     /// `win.` action and its rating key.
     action: Option<(&'static str, ItemId)>,
     /// Cache key and server path of the image.
@@ -152,19 +183,24 @@ fn present(item: &Item, in_show_view: bool) -> Presentation {
     let parent = || item.parent_title.clone().unwrap_or_default();
     let own_image = || item.thumb.clone().map(|thumb| (item.rating_key, thumb));
 
-    let (title, subtitle, image_height) = match item.kind {
+    let (title, subtitle, shape) = match item.kind {
+        // Among the episodes of its own season an episode is told by its
+        // own name and picture; elsewhere by those of its show.
+        ItemKind::Episode if in_show_view => (item.title.clone(), item.season_episode(), Shape::Wide),
         ItemKind::Episode => (
             item.grandparent_title.clone().unwrap_or_default(),
             Some(match item.season_episode() {
                 Some(number) => format!("{number} - {}", item.title),
                 None => item.title.clone(),
             }),
-            if in_show_view { 110 } else { 300 },
+            Shape::Poster,
         ),
-        ItemKind::Season => (parent(), Some(item.title.clone()), 300),
-        ItemKind::Album => (parent(), Some(item.title.clone()), 200),
-        ItemKind::Artist | ItemKind::Playlist | ItemKind::Photo => (item.title.clone(), None, 200),
-        _ => (item.title.clone(), year(), 300),
+        ItemKind::Season => (parent(), Some(crate::util::season_name(item)), Shape::Poster),
+        ItemKind::Album => (parent(), Some(item.title.clone()), Shape::Square),
+        ItemKind::Artist | ItemKind::Playlist | ItemKind::Photo => {
+            (item.title.clone(), None, Shape::Square)
+        }
+        _ => (item.title.clone(), year(), Shape::Poster),
     };
 
     let action = match item.kind {
@@ -202,7 +238,7 @@ fn present(item: &Item, in_show_view: bool) -> Presentation {
     Presentation {
         title,
         subtitle,
-        image_height,
+        shape,
         action,
         image,
     }
@@ -298,12 +334,37 @@ fn menu(item: &Item, in_show_view: bool) -> gio::Menu {
 impl CoverBox {
     pub fn new(in_show_view: bool) -> Self {
         let cover = Self::default();
-        cover.imp().in_show_view.set(in_show_view);
+        cover.set_in_show_view(in_show_view);
         cover
     }
 
-    /// Shows `item`. A tile can be reused for another item at any time.
-    pub fn set_item(&self, item: &Item, width: i32) {
+    /// Whether the tile is among the episodes of one season, which changes
+    /// how the next episode it is given is shown.
+    pub fn set_in_show_view(&self, in_show_view: bool) {
+        self.imp().in_show_view.set(in_show_view);
+    }
+
+    /// Has `callback` told, whenever the picture of a film or clip is
+    /// loaded, whether it is wider than tall: a frame instead of a poster.
+    pub fn connect_picture_loaded(&self, callback: impl Fn(bool) + 'static) {
+        self.imp().on_picture_loaded.replace(Some(Box::new(callback)));
+    }
+
+    /// Gives the picture the size for tiles of `width`. With `wide`, what
+    /// would be a poster is a frame of a video.
+    pub fn resize(&self, width: i32, wide: bool) {
+        let imp = self.imp();
+        let shape = match imp.shape.get() {
+            Shape::Poster if wide => Shape::Wide,
+            shape => shape,
+        };
+        let (width, height) = shape.size(width);
+        imp._cover_frame.set_size_request(width, height);
+    }
+
+    /// Shows `item`. A tile can be reused for another item at any time. See
+    /// [`Self::resize`] for `width` and `wide`.
+    pub fn set_item(&self, item: &Item, width: i32, wide: bool) {
         let imp = self.imp();
         self.unbind();
         self.set_sensitive(true);
@@ -312,11 +373,20 @@ impl CoverBox {
 
         imp._title_label.set_text(&presentation.title);
         imp._title_label.set_tooltip_text(Some(&presentation.title));
+        // A film without a year keeps the line of it, so that the tiles of
+        // a grid of films are equally tall.
+        let keeps_line = matches!(item.kind, ItemKind::Movie | ItemKind::Clip);
         imp._subtitle_label
-            .set_visible(presentation.subtitle.is_some());
-        if let Some(subtitle) = &presentation.subtitle {
-            imp._subtitle_label.set_text(subtitle);
-            imp._subtitle_label.set_tooltip_text(Some(subtitle));
+            .set_visible(presentation.subtitle.is_some() || keeps_line);
+        match &presentation.subtitle {
+            Some(subtitle) => {
+                imp._subtitle_label.set_text(subtitle);
+                imp._subtitle_label.set_tooltip_text(Some(subtitle));
+            }
+            None => {
+                imp._subtitle_label.set_text("\u{a0}");
+                imp._subtitle_label.set_tooltip_text(None);
+            }
         }
 
         let playable = matches!(item.kind, ItemKind::Movie | ItemKind::Episode);
@@ -348,8 +418,10 @@ impl CoverBox {
         // The menu is built when it is opened, see `show_menu`.
         imp.item.replace(Some(item.clone()));
 
-        imp._cover_image
-            .set_size_request(width, presentation.image_height);
+        // Only films and clips come with a frame for a poster.
+        let video = matches!(item.kind, ItemKind::Movie | ItemKind::Clip);
+        imp.shape.set(presentation.shape);
+        self.resize(width, wide && video);
         imp._downloaded_image
             .set_visible(crate::sync::Sync::current().is_downloaded(item.rating_key));
 
@@ -382,17 +454,23 @@ impl CoverBox {
                     (None, None) => None,
                 };
                 if let Some(texture) = texture {
-                    cover.imp()._cover_image.set_paintable(Some(&texture));
-                    cover.imp()._placeholder_image.set_visible(false);
+                    let imp = cover.imp();
+                    imp._cover_image.set_paintable(Some(&texture));
+                    imp._placeholder_image.set_visible(false);
+                    if video {
+                        if let Some(callback) = imp.on_picture_loaded.borrow().as_ref() {
+                            callback(texture.width() > texture.height() * 5 / 4);
+                        }
+                    }
                 }
             }
         ));
         imp.image_task.replace(Some(task));
     }
 
-    /// Shows an empty tile of the size of a real one, for a list that is
-    /// still loading.
-    pub fn set_placeholder(&self, width: i32, image_height: i32) {
+    /// Shows an empty tile of the size of a real one with a picture of
+    /// `shape`, for a list that is still loading.
+    pub fn set_placeholder(&self, width: i32, shape: Shape) {
         let imp = self.imp();
         self.unbind();
         self.set_sensitive(false);
@@ -410,7 +488,8 @@ impl CoverBox {
         imp._downloaded_image.set_visible(false);
         imp._cover_image.set_paintable(gdk::Paintable::NONE);
         imp._placeholder_image.set_visible(false);
-        imp._cover_image.set_size_request(width, image_height);
+        imp.shape.set(shape);
+        self.resize(width, false);
     }
 
     /// Stops loading the image of the current item.
@@ -481,7 +560,7 @@ mod tests {
         // On the page of the show itself, its own still, and smaller.
         let in_show = present(&episode, true);
         assert_eq!(in_show.image, Some(("1".into(), "/own".into())));
-        assert!(in_show.image_height < tile.image_height);
+        assert!(in_show.shape.size(200).1 < tile.shape.size(200).1);
         // Without a poster of the show, its own picture after all.
         let alone = Item {
             grandparent_thumb: None,

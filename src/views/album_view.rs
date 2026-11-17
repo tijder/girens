@@ -64,7 +64,7 @@ fn item_count(count: u32) -> String {
 }
 
 /// A playing time in words: `52 min`, `1 h 4 min`.
-fn playing_time(milliseconds: u64) -> String {
+pub fn playing_time(milliseconds: u64) -> String {
     let minutes = (milliseconds / 60_000).max(1);
     if minutes < 60 {
         gettext_f("{} min", &[&minutes.to_string()])

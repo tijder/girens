@@ -28,19 +28,12 @@ mod imp {
     impl ObjectImpl for DownloadsView {
         fn constructed(&self) {
             self.parent_constructed();
-            let title = gtk::Label::builder()
-                .label(gettext("Downloads"))
-                .halign(gtk::Align::Start)
-                .margin_top(10)
-                .margin_bottom(15)
-                .margin_start(10)
-                .build();
-            title.add_css_class("title-1");
+            // The header bar names the page.
             self.list.set_grid_mode();
+            self.list.set_margin_top(8);
 
             let content = gtk::Box::new(gtk::Orientation::Vertical, 0);
             content.set_vexpand(true);
-            content.append(&title);
             content.append(&self.list);
             self.obj().set_child(Some(&content));
         }

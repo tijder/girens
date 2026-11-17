@@ -25,11 +25,18 @@ template $cover_box : Button {
     Overlay {
       halign: center;
 
+      // Gives the tile its size. The picture lies over it, so that a
+      // picture that is larger than the tile does not stretch it.
+      Box _cover_frame {
+        vexpand: true;
+      }
+
+      [overlay]
       Picture _cover_image {
         styles [
           "cover_image",
         ]
-        vexpand: true;
+        can-target: false;
         content-fit: cover;
       }
 
@@ -54,10 +61,9 @@ template $cover_box : Button {
 
         halign: end;
         valign: start;
-        margin-top: 6;
-        margin-end: 6;
-        width-request: 12;
-        height-request: 12;
+        margin-top: 8;
+        margin-end: 8;
+        pixel-size: 8;
         tooltip-text: _("Unwatched");
       }
 

@@ -7,16 +7,22 @@ use girens_model::model::Item;
 use gtk::prelude::*;
 use gtk::{gio, glib, CompositeTemplate};
 
+use super::cover_box::Shape;
 use super::CoverBox;
 
-const DEFAULT_COVER_WIDTH: i32 = 200;
+/// The width of a tile, unless the window is too narrow for two of them.
+pub const COVER_WIDTH: i32 = 160;
+
+/// How many pictures of films are looked at to tell whether a grid shows
+/// posters or frames of videos.
+const SAMPLES: u32 = 3;
 
 /// What a tile of the list stands for.
 enum Entry {
     Item(Box<Item>),
     /// An empty tile that keeps the place of an item that is being loaded.
     Placeholder {
-        image_height: i32,
+        shape: Shape,
     },
 }
 
@@ -48,6 +54,13 @@ mod imp {
         pub placeholders: Cell<bool>,
         pub store: gio::ListStore,
         pub cover_width: Cell<i32>,
+        /// Whether the films of a grid are pictured by a frame instead of a
+        /// poster, as in a library of home videos or music clips; their
+        /// tiles are wide then.
+        pub wide: Cell<bool>,
+        /// How many pictures of films were looked at for that, and how many
+        /// of them were wider than tall.
+        pub sampled: Cell<(u32, u32)>,
         pub in_show_view: Cell<bool>,
         pub on_end_reached: RefCell<Option<Box<dyn Fn()>>>,
     }
@@ -63,7 +76,9 @@ mod imp {
                 grid_mode: Cell::new(false),
                 placeholders: Cell::new(false),
                 store: gio::ListStore::new::<glib::BoxedAnyObject>(),
-                cover_width: Cell::new(DEFAULT_COVER_WIDTH),
+                cover_width: Cell::new(COVER_WIDTH),
+                wide: Cell::new(false),
+                sampled: Cell::new((0, 0)),
                 in_show_view: Cell::new(false),
                 on_end_reached: RefCell::default(),
             }
@@ -99,7 +114,13 @@ mod imp {
                         return;
                     };
                     list_item.set_activatable(false);
-                    list_item.set_child(Some(&CoverBox::new(list.imp().in_show_view.get())));
+                    let cover = CoverBox::new(list.imp().in_show_view.get());
+                    cover.connect_picture_loaded(glib::clone!(
+                        #[weak]
+                        list,
+                        move |landscape| list.sample(landscape)
+                    ));
+                    list_item.set_child(Some(&cover));
                 }
             ));
             factory.connect_bind(glib::clone!(
@@ -110,12 +131,11 @@ mod imp {
                         return;
                     };
                     let width = list.imp().cover_width.get();
+                    cover.set_in_show_view(list.imp().in_show_view.get());
                     let entry = entry.borrow::<Entry>();
                     match &*entry {
-                        Entry::Item(item) => cover.set_item(item, width),
-                        Entry::Placeholder { image_height } => {
-                            cover.set_placeholder(width, *image_height)
-                        }
+                        Entry::Item(item) => cover.set_item(item, width, list.imp().wide.get()),
+                        Entry::Placeholder { shape } => cover.set_placeholder(width, *shape),
                     }
                 }
             ));
@@ -200,22 +220,80 @@ impl Default for List {
 }
 
 impl List {
+    /// Takes note of the picture of a film: after a few of them a grid
+    /// knows whether it shows posters or frames.
+    fn sample(&self, landscape: bool) {
+        let imp = self.imp();
+        let (seen, wide) = imp.sampled.get();
+        if !imp.grid_mode.get() || seen >= SAMPLES {
+            return;
+        }
+        let (seen, wide) = (seen + 1, wide + u32::from(landscape));
+        imp.sampled.set((seen, wide));
+        if seen == SAMPLES.min(imp.store.n_items()) && wide * 2 > seen {
+            imp.wide.set(true);
+            self.resize_tiles();
+        }
+    }
+
+    /// Gives the tiles in view the size that is now wanted. They are told
+    /// so themselves: the grid does not bind a tile again for an item it
+    /// already shows.
+    fn resize_tiles(&self) {
+        let imp = self.imp();
+        let (width, wide) = (imp.cover_width.get(), imp.wide.get());
+        let mut cell = imp._grid_view.first_child();
+        while let Some(widget) = cell {
+            if let Some(cover) = widget.first_child().and_downcast_ref::<CoverBox>() {
+                cover.resize(width, wide);
+            }
+            cell = widget.next_sibling();
+        }
+    }
+
+    /// Forgets what was learnt about the pictures of other items.
+    fn start_over(&self) {
+        let imp = self.imp();
+        imp.wide.set(false);
+        imp.sampled.set((0, 0));
+    }
+
     pub fn set_items(&self, items: Vec<Item>) {
         let imp = self.imp();
+        self.start_over();
         imp.placeholders.set(false);
         imp.store.splice(0, imp.store.n_items(), &entries(items));
+    }
+
+    /// Brings the tile of the item with this rating key into view.
+    pub fn scroll_to_item(&self, rating_key: girens_model::ItemId) {
+        let imp = self.imp();
+        let position = (0..imp.store.n_items()).find(|position| {
+            imp.store
+                .item(*position)
+                .and_downcast::<glib::BoxedAnyObject>()
+                .is_some_and(|object| {
+                    matches!(&*object.borrow::<Entry>(),
+                        Entry::Item(shown) if shown.rating_key == rating_key)
+                })
+        });
+        if let Some(position) = position {
+            imp._grid_view
+                .scroll_to(position, gtk::ListScrollFlags::NONE, None);
+        }
     }
 
     pub fn append(&self, items: Vec<Item>) {
         self.imp().store.extend_from_slice(&entries(items));
     }
 
-    /// Shows `count` empty tiles with an image of `image_height`, so that the
+    /// Shows `count` empty tiles with a picture of `shape`, so that the
     /// list already takes its place while its items are loaded.
-    pub fn set_placeholders(&self, count: usize, image_height: i32) {
+    pub fn set_placeholders(&self, count: usize, shape: Shape) {
         let imp = self.imp();
+        self.start_over();
         let objects: Vec<glib::BoxedAnyObject> = (0..count)
-            .map(|_| glib::BoxedAnyObject::new(Entry::Placeholder { image_height }))
+            .map(|_| glib::BoxedAnyObject::new(Entry::Placeholder { shape }))
             .collect();
         imp.placeholders.set(true);
         imp._empty_page.set_visible(false);
@@ -224,6 +302,7 @@ impl List {
     }
 
     pub fn clear(&self) {
+        self.start_over();
         self.imp().placeholders.set(false);
         self.imp().store.remove_all();
     }
@@ -258,9 +337,7 @@ impl List {
     pub fn set_cover_width(&self, width: i32) {
         let imp = self.imp();
         if imp.cover_width.replace(width) != width {
-            // Rebinds the visible tiles so that they take the new size.
-            let count = imp.store.n_items();
-            imp.store.items_changed(0, count, count);
+            self.resize_tiles();
         }
     }
 
@@ -294,7 +371,8 @@ impl List {
         imp._scrolled_window.set_vexpand(true);
     }
 
-    /// Tiles inside a show page present episodes differently.
+    /// Among the episodes of one season, tiles present an episode by its
+    /// own name and picture. Applies to the items set from now on.
     pub fn set_in_show_view(&self, in_show_view: bool) {
         self.imp().in_show_view.set(in_show_view);
     }

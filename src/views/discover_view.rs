@@ -8,6 +8,7 @@ use gtk::prelude::*;
 use gtk::{glib, CompositeTemplate};
 
 use super::List;
+use super::cover_box::Shape;
 use crate::runtime;
 use crate::session::Session;
 
@@ -103,8 +104,8 @@ impl DiscoverView {
         ]
     }
 
-    /// Height of the images in each row, in the order of `rows`.
-    const IMAGE_HEIGHTS: [i32; 4] = [300, 300, 300, 200];
+    /// Shape of the pictures in each row, in the order of `rows`.
+    const SHAPES: [Shape; 4] = [Shape::Poster, Shape::Poster, Shape::Poster, Shape::Square];
 
     /// Fills a row; a row without items is hidden together with its heading.
     fn fill(heading: &gtk::Label, list: &List, items: Vec<Item>) {
@@ -125,10 +126,10 @@ impl DiscoverView {
         // page does not jump when the items arrive.
         let machine = Session::current().machine_identifier();
         if machine.is_none() || *imp.loaded_from.borrow() != machine {
-            for ((heading, list), image_height) in self.rows().iter().zip(Self::IMAGE_HEIGHTS) {
+            for ((heading, list), shape) in self.rows().iter().zip(Self::SHAPES) {
                 heading.set_visible(true);
                 list.set_visible(true);
-                list.set_placeholders(PLACEHOLDERS, image_height);
+                list.set_placeholders(PLACEHOLDERS, shape);
             }
         }
 

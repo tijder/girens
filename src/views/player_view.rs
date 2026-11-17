@@ -374,7 +374,7 @@ impl PlayerView {
     pub fn set_window_width(&self, width: i32) {
         let imp = self.imp();
         imp._deck_shows_box
-            .set_cover_width(if width < 450 { width / 2 - 10 } else { 200 });
+            .set_cover_width((width / 2 - 10).min(super::COVER_WIDTH));
         imp._media_bottom.set_narrow(width < 460);
         imp._card_box.set_orientation(if width < 850 {
             gtk::Orientation::Vertical
@@ -882,6 +882,8 @@ impl PlayerView {
             ItemKind::Episode => item.parent_rating_key,
             _ => None,
         };
+        imp._deck_shows_box.set_in_show_view(season.is_some());
+        let playing = item.rating_key;
         let section = match item.kind {
             ItemKind::Clip | ItemKind::Track => None,
             _ => item.library_section_id,
@@ -908,7 +910,14 @@ impl PlayerView {
                 })
                 .await;
                 match items {
-                    Ok(items) => view.imp()._deck_shows_box.set_items(items),
+                    Ok(items) => {
+                        let list = &view.imp()._deck_shows_box;
+                        list.set_items(items);
+                        // A season starts where the viewer is in it.
+                        if season.is_some() {
+                            list.scroll_to_item(playing);
+                        }
+                    }
                     Err(err) => crate::notify::failure(&crate::messages::load_on_deck(), &err),
                 }
             }

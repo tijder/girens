@@ -8,23 +8,18 @@ template $section_view : Adw.Bin {
     Box {
       orientation: vertical;
 
-      Box {
-        margin-top: 10;
-        margin-bottom: 10;
-        Label _title_label {
-          styles [
-            "title-1"
-          ]
-          halign: start;
-          margin-start: 10;
-          margin-bottom: 5;
-          label: "label";
-          ellipsize: end;
-          hexpand: true;
-        }
+      // The header bar names the page; this label only keeps the name for it.
+      Label _title_label {
+        visible: false;
+      }
 
+      Box {
         Box _section_controll_box {
+          margin-top: 8;
+          margin-bottom: 6;
           margin-end: 10;
+          halign: end;
+          hexpand: true;
 
           Button _play_button {
             tooltip-text: _("Play");

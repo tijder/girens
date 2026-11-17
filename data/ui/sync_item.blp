@@ -1,13 +1,20 @@
 using Gtk 4.0;
 
 template $sync_item : Box {
-  height-request: 50;
+  spacing: 12;
+  margin-top: 8;
+  margin-bottom: 8;
+  margin-start: 8;
+  margin-end: 8;
+
   Overlay {
     Image _cover_image {
       styles [
         "cover_image",
+        "album-cover",
       ]
-      pixel-size: 100;
+      overflow: hidden;
+      pixel-size: 64;
     }
 
     [overlay]
@@ -18,27 +25,28 @@ template $sync_item : Box {
 
       halign: end;
       valign: start;
-      margin-top: 6;
-      margin-end: 6;
-      width-request: 12;
-      height-request: 12;
+      margin-top: 8;
+      margin-end: 8;
+      pixel-size: 8;
       tooltip-text: _("Unwatched");
     }
   }
 
   Label _title_label {
-    margin-start: 5;
-    margin-end: 5;
     label: "label";
+    xalign: 0;
     ellipsize: end;
     hexpand: true;
   }
 
   Button _remove_button {
+    styles [
+      "flat",
+      "circular",
+    ]
+
+    valign: center;
     tooltip-text: _("Remove");
-    width-request: 50;
-    Image {
-      icon-name: "edit-delete-symbolic";
-    }
+    icon-name: "edit-delete-symbolic";
   }
 }

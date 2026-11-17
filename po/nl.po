@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 22:27+0100\n"
+"POT-Creation-Date: 2026-11-17 23:19+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -57,19 +57,19 @@ msgstr "Het artiestenscherm"
 
 #: data/ui/album_header.blp:92 data/ui/artist_view.blp:82
 #: data/ui/media_box_music.blp:128 data/ui/media_box_video_bottom.blp:123
-#: data/ui/section_view.blp:30 data/ui/show_view.blp:102
+#: data/ui/section_view.blp:25 data/ui/show_view.blp:102
 #: src/views/album_view.rs:187
 msgid "Play"
 msgstr "Afspelen"
 
 #: data/ui/album_header.blp:103 data/ui/artist_view.blp:93
-#: data/ui/music_popover_menu.blp:58 data/ui/section_view.blp:37
-#: data/ui/show_view.blp:113 src/views/cover_box.rs:286
+#: data/ui/music_popover_menu.blp:58 data/ui/section_view.blp:32
+#: data/ui/show_view.blp:113 src/views/cover_box.rs:322
 msgid "Shuffle"
 msgstr "Shufflen"
 
 #: data/ui/album_header.blp:113 data/ui/album_item.blp:47
-#: data/ui/cover_box.blp:72
+#: data/ui/cover_box.blp:78
 msgid "More"
 msgstr "Meer"
 
@@ -77,17 +77,17 @@ msgstr "Meer"
 msgid "Play music clip"
 msgstr "Muziekclip afspelen"
 
-#: data/ui/cover_box.blp:61 data/ui/sync_item.blp:25
+#: data/ui/cover_box.blp:67 data/ui/sync_item.blp:31
 #: src/views/section_view.rs:27
 msgid "Unwatched"
 msgstr "Onbekeken"
 
-#: data/ui/cover_box.blp:90
+#: data/ui/cover_box.blp:96
 msgid "Available offline"
 msgstr "Offline beschikbaar"
 
 #: data/ui/discover_view.blp:20 data/ui/player_view.blp:215
-#: src/views/player_view.rs:892
+#: src/views/player_view.rs:894
 msgid "Continue watching"
 msgstr "Verder kijken"
 
@@ -224,13 +224,12 @@ msgstr "Zoeken"
 #: data/ui/main_window.blp:81 data/ui/sync_dialog.blp:32
 #: data/ui/sync_dialog.blp:33 data/ui/sync_settings.blp:46
 #: data/ui/sync_settings.blp:47 src/views/album_view.rs:373
-#: src/views/album_view.rs:402 src/views/cover_box.rs:280
+#: src/views/album_view.rs:402 src/views/cover_box.rs:316
 msgid "Sync"
 msgstr "Synchroniseren"
 
-#: data/ui/main_window.blp:88 src/views/downloads_view.rs:32
-#: src/views/sidebar_box.rs:164 src/views/sidebar_box.rs:197
-#: src/window/navigation.rs:241
+#: data/ui/main_window.blp:88 src/views/sidebar_box.rs:164
+#: src/views/sidebar_box.rs:197 src/window/navigation.rs:241
 msgid "Downloads"
 msgstr "Downloads"
 
@@ -370,7 +369,7 @@ msgstr "Geen resultaten gevonden"
 msgid "Try a different search"
 msgstr "Probeer een andere zoekopdracht"
 
-#: data/ui/section_view.blp:46
+#: data/ui/section_view.blp:41
 msgid "Order"
 msgstr "Sorteren"
 
@@ -508,7 +507,7 @@ msgstr "Muziekclips afspelen in plaats van audiotrack"
 msgid "Sync items"
 msgstr "Items synchroniseren"
 
-#: data/ui/sync_item.blp:38
+#: data/ui/sync_item.blp:49
 msgid "Remove"
 msgstr "Verwijderen"
 
@@ -666,7 +665,7 @@ msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 "Aanmelden is niet gelukt. Ga terug naar Girens om het opnieuw te proberen."
 
-#: src/session.rs:606
+#: src/session.rs:606 src/util.rs:109
 #, rust-format
 msgid "Season {}"
 msgstr "Seizoen {}"
@@ -708,6 +707,10 @@ msgstr "Een item kon niet worden gedownload"
 msgid "Not enough disk space for the download"
 msgstr "Niet genoeg schijfruimte voor de download"
 
+#: src/util.rs:107
+msgid "Specials"
+msgstr "Specials"
+
 #: src/views/album_item.rs:178
 msgid "Play next"
 msgstr "Hierna afspelen"
@@ -720,15 +723,15 @@ msgstr "Aan wachtrij toevoegen"
 msgid "Add to playlist…"
 msgstr "Aan afspeellijst toevoegen…"
 
-#: src/views/album_item.rs:190 src/views/cover_box.rs:229
+#: src/views/album_item.rs:190 src/views/cover_box.rs:265
 msgid "Go to album view"
 msgstr "Album­weergave"
 
-#: src/views/album_item.rs:203 src/views/cover_box.rs:264
+#: src/views/album_item.rs:203 src/views/cover_box.rs:300
 msgid "Mark as Played"
 msgstr "Markeren als afgespeeld"
 
-#: src/views/album_item.rs:205 src/views/cover_box.rs:271
+#: src/views/album_item.rs:205 src/views/cover_box.rs:307
 msgid "Mark as Unplayed"
 msgstr "Markeren als onafgespeeld"
 
@@ -779,8 +782,8 @@ msgstr "Hervatten"
 msgid "Disc {}"
 msgstr "Schĳf {}"
 
-#: src/views/album_view.rs:367 src/views/cover_box.rs:236
-#: src/views/cover_box.rs:243
+#: src/views/album_view.rs:367 src/views/cover_box.rs:272
+#: src/views/cover_box.rs:279
 msgid "Go to artist view"
 msgstr "Artiest­weergave"
 
@@ -788,15 +791,15 @@ msgstr "Artiest­weergave"
 msgid "This playlist is empty"
 msgstr "Deze afspeellijst is leeg"
 
-#: src/views/cover_box.rs:259
+#: src/views/cover_box.rs:295
 msgid "Go to show view"
 msgstr "Serie­weergave"
 
-#: src/views/cover_box.rs:290 src/window/playback.rs:119
+#: src/views/cover_box.rs:326 src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr "Starten vanaf het begin"
 
-#: src/views/downloads_view.rs:76
+#: src/views/downloads_view.rs:69
 msgid "Nothing downloaded yet"
 msgstr "Nog niets gedownload"
 
@@ -867,11 +870,11 @@ msgstr "Over {0} s: {1}"
 msgid "None"
 msgstr "Geen"
 
-#: src/views/player_view.rs:890
+#: src/views/player_view.rs:892
 msgid "More of this season"
 msgstr "Meer uit dit seizoen"
 
-#: src/views/player_view.rs:958
+#: src/views/player_view.rs:967
 #, rust-format
 msgid "Speed {}×"
 msgstr "Snelheid {}×"
@@ -882,7 +885,8 @@ msgstr "Geen afspeellijsten"
 
 #: src/views/playlist_dialog.rs:42
 msgid "There is no playlist for music that can be added to."
-msgstr "Er is geen afspeellijst voor muziek waaraan iets kan worden toegevoegd."
+msgstr ""
+"Er is geen afspeellijst voor muziek waaraan iets kan worden toegevoegd."
 
 #: src/views/playlist_dialog.rs:54
 msgid "Add to Playlist"
@@ -1184,7 +1188,7 @@ msgstr "Er is geen Ister-server gevonden op {}."
 msgid "This item is on a server that is not in use"
 msgstr "Dit item staat op een server die niet in gebruik is"
 
-#: src/window/mod.rs:809
+#: src/window/mod.rs:811
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -1193,11 +1197,11 @@ msgstr ""
 "af te spelen."
 
 #. Translators put their names here.
-#: src/window/mod.rs:814
+#: src/window/mod.rs:816
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:817
+#: src/window/mod.rs:819
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
@@ -1205,7 +1209,7 @@ msgstr "Help mee vertalen"
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:850
+#: src/window/mod.rs:852
 msgid "Waiting for you to sign in in the browser…"
 msgstr "Wachten tot je bent aangemeld in de browser…"
 

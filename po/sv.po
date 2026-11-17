@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 22:27+0100\n"
+"POT-Creation-Date: 2026-11-17 23:19+0100\n"
 "PO-Revision-Date: 2022-10-31 11:06+0000\n"
 "Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/girens/girens/sv/"
@@ -55,19 +55,19 @@ msgstr ""
 
 #: data/ui/album_header.blp:92 data/ui/artist_view.blp:82
 #: data/ui/media_box_music.blp:128 data/ui/media_box_video_bottom.blp:123
-#: data/ui/section_view.blp:30 data/ui/show_view.blp:102
+#: data/ui/section_view.blp:25 data/ui/show_view.blp:102
 #: src/views/album_view.rs:187
 msgid "Play"
 msgstr ""
 
 #: data/ui/album_header.blp:103 data/ui/artist_view.blp:93
-#: data/ui/music_popover_menu.blp:58 data/ui/section_view.blp:37
-#: data/ui/show_view.blp:113 src/views/cover_box.rs:286
+#: data/ui/music_popover_menu.blp:58 data/ui/section_view.blp:32
+#: data/ui/show_view.blp:113 src/views/cover_box.rs:322
 msgid "Shuffle"
 msgstr ""
 
 #: data/ui/album_header.blp:113 data/ui/album_item.blp:47
-#: data/ui/cover_box.blp:72
+#: data/ui/cover_box.blp:78
 msgid "More"
 msgstr ""
 
@@ -75,17 +75,17 @@ msgstr ""
 msgid "Play music clip"
 msgstr ""
 
-#: data/ui/cover_box.blp:61 data/ui/sync_item.blp:25
+#: data/ui/cover_box.blp:67 data/ui/sync_item.blp:31
 #: src/views/section_view.rs:27
 msgid "Unwatched"
 msgstr ""
 
-#: data/ui/cover_box.blp:90
+#: data/ui/cover_box.blp:96
 msgid "Available offline"
 msgstr ""
 
 #: data/ui/discover_view.blp:20 data/ui/player_view.blp:215
-#: src/views/player_view.rs:892
+#: src/views/player_view.rs:894
 msgid "Continue watching"
 msgstr ""
 
@@ -222,13 +222,12 @@ msgstr ""
 #: data/ui/main_window.blp:81 data/ui/sync_dialog.blp:32
 #: data/ui/sync_dialog.blp:33 data/ui/sync_settings.blp:46
 #: data/ui/sync_settings.blp:47 src/views/album_view.rs:373
-#: src/views/album_view.rs:402 src/views/cover_box.rs:280
+#: src/views/album_view.rs:402 src/views/cover_box.rs:316
 msgid "Sync"
 msgstr ""
 
-#: data/ui/main_window.blp:88 src/views/downloads_view.rs:32
-#: src/views/sidebar_box.rs:164 src/views/sidebar_box.rs:197
-#: src/window/navigation.rs:241
+#: data/ui/main_window.blp:88 src/views/sidebar_box.rs:164
+#: src/views/sidebar_box.rs:197 src/window/navigation.rs:241
 msgid "Downloads"
 msgstr ""
 
@@ -368,7 +367,7 @@ msgstr ""
 msgid "Try a different search"
 msgstr ""
 
-#: data/ui/section_view.blp:46
+#: data/ui/section_view.blp:41
 msgid "Order"
 msgstr ""
 
@@ -506,7 +505,7 @@ msgstr ""
 msgid "Sync items"
 msgstr ""
 
-#: data/ui/sync_item.blp:38
+#: data/ui/sync_item.blp:49
 msgid "Remove"
 msgstr ""
 
@@ -662,7 +661,7 @@ msgstr ""
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: src/session.rs:606
+#: src/session.rs:606 src/util.rs:109
 #, rust-format
 msgid "Season {}"
 msgstr ""
@@ -704,6 +703,10 @@ msgstr ""
 msgid "Not enough disk space for the download"
 msgstr ""
 
+#: src/util.rs:107
+msgid "Specials"
+msgstr ""
+
 #: src/views/album_item.rs:178
 msgid "Play next"
 msgstr ""
@@ -716,15 +719,15 @@ msgstr ""
 msgid "Add to playlist…"
 msgstr ""
 
-#: src/views/album_item.rs:190 src/views/cover_box.rs:229
+#: src/views/album_item.rs:190 src/views/cover_box.rs:265
 msgid "Go to album view"
 msgstr ""
 
-#: src/views/album_item.rs:203 src/views/cover_box.rs:264
+#: src/views/album_item.rs:203 src/views/cover_box.rs:300
 msgid "Mark as Played"
 msgstr ""
 
-#: src/views/album_item.rs:205 src/views/cover_box.rs:271
+#: src/views/album_item.rs:205 src/views/cover_box.rs:307
 msgid "Mark as Unplayed"
 msgstr ""
 
@@ -775,8 +778,8 @@ msgstr ""
 msgid "Disc {}"
 msgstr ""
 
-#: src/views/album_view.rs:367 src/views/cover_box.rs:236
-#: src/views/cover_box.rs:243
+#: src/views/album_view.rs:367 src/views/cover_box.rs:272
+#: src/views/cover_box.rs:279
 msgid "Go to artist view"
 msgstr ""
 
@@ -784,15 +787,15 @@ msgstr ""
 msgid "This playlist is empty"
 msgstr ""
 
-#: src/views/cover_box.rs:259
+#: src/views/cover_box.rs:295
 msgid "Go to show view"
 msgstr ""
 
-#: src/views/cover_box.rs:290 src/window/playback.rs:119
+#: src/views/cover_box.rs:326 src/window/playback.rs:119
 msgid "Start from the beginning"
 msgstr ""
 
-#: src/views/downloads_view.rs:76
+#: src/views/downloads_view.rs:69
 msgid "Nothing downloaded yet"
 msgstr ""
 
@@ -863,11 +866,11 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: src/views/player_view.rs:890
+#: src/views/player_view.rs:892
 msgid "More of this season"
 msgstr ""
 
-#: src/views/player_view.rs:958
+#: src/views/player_view.rs:967
 #, rust-format
 msgid "Speed {}×"
 msgstr ""
@@ -1166,18 +1169,18 @@ msgstr ""
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: src/window/mod.rs:809
+#: src/window/mod.rs:811
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
 #. Translators put their names here.
-#: src/window/mod.rs:814
+#: src/window/mod.rs:816
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:817
+#: src/window/mod.rs:819
 msgid "Help with translating"
 msgstr ""
 
@@ -1185,7 +1188,7 @@ msgstr ""
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:850
+#: src/window/mod.rs:852
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 

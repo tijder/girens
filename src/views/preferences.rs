@@ -100,6 +100,8 @@ pub fn present(parent: &impl IsA<gtk::Widget>) {
     page.add(&profiles);
     let dialog = adw::PreferencesDialog::builder()
         .title(gettext("Preferences"))
+        // Room for all of it; the default cuts the last group in two.
+        .content_height(520)
         .build();
     dialog.add(&page);
     dialog.present(Some(parent));

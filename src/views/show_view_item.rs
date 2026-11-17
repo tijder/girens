@@ -83,12 +83,17 @@ impl ShowViewItem {
             None => episode.title.clone(),
         };
         imp._title_label.set_text(&title);
+        // When it came out and how long it takes.
         let released = episode
             .originally_available_at
             .as_deref()
-            .and_then(util::format_date)
-            .unwrap_or_default();
-        imp._release_label.set_text(&released);
+            .and_then(util::format_date);
+        let length = episode
+            .duration
+            .filter(|duration| *duration > 0)
+            .map(super::album_view::playing_time);
+        imp._release_label
+            .set_text(&util::detail_line([released, length]));
         imp._description_label
             .set_text(episode.summary.as_deref().unwrap_or_default());
 

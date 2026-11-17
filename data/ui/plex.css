@@ -12,13 +12,14 @@ gridview.cover-grid {
   background-color: var(--view-bg-color);
 }
 
-/* The dot on items that were not played yet. */
+/* The dot on items that were not played yet: small, as most of a library
+   is new to its user, with a ring that sets it off against any picture. */
 .watched_tip {
   background-color: var(--accent-bg-color);
   border-radius: 9999px;
-  min-width: 12px;
-  min-height: 12px;
-  box-shadow: 0 0 0 2px alpha(black, 0.35);
+  min-width: 8px;
+  min-height: 8px;
+  box-shadow: 0 0 0 1.5px alpha(white, 0.9), 0 0 3px 1.5px alpha(black, 0.4);
 }
 
 /* The number of a track: plain while the track is new to the user, faded

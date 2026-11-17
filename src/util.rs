@@ -2,8 +2,11 @@
 
 use std::path::Path;
 
+use girens_model::model::Item;
 use girens_model::ItemId;
 use gtk::glib;
+
+use crate::i18n::{gettext, gettext_f};
 
 /// Replaces the file at `path` by `contents` in one step: whoever reads it,
 /// also after a crash half way, finds the old file or the new one, never a
@@ -95,6 +98,18 @@ pub fn format_date(iso_date: &str) -> Option<String> {
     );
     let date = glib::DateTime::from_local(year, month, day, 0, 0, 0.0).ok()?;
     date.format("%d %b %Y").ok().map(Into::into)
+}
+
+/// The name of a season in the language of the user, where the server
+/// names it by its number in English.
+pub fn season_name(season: &Item) -> String {
+    match season.index {
+        Some(0) if season.title == "Specials" => gettext("Specials"),
+        Some(number) if season.title == format!("Season {number}") => {
+            gettext_f("Season {}", &[&number.to_string()])
+        }
+        _ => season.title.clone(),
+    }
 }
 
 /// The rating key at the end of `/library/metadata/<key>`.

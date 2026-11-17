@@ -242,7 +242,7 @@ impl ShowView {
             .collect();
         let mut first: Option<gtk::ToggleButton> = None;
         for season in &seasons {
-            let button = gtk::ToggleButton::with_label(&season.title);
+            let button = gtk::ToggleButton::with_label(&util::season_name(season));
             match &first {
                 Some(first) => button.set_group(Some(first)),
                 None => first = Some(button.clone()),

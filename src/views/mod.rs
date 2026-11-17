@@ -40,7 +40,7 @@ pub use artist_view::ArtistView;
 pub use cover_box::CoverBox;
 pub use discover_view::DiscoverView;
 pub use downloads_view::DownloadsView;
-pub use list::List;
+pub use list::{List, COVER_WIDTH};
 pub use loading_view::LoadingView;
 pub use login_view::{LoginRequest, LoginView};
 pub use media_box::{MediaBoxMusic, MediaBoxVideoBottom, MediaBoxVideoTop, MediaControls};

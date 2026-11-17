@@ -29,6 +29,7 @@ src/player/mod.rs
 src/player/streams.rs
 src/session.rs
 src/sync.rs
+src/util.rs
 src/views/album_item.rs
 src/views/album_view.rs
 src/views/cover_box.rs
