@@ -20,6 +20,7 @@ mod media_box;
 mod music_popover_menu;
 mod photo_view;
 mod player_view;
+pub mod playlist_dialog;
 pub mod preferences;
 mod profile_dialog;
 mod queue_popover;

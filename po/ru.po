@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 18:17+0100\n"
+"POT-Creation-Date: 2026-11-17 22:27+0100\n"
 "PO-Revision-Date: 2025-05-05 06:44+0000\n"
 "Last-Translator: Yurt Page <yurtpage@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/girens/girens/ru/"
@@ -20,8 +20,16 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12-dev\n"
 
-#: data/nl.g4d.Girens.metainfo.xml.in:5 data/nl.g4d.Girens.desktop.in:2
+#: data/nl.g4d.Girens.desktop.in:2 data/nl.g4d.Girens.metainfo.xml.in:5
 msgid "Girens"
+msgstr ""
+
+#: data/nl.g4d.Girens.desktop.in:3
+msgid "Play the movies, shows and music of your Plex or Ister server"
+msgstr ""
+
+#: data/nl.g4d.Girens.desktop.in:10
+msgid "girens;plex;ister;media;player;"
 msgstr ""
 
 #: data/nl.g4d.Girens.metainfo.xml.in:9
@@ -46,17 +54,10 @@ msgstr ""
 msgid "The artist screen"
 msgstr ""
 
-#: data/nl.g4d.Girens.desktop.in:3
-msgid "Play the movies, shows and music of your Plex or Ister server"
-msgstr ""
-
-#: data/nl.g4d.Girens.desktop.in:10
-msgid "girens;plex;ister;media;player;"
-msgstr ""
-
 #: data/ui/album_header.blp:92 data/ui/artist_view.blp:82
-#: data/ui/media_box_music.blp:111 data/ui/media_box_video_bottom.blp:123
+#: data/ui/media_box_music.blp:128 data/ui/media_box_video_bottom.blp:123
 #: data/ui/section_view.blp:30 data/ui/show_view.blp:102
+#: src/views/album_view.rs:187
 msgid "Play"
 msgstr ""
 
@@ -66,11 +67,12 @@ msgstr ""
 msgid "Shuffle"
 msgstr "Перемешать"
 
-#: data/ui/album_header.blp:113 data/ui/cover_box.blp:72
+#: data/ui/album_header.blp:113 data/ui/album_item.blp:47
+#: data/ui/cover_box.blp:72
 msgid "More"
 msgstr ""
 
-#: data/ui/album_item.blp:44
+#: data/ui/album_item.blp:57
 msgid "Play music clip"
 msgstr ""
 
@@ -100,12 +102,12 @@ msgstr ""
 msgid "Recently added Music"
 msgstr ""
 
-#: data/ui/list.blp:40 data/ui/media_box_music.blp:101
+#: data/ui/list.blp:40 data/ui/media_box_music.blp:117
 #: data/ui/media_box_video_bottom.blp:114
 msgid "Previous"
 msgstr ""
 
-#: data/ui/list.blp:55 data/ui/media_box_music.blp:120
+#: data/ui/list.blp:55 data/ui/media_box_music.blp:142
 #: data/ui/media_box_video_bottom.blp:132
 msgid "Next"
 msgstr ""
@@ -220,8 +222,8 @@ msgstr ""
 
 #: data/ui/main_window.blp:81 data/ui/sync_dialog.blp:32
 #: data/ui/sync_dialog.blp:33 data/ui/sync_settings.blp:46
-#: data/ui/sync_settings.blp:47 src/views/album_view.rs:308
-#: src/views/album_view.rs:337 src/views/cover_box.rs:280
+#: data/ui/sync_settings.blp:47 src/views/album_view.rs:373
+#: src/views/album_view.rs:402 src/views/cover_box.rs:280
 msgid "Sync"
 msgstr "Синхронизация"
 
@@ -251,19 +253,15 @@ msgstr "Комбинации клавиш"
 msgid "About Girens"
 msgstr "О Girens"
 
-#: data/ui/media_box_music.blp:77 data/ui/media_box_video_bottom.blp:64
+#: data/ui/media_box_music.blp:82 data/ui/media_box_video_bottom.blp:64
 msgid "Play queue"
 msgstr ""
 
-#: data/ui/media_box_music.blp:129 data/ui/media_box_video_top.blp:46
-msgid "Stop"
-msgstr ""
-
-#: data/ui/media_box_music.blp:140 data/ui/media_box_video_bottom.blp:92
+#: data/ui/media_box_music.blp:152 data/ui/media_box_video_bottom.blp:92
 msgid "Volume"
 msgstr ""
 
-#: data/ui/media_box_music.blp:151
+#: data/ui/media_box_music.blp:170
 msgid "Options"
 msgstr ""
 
@@ -289,6 +287,10 @@ msgstr ""
 
 #: data/ui/media_box_video_top.blp:19
 msgid "Fill window"
+msgstr ""
+
+#: data/ui/media_box_video_top.blp:46 data/ui/music_popover_menu.blp:75
+msgid "Stop"
 msgstr ""
 
 #: data/ui/music_popover_menu.blp:67
@@ -619,19 +621,32 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/player/mod.rs:401
+#: src/player/mod.rs:444
 msgid "Nothing to play"
 msgstr ""
 
-#: src/player/mod.rs:409
+#: src/player/mod.rs:452
 msgid "Could not create a play queue"
 msgstr ""
 
-#: src/player/mod.rs:610
+#: src/player/mod.rs:492
+#, fuzzy
+msgid "Plays next"
+msgstr "Плейлисты"
+
+#: src/player/mod.rs:494
+msgid "Added to the play queue"
+msgstr ""
+
+#: src/player/mod.rs:498
+msgid "Could not add to the play queue"
+msgstr ""
+
+#: src/player/mod.rs:690
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: src/player/mod.rs:824 src/player/mod.rs:1166
+#: src/player/mod.rs:923 src/player/mod.rs:1265
 msgid "Could not start playback"
 msgstr ""
 
@@ -644,40 +659,40 @@ msgstr ""
 msgid "Could not change the stream"
 msgstr "Подключение к {}."
 
-#: src/session.rs:513
+#: src/session.rs:520
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 
-#: src/session.rs:514
+#: src/session.rs:521
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: src/session.rs:597
+#: src/session.rs:606
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: src/session.rs:598
+#: src/session.rs:607
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: src/session.rs:599
+#: src/session.rs:608
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: src/session.rs:600 src/views/player_view.rs:564
+#: src/session.rs:609 src/views/player_view.rs:564
 #, rust-format
 msgid "Chapter {}"
 msgstr ""
 
-#: src/session.rs:601
+#: src/session.rs:610
 msgid "Unknown"
 msgstr ""
 
 #. Subtitles that are pictures rather than text; {} is their name.
-#: src/session.rs:603
+#: src/session.rs:612
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
@@ -693,6 +708,31 @@ msgstr ""
 #: src/sync.rs:716
 msgid "Not enough disk space for the download"
 msgstr ""
+
+#: src/views/album_item.rs:178
+#, fuzzy
+msgid "Play next"
+msgstr "Плеер"
+
+#: src/views/album_item.rs:179
+msgid "Add to play queue"
+msgstr ""
+
+#: src/views/album_item.rs:184
+msgid "Add to playlist…"
+msgstr ""
+
+#: src/views/album_item.rs:190 src/views/cover_box.rs:229
+msgid "Go to album view"
+msgstr "Перейти на страницу альбома"
+
+#: src/views/album_item.rs:203 src/views/cover_box.rs:264
+msgid "Mark as Played"
+msgstr "Отметить как Просмотренный"
+
+#: src/views/album_item.rs:205 src/views/cover_box.rs:271
+msgid "Mark as Unplayed"
+msgstr "Отметить как Непросмотренный"
 
 #. / `12 songs`.
 #: src/views/album_view.rs:53
@@ -731,35 +771,32 @@ msgstr ""
 msgid "{0} h {1} min"
 msgstr ""
 
-#: src/views/album_view.rs:163
+#: src/views/album_view.rs:188
+#, fuzzy
+msgid "Pause"
+msgstr "Воспроизведение/Пауза"
+
+#: src/views/album_view.rs:189 src/window/playback.rs:120
+msgid "Resume"
+msgstr "Продолжить"
+
+#: src/views/album_view.rs:222
 #, rust-format
 msgid "Disc {}"
 msgstr "Диск {}"
 
-#: src/views/album_view.rs:302 src/views/cover_box.rs:236
+#: src/views/album_view.rs:367 src/views/cover_box.rs:236
 #: src/views/cover_box.rs:243
 msgid "Go to artist view"
 msgstr "Перейти на страницу исполнителя"
 
-#: src/views/album_view.rs:324
+#: src/views/album_view.rs:389
 msgid "This playlist is empty"
 msgstr ""
-
-#: src/views/cover_box.rs:229
-msgid "Go to album view"
-msgstr "Перейти на страницу альбома"
 
 #: src/views/cover_box.rs:259
 msgid "Go to show view"
 msgstr "Перейти на страницу сериала"
-
-#: src/views/cover_box.rs:264
-msgid "Mark as Played"
-msgstr "Отметить как Просмотренный"
-
-#: src/views/cover_box.rs:271
-msgid "Mark as Unplayed"
-msgstr "Отметить как Непросмотренный"
 
 #: src/views/cover_box.rs:290 src/window/playback.rs:119
 msgid "Start from the beginning"
@@ -792,7 +829,7 @@ msgid "Looking up the server…"
 msgstr ""
 
 #. A star says nothing to someone who cannot see it.
-#: src/views/music_popover_menu.rs:90
+#: src/views/music_popover_menu.rs:92
 #, rust-format
 msgid "{} star"
 msgid_plural "{} stars"
@@ -800,7 +837,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/views/music_popover_menu.rs:193
+#: src/views/music_popover_menu.rs:206
 msgid "Could not rate the track"
 msgstr ""
 
@@ -845,6 +882,30 @@ msgstr ""
 #, rust-format
 msgid "Speed {}×"
 msgstr ""
+
+#: src/views/playlist_dialog.rs:41
+#, fuzzy
+msgid "No Playlists"
+msgstr "Плейлисты"
+
+#: src/views/playlist_dialog.rs:42
+msgid "There is no playlist for music that can be added to."
+msgstr ""
+
+#: src/views/playlist_dialog.rs:54
+#, fuzzy
+msgid "Add to Playlist"
+msgstr "Плейлисты"
+
+#: src/views/playlist_dialog.rs:119
+#, rust-format
+msgid "Added to “{}”"
+msgstr ""
+
+#: src/views/playlist_dialog.rs:121
+#, fuzzy
+msgid "Could not add to the playlist"
+msgstr "Подключение к {}."
 
 #: src/views/preferences.rs:22
 msgid "Prefer music clips"
@@ -1126,18 +1187,18 @@ msgstr "Подключение к серверу Plex по адресу"
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: src/window/mod.rs:800
+#: src/window/mod.rs:809
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
 #. Translators put their names here.
-#: src/window/mod.rs:805
+#: src/window/mod.rs:814
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:808
+#: src/window/mod.rs:817
 msgid "Help with translating"
 msgstr "Помочь с переводом"
 
@@ -1145,7 +1206,7 @@ msgstr "Помочь с переводом"
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:841
+#: src/window/mod.rs:850
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 
@@ -1160,10 +1221,6 @@ msgstr ""
 #: src/window/playback.rs:116
 msgid "Do you want to resume watching or start from the beginning?"
 msgstr "Продолжить просмотр или начать с начала?"
-
-#: src/window/playback.rs:120
-msgid "Resume"
-msgstr "Продолжить"
 
 #~ msgid "Ok"
 #~ msgstr "Ок"

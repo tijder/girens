@@ -1351,6 +1351,51 @@ impl IsterServer {
         Ok(self.play_queue(&answer.get_play_queue.ok_or(Error::NotFound(id))?))
     }
 
+    /// Adds `item` to a queue: after the entry `after`, or at the end.
+    pub async fn add_to_play_queue(
+        &self,
+        id: ItemId,
+        item: &Item,
+        after: Option<ItemId>,
+    ) -> Result<PlayQueue> {
+        #[derive(Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Answer {
+            add_play_queue_item: wire::PlayQueue,
+        }
+        let playable = self.playable(item.rating_key).await?;
+        let [(media_type, uuid)] = playable.as_slice() else {
+            return Err(Error::NotFound(item.rating_key));
+        };
+        // An entry is named `<queue>:<entry>`.
+        let after = after.and_then(|entry| {
+            entry
+                .as_str()
+                .split_once(':')
+                .map(|(_, entry)| entry.to_owned())
+        });
+        let variables = json!({
+            "queue": id.as_str(),
+            "type": media_type,
+            "id": uuid,
+            "after": after,
+        });
+        let answer: Answer = self.query(queries::ADD_PLAY_QUEUE_ITEM, variables).await?;
+        Ok(self.play_queue(&answer.add_play_queue_item))
+    }
+
+    /// Adds `item` to the end of a playlist.
+    pub async fn add_to_playlist(&self, playlist: ItemId, item: &Item) -> Result<()> {
+        let uuid = |id: ItemId| {
+            map::split(id)
+                .map(|(_, uuid)| uuid.to_owned())
+                .ok_or(Error::NotFound(id))
+        };
+        let variables = json!({ "playlist": uuid(playlist)?, "id": uuid(item.rating_key)? });
+        let _: Value = self.query(queries::ADD_PLAYLIST_ITEM, variables).await?;
+        Ok(())
+    }
+
     /// The server cannot reorder a queue, so this makes a new one of the
     /// same source, starting at what is playing.
     pub async fn shuffle_play_queue(&self, id: ItemId, shuffle: bool) -> Result<PlayQueue> {

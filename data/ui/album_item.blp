@@ -11,6 +11,7 @@ template $album_item : Box {
     Label _index_label {
       styles [
         "numeric",
+        "track-index",
       ]
 
       width-chars: 3;
@@ -32,6 +33,18 @@ template $album_item : Box {
     xalign: 0;
     label: "title";
     ellipsize: end;
+  }
+
+  // What can be done with the track; also opened with a secondary click.
+  MenuButton _menu_button {
+    styles [
+      "flat",
+      "track-menu",
+    ]
+
+    valign: center;
+    icon-name: "view-more-symbolic";
+    tooltip-text: _("More");
   }
 
   Button _music_clip_button {

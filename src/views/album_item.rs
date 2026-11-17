@@ -1,10 +1,13 @@
 //! One track in an album.
 
+use std::cell::{Cell, RefCell};
+
 use adw::subclass::prelude::*;
 use girens_model::model::Item;
 use gtk::prelude::*;
-use gtk::{glib, CompositeTemplate};
+use gtk::{gio, glib, CompositeTemplate};
 
+use crate::i18n::gettext;
 use crate::util;
 
 mod imp {
@@ -25,8 +28,13 @@ mod imp {
         pub _playing_image: TemplateChild<gtk::Image>,
         #[template_child]
         pub _music_clip_button: TemplateChild<gtk::Button>,
-        /// Rating key of the track the row shows.
-        pub track: std::cell::Cell<Option<girens_model::ItemId>>,
+        #[template_child]
+        pub _menu_button: TemplateChild<gtk::MenuButton>,
+        /// The track the row shows.
+        pub track: RefCell<Option<Item>>,
+        /// Whether the menu leads to the album: in a playlist, where the
+        /// tracks come from anywhere.
+        pub album_link: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -44,7 +52,52 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for AlbumItem {}
+    impl ObjectImpl for AlbumItem {
+        fn constructed(&self) {
+            self.parent_constructed();
+            let row = self.obj();
+
+            // The menu depends on the track and on what is playing, so it is
+            // made when it is asked for.
+            self._menu_button.set_create_popup_func(glib::clone!(
+                #[weak]
+                row,
+                move |button| button.set_menu_model(row.menu().as_ref())
+            ));
+            self._menu_button.connect_active_notify(|button| {
+                if button.is_active() {
+                    button.add_css_class("open");
+                } else {
+                    button.remove_css_class("open");
+                }
+            });
+
+            let click = gtk::GestureClick::builder()
+                .button(gtk::gdk::BUTTON_SECONDARY)
+                .build();
+            click.connect_pressed(glib::clone!(
+                #[weak]
+                row,
+                move |click, _, _, _| {
+                    click.set_state(gtk::EventSequenceState::Claimed);
+                    row.imp()._menu_button.popup();
+                }
+            ));
+            row.add_controller(click);
+
+            // On a touch screen there is no secondary click.
+            let press = gtk::GestureLongPress::builder().touch_only(true).build();
+            press.connect_pressed(glib::clone!(
+                #[weak]
+                row,
+                move |press, _, _| {
+                    press.set_state(gtk::EventSequenceState::Claimed);
+                    row.imp()._menu_button.popup();
+                }
+            ));
+            row.add_controller(press);
+        }
+    }
     impl WidgetImpl for AlbumItem {}
     impl BoxImpl for AlbumItem {}
 }
@@ -56,22 +109,24 @@ glib::wrapper! {
 }
 
 impl AlbumItem {
-    pub fn new(track: &Item) -> Self {
+    pub fn new(track: &Item, album_link: bool) -> Self {
         let row: Self = glib::Object::new();
-        row.set_track(track);
+        row.set_track(track, album_link);
         row
     }
 
     /// Shows `track`; the row can be reused for another one at any time.
-    pub fn set_track(&self, track: &Item) {
+    /// With `album_link` its menu leads to the album it is on.
+    pub fn set_track(&self, track: &Item, album_link: bool) {
         let imp = self.imp();
+        imp.album_link.set(album_link);
         if track.view_count == 0 {
             imp._index_label.add_css_class("unplayed");
         } else {
             imp._index_label.remove_css_class("unplayed");
         }
         imp._title_label.set_text(&track.title);
-        imp.track.set(Some(track.rating_key));
+        imp.track.replace(Some(track.clone()));
         self.mark_playing();
         imp._index_label.set_text(
             &track
@@ -99,12 +154,73 @@ impl AlbumItem {
         }
     }
 
-    /// Marks the row when its track is the one that is playing.
+    /// What can be done with the track, for its menu.
+    fn menu(&self) -> Option<gio::Menu> {
+        let imp = self.imp();
+        let track = imp.track.borrow();
+        let track = track.as_ref()?;
+        let key = track.rating_key.as_str().to_variant();
+        let section = |entries: &[(String, &str, &glib::Variant)]| {
+            let section = gio::Menu::new();
+            for (label, action, target) in entries {
+                let entry = gio::MenuItem::new(Some(label), None);
+                entry.set_action_and_target_value(Some(action), Some(target));
+                section.append_item(&entry);
+            }
+            section
+        };
+
+        let menu = gio::Menu::new();
+        if crate::player::can_enqueue() {
+            menu.append_section(
+                None,
+                &section(&[
+                    (gettext("Play next"), "win.queue-next-by-id", &key),
+                    (gettext("Add to play queue"), "win.queue-add-by-id", &key),
+                ]),
+            );
+        }
+        let mut entries = vec![(
+            gettext("Add to playlist…"),
+            "win.add-to-playlist-by-id",
+            key.clone(),
+        )];
+        if let (true, Some(album)) = (imp.album_link.get(), track.parent_rating_key) {
+            entries.push((
+                gettext("Go to album view"),
+                "win.show-album-by-id",
+                album.as_str().to_variant(),
+            ));
+        }
+        let entries: Vec<_> = entries
+            .iter()
+            .map(|(label, action, target)| (label.clone(), *action, target))
+            .collect();
+        menu.append_section(None, &section(&entries));
+        menu.append_section(
+            None,
+            &section(&[if track.view_count == 0 {
+                (gettext("Mark as Played"), "win.mark-as-played-by-id", &key)
+            } else {
+                (gettext("Mark as Unplayed"), "win.mark-as-unplayed-by-id", &key)
+            }]),
+        );
+        Some(menu)
+    }
+
+    /// Marks the row when its track is the one that is playing, and tells
+    /// whether it plays or waits.
     pub fn mark_playing(&self) {
         let imp = self.imp();
-        let track = imp.track.get();
+        let track = imp.track.borrow().as_ref().map(|track| track.rating_key);
         if track.is_some() && crate::player::now_playing() == track {
             imp._title_label.add_css_class("now-playing");
+            imp._playing_image
+                .set_icon_name(Some(if crate::player::now_paused() {
+                    "media-playback-pause-symbolic"
+                } else {
+                    "media-playback-start-symbolic"
+                }));
             imp._index_stack.set_visible_child(&*imp._playing_image);
         } else {
             imp._title_label.remove_css_class("now-playing");

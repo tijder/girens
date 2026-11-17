@@ -258,6 +258,51 @@ async fn watched_state_and_rating_requests() {
 }
 
 #[tokio::test]
+async fn a_track_is_added_to_a_queue_and_to_a_playlist() {
+    let (mock, server) = connect().await;
+    serve(&mock, "/library/metadata/3", "track_metadata").await;
+    let track = server.item(3.into()).await.unwrap();
+    let uri = format!(
+        "server://{}/com.plexapp.plugins.library{}",
+        server.machine_identifier(),
+        track.key
+    );
+
+    // To play next, and then the queue is read as it has become.
+    Mock::given(method("PUT"))
+        .and(path("/playQueues/7"))
+        .and(query_param("uri", uri.as_str()))
+        .and(query_param("next", "1"))
+        .respond_with(ResponseTemplate::new(200))
+        .expect(1)
+        .mount(&mock)
+        .await;
+    let queue = r#"{"MediaContainer": {"playQueueID": 7, "playQueueSelectedItemID": 70,
+        "Metadata": [{"ratingKey": "9", "key": "/library/metadata/9", "type": "track",
+        "title": "Playing", "playQueueItemID": 70}]}}"#;
+    Mock::given(method("GET"))
+        .and(path("/playQueues/7"))
+        .respond_with(ResponseTemplate::new(200).set_body_raw(queue, "application/json"))
+        .expect(1)
+        .mount(&mock)
+        .await;
+    let queue = server
+        .add_to_play_queue(7.into(), &track, true)
+        .await
+        .unwrap();
+    assert_eq!(queue.selected_index(), Some(0));
+
+    Mock::given(method("PUT"))
+        .and(path("/playlists/5/items"))
+        .and(query_param("uri", uri.as_str()))
+        .respond_with(ResponseTemplate::new(200))
+        .expect(1)
+        .mount(&mock)
+        .await;
+    server.add_to_playlist(5.into(), &track).await.unwrap();
+}
+
+#[tokio::test]
 async fn playback_urls_and_timeline() {
     let (mock, server) = connect().await;
     serve(&mock, "/library/metadata/2", "episode_metadata").await;

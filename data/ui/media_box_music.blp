@@ -73,10 +73,15 @@ template $media_box_music : Adw.Bin {
       }
 
       MenuButton _playqueue_button {
+        styles [
+          "flat",
+          "circular",
+        ]
+
         icon-name: "view-list-symbolic";
         tooltip-text: _("Play queue");
-        width-request: 50;
-        height-request: 50;
+        valign: center;
+        margin-start: 6;
         direction: up;
       }
 
@@ -96,48 +101,57 @@ template $media_box_music : Adw.Bin {
         }
       }
 
+      // Round buttons like elsewhere in the application; the one to play
+      // and pause with stands out. Stopping is in the menu.
       Box {
-        Button _prev_button {
-          tooltip-text: _("Previous");
-          width-request: 50;
-          height-request: 50;
+        spacing: 4;
+        margin-end: 6;
+        valign: center;
 
-          Image {
-            icon-name: "media-seek-backward-symbolic";
-          }
+        Button _prev_button {
+          styles [
+            "flat",
+            "circular",
+          ]
+
+          tooltip-text: _("Previous");
+          valign: center;
+          icon-name: "media-seek-backward-symbolic";
         }
 
         Button _play_button {
+          styles [
+            "circular",
+            "media-play-button",
+          ]
+
           tooltip-text: _("Play");
-          width-request: 50;
-          height-request: 50;
+          valign: center;
+
           Image _play_image {
             icon-name: "media-playback-start-symbolic";
           }
         }
 
         Button _next_button {
+          styles [
+            "flat",
+            "circular",
+          ]
+
           tooltip-text: _("Next");
-          width-request: 50;
-          height-request: 50;
-          Image {
-            icon-name: "media-seek-forward-symbolic";
-          }
-        }
-
-        Button _close_button {
-          tooltip-text: _("Stop");
-          width-request: 50;
-          height-request: 50;
-          receives-default: true;
-
-          Image {
-            icon-name: "media-playback-stop-symbolic";
-          }
+          valign: center;
+          icon-name: "media-seek-forward-symbolic";
         }
 
         ScaleButton _volume_button {
+          styles [
+            "circular",
+          ]
+
           tooltip-text: _("Volume");
+          valign: center;
+          margin-start: 6;
           icons: ["audio-volume-muted-symbolic", "audio-volume-high-symbolic", "audio-volume-low-symbolic", "audio-volume-medium-symbolic"];
           adjustment: Adjustment {
             upper: 100;
@@ -147,16 +161,16 @@ template $media_box_music : Adw.Bin {
         }
 
         MenuButton _media_settings {
+          styles [
+            "flat",
+            "circular",
+          ]
+
           icon-name: "view-more-symbolic";
           tooltip-text: _("Options");
-          width-request: 50;
-          height-request: 50;
+          valign: center;
           direction: up;
         }
-
-        styles [
-          "linked",
-        ]
       }
 
       layout {

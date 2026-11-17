@@ -202,24 +202,59 @@ struct Inner {
     listeners: RefCell<Vec<Rc<dyn Fn(&Event)>>>,
 }
 
+/// What pages show of the playback: which row to mark and which play button
+/// is a pause button for the time being.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+struct NowPlaying {
+    /// Rating key of the item that is playing.
+    item: Option<ItemId>,
+    /// Rating key of the album, artist or playlist the queue was made of.
+    source: Option<ItemId>,
+    paused: bool,
+}
+
 thread_local! {
-    /// Rating key of what is playing, and who wants to know when it changes.
-    static NOW_PLAYING: std::cell::Cell<Option<ItemId>> = const { std::cell::Cell::new(None) };
+    /// What is playing, and who wants to know when it changes.
+    static NOW_PLAYING: std::cell::Cell<NowPlaying> = const {
+        std::cell::Cell::new(NowPlaying { item: None, source: None, paused: false })
+    };
     static NOW_PLAYING_LISTENERS: RefCell<Vec<Box<dyn Fn()>>> = const { RefCell::new(Vec::new()) };
 }
 
 /// Rating key of the item that is playing, for lists that mark it.
 pub fn now_playing() -> Option<ItemId> {
-    NOW_PLAYING.get()
+    NOW_PLAYING.get().item
 }
 
-/// Calls `listener` whenever another item starts or playback stops.
+/// Whether what is playing is paused.
+pub fn now_paused() -> bool {
+    NOW_PLAYING.get().paused
+}
+
+/// Rating key of the album, artist or playlist that is playing: what the
+/// user asked for, of which [`now_playing`] is one item.
+pub fn playing_source() -> Option<ItemId> {
+    let playing = NOW_PLAYING.get();
+    playing.item.and(playing.source)
+}
+
+/// Whether something plays that more can be queued after.
+pub fn can_enqueue() -> bool {
+    PLAYER
+        .with_borrow(Weak::upgrade)
+        .is_some_and(|inner| inner.server_queue().is_some())
+}
+
+/// Calls `listener` whenever another item starts, or playback pauses, goes
+/// on or stops.
 pub fn connect_now_playing(listener: impl Fn() + 'static) {
     NOW_PLAYING_LISTENERS.with_borrow_mut(|listeners| listeners.push(Box::new(listener)));
 }
 
-fn set_now_playing(rating_key: Option<ItemId>) {
-    if NOW_PLAYING.replace(rating_key) != rating_key {
+fn update_now_playing(change: impl FnOnce(&mut NowPlaying)) {
+    let mut playing = NOW_PLAYING.get();
+    change(&mut playing);
+    if NOW_PLAYING.replace(playing) != playing {
         NOW_PLAYING_LISTENERS.with_borrow(|listeners| {
             for listener in listeners {
                 listener();
@@ -368,18 +403,20 @@ impl Player {
                 return;
             };
             let queue = runtime::run(async move {
+                // Each with what the queue is made of, for the page of that
+                // to tell that it is playing.
                 match target {
-                    PlayTarget::Section { section, sort } => {
-                        server
-                            .create_section_play_queue(&section, sort.as_deref(), shuffle)
-                            .await
-                    }
+                    PlayTarget::Section { section, sort } => server
+                        .create_section_play_queue(&section, sort.as_deref(), shuffle)
+                        .await
+                        .map(|queue| (queue, None)),
                     PlayTarget::PlaylistItem { playlist, item } => {
                         let (playlist, item) =
                             tokio::try_join!(server.item(playlist), server.item(item))?;
                         server
                             .create_play_queue(&playlist, Some(&item), shuffle)
                             .await
+                            .map(|queue| (queue, Some(playlist.rating_key)))
                     }
                     PlayTarget::Item(key) => {
                         let item = server.item(key).await?;
@@ -388,21 +425,27 @@ impl Player {
                         match (item.kind, item.parent_rating_key) {
                             (ItemKind::Track, Some(album)) => {
                                 let album = server.item(album).await?;
-                                server.create_play_queue(&album, Some(&item), shuffle).await
+                                server
+                                    .create_play_queue(&album, Some(&item), shuffle)
+                                    .await
+                                    .map(|queue| (queue, Some(album.rating_key)))
                             }
-                            _ => server.create_play_queue(&item, None, shuffle).await,
+                            _ => server
+                                .create_play_queue(&item, None, shuffle)
+                                .await
+                                .map(|queue| (queue, Some(key))),
                         }
                     }
                 }
             })
             .await;
             match queue {
-                Ok(queue) if queue.items.is_empty() => {
+                Ok((queue, _)) if queue.items.is_empty() => {
                     crate::notify::message(&crate::i18n::gettext("Nothing to play"))
                 }
-                Ok(queue) => {
+                Ok((queue, source)) => {
                     let index = queue.selected_index().unwrap_or(0);
-                    inner.set_queue(queue, index);
+                    inner.set_queue(queue, index, source);
                     inner.start(index, mode);
                 }
                 Err(err) => crate::notify::failure(
@@ -418,8 +461,45 @@ impl Player {
         if items.is_empty() {
             return;
         }
-        self.inner.set_queue(PlayQueue::local(items), 0);
+        self.inner.set_queue(PlayQueue::local(items), 0, None);
         self.inner.start(0, StartMode::Ask);
+    }
+
+    /// Adds the item with this rating key to the queue that is playing:
+    /// right after what plays now with `next`, at the end otherwise.
+    pub fn enqueue(&self, key: ItemId, next: bool) {
+        let inner = self.inner.clone();
+        let (Some(server), Some((queue, playing))) =
+            (Session::current().server(), inner.server_queue())
+        else {
+            return;
+        };
+        glib::spawn_future_local(async move {
+            let after = playing.filter(|_| next);
+            let added = runtime::run(async move {
+                let item = server.item(key).await?;
+                server.add_to_play_queue(queue, &item, after).await
+            })
+            .await;
+            match added {
+                Ok(queue) => {
+                    // Something else may have been started in the meantime.
+                    let current = inner.server_queue().map(|(id, _)| id);
+                    if current == Some(queue.id) {
+                        inner.replace_queue(queue);
+                    }
+                    crate::notify::message(&if next {
+                        crate::i18n::gettext("Plays next")
+                    } else {
+                        crate::i18n::gettext("Added to the play queue")
+                    });
+                }
+                Err(err) => crate::notify::failure(
+                    &crate::i18n::gettext("Could not add to the play queue"),
+                    &err,
+                ),
+            }
+        });
     }
 
     /// Answers [`Event::AskResume`] for the current queue entry.
@@ -708,8 +788,15 @@ impl Inner {
 
     fn emit(&self, event: Event) {
         match &event {
-            Event::Started { item, .. } => set_now_playing(Some(item.rating_key)),
-            Event::Stopped => set_now_playing(None),
+            Event::Started { item, .. } => update_now_playing(|playing| {
+                playing.item = Some(item.rating_key);
+                playing.paused = false;
+            }),
+            Event::Paused(paused) => update_now_playing(|playing| playing.paused = *paused),
+            Event::Stopped => update_now_playing(|playing| {
+                playing.item = None;
+                playing.paused = false;
+            }),
             _ => {}
         }
         // Listeners may call back into the player, so no borrow is held.
@@ -740,7 +827,19 @@ impl Inner {
         self.set_mpv("volume", i64::from(self.settings.int("volume-level")));
     }
 
-    fn set_queue(&self, queue: PlayQueue, index: usize) {
+    /// The id of the queue and of the entry that is playing, when something
+    /// plays from a queue the server keeps.
+    fn server_queue(&self) -> Option<(ItemId, Option<ItemId>)> {
+        let state = self.state.borrow();
+        let playing = state.current.as_ref()?;
+        let queue = state.queue.as_ref().filter(|queue| !queue.is_local())?;
+        Some((queue.id, playing.item.play_queue_item_id))
+    }
+
+    /// Starts over with `queue`, made of the album, artist or playlist
+    /// `source`.
+    fn set_queue(&self, queue: PlayQueue, index: usize, source: Option<ItemId>) {
+        update_now_playing(|playing| playing.source = source);
         {
             let mut state = self.state.borrow_mut();
             state.queue = Some(queue);

@@ -21,8 +21,33 @@ gridview.cover-grid {
   box-shadow: 0 0 0 2px alpha(black, 0.35);
 }
 
-.unplayed {
-  color: var(--accent-color);
+/* The number of a track: plain while the track is new to the user, faded
+   once it was played. The accent colour is kept for the track that plays. */
+.track-index {
+  opacity: 0.45;
+}
+
+.track-index.unplayed {
+  opacity: 1;
+}
+
+/* The menu button of a track appears on hover, keyboard focus or while its
+   menu is open. */
+menubutton.track-menu {
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+row:hover menubutton.track-menu,
+menubutton.track-menu:focus-within,
+menubutton.track-menu.open {
+  opacity: 1;
+}
+
+/* The button to play and pause the music with, larger than those around it. */
+button.media-play-button {
+  min-width: 42px;
+  min-height: 42px;
 }
 
 .black_background {

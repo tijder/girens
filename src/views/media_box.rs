@@ -84,7 +84,6 @@ media_box_widget!(music, MediaBoxMusic, "media_box_music", "/nl/g4d/Girens/media
     _play_button: gtk::Button,
     _play_image: gtk::Image,
     _next_button: gtk::Button,
-    _close_button: gtk::Button,
     _volume_button: gtk::ScaleButton,
     _media_settings: gtk::MenuButton,
 });
@@ -246,7 +245,6 @@ impl MediaControls {
             &imp._time_right_label,
         );
         self.add_labels(&imp._title_label, &imp._subtitle_label);
-        self.add_close(&imp._close_button);
         self.add_queue_button(&imp._playqueue_button, &imp._cover_image);
         bind_volume(&imp._volume_button);
         // Clicking the title or the cover opens the album of the track.

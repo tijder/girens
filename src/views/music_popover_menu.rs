@@ -1,4 +1,4 @@
-//! Rating, shuffle and repeat for the music that is playing.
+//! Rating, shuffle, repeat and stopping for the music that is playing.
 
 use std::cell::{Cell, RefCell};
 
@@ -41,6 +41,8 @@ mod imp {
         pub _shuffle_button: TemplateChild<gtk::Switch>,
         #[template_child]
         pub _repeat_button: TemplateChild<gtk::Switch>,
+        #[template_child]
+        pub _stop_row: TemplateChild<adw::ButtonRow>,
         pub item: RefCell<Option<Item>>,
         /// Set while the switches are updated from the player.
         pub updating: Cell<bool>,
@@ -116,6 +118,17 @@ impl MusicPopoverMenu {
                 if !menu.imp().updating.get() {
                     player.set_repeat(switch.is_active());
                 }
+            }
+        ));
+
+        imp._stop_row.connect_activated(glib::clone!(
+            #[weak]
+            menu,
+            #[strong]
+            player,
+            move |_| {
+                menu.popdown();
+                player.stop();
             }
         ));
 

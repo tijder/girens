@@ -385,6 +385,25 @@ impl Server {
     pub async fn shuffle_play_queue(&self, id: ItemId, shuffle: bool) -> Result<PlayQueue> {
         each!(self, server => server.shuffle_play_queue(id, shuffle).await)
     }
+
+    /// Adds `item` to a queue: after the entry `after`, which is the one
+    /// that is playing, or at the end.
+    pub async fn add_to_play_queue(
+        &self,
+        id: ItemId,
+        item: &Item,
+        after: Option<ItemId>,
+    ) -> Result<PlayQueue> {
+        match self {
+            Server::Plex(server) => server.add_to_play_queue(id, item, after.is_some()).await,
+            Server::Ister(server) => server.add_to_play_queue(id, item, after).await,
+        }
+    }
+
+    /// Adds `item` to the end of a playlist.
+    pub async fn add_to_playlist(&self, playlist: ItemId, item: &Item) -> Result<()> {
+        each!(self, server => server.add_to_playlist(playlist, item).await)
+    }
 }
 
 /// A name for a conversion session that no other player uses.

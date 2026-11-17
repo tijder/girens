@@ -735,6 +735,15 @@ impl PlexWindow {
         match (command, argument) {
             (Some("skip"), _) => player.skip_segment(),
             (Some("next"), _) => player.next(),
+            (Some("pause"), _) => player.pause(),
+            (Some("queue"), _) => eprintln!(
+                "queue: {:?}",
+                player
+                    .queue_items()
+                    .iter()
+                    .map(|item| item.title.as_str())
+                    .collect::<Vec<_>>()
+            ),
             (Some("previous"), _) => player.previous(),
             (Some("seek"), Some(seconds)) => player.seek_to(seconds * 1000),
             (Some("subtitle"), Some(nth)) => {
@@ -905,6 +914,20 @@ impl PlexWindow {
             window.set_watched(key, false)
         });
 
+        add("queue-next-by-id", |window, key| {
+            if let Some(player) = window.imp().player.get() {
+                player.enqueue(key, true);
+            }
+        });
+        add("queue-add-by-id", |window, key| {
+            if let Some(player) = window.imp().player.get() {
+                player.enqueue(key, false);
+            }
+        });
+        add("add-to-playlist-by-id", |window, key| {
+            views::playlist_dialog::present(window, key)
+        });
+
         add("sync-by-id", |window, key| window.sync_item(key));
         add("play-item", |window, key| {
             window.play(PlayTarget::Item(key), false, StartMode::Ask)
@@ -931,6 +954,11 @@ impl PlexWindow {
             button.set_active(!button.is_active());
         });
         plain("back", |window| window.go_back());
+        plain("play-pause", |window| {
+            if let Some(player) = window.imp().player.get() {
+                player.play_pause();
+            }
+        });
         plain("preferences", views::preferences::present);
         plain("shortcuts", |window| window.show_shortcuts());
         plain("main-menu", |window| window.imp()._menu_button.popup());
@@ -1010,6 +1038,8 @@ impl PlexWindow {
         imp._section_view.update_item(item);
         imp._search_view.update_item(item);
         imp._player_view.update_item(item);
+        imp._album_view.update_item(item);
+        imp._artist_view.update_item(item);
         if matches!(item.kind, ItemKind::Show | ItemKind::Season) {
             // Their episodes changed too; those rows are loaded again.
             imp._discover_view.refresh();

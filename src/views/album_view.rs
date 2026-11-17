@@ -139,14 +139,66 @@ pub fn setup_music_list(list: &gtk::ListView) -> gio::ListStore {
         move || {
             let mut cell = list.first_child();
             while let Some(widget) = cell {
-                if let Some(item) = widget.first_child().and_downcast::<AlbumItem>() {
+                let row = widget.first_child();
+                if let Some(item) = row.and_downcast_ref::<AlbumItem>() {
                     item.mark_playing();
+                } else if let Some(header) = row.and_downcast_ref::<AlbumHeader>() {
+                    header.mark_playing();
                 }
                 cell = widget.next_sibling();
             }
         }
     ));
     store
+}
+
+/// Shows the new state of a track, such as played or not, in its row.
+pub fn update_track(store: &gio::ListStore, track: &Item) {
+    for position in 0..store.n_items() {
+        let Some(object) = store.item(position).and_downcast::<glib::BoxedAnyObject>() else {
+            continue;
+        };
+        let changed = match &*object.borrow::<MusicRow>() {
+            MusicRow::Track(shown) if shown.rating_key == track.rating_key => {
+                Some(MusicRow::Track(Box::new(track.clone())))
+            }
+            // The row of a playlist shows its own title and number.
+            MusicRow::Entry { playlist, item } if item.rating_key == track.rating_key => {
+                let mut item = item.clone();
+                item.view_count = track.view_count;
+                Some(MusicRow::Entry {
+                    playlist: *playlist,
+                    item,
+                })
+            }
+            _ => None,
+        };
+        if let Some(changed) = changed {
+            store.splice(position, 1, &[glib::BoxedAnyObject::new(changed)]);
+        }
+    }
+}
+
+/// Makes `button` play the album, artist or playlist `key`, or pause and
+/// continue it while that is what plays.
+pub fn show_play_button(button: &gtk::Button, content: &adw::ButtonContent, key: ItemId) {
+    let playing = crate::player::playing_source() == Some(key);
+    let (icon, label) = match (playing, crate::player::now_paused()) {
+        (false, _) => ("media-playback-start-symbolic", gettext("Play")),
+        (true, false) => ("media-playback-pause-symbolic", gettext("Pause")),
+        (true, true) => ("media-playback-start-symbolic", gettext("Resume")),
+    };
+    content.set_icon_name(icon);
+    content.set_label(&label);
+    // Without a name first: the old action does not take the new target.
+    button.set_action_name(None);
+    if playing {
+        button.set_action_target_value(None);
+        button.set_action_name(Some("win.play-pause"));
+    } else {
+        button.set_action_target_value(Some(&key.as_str().to_variant()));
+        button.set_action_name(Some("win.play-item"));
+    }
 }
 
 fn music_store(list: &gtk::ListView) -> gio::ListStore {
@@ -178,15 +230,17 @@ fn music_store(list: &gtk::ListView) -> gio::ListStore {
                 items,
                 duration,
             } => RowWidget::inert(&AlbumHeader::for_playlist(playlist, *items, *duration)),
-            MusicRow::Track(track) | MusicRow::Entry { item: track, .. } => match previous
-                .and_downcast::<AlbumItem>()
-            {
-                Some(item) => {
-                    item.set_track(track);
-                    RowWidget::activatable(&item)
+            MusicRow::Track(track) | MusicRow::Entry { item: track, .. } => {
+                // The tracks of a playlist come from anywhere.
+                let album_link = matches!(row, MusicRow::Entry { .. });
+                match previous.and_downcast::<AlbumItem>() {
+                    Some(item) => {
+                        item.set_track(track, album_link);
+                        RowWidget::activatable(&item)
+                    }
+                    None => RowWidget::activatable(&AlbumItem::new(track, album_link)),
                 }
-                None => RowWidget::activatable(&AlbumItem::new(track)),
-            },
+            }
         },
         glib::clone!(
             #[weak]
@@ -230,6 +284,10 @@ mod header {
         pub _menu_button: TemplateChild<gtk::MenuButton>,
         #[template_child]
         pub _play_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _play_content: TemplateChild<adw::ButtonContent>,
+        /// Rating key of the album or playlist.
+        pub key: Cell<Option<ItemId>>,
         pub cover_task: RefCell<Option<glib::JoinHandle<()>>>,
     }
 
@@ -361,11 +419,19 @@ impl AlbumHeader {
         imp._title_label.set_text(&item.title);
         imp._subtitle_label.set_text(details);
         let target = item.rating_key.as_str().to_variant();
-        imp._play_button.set_action_target_value(Some(&target));
-        imp._play_button.set_action_name(Some("win.play-item"));
+        imp.key.set(Some(item.rating_key));
+        self.mark_playing();
         imp._shuffle_button.set_action_target_value(Some(&target));
         imp._shuffle_button
             .set_action_name(Some("win.shuffle-by-id"));
+    }
+
+    /// Turns the play button into one to pause with while this plays.
+    fn mark_playing(&self) {
+        let imp = self.imp();
+        if let Some(key) = imp.key.get() {
+            show_play_button(&imp._play_button, &imp._play_content, key);
+        }
     }
 
     fn load_cover(&self, key: ItemId, thumb: Option<String>) {
@@ -448,6 +514,13 @@ impl AlbumView {
     /// What is currently displayed.
     pub fn rating_key(&self) -> Option<ItemId> {
         self.imp().rating_key.get()
+    }
+
+    /// Shows the new state of a track that may be listed here.
+    pub fn update_item(&self, item: &Item) {
+        if let Some(store) = self.imp().store.get() {
+            update_track(store, item);
+        }
     }
 
     /// Loads and shows the playlist with this rating key. Its items come

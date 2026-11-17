@@ -97,6 +97,31 @@ impl PlexServer {
             .await
     }
 
+    /// Adds `item` to a queue: right after what is playing with `next`, at
+    /// the end otherwise.
+    pub async fn add_to_play_queue(&self, id: ItemId, item: &Item, next: bool) -> Result<PlayQueue> {
+        let uri = self.item_uri(&item.key);
+        let mut params = vec![("uri", uri.as_str())];
+        if next {
+            params.push(("next", "1"));
+        }
+        self.command(Method::PUT, &format!("/playQueues/{id}"), &params)
+            .await?;
+        // The answer may hold only a part of the queue.
+        self.refresh_play_queue(id).await
+    }
+
+    /// Adds `item` to the end of a playlist.
+    pub async fn add_to_playlist(&self, playlist: ItemId, item: &Item) -> Result<()> {
+        let uri = self.item_uri(&item.key);
+        self.command(
+            Method::PUT,
+            &format!("/playlists/{playlist}/items"),
+            &[("uri", uri.as_str())],
+        )
+        .await
+    }
+
     pub async fn shuffle_play_queue(&self, id: ItemId, shuffle: bool) -> Result<PlayQueue> {
         let action = if shuffle { "shuffle" } else { "unshuffle" };
         self.play_queue(Method::PUT, &format!("/playQueues/{id}/{action}"), &[])

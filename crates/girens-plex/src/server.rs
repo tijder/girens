@@ -223,7 +223,7 @@ impl PlexServer {
         self.request(Method::GET, path, params).await
     }
 
-    async fn command(&self, method: Method, path: &str, params: &[(&str, &str)]) -> Result<()> {
+    pub(crate) async fn command(&self, method: Method, path: &str, params: &[(&str, &str)]) -> Result<()> {
         self.request::<serde::de::IgnoredAny>(method, path, params)
             .await
             .map(drop)

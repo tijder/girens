@@ -1,5 +1,5 @@
-data/nl.g4d.Girens.metainfo.xml.in
 data/nl.g4d.Girens.desktop.in
+data/nl.g4d.Girens.metainfo.xml.in
 data/ui/album_header.blp
 data/ui/album_item.blp
 data/ui/artist_view.blp
@@ -29,6 +29,7 @@ src/player/mod.rs
 src/player/streams.rs
 src/session.rs
 src/sync.rs
+src/views/album_item.rs
 src/views/album_view.rs
 src/views/cover_box.rs
 src/views/downloads_view.rs
@@ -37,6 +38,7 @@ src/views/login_view.rs
 src/views/music_popover_menu.rs
 src/views/photo_view.rs
 src/views/player_view.rs
+src/views/playlist_dialog.rs
 src/views/preferences.rs
 src/views/profile_dialog.rs
 src/views/search_view.rs

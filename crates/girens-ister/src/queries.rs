@@ -371,6 +371,25 @@ pub const GET_PLAY_QUEUE: &str = document!(
     file_brief
 );
 
+pub const ADD_PLAY_QUEUE_ITEM: &str = document!(
+    "mutation AddPlayQueueItem($queue: ID!, $type: MediaType!, $id: ID!, $after: ID) { \
+     addPlayQueueItem(playQueueId: $queue, mediaType: $type, mediaId: $id, \
+     afterPlayQueueItemId: $after) { ...Queue } }",
+    queue,
+    chapter,
+    podcast_episode,
+    movie,
+    episode,
+    track,
+    image,
+    metadata,
+    status,
+    file_brief
+);
+
+pub const ADD_PLAYLIST_ITEM: &str = "mutation AddPlaylistItem($playlist: ID!, $id: ID!) { \
+     addPlaylistItem(playlistId: $playlist, mediaId: $id) { id } }";
+
 /// Reports the position; also what keeps the session of the player alive.
 pub const UPDATE_PLAY_QUEUE: &str = "mutation UpdatePlayQueue($id: ID!, $item: ID!, $progress: Int!, \
      $settings: StreamSettingsInput, $state: PlayState, $device: ID) { \
@@ -421,6 +440,8 @@ pub const ALL: &[&str] = &[
     PLAYLIST,
     CREATE_PLAY_QUEUE,
     GET_PLAY_QUEUE,
+    ADD_PLAY_QUEUE_ITEM,
+    ADD_PLAYLIST_ITEM,
     UPDATE_PLAY_QUEUE,
     MARK_PLAYED,
     PLAYBACK_HISTORY,

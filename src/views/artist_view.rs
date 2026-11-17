@@ -10,7 +10,9 @@ use girens_model::model::Item;
 use gtk::prelude::*;
 use gtk::{gio, glib, CompositeTemplate};
 
-use super::album_view::{album_count, album_rows, setup_music_list, song_count, MusicRow};
+use super::album_view::{
+    album_count, album_rows, setup_music_list, show_play_button, song_count, update_track, MusicRow,
+};
 use super::row_list;
 use crate::session::Session;
 use crate::{images, runtime};
@@ -33,6 +35,8 @@ mod imp {
         pub _subtitle_label: TemplateChild<gtk::Label>,
         #[template_child]
         pub _play_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _play_content: TemplateChild<adw::ButtonContent>,
         #[template_child]
         pub _shuffle_button: TemplateChild<gtk::Button>,
         pub store: OnceCell<gio::ListStore>,
@@ -59,6 +63,11 @@ mod imp {
         fn constructed(&self) {
             self.parent_constructed();
             let _ = self.store.set(setup_music_list(&self._list_view));
+            crate::player::connect_now_playing(glib::clone!(
+                #[weak(rename_to = view)]
+                self.obj(),
+                move || view.mark_playing()
+            ));
         }
     }
 
@@ -83,6 +92,21 @@ impl ArtistView {
         self.imp().rating_key.get()
     }
 
+    /// Shows the new state of a track that may be listed here.
+    pub fn update_item(&self, item: &Item) {
+        if let Some(store) = self.imp().store.get() {
+            update_track(store, item);
+        }
+    }
+
+    /// Turns the play button into one to pause with while the artist plays.
+    fn mark_playing(&self) {
+        let imp = self.imp();
+        if let Some(key) = imp.rating_key.get() {
+            show_play_button(&imp._play_button, &imp._play_content, key);
+        }
+    }
+
     fn header_row(&self) -> MusicRow {
         MusicRow::Widget(self.imp()._header.get().upcast())
     }
@@ -104,8 +128,7 @@ impl ArtistView {
         );
 
         let target = rating_key.as_str().to_variant();
-        imp._play_button.set_action_target_value(Some(&target));
-        imp._play_button.set_action_name(Some("win.play-item"));
+        self.mark_playing();
         imp._shuffle_button.set_action_target_value(Some(&target));
         imp._shuffle_button
             .set_action_name(Some("win.shuffle-by-id"));
@@ -148,6 +171,7 @@ impl ArtistView {
                 imp._title_label.set_text(&artist.title);
                 imp._avatar.set_text(Some(&artist.title));
                 let genres: Vec<&str> = artist.genres.iter().map(|g| g.tag.as_str()).collect();
+                let total_tracks = tracks.len() as u32;
                 imp._subtitle_label.set_text(&crate::util::detail_line([
                     (!genres.is_empty()).then(|| genres.join(", ")),
                     (!albums.is_empty()).then(|| album_count(albums.len() as u32)),
@@ -182,6 +206,42 @@ impl ArtistView {
                     rows.extend(album_rows(album, &tracks, false));
                 }
                 row_list::replace_from(&store, 1, rows);
+
+                // The server does not list every album the tracks are on:
+                // compilations and the like are left out. Those follow, so
+                // that all that plays for the artist can be found here.
+                let mut missing: Vec<ItemId> = by_album.keys().copied().collect();
+                if missing.is_empty() {
+                    return;
+                }
+                missing.sort();
+                let Some(server) = Session::current().server() else {
+                    return;
+                };
+                let fetched = runtime::run(async move {
+                    let mut albums = Vec::new();
+                    for key in missing {
+                        match server.item(key).await {
+                            Ok(album) => albums.push(album),
+                            Err(err) => log::warn!("Could not load album {key}: {err}"),
+                        }
+                    }
+                    albums
+                })
+                .await;
+                let mut more = fetched;
+                more.sort_by_key(|album| album.year);
+                let mut rows = Vec::new();
+                for album in &more {
+                    let tracks = by_album.remove(&album.rating_key).unwrap_or_default();
+                    rows.extend(album_rows(album, &tracks, false));
+                }
+                imp._subtitle_label.set_text(&crate::util::detail_line([
+                    (!genres.is_empty()).then(|| genres.join(", ")),
+                    Some(album_count((albums.len() + more.len()) as u32)),
+                    (total_tracks > 0).then(|| song_count(total_tracks)),
+                ]));
+                row_list::replace_from(&store, store.n_items(), rows);
             }
         ));
         if let Some(previous) = imp.task.replace(Some(task)) {
