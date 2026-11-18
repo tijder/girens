@@ -754,6 +754,14 @@ impl PlexWindow {
                 });
                 player.set_subtitle_stream(stream);
             }
+            (Some("version"), Some(nth)) => {
+                let media = player
+                    .loaded_item()
+                    .and_then(|item| item.media.get(nth as usize).map(|media| media.id));
+                if let Some(media) = media {
+                    player.set_version(media);
+                }
+            }
             (Some("position"), _) => eprintln!(
                 "player: {} ms into {:?}",
                 player.position(),

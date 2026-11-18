@@ -952,9 +952,9 @@ impl Inner {
             None => item.clone(),
         };
         let mut loading = loading;
+        let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
         self.prefer_version(&mut loading);
 
-        let direct = self.settings.boolean("play-media-direct") || loading.kind.is_audio();
         let mut local_subtitles = Vec::new();
         let opened = if let Some(path) =
             crate::sync::local_file(&machine, &user, loading.rating_key)
@@ -1130,8 +1130,17 @@ impl Inner {
     }
 
     /// What plays is the first file of an item: puts the one the user chose
-    /// for `item` there.
+    /// for `item` there, or else one that plays as it is before those the
+    /// server has to convert anyway.
     fn prefer_version(&self, item: &mut Item) {
+        if self.settings.boolean("play-media-direct") {
+            if let Some(server) = Session::current().server() {
+                let fitting = item.media.iter().position(|media| server.plays_as_it_is(media));
+                if let Some(fitting) = fitting {
+                    item.media[..=fitting].rotate_right(1);
+                }
+            }
+        }
         let chosen = self
             .state
             .borrow()

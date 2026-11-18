@@ -16,6 +16,27 @@ use crate::map::{self, Context, Kind, Labels, Selection};
 use crate::{queries, wire};
 
 /// A token for media and images lasts a day; it is replaced well before.
+/// The formats of video the stream carries as they are; anything else has to
+/// be converted to be seen at all. VP9 and AV1 do not fit in the stream, and
+/// MPEG-4 arrives without what a player needs to start decoding it.
+const COPIED_CODECS: [&str; 4] = ["h264", "hevc", "mpeg2video", "mpeg1video"];
+
+/// What a picture kept inside a file is stored as.
+const COVER_CODECS: [&str; 5] = ["mjpeg", "png", "bmp", "gif", "webp"];
+
+/// Whether the stream carries the video of `part` as it is, without
+/// converting it.
+pub fn carried_as_it_is(part: &girens_model::model::Part) -> bool {
+    part.streams
+        .iter()
+        .filter(|stream| stream.stream_type == 1)
+        .map(|stream| stream.codec.as_deref().unwrap_or_default().to_ascii_lowercase())
+        // A cover kept in the file counts as a video there, but is not
+        // what plays.
+        .find(|codec| !COVER_CODECS.contains(&codec.as_str()))
+        .is_none_or(|codec| COPIED_CODECS.contains(&codec.as_str()))
+}
+
 const STREAM_TOKEN_AGE: Duration = Duration::from_secs(12 * 3600);
 /// How long the results of a search are kept, for the next kind asked for.
 const SEARCH_AGE: Duration = Duration::from_secs(30);
@@ -1148,13 +1169,7 @@ impl IsterServer {
             .parts()
             .next()
             .ok_or(Error::NotFound(item.rating_key))?;
-        // The stream carries a video as it is only in these formats;
-        // anything else has to be converted to be seen at all.
-        let fits = part
-            .streams
-            .iter()
-            .filter(|stream| stream.stream_type == 1)
-            .all(|stream| matches!(stream.codec.as_deref(), Some("h264" | "hevc")));
+        let fits = carried_as_it_is(part);
         let direct = direct && fits;
         Ok(format!(
             "{}/master.m3u8?direct={direct}&transcode={}&subtitleFormat=SRT&token={}",

@@ -424,11 +424,11 @@ async fn a_queue_is_made_played_and_reported() {
     assert_eq!(queue_id, queue.id.as_str());
 
     let loaded = server.item(playing.rating_key).await.unwrap();
-    // Video the stream cannot carry as it is (anything but H.264 and
-    // HEVC) is converted, also when asked to play it as it is.
-    let fits = loaded
+    // Video the stream cannot carry as it is (VP9 here) is converted, also
+    // when asked to play it as it is.
+    let fits = !loaded
         .streams(StreamKind::Video)
-        .all(|stream| matches!(stream.codec.as_deref(), Some("h264" | "hevc")));
+        .any(|stream| stream.codec.as_deref() == Some("vp9"));
     let url = server.stream_url(&loaded, true).unwrap();
     assert!(url.contains(&format!(
         "/master.m3u8?direct={fits}&transcode={}&subtitleFormat=SRT&token=stream-token",
@@ -438,6 +438,23 @@ async fn a_queue_is_made_played_and_reported() {
     let movie = server.item("movie-any".into()).await.unwrap();
     assert!(server.stream_url(&movie, true).unwrap().contains("direct=true&transcode=false"));
     assert!(server.stream_url(&movie, false).unwrap().contains("direct=false&transcode=true"));
+    // So does older video, and a cover kept in the file does not count.
+    let with_codecs = |codecs: &[&str]| {
+        let mut movie = movie.clone();
+        let streams = &mut movie.media[0].parts[0].streams;
+        let video = streams.iter().find(|stream| stream.stream_type == 1).unwrap().clone();
+        streams.retain(|stream| stream.stream_type != 1);
+        streams.extend(codecs.iter().map(|codec| girens_model::model::Stream {
+            codec: Some((*codec).to_owned()),
+            ..video.clone()
+        }));
+        server.stream_url(&movie, true).unwrap()
+    };
+    assert!(with_codecs(&["mpeg2video"]).contains("direct=true"));
+    assert!(with_codecs(&["mpeg4"]).contains("direct=false"));
+    assert!(with_codecs(&["mjpeg", "h264"]).contains("direct=true"));
+    assert!(with_codecs(&["h264", "png"]).contains("direct=true"));
+    assert!(with_codecs(&["mjpeg", "av1"]).contains("direct=false"));
 
     Mock::given(method("POST"))
         .and(path("/api/graphql"))

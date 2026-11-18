@@ -256,6 +256,18 @@ impl Server {
 
     // Playing
 
+    /// Whether `media` plays as it is when asked to, rather than converted
+    /// all the same.
+    pub fn plays_as_it_is(&self, media: &girens_model::model::Media) -> bool {
+        match self {
+            Server::Plex(_) => true,
+            Server::Ister(_) => media
+                .parts
+                .first()
+                .is_some_and(girens_ister::carried_as_it_is),
+        }
+    }
+
     /// Has the server make `item` (with its files, as [`Server::item`]
     /// gives it) ready to play.
     pub async fn open_stream(&self, item: &Item, options: &StreamOptions) -> Result<Opened> {

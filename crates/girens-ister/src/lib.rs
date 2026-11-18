@@ -12,7 +12,7 @@ mod server;
 mod wire;
 
 pub use map::Labels;
-pub use server::{machine_identifier, IsterServer, Player, TokenKeeper, User, SUBTITLE_DELAY};
+pub use server::{carried_as_it_is, machine_identifier, IsterServer, Player, TokenKeeper, User, SUBTITLE_DELAY};
 
 /// The documents sent to the server, for checking them against its schema.
 #[doc(hidden)]
