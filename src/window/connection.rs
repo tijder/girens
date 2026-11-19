@@ -182,12 +182,12 @@ impl PlexWindow {
     /// Signs in through the browser: opens plex.tv and waits until the user
     /// has approved there, or has typed the code of the pin at plex.tv/link
     /// on another device. Logging out from the waiting page cancels it.
-    /// `Ok(false)` when plex.tv forgot the pin before the user got to it.
+    /// `Ok(false)` when plex.tv forgot the request before the user got to it.
     async fn browser_login(&self) -> girens_model::Result<bool> {
         let imp = self.imp();
         let session = imp.session.clone();
         let signed_in = session.account_id();
-        let (url, pin) = session.start_browser_login().await?;
+        let (url, sign_in) = session.start_browser_login().await?;
         #[cfg(debug_assertions)]
         let opened = crate::debug::take_login_url(&url);
         #[cfg(not(debug_assertions))]
@@ -203,7 +203,7 @@ impl PlexWindow {
                 },
             );
         }
-        self.show_waiting_for_browser(&url, Some(&pin.code));
+        self.show_waiting_for_browser(&url, Some(sign_in.link_code()));
 
         // plex.tv keeps a sign-in request for about fifteen minutes.
         for _ in 0..BROWSER_LOGIN_ATTEMPTS {
@@ -220,7 +220,7 @@ impl PlexWindow {
                 // Another account was chosen meanwhile.
                 return Err(Error::Unauthorized);
             }
-            match session.finish_browser_login(&pin).await {
+            match session.finish_browser_login(&sign_in).await {
                 Ok(true) => {
                     // The user is still looking at the browser.
                     self.present();
@@ -232,7 +232,7 @@ impl PlexWindow {
                 Err(err) if err.is_network() => {
                     log::warn!("Could not check the sign-in on plex.tv: {err}");
                 }
-                // plex.tv has forgotten the pin.
+                // plex.tv has forgotten the request.
                 Err(Error::Status { status, .. }) if status.as_u16() == 404 => {
                     return Ok(false);
                 }

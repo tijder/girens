@@ -117,11 +117,8 @@ impl Resource {
     }
 }
 
-/// A pending sign-in through the browser: the user approves it on plex.tv,
-/// after which the pin yields an account token. This also works for accounts
-/// with two-factor authentication. The [code](Self::code) is short enough to
-/// type at [`LINK_PAGE`] on another device, for when the browser is not on
-/// this one.
+/// A request to sign in that the user approves on plex.tv, after which it
+/// yields an account token.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Pin {
@@ -131,16 +128,35 @@ pub struct Pin {
     pub auth_token: Option<String>,
 }
 
-impl Pin {
+/// A pending sign-in through the browser, which also works for accounts
+/// with two-factor authentication. It can be approved in two ways, each
+/// with a pin of its own: the sign-in page of plex.tv only takes the long
+/// code of a strong pin, and the page to type a code at only the short code
+/// of a weak one.
+#[derive(Debug, Clone)]
+pub struct BrowserSignIn {
+    /// Approved at [`Self::auth_url`].
+    page: Pin,
+    /// Approved by typing [`Self::link_code`] at [`LINK_PAGE`].
+    link: Pin,
+}
+
+impl BrowserSignIn {
     /// The page to open in the browser.
     pub fn auth_url(&self, client: &ClientInfo) -> String {
         // Plex expects the parameters after the `#`, not as a query string.
         let parameters = url::form_urlencoded::Serializer::new(String::new())
             .append_pair("clientID", &client.identifier)
-            .append_pair("code", &self.code)
+            .append_pair("code", &self.page.code)
             .append_pair("context[device][product]", &client.product)
             .finish();
         format!("{AUTH_PAGE}#?{parameters}")
+    }
+
+    /// The code to type at [`LINK_PAGE`], for when the browser is not on
+    /// this device.
+    pub fn link_code(&self) -> &str {
+        &self.link.code
     }
 }
 
@@ -190,19 +206,48 @@ impl MyPlex {
         Self::with_account(account, client, PLEX_TV)
     }
 
-    /// Starts a sign-in through the browser. Open [`Pin::auth_url`], or have
-    /// the user type [`Pin::code`] at [`LINK_PAGE`], and call
-    /// [`Self::check_pin`] until it returns a session. The pin is kept for
-    /// about fifteen minutes.
-    pub async fn create_pin(client: &ClientInfo) -> Result<Pin> {
+    /// Starts a sign-in through the browser. Open
+    /// [`BrowserSignIn::auth_url`], or have the user type
+    /// [`BrowserSignIn::link_code`] at [`LINK_PAGE`], and call
+    /// [`Self::check_browser_sign_in`] until it returns a session. plex.tv
+    /// keeps the code to type for about fifteen minutes.
+    pub async fn start_browser_sign_in(client: &ClientInfo) -> Result<BrowserSignIn> {
+        let (page, link) = tokio::try_join!(
+            Self::create_pin(client, true),
+            Self::create_pin(client, false)
+        )?;
+        Ok(BrowserSignIn { page, link })
+    }
+
+    /// The session, once the user has approved `sign_in` in either way.
+    pub async fn check_browser_sign_in(
+        sign_in: &BrowserSignIn,
+        client: &ClientInfo,
+    ) -> Result<Option<Self>> {
+        let (page, link) = tokio::join!(
+            Self::check_pin(&sign_in.page, client),
+            Self::check_pin(&sign_in.link, client)
+        );
+        match (page, link) {
+            (Ok(Some(session)), _) | (_, Ok(Some(session))) => Ok(Some(session)),
+            // One pin that plex.tv forgot or that could not be asked after
+            // does not end the wait for the other.
+            (Ok(None), _) | (_, Ok(None)) => Ok(None),
+            (Err(error), Err(_)) => Err(error),
+        }
+    }
+
+    /// Asks plex.tv for a pin. A strong one has a code that is too long to
+    /// type, a weak one a code of four characters that the sign-in page
+    /// does not take.
+    pub async fn create_pin(client: &ClientInfo, strong: bool) -> Result<Pin> {
         let http = girens_model::net::client_builder()
             .default_headers(client.headers(None))
             .build()?;
-        // Not a strong pin: those are too long to type at the link page.
-        send(http.post(format!("{PINS}?strong=false"))).await
+        send(http.post(format!("{PINS}?strong={strong}"))).await
     }
 
-    /// The session, once the user has approved `pin` in the browser.
+    /// The session, once the user has approved `pin`.
     pub async fn check_pin(pin: &Pin, client: &ClientInfo) -> Result<Option<Self>> {
         let http = girens_model::net::client_builder()
             .default_headers(client.headers(None))
@@ -325,11 +370,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn the_sign_in_page_gets_its_parameters_after_the_hash() {
-        let pin = Pin {
+    fn the_sign_in_page_gets_the_long_code_after_the_hash() {
+        let pin = |code: &str| Pin {
             id: 1,
-            code: "abc123".into(),
+            code: code.into(),
             auth_token: None,
+        };
+        let sign_in = BrowserSignIn {
+            page: pin("abcdefghijklmnopqrstuvwxy"),
+            link: pin("AB12"),
         };
         let client = ClientInfo {
             identifier: "client id".into(),
@@ -338,9 +387,10 @@ mod tests {
             device_name: "test".into(),
         };
         assert_eq!(
-            pin.auth_url(&client),
-            "https://app.plex.tv/auth#?clientID=client+id&code=abc123&context%5Bdevice%5D%5Bproduct%5D=Girens"
+            sign_in.auth_url(&client),
+            "https://app.plex.tv/auth#?clientID=client+id&code=abcdefghijklmnopqrstuvwxy&context%5Bdevice%5D%5Bproduct%5D=Girens"
         );
+        assert_eq!(sign_in.link_code(), "AB12");
     }
 
     #[test]

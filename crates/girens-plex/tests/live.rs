@@ -78,14 +78,16 @@ async fn a_browser_sign_in_can_be_started() {
         version: env!("CARGO_PKG_VERSION").into(),
         device_name: "live test".into(),
     };
-    let pin = MyPlex::create_pin(&client).await.unwrap();
-    assert!(pin.id > 0);
-    assert_eq!(pin.code.len(), 4, "a code to type at plex.tv/link");
-    assert!(pin.auth_token.is_none());
-    assert!(pin
-        .auth_url(&client)
-        .starts_with("https://app.plex.tv/auth#?clientID="));
-    assert!(MyPlex::check_pin(&pin, &client).await.unwrap().is_none());
+    let sign_in = MyPlex::start_browser_sign_in(&client).await.unwrap();
+    assert_eq!(sign_in.link_code().len(), 4, "a code to type at plex.tv/link");
+    let page = sign_in.auth_url(&client);
+    assert!(page.starts_with("https://app.plex.tv/auth#?clientID="));
+    let code = page.split("&code=").nth(1).unwrap().split('&').next().unwrap();
+    assert!(code.len() > 20, "the sign-in page takes the long code: {code}");
+    assert!(MyPlex::check_browser_sign_in(&sign_in, &client)
+        .await
+        .unwrap()
+        .is_none());
 }
 
 /// Interrupts a real download and continues it, as the offline sync does.

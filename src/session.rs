@@ -428,22 +428,29 @@ impl Session {
     }
 
     /// Starts a sign-in through the browser and returns the page to open
-    /// and the pin to wait for.
-    pub async fn start_browser_login(&self) -> Result<(String, girens_plex::myplex::Pin)> {
+    /// and what to wait for.
+    pub async fn start_browser_login(
+        &self,
+    ) -> Result<(String, girens_plex::myplex::BrowserSignIn)> {
         let client = self.client.clone();
-        let pin = runtime::run({
+        let sign_in = runtime::run({
             let client = client.clone();
-            async move { MyPlex::create_pin(&client).await }
+            async move { MyPlex::start_browser_sign_in(&client).await }
         })
         .await?;
-        Ok((pin.auth_url(&client), pin))
+        Ok((sign_in.auth_url(&client), sign_in))
     }
 
-    /// Whether the user has approved `pin` by now; if so the account is
+    /// Whether the user has approved `sign_in` by now; if so the account is
     /// signed in.
-    pub async fn finish_browser_login(&self, pin: &girens_plex::myplex::Pin) -> Result<bool> {
-        let (client, pin) = (self.client.clone(), pin.clone());
-        match runtime::run(async move { MyPlex::check_pin(&pin, &client).await }).await? {
+    pub async fn finish_browser_login(
+        &self,
+        sign_in: &girens_plex::myplex::BrowserSignIn,
+    ) -> Result<bool> {
+        let (client, sign_in) = (self.client.clone(), sign_in.clone());
+        let checked =
+            runtime::run(async move { MyPlex::check_browser_sign_in(&sign_in, &client).await });
+        match checked.await? {
             Some(myplex) => {
                 self.add_account(myplex).await;
                 Ok(true)
@@ -734,6 +741,7 @@ impl Session {
     /// server is remembered as an account of its own.
     pub async fn connect_url(&self, url: String, token: String) -> Result<()> {
         let client = self.client.clone();
+        let url = with_scheme(&url);
         let server =
             runtime::run(async move { PlexServer::connect(&url, &token, &client).await }).await?;
         let id = store::server_account_id(server.machine_identifier());
@@ -902,6 +910,19 @@ pub fn config_file() -> std::path::PathBuf {
     glib::user_config_dir().join("config")
 }
 
+/// The address of a Plex server as typed, as a URL: an address without
+/// `http://` or `https://` is taken to be plain HTTP, which is what a
+/// server on the local network speaks.
+fn with_scheme(address: &str) -> String {
+    let address = address.trim();
+    let lower = address.to_ascii_lowercase();
+    if lower.starts_with("http://") || lower.starts_with("https://") {
+        address.to_owned()
+    } else {
+        format!("http://{address}")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::future::Future;
@@ -911,6 +932,14 @@ mod tests {
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     use super::*;
+
+    #[test]
+    fn a_server_address_without_a_scheme_is_plain_http() {
+        assert_eq!(with_scheme("192.168.1.10:32400"), "http://192.168.1.10:32400");
+        assert_eq!(with_scheme(" nas:32400 "), "http://nas:32400");
+        assert_eq!(with_scheme("http://nas:32400"), "http://nas:32400");
+        assert_eq!(with_scheme("HTTPS://plex.example.org"), "HTTPS://plex.example.org");
+    }
 
     fn fixture(name: &str) -> String {
         let file = format!(
