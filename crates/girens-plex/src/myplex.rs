@@ -117,6 +117,10 @@ impl Resource {
     }
 }
 
+/// How long a more preferred connection (a local one rather than a remote
+/// one, a direct one rather than a relay) gets to answer after another did.
+const PREFERENCE_GRACE: std::time::Duration = std::time::Duration::from_secs(1);
+
 /// A request to sign in that the user approves on plex.tv, after which it
 /// yields an account token.
 #[derive(Debug, Clone, Deserialize)]
@@ -342,25 +346,71 @@ impl MyPlex {
         Self::with_account(account, &self.client, &self.plex_tv)
     }
 
-    /// Tries the connections of `resource` in order of preference and returns
-    /// the first that works.
+    /// Tries all connections of `resource` at once and returns the one that
+    /// works; when several do, the most preferred of those that answer
+    /// within [`PREFERENCE_GRACE`] of the first. One after the other, an
+    /// address that does not answer (the local one, away from home) held up
+    /// the rest for as long as its timeout.
     pub async fn connect(&self, resource: &Resource) -> Result<PlexServer> {
         let token = resource
             .access_token
             .as_deref()
             .unwrap_or(&self.account.auth_token);
+        let mut attempts = tokio::task::JoinSet::new();
+        let connections = resource.preferred_connections();
+        // Whether the attempt at each connection, in order of preference,
+        // is still running.
+        let mut pending = vec![true; connections.len()];
+        for (index, connection) in connections.into_iter().enumerate() {
+            let (uri, token, client) = (
+                connection.uri.clone(),
+                token.to_owned(),
+                self.client.clone(),
+            );
+            attempts
+                .spawn(async move { (index, PlexServer::connect(&uri, &token, &client).await) });
+        }
+
+        let mut best: Option<(usize, PlexServer)> = None;
+        let mut deadline = None;
         let mut last_error = None;
-        for connection in resource.preferred_connections() {
-            match PlexServer::connect(&connection.uri, token, &self.client).await {
-                Ok(server) => return Ok(server),
-                Err(Error::Unauthorized) => return Err(Error::Unauthorized),
+        loop {
+            // Nothing that is still running would be preferred to what answered.
+            if let Some((index, _)) = &best {
+                if !pending[..*index].contains(&true) {
+                    break;
+                }
+            }
+            let joined = match deadline {
+                Some(deadline) => {
+                    match tokio::time::timeout_at(deadline, attempts.join_next()).await {
+                        Ok(joined) => joined,
+                        Err(_) => break,
+                    }
+                }
+                None => attempts.join_next().await,
+            };
+            let Some(joined) = joined else { break };
+            let Ok((index, result)) = joined else {
+                continue;
+            };
+            pending[index] = false;
+            match result {
+                Ok(server) => {
+                    if best.as_ref().is_none_or(|(current, _)| index < *current) {
+                        best = Some((index, server));
+                    }
+                    deadline.get_or_insert_with(|| tokio::time::Instant::now() + PREFERENCE_GRACE);
+                }
+                Err(Error::Unauthorized) if best.is_none() => return Err(Error::Unauthorized),
                 Err(error) => last_error = Some(error),
             }
         }
-        match last_error {
-            Some(error) if error.is_network() => Err(Error::NoConnection(resource.name.clone())),
-            Some(error) => Err(error),
-            None => Err(Error::NoConnection(resource.name.clone())),
+        // Dropping `attempts` ends the ones that are still running.
+        match (best, last_error) {
+            (Some((_, server)), _) => Ok(server),
+            (None, Some(error)) if !error.is_network() => Err(error),
+            (None, _) => Err(Error::NoConnection(resource.name.clone())),
         }
     }
 }

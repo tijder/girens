@@ -2,7 +2,9 @@
 //! responses have the fields of real ones (recorded on 2026-11-06) with
 //! made-up values.
 
-use girens_plex::myplex::MyPlex;
+use std::time::{Duration, Instant};
+
+use girens_plex::myplex::{Connection, MyPlex, Resource};
 use girens_plex::{ClientInfo, Error};
 use wiremock::matchers::{header, method, path, query_param, query_param_is_missing};
 use wiremock::{Mock, MockServer, ResponseTemplate};
@@ -110,7 +112,10 @@ async fn a_protected_profile_takes_its_pin() {
     assert!(matches!(wrong, Err(Error::WrongPin)), "{wrong:?}");
     let missing = myplex.switch_user(&users[1].uuid, None).await;
     assert!(matches!(missing, Err(Error::WrongPin)), "{missing:?}");
-    assert!(myplex.switch_user(&users[1].uuid, Some("1234")).await.is_ok());
+    assert!(myplex
+        .switch_user(&users[1].uuid, Some("1234"))
+        .await
+        .is_ok());
 }
 
 #[tokio::test]
@@ -130,4 +135,74 @@ async fn a_profile_that_is_gone_is_not_a_wrong_pin() {
         }
         other => panic!("{other:?}"),
     }
+}
+
+/// A media server that answers after `delay`.
+async fn media_server(delay: Duration) -> MockServer {
+    let mock = MockServer::start().await;
+    Mock::given(method("GET"))
+        .and(path("/"))
+        .respond_with(fixture("server_root", 200).set_delay(delay))
+        .mount(&mock)
+        .await;
+    mock
+}
+
+/// A server of the account with a local and a remote address.
+fn resource(local: &str, remote: &str) -> Resource {
+    let connection = |uri: &str, local| Connection {
+        uri: uri.to_owned(),
+        local,
+        relay: false,
+    };
+    Resource {
+        name: "Server".into(),
+        client_identifier: "machine".into(),
+        provides: "server".into(),
+        owned: true,
+        access_token: Some("server-token".into()),
+        connections: vec![connection(remote, false), connection(local, true)],
+    }
+}
+
+#[tokio::test]
+async fn an_address_that_does_not_answer_does_not_hold_up_the_others() {
+    let (_plex_tv, myplex) = sign_in().await;
+    let local = media_server(Duration::from_secs(30)).await;
+    let remote = media_server(Duration::ZERO).await;
+
+    let started = Instant::now();
+    let server = myplex
+        .connect(&resource(&local.uri(), &remote.uri()))
+        .await
+        .expect("connect");
+    assert_eq!(server.base_url().as_str(), format!("{}/", remote.uri()));
+    assert!(
+        started.elapsed() < Duration::from_secs(5),
+        "{:?}",
+        started.elapsed()
+    );
+}
+
+#[tokio::test]
+async fn the_preferred_address_wins_when_it_answers_a_little_later() {
+    let (_plex_tv, myplex) = sign_in().await;
+    let local = media_server(Duration::from_millis(300)).await;
+    let remote = media_server(Duration::ZERO).await;
+
+    let server = myplex
+        .connect(&resource(&local.uri(), &remote.uri()))
+        .await
+        .expect("connect");
+    assert_eq!(server.base_url().as_str(), format!("{}/", local.uri()));
+}
+
+#[tokio::test]
+async fn no_address_that_answers_is_no_connection() {
+    let (_plex_tv, myplex) = sign_in().await;
+    // Nothing listens on these ports.
+    let gone = myplex
+        .connect(&resource("http://127.0.0.1:1", "http://127.0.0.1:2"))
+        .await;
+    assert!(matches!(gone, Err(Error::NoConnection(_))), "{gone:?}");
 }
