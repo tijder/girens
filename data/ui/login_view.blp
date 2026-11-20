@@ -39,6 +39,13 @@ template $login_view : Box {
         Adw.PreferencesGroup {
           title: _("Plex");
 
+          [header-suffix]
+          LinkButton {
+            label: "plex.tv";
+            uri: "https://www.plex.tv";
+            valign: center;
+          }
+
           Adw.ActionRow {
             title: _("Sign in on plex.tv");
             subtitle: _("Opens your browser; also for accounts with two-factor authentication");
@@ -111,6 +118,13 @@ template $login_view : Box {
 
         Adw.PreferencesGroup {
           title: _("Ister");
+
+          [header-suffix]
+          LinkButton {
+            label: "ister.app";
+            uri: "https://ister.app";
+            valign: center;
+          }
 
           Adw.EntryRow _ister_address_entry {
             title: _("The address of the Ister server");
