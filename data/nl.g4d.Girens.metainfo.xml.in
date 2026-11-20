@@ -11,6 +11,7 @@
   <project_license>GPL-3.0-or-later</project_license>
   <description>
     <p>Girens is a media player for Plex and Ister servers. You can watch and listen to your music, shows and movies with this GTK app.</p>
+    <p>Several accounts can be signed in next to each other, what you download can be watched without a connection, and an Ister server also brings its audiobooks and podcasts.</p>
   </description>
   <launchable type="desktop-id">nl.g4d.Girens.desktop</launchable>
   <content_rating type="oars-1.1">
@@ -37,13 +38,17 @@
         <p>Girens is rewritten in Rust. It starts faster, uses less memory and no longer needs Python.</p>
         <ul>
           <li>Several accounts can be signed in, and you can switch between the profiles of a Plex Home</li>
-          <li>Sign in through the browser, also with two-factor authentication</li>
+          <li>Sign in through the browser, also with two-factor authentication, or with a code at plex.tv/link</li>
           <li>Ister servers: sign in to one next to your Plex accounts to browse and play its movies, shows, music, audiobooks and podcasts</li>
           <li>With an Ister server: downloads, skip the intro, go on to the next episode during the credits, and subtitles of DVDs and Blu-rays</li>
           <li>Downloads are shown and played without a connection to the server, and resume where you stopped</li>
           <li>Photo libraries, and a page for each playlist</li>
           <li>Back navigation, search results grouped by kind and a preferences dialog</li>
-          <li>The desktop's media controls can repeat, change the volume and quit Girens</li>
+          <li>A menu on each track to play it next, queue it, add it to a playlist or mark it as played</li>
+          <li>The page of an artist lists every album, and the play button of what is playing pauses it</li>
+          <li>Smaller tiles, so that more of them fit, and wide ones for libraries of clips</li>
+          <li>The desktop's media controls show the cover and can repeat, change the volume and quit Girens</li>
+          <li>Videos in AV1 play without a graphics card that decodes them</li>
         </ul>
       </description>
     </release>

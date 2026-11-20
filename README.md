@@ -1,10 +1,16 @@
 # Girens
 
-Girens is a media player for [Plex](https://www.plex.tv/) and [Ister](https://github.com/ister-app) servers. You can watch and listen to your music, shows and movies with this GTK app, with accounts of both kinds signed in next to each other.
+Girens is a media player for [Plex](https://www.plex.tv/) and [Ister](https://github.com/ister-app) servers. You can watch and listen to your music, shows and movies with this GTK app, and to the audiobooks and podcasts of an Ister server, with accounts of both kinds signed in next to each other.
 
 Both can be downloaded from for watching offline; what was watched that way is told to the server when it can be reached again.
 
-To stay signed in to an Ister server after the session in the browser has ended, Girens asks its OpenID Connect provider for the `offline_access` scope. A provider that does not grant that to the `ister` client still works: Girens then asks to sign in again when the session has ended.
+## Signing in
+
+A Plex account signs in on plex.tv in your browser, which also works with two-factor authentication. Girens shows a short code as well, to type at [plex.tv/link](https://plex.tv/link) on another device. A username and password can be entered in Girens itself, and a Plex server without a plex.tv account is reached by its address and a token. With a Plex Home you choose the profile to use.
+
+An Ister server is signed in to by its address; the browser opens the page of its OpenID Connect provider. To stay signed in after the session in the browser has ended, Girens asks that provider for the `offline_access` scope. A provider that does not grant that to the `ister` client still works: Girens then asks to sign in again when the session has ended.
+
+Titles and descriptions of an Ister server are shown in the language of your desktop. What the server does not have in that language, such as the title of an episode that was never translated, is shown in English.
 
 ## Why this app
 

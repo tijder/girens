@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: girens\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 23:19+0100\n"
+"POT-Creation-Date: 2026-11-20 18:46+0100\n"
 "PO-Revision-Date: 2024-05-11 15:00+0000\n"
 "Last-Translator: Philip Goto <philip.goto@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/girens/girens/nl/"
@@ -43,15 +43,25 @@ msgstr ""
 "Girens is een mediaspeler voor Plex- en Ister-servers. Met deze GTK-app kun "
 "je je muziek, series en films bekijken en beluisteren."
 
-#: data/nl.g4d.Girens.metainfo.xml.in:22
+#: data/nl.g4d.Girens.metainfo.xml.in:14
+msgid ""
+"Several accounts can be signed in next to each other, what you download can "
+"be watched without a connection, and an Ister server also brings its "
+"audiobooks and podcasts."
+msgstr ""
+"Er kunnen meerdere accounts naast elkaar aangemeld zijn, wat je downloadt "
+"kun je zonder verbinding bekijken, en een Ister-server brengt ook zijn "
+"luisterboeken en podcasts mee."
+
+#: data/nl.g4d.Girens.metainfo.xml.in:23
 msgid "The show screen"
 msgstr "Het seriescherm"
 
-#: data/nl.g4d.Girens.metainfo.xml.in:26
+#: data/nl.g4d.Girens.metainfo.xml.in:27
 msgid "The album screen"
 msgstr "Het albumscherm"
 
-#: data/nl.g4d.Girens.metainfo.xml.in:30
+#: data/nl.g4d.Girens.metainfo.xml.in:31
 msgid "The artist screen"
 msgstr "Het artiestenscherm"
 
@@ -643,7 +653,7 @@ msgstr "Kon niet aan de wachtrij toevoegen"
 msgid "Could not shuffle the play queue"
 msgstr "De wachtrij kon niet worden geschud"
 
-#: src/player/mod.rs:923 src/player/mod.rs:1265
+#: src/player/mod.rs:923 src/player/mod.rs:1274
 msgid "Could not start playback"
 msgstr "Het afspelen kon niet worden gestart"
 
@@ -655,42 +665,42 @@ msgstr "Kan de ondertitels niet laden"
 msgid "Could not change the stream"
 msgstr "Het spoor kon niet worden gewijzigd"
 
-#: src/session.rs:520
+#: src/session.rs:527
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 "Je bent aangemeld. Je kunt deze pagina sluiten en teruggaan naar Girens."
 
-#: src/session.rs:521
+#: src/session.rs:528
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 "Aanmelden is niet gelukt. Ga terug naar Girens om het opnieuw te proberen."
 
-#: src/session.rs:606 src/util.rs:109
+#: src/session.rs:613 src/util.rs:109
 #, rust-format
 msgid "Season {}"
 msgstr "Seizoen {}"
 
-#: src/session.rs:607
+#: src/session.rs:614
 #, rust-format
 msgid "Episode {}"
 msgstr "Aflevering {}"
 
-#: src/session.rs:608
+#: src/session.rs:615
 #, rust-format
 msgid "Track {}"
 msgstr "Nummer {}"
 
-#: src/session.rs:609 src/views/player_view.rs:564
+#: src/session.rs:616 src/views/player_view.rs:564
 #, rust-format
 msgid "Chapter {}"
 msgstr "Hoofdstuk {}"
 
-#: src/session.rs:610
+#: src/session.rs:617
 msgid "Unknown"
 msgstr "Onbekend"
 
 #. Subtitles that are pictures rather than text; {} is their name.
-#: src/session.rs:612
+#: src/session.rs:619
 #, rust-format
 msgid "{} (pictures)"
 msgstr "{} (plaatjes)"
@@ -1188,7 +1198,7 @@ msgstr "Er is geen Ister-server gevonden op {}."
 msgid "This item is on a server that is not in use"
 msgstr "Dit item staat op een server die niet in gebruik is"
 
-#: src/window/mod.rs:811
+#: src/window/mod.rs:819
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
@@ -1197,11 +1207,11 @@ msgstr ""
 "af te spelen."
 
 #. Translators put their names here.
-#: src/window/mod.rs:816
+#: src/window/mod.rs:824
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:819
+#: src/window/mod.rs:827
 msgid "Help with translating"
 msgstr "Help mee vertalen"
 
@@ -1209,7 +1219,7 @@ msgstr "Help mee vertalen"
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:852
+#: src/window/mod.rs:860
 msgid "Waiting for you to sign in in the browser…"
 msgstr "Wachten tot je bent aangemeld in de browser…"
 

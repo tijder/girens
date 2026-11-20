@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Girens 2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 23:19+0100\n"
+"POT-Creation-Date: 2026-11-20 18:46+0100\n"
 "PO-Revision-Date: 2024-05-02 22:07+0000\n"
 "Last-Translator: Fernando Lopes "
 "<118869201+plasmus777@users.noreply.github.com>\n"
@@ -42,15 +42,22 @@ msgid ""
 "listen to your music, shows and movies with this GTK app."
 msgstr ""
 
-#: data/nl.g4d.Girens.metainfo.xml.in:22
+#: data/nl.g4d.Girens.metainfo.xml.in:14
+msgid ""
+"Several accounts can be signed in next to each other, what you download can "
+"be watched without a connection, and an Ister server also brings its "
+"audiobooks and podcasts."
+msgstr ""
+
+#: data/nl.g4d.Girens.metainfo.xml.in:23
 msgid "The show screen"
 msgstr ""
 
-#: data/nl.g4d.Girens.metainfo.xml.in:26
+#: data/nl.g4d.Girens.metainfo.xml.in:27
 msgid "The album screen"
 msgstr ""
 
-#: data/nl.g4d.Girens.metainfo.xml.in:30
+#: data/nl.g4d.Girens.metainfo.xml.in:31
 msgid "The artist screen"
 msgstr ""
 
@@ -642,7 +649,7 @@ msgstr ""
 msgid "Could not shuffle the play queue"
 msgstr ""
 
-#: src/player/mod.rs:923 src/player/mod.rs:1265
+#: src/player/mod.rs:923 src/player/mod.rs:1274
 msgid "Could not start playback"
 msgstr ""
 
@@ -654,40 +661,40 @@ msgstr ""
 msgid "Could not change the stream"
 msgstr ""
 
-#: src/session.rs:520
+#: src/session.rs:527
 msgid "You are signed in. You can close this page and return to Girens."
 msgstr ""
 
-#: src/session.rs:521
+#: src/session.rs:528
 msgid "Signing in did not work. Return to Girens to try again."
 msgstr ""
 
-#: src/session.rs:606 src/util.rs:109
+#: src/session.rs:613 src/util.rs:109
 #, rust-format
 msgid "Season {}"
 msgstr ""
 
-#: src/session.rs:607
+#: src/session.rs:614
 #, rust-format
 msgid "Episode {}"
 msgstr ""
 
-#: src/session.rs:608
+#: src/session.rs:615
 #, rust-format
 msgid "Track {}"
 msgstr ""
 
-#: src/session.rs:609 src/views/player_view.rs:564
+#: src/session.rs:616 src/views/player_view.rs:564
 #, rust-format
 msgid "Chapter {}"
 msgstr ""
 
-#: src/session.rs:610
+#: src/session.rs:617
 msgid "Unknown"
 msgstr ""
 
 #. Subtitles that are pictures rather than text; {} is their name.
-#: src/session.rs:612
+#: src/session.rs:619
 #, rust-format
 msgid "{} (pictures)"
 msgstr ""
@@ -1170,18 +1177,18 @@ msgstr ""
 msgid "This item is on a server that is not in use"
 msgstr ""
 
-#: src/window/mod.rs:811
+#: src/window/mod.rs:819
 msgid ""
 "A Plex GTK client for playing movies, TV shows and music from your Plex "
 "library."
 msgstr ""
 
 #. Translators put their names here.
-#: src/window/mod.rs:816
+#: src/window/mod.rs:824
 msgid "translator-credits"
 msgstr ""
 
-#: src/window/mod.rs:819
+#: src/window/mod.rs:827
 msgid "Help with translating"
 msgstr ""
 
@@ -1189,7 +1196,7 @@ msgstr ""
 #. / browser, with a way to get to that page again and to give up. With
 #. / a `code`, that can be typed at plex.tv/link on another device
 #. / instead.
-#: src/window/mod.rs:852
+#: src/window/mod.rs:860
 msgid "Waiting for you to sign in in the browser…"
 msgstr ""
 
