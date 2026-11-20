@@ -24,7 +24,7 @@ Flatpak is the recommended installation method. You can get Girens Flatpak on Fl
 <img src="https://flathub.org/assets/badges/flathub-badge-i-en.png" width="190px" />
 </a>
 
-The Rust version is on the `beta` branch of Flathub:
+Versions that are not released yet are on the `beta` branch of Flathub:
 
 ```bash
 flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo

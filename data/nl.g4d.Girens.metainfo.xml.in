@@ -33,7 +33,7 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release date="2026-11-06" version="3.0.0">
+    <release date="2026-11-20" version="3.0.0">
       <description translate="no">
         <p>Girens is rewritten in Rust. It starts faster, uses less memory and no longer needs Python.</p>
         <ul>
