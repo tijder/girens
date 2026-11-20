@@ -209,37 +209,50 @@ fn background(images: &[wire::Image]) -> Option<String> {
 }
 
 impl Context {
-    /// The description in the language the user reads best.
-    fn metadata<'a>(&self, all: &'a [wire::Metadata]) -> Option<&'a wire::Metadata> {
-        let in_language = |wanted: &str| {
-            all.iter().find(|metadata| {
-                metadata
-                    .language
-                    .as_deref()
-                    .is_some_and(|language| same_language(language, wanted))
-            })
+    /// The descriptions from the one in the language the user reads best to
+    /// the one they read worst.
+    fn metadata<'a>(&self, all: &'a [wire::Metadata]) -> Vec<&'a wire::Metadata> {
+        let mut ordered: Vec<&wire::Metadata> = Vec::new();
+        let mut add = |wanted: &dyn Fn(&wire::Metadata) -> bool| {
+            for metadata in all.iter().filter(|metadata| wanted(metadata)) {
+                if !ordered.iter().any(|seen| std::ptr::eq(*seen, metadata)) {
+                    ordered.push(metadata);
+                }
+            }
         };
-        self.languages
-            .iter()
-            .find_map(|language| in_language(language))
-            .or_else(|| in_language("eng"))
-            // What was read from the file itself has no language.
-            .or_else(|| all.iter().rev().find(|metadata| metadata.title.is_some()))
-            .or(all.first())
+        let in_language = |metadata: &wire::Metadata, wanted: &str| {
+            metadata
+                .language
+                .as_deref()
+                .is_some_and(|language| same_language(language, wanted))
+        };
+        for language in &self.languages {
+            add(&|metadata| in_language(metadata, language));
+        }
+        add(&|metadata| in_language(metadata, "eng"));
+        // What was read from the file itself has no language.
+        add(&|metadata| metadata.language.as_deref().is_none_or(str::is_empty));
+        add(&|_| true);
+        ordered
     }
 
+    /// Each field comes from the best description that has it: a
+    /// description in the language of the user may lack a title, as that of
+    /// an episode whose title was never translated.
     fn describe(&self, item: &mut Item, all: &[wire::Metadata]) {
-        let Some(metadata) = self.metadata(all) else {
-            return;
+        let ordered = self.metadata(all);
+        let first = |field: fn(&wire::Metadata) -> Option<&str>| {
+            ordered
+                .iter()
+                .find_map(|metadata| field(metadata).filter(|text| !text.trim().is_empty()))
         };
-        if let Some(title) = metadata.title.as_deref().filter(|title| !title.is_empty()) {
+        if let Some(title) = first(|metadata| metadata.title.as_deref()) {
             item.title = title.to_owned();
         }
-        item.summary = metadata.description.clone().filter(|text| !text.is_empty());
-        item.originally_available_at = metadata.released.clone();
-        item.genres = metadata
-            .genre
-            .as_deref()
+        item.summary = first(|metadata| metadata.description.as_deref()).map(str::to_owned);
+        item.originally_available_at =
+            first(|metadata| metadata.released.as_deref()).map(str::to_owned);
+        item.genres = first(|metadata| metadata.genre.as_deref())
             .unwrap_or_default()
             .split(',')
             .map(str::trim)
@@ -886,6 +899,27 @@ mod tests {
             "directory": {"servingNode": {"url": "http://node"}},
             "mediaFileStreams": streams, "segments": segments,
         })
+    }
+
+    #[test]
+    fn a_field_comes_from_the_best_description_that_has_it() {
+        let context = Context {
+            languages: vec!["nl".into()],
+            ..Context::default()
+        };
+        let item = context.episode(
+            &serde_json::from_value(serde_json::json!({
+                "id": "one", "number": 1,
+                "metadata": [
+                    {"language": "eng", "title": "Pilot", "description": "A start.", "released": "2013-12-02"},
+                    {"language": "nld", "title": null, "description": "Een begin.", "released": "2013-12-02"},
+                ],
+            }))
+            .unwrap(),
+        );
+        // The title was never translated; the description was.
+        assert_eq!(item.title, "Pilot");
+        assert_eq!(item.summary.as_deref(), Some("Een begin."));
     }
 
     #[test]
