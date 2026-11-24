@@ -235,6 +235,13 @@ impl PlexWindow {
             Location::Player => imp._player_view.get().upcast(),
         };
         imp.page_stack.set_visible_child(&page);
+        // A video that waits to be started is only in the sidebar while its
+        // page is open: it does not play, so there is nothing to return to
+        // but by going back.
+        if imp.resume_pending.get() {
+            imp._sidebar_box
+                .set_player_visible(matches!(location, Location::Player));
+        }
         self.set_page_title(match location {
             Location::Home => Ok(gettext("Home")),
             Location::Playlists => Ok(gettext("Playlists")),

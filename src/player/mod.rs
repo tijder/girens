@@ -76,6 +76,7 @@ pub enum Event {
     /// [`Event::Stopped`] when it does not come to that.
     Loading(Box<Item>),
     /// The item was partly watched; answer with [`Player::start_current`].
+    /// Until then nothing of it is loaded.
     AskResume(Box<Item>),
     /// Playback of an item began. `video` tells whether there is a picture.
     Started {
@@ -966,6 +967,12 @@ impl Inner {
         };
 
         if mode == StartMode::Ask && item.view_offset != 0 {
+            // With all that is known of the item, for the page that asks to
+            // tell about it.
+            let known = self.state.borrow().preloaded.clone();
+            let item = known
+                .filter(|known| known.rating_key == item.rating_key)
+                .unwrap_or(item);
             self.emit(Event::AskResume(Box::new(item)));
             return;
         }

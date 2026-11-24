@@ -129,6 +129,9 @@ mod imp {
         /// Whether a video is loaded, and whether it is paused.
         pub video_playing: Cell<bool>,
         pub video_paused: Cell<bool>,
+        /// Set while the page of a video waits for the user to choose where
+        /// it starts, with nothing playing.
+        pub resume_pending: Cell<bool>,
         /// Set once playback was ended for closing the window.
         pub closing: Cell<bool>,
         pub search_timeout: RefCell<Option<glib::SourceId>>,
@@ -195,6 +198,7 @@ mod imp {
                 inhibit_cookie: Cell::new(None),
                 video_playing: Cell::new(false),
                 video_paused: Cell::new(false),
+                resume_pending: Cell::new(false),
                 closing: Cell::new(false),
                 search_timeout: RefCell::new(None),
                 history: RefCell::default(),
@@ -742,6 +746,7 @@ impl PlexWindow {
             (Some("skip"), _) => player.skip_segment(),
             (Some("next"), _) => player.next(),
             (Some("pause"), _) => player.pause(),
+            (Some("resume"), _) => player.start_current(StartMode::Resume),
             (Some("queue"), _) => eprintln!(
                 "queue: {:?}",
                 player

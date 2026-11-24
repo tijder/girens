@@ -13,7 +13,7 @@ use gtk::{gdk, glib, CompositeTemplate};
 use super::{List, MediaBoxVideoBottom, MediaBoxVideoTop, MediaControls};
 use crate::i18n::{gettext, gettext_f};
 use crate::player::render::VideoRenderer;
-use crate::player::{Event, Player, SubtitlePictures, CONTROLS_HIDE_DELAY};
+use crate::player::{Event, Player, StartMode, SubtitlePictures, CONTROLS_HIDE_DELAY};
 use crate::session::Session;
 use crate::{runtime, util};
 
@@ -72,6 +72,14 @@ mod imp {
         pub _subtitle_picture: TemplateChild<gtk::Picture>,
         #[template_child]
         pub _loading_spinner: TemplateChild<adw::Spinner>,
+        #[template_child]
+        pub _resume_box: TemplateChild<gtk::Box>,
+        #[template_child]
+        pub _resume_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub _resume_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub _beginning_button: TemplateChild<gtk::Button>,
         /// The sheets subtitle pictures are cut out of, by where they
         /// come from.
         pub subtitle_sheets: RefCell<std::collections::HashMap<String, gdk::Texture>>,
@@ -219,6 +227,21 @@ impl PlayerView {
             self,
             move |event| view.on_player_event(event)
         ));
+        for (button, mode) in [
+            (&imp._resume_button, StartMode::Resume),
+            (&imp._beginning_button, StartMode::Beginning),
+        ] {
+            button.connect_clicked(glib::clone!(
+                #[weak(rename_to = view)]
+                self,
+                move |_| {
+                    view.imp()._resume_box.set_visible(false);
+                    if let Some(player) = view.imp().player.get() {
+                        player.start_current(mode);
+                    }
+                }
+            ));
+        }
 
         imp._key_controller.connect_key_pressed(glib::clone!(
             #[weak(rename_to = view)]
@@ -707,14 +730,19 @@ impl PlayerView {
 
     fn on_player_event(&self, event: &Event) {
         match event {
-            Event::Loading(item) if !item.kind.is_audio() => {
+            Event::AskResume(item) if !item.kind.is_audio() => self.ask_resume(item),
+            Event::Loading(item) => {
                 let imp = self.imp();
-                imp.title.set_label(&page_title(item));
-                imp._loading_spinner.set_visible(true);
+                imp._resume_box.set_visible(false);
+                if !item.kind.is_audio() {
+                    imp.title.set_label(&page_title(item));
+                    imp._loading_spinner.set_visible(true);
+                }
             }
             Event::Started { item, video } => {
                 let imp = self.imp();
                 imp._loading_spinner.set_visible(false);
+                imp._resume_box.set_visible(false);
                 imp.next_cancelled.set(false);
                 self.stop_next_countdown();
                 imp.title.set_label(&page_title(item));
@@ -745,6 +773,7 @@ impl PlayerView {
             Event::Subtitles(subtitles) => self.show_subtitles(subtitles.clone()),
             Event::Stopped => {
                 self.imp()._loading_spinner.set_visible(false);
+                self.imp()._resume_box.set_visible(false);
                 self.offer_skip(None);
                 self.stop_next_countdown();
                 self.show_subtitles(None);
@@ -757,6 +786,31 @@ impl PlayerView {
             }
             _ => {}
         }
+    }
+
+    /// Shows a partly watched video with, where its picture comes, the
+    /// choice between going on and starting over. It loads once chosen.
+    fn ask_resume(&self, item: &Item) {
+        let imp = self.imp();
+        imp.title.set_label(&page_title(item));
+        self.show_item(item);
+        // Nothing is loaded yet that these could change.
+        imp._options_list.set_visible(false);
+        imp._loading_spinner.set_visible(false);
+        imp._resume_label.set_label(&match item.kind {
+            ItemKind::Episode => match item.season_episode() {
+                Some(number) => format!("{number} · {}", item.title),
+                None => item.title.clone(),
+            },
+            _ => item.title.clone(),
+        });
+        imp._resume_button.set_label(&format!(
+            "{} · {}",
+            gettext("Resume"),
+            util::format_duration(item.view_offset)
+        ));
+        imp._resume_box.set_visible(true);
+        imp._resume_button.grab_focus();
     }
 
     fn show_item(&self, item: &Item) {

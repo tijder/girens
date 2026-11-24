@@ -136,7 +136,7 @@ pub fn after_connect(window: &crate::window::PlexWindow) {
         }
     }
     // `GIRENS_DEBUG_PLAYER="skip@12;seek 170@20"`: what to tell the player,
-    // and after how many seconds (`skip`, `next`, `pause`, `queue` to print it, `seek <seconds>`,
+    // and after how many seconds (`skip`, `next`, `pause`, `resume` to answer the question where to start, `queue` to print it, `seek <seconds>`,
     // `subtitle <n>` for the n-th subtitle stream, `version <n>` for the n-th file,
     // `position` to print it).
     if let Ok(spec) = std::env::var("GIRENS_DEBUG_PLAYER") {

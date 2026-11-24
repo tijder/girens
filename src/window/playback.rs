@@ -91,10 +91,12 @@ impl PlexWindow {
             // A video has its page from the moment it is chosen; the page
             // shows that it is loading.
             Event::Loading(item) if !item.kind.is_audio() => {
+                imp.resume_pending.set(false);
                 imp._sidebar_box.set_player_visible(true);
                 self.open(Location::Player);
             }
             Event::Started { video, .. } => {
+                imp.resume_pending.set(false);
                 imp.video_playing.set(*video);
                 imp.video_paused.set(false);
                 self.update_idle_inhibit();
@@ -103,12 +105,20 @@ impl PlexWindow {
                     self.open(Location::Player);
                 }
             }
-            Event::AskResume(item) => self.ask_resume(&item.title),
+            // A video asks on its own page, where its picture comes; the
+            // rest, such as a book, in a dialog.
+            Event::AskResume(item) if item.kind.is_audio() => self.ask_resume(&item.title),
+            Event::AskResume(_) => {
+                imp.resume_pending.set(true);
+                imp._sidebar_box.set_player_visible(true);
+                self.open(Location::Player);
+            }
             Event::Paused(paused) => {
                 imp.video_paused.set(*paused);
                 self.update_idle_inhibit();
             }
             Event::Stopped => {
+                imp.resume_pending.set(false);
                 imp.video_playing.set(false);
                 self.update_idle_inhibit();
                 imp._sidebar_box.set_player_visible(false);
@@ -144,7 +154,8 @@ impl PlexWindow {
         imp.busy_pulse.replace(Some(pulse));
     }
 
-    /// Asks whether to resume a partly watched item or start over.
+    /// Asks whether to resume a partly watched item or start over, for what
+    /// has no page of its own to ask on.
     pub(super) fn ask_resume(&self, title: &str) {
         let dialog = adw::AlertDialog::new(
             Some(title),

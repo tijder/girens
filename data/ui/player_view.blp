@@ -66,8 +66,48 @@ template $player_view : Adw.Bin {
           height-request: 48;
 
           styles [
-            "video-loading",
+            "on-video",
           ]
+        }
+
+        // Asked of a video that was partly watched, before it is loaded.
+        [overlay]
+        Box _resume_box {
+          visible: false;
+          orientation: vertical;
+          spacing: 12;
+          halign: center;
+          valign: center;
+          margin-start: 24;
+          margin-end: 24;
+
+          Label _resume_label {
+            wrap: true;
+            justify: center;
+            max-width-chars: 40;
+            margin-bottom: 12;
+
+            styles [
+              "title-2",
+              "on-video",
+            ]
+          }
+
+          Button _resume_button {
+            styles [
+              "pill",
+              "suggested-action",
+            ]
+          }
+
+          Button _beginning_button {
+            label: _("Start from the beginning");
+
+            styles [
+              "pill",
+              "on-video-button",
+            ]
+          }
         }
 
         [overlay]
