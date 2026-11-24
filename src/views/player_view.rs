@@ -71,6 +71,8 @@ mod imp {
         #[template_child]
         pub _subtitle_picture: TemplateChild<gtk::Picture>,
         #[template_child]
+        pub _scrolled_window: TemplateChild<gtk::ScrolledWindow>,
+        #[template_child]
         pub _loading_spinner: TemplateChild<adw::Spinner>,
         #[template_child]
         pub _resume_box: TemplateChild<gtk::Box>,
@@ -130,6 +132,8 @@ mod imp {
         pub windowed: Cell<bool>,
         /// Height of the video when it does not fill the window.
         pub video_height: Cell<i32>,
+        /// Width and height the page was last given.
+        pub page_size: Cell<(i32, i32)>,
         pub hide_timeout: RefCell<Option<glib::SourceId>>,
         pub last_click: Cell<Option<Instant>>,
         pub last_pointer: Cell<(f64, f64)>,
@@ -227,6 +231,33 @@ impl PlayerView {
             self,
             move |event| view.on_player_event(event)
         ));
+        // The page is as large as the window leaves it, whatever is on it,
+        // and what scrolls it tells when that changes; the video follows.
+        // Not from within the allocation, which a new size request would
+        // start over.
+        for adjustment in [
+            imp._scrolled_window.hadjustment(),
+            imp._scrolled_window.vadjustment(),
+        ] {
+            adjustment.connect_page_size_notify(glib::clone!(
+                #[weak(rename_to = view)]
+                self,
+                move |_| {
+                    let window = &view.imp()._scrolled_window;
+                    let size = (
+                        window.hadjustment().page_size() as i32,
+                        window.vadjustment().page_size() as i32,
+                    );
+                    if view.imp().page_size.replace(size) != size {
+                        glib::idle_add_local_once(glib::clone!(
+                            #[weak]
+                            view,
+                            move || view.fit_video()
+                        ));
+                    }
+                }
+            ));
+        }
         for (button, mode) in [
             (&imp._resume_button, StartMode::Resume),
             (&imp._beginning_button, StartMode::Beginning),
@@ -406,14 +437,25 @@ impl PlayerView {
         } else {
             gtk::Orientation::Horizontal
         });
-        let height = match width {
-            ..850 => 300,
-            850..1500 => 500,
-            _ => 800,
-        };
-        imp.video_height.set(height);
-        if !imp.fullscreen.get() && !imp.windowed.get() {
-            imp._video_box.set_size_request(-1, height);
+    }
+
+    /// Gives the video the height that suits the page as it is now: that of
+    /// a wide picture over the whole width, as far as the page is tall
+    /// enough for it and for a glimpse of what is below.
+    fn fit_video(&self) {
+        let imp = self.imp();
+        let (width, height) = imp.page_size.get();
+        if width <= 0 || height <= 0 {
+            return;
+        }
+        let fitting = (width * 9 / 16)
+            .min(height - BELOW_VIDEO)
+            .max(MIN_VIDEO_HEIGHT);
+        if imp.video_height.replace(fitting) != fitting
+            && !imp.fullscreen.get()
+            && !imp.windowed.get()
+        {
+            imp._video_box.set_size_request(-1, fitting);
         }
     }
 
@@ -1140,3 +1182,9 @@ fn page_title(item: &Item) -> String {
         _ => item.title.clone(),
     }
 }
+
+/// How much of the page is kept for what is below the video, so that it
+/// shows there is something to scroll to.
+const BELOW_VIDEO: i32 = 110;
+/// The least height of the video, however small the window.
+const MIN_VIDEO_HEIGHT: i32 = 180;
