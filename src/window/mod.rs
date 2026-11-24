@@ -826,8 +826,10 @@ impl PlexWindow {
             .developers(["Gerben Droogers"])
             .artists(["Tobias Bernard"])
             .copyright("© 2018-2026 Gerben Droogers.")
+            // The same words as in the launcher, and so in the same
+            // translation.
             .comments(gettext(
-                "A Plex GTK client for playing movies, TV shows and music from your Plex library.",
+                "Play the movies, shows and music of your Plex or Ister server",
             ))
             .website("https://gitlab.gnome.org/tijder/girens")
             .license_type(gtk::License::Gpl30)
