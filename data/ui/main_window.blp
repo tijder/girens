@@ -118,6 +118,17 @@ template $PlexWindow : Adw.ApplicationWindow {
             SearchBar _search_bar {
               SearchEntry _search_entry {}
             }
+            Overlay {
+            // Runs while what was clicked is being fetched for playing.
+            [overlay]
+            ProgressBar _busy_bar {
+              styles ["osd"]
+              valign: start;
+              visible: false;
+              can-target: false;
+              pulse-step: 0.08;
+            }
+
             Adw.ViewStack _viewStack_pages {
               vhomogeneous: false;
               hhomogeneous: false;
@@ -149,6 +160,7 @@ template $PlexWindow : Adw.ApplicationWindow {
               Adw.ViewStackPage _player_revealer {
                 child: $player_view _player_view {};
               }
+            }
             }
           }
 

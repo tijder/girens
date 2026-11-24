@@ -20,6 +20,10 @@ template $player_view : Adw.Bin {
 
       Overlay _overlay {
         Stack _stack {
+          styles [
+            "video-area",
+          ]
+
           GestureClick _click {
             button: 1;
             exclusive: true;
@@ -49,6 +53,21 @@ template $player_view : Adw.Bin {
               hexpand: true;
             }
           }
+        }
+
+        // Shown from the choice of a video until it plays.
+        [overlay]
+        Adw.Spinner _loading_spinner {
+          visible: false;
+          can-target: false;
+          halign: center;
+          valign: center;
+          width-request: 48;
+          height-request: 48;
+
+          styles [
+            "video-loading",
+          ]
         }
 
         [overlay]

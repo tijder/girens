@@ -51,6 +51,18 @@ button.media-play-button {
   min-height: 42px;
 }
 
+/* Where the video comes: black from the moment it is chosen, not only
+   once there is a picture. */
+.video-area {
+  background-color: black;
+}
+
+/* The spinner over a video that is still loading: light, as what is
+   behind it is black in either colour scheme. */
+.video-loading {
+  color: white;
+}
+
 .black_background {
   background-color: black;
   box-shadow: 0 0 0 black;

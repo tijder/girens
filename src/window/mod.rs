@@ -66,6 +66,10 @@ mod imp {
         #[template_child(id = "_viewStack_pages")]
         pub page_stack: TemplateChild<adw::ViewStack>,
         #[template_child]
+        pub _busy_bar: TemplateChild<gtk::ProgressBar>,
+        /// Keeps the busy bar moving while it is shown.
+        pub busy_pulse: RefCell<Option<glib::SourceId>>,
+        #[template_child]
         pub _discover_view: TemplateChild<views::DiscoverView>,
         #[template_child]
         pub _section_view: TemplateChild<views::SectionView>,
@@ -156,6 +160,8 @@ mod imp {
                 _menu_button: TemplateChild::default(),
                 _avatar_image: TemplateChild::default(),
                 page_stack: TemplateChild::default(),
+                _busy_bar: TemplateChild::default(),
+                busy_pulse: RefCell::new(None),
                 _discover_view: TemplateChild::default(),
                 _section_view: TemplateChild::default(),
                 _search_view: TemplateChild::default(),

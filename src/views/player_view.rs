@@ -70,6 +70,8 @@ mod imp {
         pub title: gtk::Label,
         #[template_child]
         pub _subtitle_picture: TemplateChild<gtk::Picture>,
+        #[template_child]
+        pub _loading_spinner: TemplateChild<adw::Spinner>,
         /// The sheets subtitle pictures are cut out of, by where they
         /// come from.
         pub subtitle_sheets: RefCell<std::collections::HashMap<String, gdk::Texture>>,
@@ -705,14 +707,17 @@ impl PlayerView {
 
     fn on_player_event(&self, event: &Event) {
         match event {
+            Event::Loading(item) if !item.kind.is_audio() => {
+                let imp = self.imp();
+                imp.title.set_label(&page_title(item));
+                imp._loading_spinner.set_visible(true);
+            }
             Event::Started { item, video } => {
                 let imp = self.imp();
+                imp._loading_spinner.set_visible(false);
                 imp.next_cancelled.set(false);
                 self.stop_next_countdown();
-                imp.title.set_label(&match item.kind {
-                    ItemKind::Episode => item.grandparent_title.clone().unwrap_or_default(),
-                    _ => item.title.clone(),
-                });
+                imp.title.set_label(&page_title(item));
                 if *video {
                     if let Some(item) = imp.player.get().and_then(Player::loaded_item) {
                         self.show_item(&item);
@@ -739,6 +744,7 @@ impl PlayerView {
             }
             Event::Subtitles(subtitles) => self.show_subtitles(subtitles.clone()),
             Event::Stopped => {
+                self.imp()._loading_spinner.set_visible(false);
                 self.offer_skip(None);
                 self.stop_next_countdown();
                 self.show_subtitles(None);
@@ -1070,5 +1076,13 @@ impl PlayerView {
             imp._controlls_top.remove_css_class("black_background");
             self.set_cursor_from_name(Some("default"));
         }
+    }
+}
+
+/// What the header bar calls the page while `item` plays or loads.
+fn page_title(item: &Item) -> String {
+    match item.kind {
+        ItemKind::Episode => item.grandparent_title.clone().unwrap_or_default(),
+        _ => item.title.clone(),
     }
 }

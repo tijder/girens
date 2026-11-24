@@ -9,7 +9,7 @@ mod reporting;
 mod streams;
 
 use girens_model::ItemId;
-use std::cell::{OnceCell, RefCell};
+use std::cell::{Cell, OnceCell, RefCell};
 use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -69,6 +69,12 @@ pub enum PlayTarget {
 
 #[derive(Debug, Clone)]
 pub enum Event {
+    /// Something was asked for that takes the server a moment: `true` from
+    /// the click until there is something else to show for it.
+    Busy(bool),
+    /// This item is being opened; [`Event::Started`] follows once it plays,
+    /// [`Event::Stopped`] when it does not come to that.
+    Loading(Box<Item>),
     /// The item was partly watched; answer with [`Player::start_current`].
     AskResume(Box<Item>),
     /// Playback of an item began. `video` tells whether there is a picture.
@@ -182,6 +188,12 @@ struct State {
     /// Incremented for every start, so that a slow start that was overtaken
     /// by a newer one can notice and give up.
     generation: u64,
+    /// Incremented for every request to play something, so that the answer
+    /// to an older one is dropped when the user chose something else since.
+    request: u64,
+    /// The item the user asked for, as fetched for making its queue, so
+    /// that loading it does not fetch it again.
+    preloaded: Option<Item>,
     prefer_music_clips: bool,
     repeat: bool,
     speed: f64,
@@ -199,6 +211,8 @@ struct Inner {
     deinterlace: RefCell<Option<String>>,
     settings: gio::Settings,
     state: RefCell<State>,
+    /// Whether [`Event::Busy`] was last sent as `true`.
+    busy: Cell<bool>,
     listeners: RefCell<Vec<Rc<dyn Fn(&Event)>>>,
 }
 
@@ -287,6 +301,7 @@ impl Player {
                 ..State::default()
             }),
             settings,
+            busy: Cell::new(false),
             listeners: RefCell::default(),
         });
         PLAYER.set(Rc::downgrade(&inner));
@@ -398,10 +413,18 @@ impl Player {
     /// Builds a play queue for `target` on the server and starts it.
     pub fn play(&self, target: PlayTarget, shuffle: bool, mode: StartMode) {
         let inner = self.inner.clone();
+        let Some(server) = Session::current().server() else {
+            return;
+        };
+        let request = {
+            let mut state = inner.state.borrow_mut();
+            state.request += 1;
+            state.request
+        };
+        // Making the queue takes a few requests; the user sees at once that
+        // the click was taken.
+        inner.set_busy(true);
         glib::spawn_future_local(async move {
-            let Some(server) = Session::current().server() else {
-                return;
-            };
             let queue = runtime::run(async move {
                 // Each with what the queue is made of, for the page of that
                 // to tell that it is playing.
@@ -409,14 +432,14 @@ impl Player {
                     PlayTarget::Section { section, sort } => server
                         .create_section_play_queue(&section, sort.as_deref(), shuffle)
                         .await
-                        .map(|queue| (queue, None)),
+                        .map(|queue| (queue, None, None)),
                     PlayTarget::PlaylistItem { playlist, item } => {
                         let (playlist, item) =
                             tokio::try_join!(server.item(playlist), server.item(item))?;
                         server
                             .create_play_queue(&playlist, Some(&item), shuffle)
                             .await
-                            .map(|queue| (queue, Some(playlist.rating_key)))
+                            .map(|queue| (queue, Some(playlist.rating_key), Some(item)))
                     }
                     PlayTarget::Item(key) => {
                         let item = server.item(key).await?;
@@ -428,30 +451,39 @@ impl Player {
                                 server
                                     .create_play_queue(&album, Some(&item), shuffle)
                                     .await
-                                    .map(|queue| (queue, Some(album.rating_key)))
+                                    .map(|queue| (queue, Some(album.rating_key), Some(item)))
                             }
                             _ => server
                                 .create_play_queue(&item, None, shuffle)
                                 .await
-                                .map(|queue| (queue, Some(key))),
+                                .map(|queue| (queue, Some(key), Some(item))),
                         }
                     }
                 }
             })
             .await;
+            if inner.state.borrow().request != request {
+                // The user chose something else in the meantime.
+                return;
+            }
             match queue {
-                Ok((queue, _)) if queue.items.is_empty() => {
+                Ok((queue, _, _)) if queue.items.is_empty() => {
+                    inner.set_busy(false);
                     crate::notify::message(&crate::i18n::gettext("Nothing to play"))
                 }
-                Ok((queue, source)) => {
+                Ok((queue, source, item)) => {
                     let index = queue.selected_index().unwrap_or(0);
+                    inner.state.borrow_mut().preloaded = item;
                     inner.set_queue(queue, index, source);
                     inner.start(index, mode);
                 }
-                Err(err) => crate::notify::failure(
-                    &crate::i18n::gettext("Could not create a play queue"),
-                    &err,
-                ),
+                Err(err) => {
+                    inner.set_busy(false);
+                    crate::notify::failure(
+                        &crate::i18n::gettext("Could not create a play queue"),
+                        &err,
+                    )
+                }
             }
         });
     }
@@ -786,7 +818,33 @@ impl Inner {
         Ok(self.mpv.get_or_init(|| mpv))
     }
 
+    /// Tells the listeners that the player is busy with a request, or done.
+    fn set_busy(&self, busy: bool) {
+        if self.busy.replace(busy) != busy {
+            self.emit(Event::Busy(busy));
+        }
+    }
+
     fn emit(&self, event: Event) {
+        // From here on there is something else to show for the request: a
+        // question, the page of the video that loads, or what plays.
+        let answered = match &event {
+            Event::Loading(item) => !item.kind.is_audio(),
+            Event::AskResume(_) | Event::Started { .. } | Event::Stopped => true,
+            _ => false,
+        };
+        if answered {
+            self.set_busy(false);
+        }
+        #[cfg(debug_assertions)]
+        match &event {
+            Event::Busy(busy) => crate::debug::mark(&format!("player busy: {busy}")),
+            Event::Loading(item) => crate::debug::mark(&format!("loading {}", item.title)),
+            Event::AskResume(_) => crate::debug::mark("asked whether to resume"),
+            Event::Started { .. } => crate::debug::mark("playback started"),
+            Event::Stopped => crate::debug::mark("playback stopped"),
+            _ => {}
+        }
         match &event {
             Event::Started { item, .. } => update_now_playing(|playing| {
                 playing.item = Some(item.rating_key);
@@ -917,6 +975,7 @@ impl Inner {
             state.generation += 1;
             state.generation
         };
+        self.emit(Event::Loading(Box::new(item.clone())));
         let inner = self.clone();
         glib::spawn_future_local(async move {
             if let Err(err) = inner.load(item, mode, generation).await {
@@ -944,10 +1003,16 @@ impl Inner {
                     }
                     _ => item.rating_key,
                 };
-                let server = server.clone();
-                runtime::run(async move { server.item(key).await })
-                    .await
-                    .map_err(|err| err.to_string())?
+                let preloaded = self.state.borrow_mut().preloaded.take();
+                match preloaded.filter(|preloaded| preloaded.rating_key == key) {
+                    Some(preloaded) => preloaded,
+                    None => {
+                        let server = server.clone();
+                        runtime::run(async move { server.item(key).await })
+                            .await
+                            .map_err(|err| err.to_string())?
+                    }
+                }
             }
             None => item.clone(),
         };

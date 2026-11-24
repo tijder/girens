@@ -182,7 +182,12 @@ async fn report(
         }
         Event::RepeatChanged(repeat) => service.set_loop_status(loop_status(*repeat)).await?,
         Event::SpeedChanged(speed) => service.set_rate(*speed).await?,
-        Event::AskResume(_) | Event::Segment(_) | Event::Subtitles(_) | Event::StreamsChanged => {}
+        Event::Busy(_)
+        | Event::Loading(_)
+        | Event::AskResume(_)
+        | Event::Segment(_)
+        | Event::Subtitles(_)
+        | Event::StreamsChanged => {}
         Event::Stopped => {
             service.set_playback_status(PlaybackStatus::Stopped).await?;
             service.set_metadata(Metadata::new()).await?;

@@ -3,6 +3,9 @@
 
 use super::*;
 
+/// Time between the steps of the bar that shows the player is busy.
+const BUSY_PULSE: std::time::Duration = std::time::Duration::from_millis(80);
+
 impl PlexWindow {
     pub(super) fn setup_player(&self) {
         let imp = self.imp();
@@ -84,6 +87,13 @@ impl PlexWindow {
     pub(super) fn on_player_event(&self, event: &Event) {
         let imp = self.imp();
         match event {
+            Event::Busy(busy) => self.show_busy(*busy),
+            // A video has its page from the moment it is chosen; the page
+            // shows that it is loading.
+            Event::Loading(item) if !item.kind.is_audio() => {
+                imp._sidebar_box.set_player_visible(true);
+                self.open(Location::Player);
+            }
             Event::Started { video, .. } => {
                 imp.video_playing.set(*video);
                 imp.video_paused.set(false);
@@ -106,6 +116,32 @@ impl PlexWindow {
             }
             _ => {}
         }
+    }
+
+    /// Shows that the player is working on what the user asked for, with a
+    /// bar that runs along the top of the page.
+    fn show_busy(&self, busy: bool) {
+        let imp = self.imp();
+        imp._busy_bar.set_visible(busy);
+        if !busy {
+            if let Some(pulse) = imp.busy_pulse.take() {
+                pulse.remove();
+            }
+            return;
+        }
+        if imp.busy_pulse.borrow().is_some() {
+            return;
+        }
+        imp._busy_bar.pulse();
+        let bar = imp._busy_bar.downgrade();
+        let pulse = glib::timeout_add_local(BUSY_PULSE, move || match bar.upgrade() {
+            Some(bar) => {
+                bar.pulse();
+                glib::ControlFlow::Continue
+            }
+            None => glib::ControlFlow::Break,
+        });
+        imp.busy_pulse.replace(Some(pulse));
     }
 
     /// Asks whether to resume a partly watched item or start over.
